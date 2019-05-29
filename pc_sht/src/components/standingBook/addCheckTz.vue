@@ -1,0 +1,421 @@
+<template>
+  <div class="lz-content-jc">
+
+    <div class="lz-form-style">
+
+      <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+
+        <el-form-item label="检测日期" prop="name">
+          <el-date-picker
+            v-model="local_check_date"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择日期" style="width: 300px">
+          </el-date-picker>
+        </el-form-item>
+
+
+        <el-form-item label="商户名称" prop="name" v-show="isShowMerchant">
+
+          <el-select v-model="local_booth_name" filterable placeholder="请选择" @change="getStallNo" style="width: 300px">
+            <el-option
+              v-for="item in local_booth_name_options"
+              :key="item.bootList[0].shop_booth_id"
+              :label="item.bootList[0].booth_name"
+              :value="item.bootList[0].shop_booth_id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="摊位号" prop="name" v-show="isShowMerchant">
+          <el-input v-model="local_stall_no" :disabled="true" placeholder="选择商户后自动填充"></el-input>
+        </el-form-item>
+        <el-form-item label="商品类型">
+          <el-radio-group v-model="goodsType">
+            <el-radio label="进货" name="goodsType" value="进货" @change="goodsTypesFun(1)"></el-radio>
+            <el-radio label="销售" name="goodsType" value="销售" @change="goodsTypesFun(2)"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="检测商品" prop="name">
+
+          <el-select v-model="local_check_good" placeholder="请选择" size="small" value-key="ID" multiple filterable
+                     style="width: 300px"
+                     @change="getGoodsNameFirst($event)">
+            <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME"
+                       :value="item"></el-option>
+          </el-select>
+
+
+        </el-form-item>
+
+
+        <el-form-item label="检测结果" prop="name">
+          <el-select v-model="local_check_result" filterable placeholder="请选择" style="width: 300px">
+            <el-option
+              v-for="item in check_result_options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+
+        </el-form-item>
+
+        <el-form-item label="备注" prop="desc">
+          <el-input type="textarea" v-model="local_remark"></el-input>
+        </el-form-item>
+
+
+        <el-form-item label="上传图片" prop="desc">
+
+          <div class="img_group">
+
+
+            <div class="img_box" v-if="allowAddImg">
+              <input type="file" accept="image/*" @change="changeImg($event)" ref="inputcheckimg">
+              <div class="filter"></div>
+            </div>
+
+            <!--<div class="img_box" v-for="(item,index) in imgArr" :key="index">-->
+            <div v-for="(item,index) in imgArr" :key="index">
+              <div class="img_show_box">
+
+                <img style="width: 100%" :src="item" alt="">
+              </div>
+            </div>
+
+          </div>
+
+        </el-form-item>
+
+
+        <el-form-item>
+          <el-button type="primary" @click="submitFormLz">保存</el-button>
+        </el-form-item>
+      </el-form>
+
+    </div>
+
+
+  </div>
+</template>
+
+<script>
+  import {addCheckItem} from '../../js/address/url.js';
+  import {purchase, getDefaultProductTypes,} from "../../js/goods/goods.js";
+  import {GetSaleTz, GetAllBiz, Parse, jcpurchase} from '../../js/standingBook/standingBook.js'
+  import axios from 'axios';
+
+  export default {
+    name: "saleTz",
+    data() {
+      return {
+
+
+        isShowImg: true,
+
+        imgData: '',
+        imgArr: [],
+        imgSrc: '',
+        allowAddImg: true,
+        showBaseCode: '',
+
+        //  检测日期  商户名称  摊位号  检测商品   检测结果  备注
+        local_check_date: '',
+        local_booth_name: '',
+        submit_booth_name: '',
+        submit_biz_id: '',
+        submit_shop_booth_id: '',
+        local_booth_name_options: '',
+
+
+        local_stall_no: '',
+        local_check_good: [],
+        local_check_good_options: [],
+
+        goods_name_Arr: [],
+        merchant_name_Arr: [],
+
+        submit_goods_name: '',
+
+        local_remark: '',
+        local_region: '',
+        local_region_name: '',
+        local_node_id: '',
+        local_node_name: '',
+
+
+        //检测结果
+        local_check_result: '',
+        check_result_options: [{
+          value: '1',
+          label: '合格'
+        }, {
+          value: '0',
+          label: '不合格'
+        }],
+
+
+        ruleForm: {},
+        rules: {},
+        isShowMerchant: true,
+        goodsType: '进货',
+        file: '',
+      }
+    },
+    mounted() {
+
+      this.isRegion = localStorage.getItem('isRegion');
+      this.local_node_name = localStorage.getItem('loginName');
+      this.local_node_id_id = localStorage.getItem('nodeidlocal');
+
+      if (this.isRegion == 'false') {
+        this.isShowMerchant = false;
+
+        this.submit_shop_booth_id = localStorage.getItem('scShopId');
+
+        this.submit_booth_name = this.local_node_name;
+
+      }
+
+      this.local_region = this.$route.params.areaId;
+      this.local_region_name = this.$route.params.areaName;
+      this.userId_local = localStorage.getItem('userId');
+      this.local_node_id = localStorage.getItem('loginId');
+
+      this.getGoodsFun(1)
+      this.getMerchantsFun();
+
+
+    },
+    methods: {
+      goodsTypesFun(ele){
+        console.log(ele)
+        this.getGoodsFun(ele)
+      },
+      // 通过商品的值获取 对应的 商品名称
+      getGoodsNameFirst(e) {
+
+        this.submit_goods_name = '';
+        for (let i = 0; i < e.length; i++) {
+          this.submit_goods_name += e[i].GOODS_NAME.toString() + ',';
+        }
+
+
+      },
+
+      //获取摊位号码
+      getStallNo(value) {
+
+        for (let i = 0; i < this.local_booth_name_options.length; i++) {
+
+          if (value == this.local_booth_name_options[i].bootList[0].shop_booth_id) {
+
+            this.local_stall_no = this.local_booth_name_options[i].bootList[0].stall_no;
+
+          }
+
+        }
+
+      },
+
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      handleRemove(file, fileList) {
+      },
+      handlePreview(file) {
+      },
+
+
+      //  将图片转换成Base64位
+      changeImg(e) {
+        this.file = e.target.files[0];
+      },
+
+
+      deleteImg(index) {
+        this.imgArr.splice(index, 1);
+        if (this.imgArr.length < 5) {
+          this.allowAddImg = true;
+        }
+      },
+
+      //  表单提交数据
+      submitFormLz() {
+
+        if (this.submit_goods_name == '') {
+          return false;
+        }
+        ;
+
+        this.getMerchantName();
+        let formData = new FormData();
+        formData.append('node_id', this.local_node_id);
+        formData.append('node_name', this.local_node_name);
+        formData.append('region', this.local_region);
+        formData.append('region_name', this.local_region_name);
+        formData.append('biz_id', this.submit_biz_id);
+        formData.append('shop_booth_id', this.submit_shop_booth_id);
+        formData.append('booth_name', this.submit_booth_name);
+        formData.append('stall_no', this.local_stall_no.toString());
+        formData.append('check_good', this.submit_goods_name);
+        formData.append('check_result', this.local_check_result);
+        formData.append('remark', this.local_remark);
+        formData.append('img', this.file);
+        formData.append('check_date', this.local_check_date);
+
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+
+        axios.post(addCheckItem, formData, config).then((res) => {
+          if (res.status === 200) {
+
+            this.$message.success(res.data.message);
+            this.$router.go(-1);
+            this.submitclear();
+            this.isShowImg = true;
+            this.showBaseCode = '';
+
+          }
+        })
+      },
+
+      /*
+      *   page: 1,
+          cols: 15000,
+          goodsName: "",
+          suppliersName: '',
+          region: this.local_region,
+          userId: this.userId_local,
+          total: '',
+      * */
+
+      //  获取商品列表
+      getGoodsFun(goodsType) {
+        let boothData = {
+          region: this.local_region,
+          userId: this.userId_local,
+          node_id: this.local_node_id_id,
+          goodsType: goodsType,// 1 进货 2销售
+        }
+        jcpurchase(boothData)
+          .then(res => {
+            this.local_check_good_options = res.data;
+
+          })
+          .catch(res => {
+          })
+
+      }
+      ,
+
+
+      //  商户通过  id  去查询  对应的名称   local_booth_name
+
+      getMerchantName() {
+
+        for (let j = 0; j < this.local_booth_name_options.length; j++) {
+          if (this.local_booth_name === this.local_booth_name_options[j].bootList[0].shop_booth_id) {
+
+            this.submit_booth_name = this.local_booth_name_options[j].bootList[0].booth_name;
+            this.submit_biz_id = this.local_booth_name_options[j].bootList[0].biz_id;
+            this.submit_shop_booth_id = this.local_booth_name_options[j].bootList[0].shop_booth_id;
+
+          }
+        }
+
+      }
+      ,
+
+      // 获取商户
+      getMerchantsFun() {
+        let obj = {
+          page: '1',
+          cols: '',
+          total: "",
+          userId: this.userId_local,
+          name: "",
+          boothName: "",
+          stall_no: "",
+          // region: "192",
+          region: this.local_region,
+        }
+        GetAllBiz(obj)
+          .then(res => {
+            this.local_booth_name_options = res.data.dataList
+
+          })
+          .catch(() => {
+            this.$message.error("出错啦!");
+          })
+      }
+      ,
+
+
+      //  清空所有数据
+      submitclear() {
+        this.local_check_date = "";
+
+        this.local_booth_name = '';
+
+
+        this.local_stall_no = '';
+
+        this.local_check_good = [];
+
+        this.submit_goods_name = '';
+
+        this.local_remark = '';
+        this.local_check_result = '';
+
+        this.$refs.inputcheckimg.value = '';
+
+        this.isShowImg = false;
+
+
+      }
+      ,
+
+
+    },
+    components: {}
+  }
+
+</script>
+
+<style lang='less' scoped>
+
+  .lz-content-jc {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    padding: 10px;
+
+    .lz-form-style {
+      margin-left: 100px;
+      margin-top: 50px;
+      width: 400px;
+    }
+  }
+
+  .img_delete {
+    width: 50px;
+    height: 50px;
+    background-color: yellow;
+  }
+
+
+</style>
