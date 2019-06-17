@@ -103,10 +103,11 @@
                             <p v-if="scope.row.is_oc_upload == 0">未上传单据</p>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width='180'>
+                    <el-table-column label="操作" width='220'>
                         <template slot-scope="scope">
                             <el-button type="text" size="small" v-if="fileBtn" @click="fileShowFun(scope.row)">上传单据</el-button>
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
+                            <el-button type="text" size="small" @click="againFun(scope.row)">再次进货</el-button>
                             <el-button type="text" size="small" @click="deleteTzFun(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -465,6 +466,9 @@ export default {
             // console.log(ele)
             this.$router.push({name:'AddEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: ele}})
         },
+        againFun(ele){
+            this.$router.push({name:'AddEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: ele,types: 'again'}})
+        }
     },
     components:{
         AreaSelect,

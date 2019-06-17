@@ -313,30 +313,43 @@ export default {
         },
         // 删除全部节点
         deleteAllFun(){
-            let arr = [],str = '';
-            this.tableData.forEach(val => {
-                arr.push(val.id)
-            })
-            if(arr.length > 0){
-                str = arr.join(',')
-            }
-            let obj = {
-                id: str
-            }
-            DeleteRoleNodeList(obj)
-                .then(res => {
-                    if (res.result == true) {
-                        this.$message.success(res.message);
-                        this.page = 1
-                        this.nodeName = ''
-                        this.getNodeFun()
-                    }else{
-                        this.$message.error(res.message);
-                    }
+            this.$confirm('确定要取消该页面所有的节点权限？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let arr = [],str = '';
+                this.tableData.forEach(val => {
+                    arr.push(val.id)
                 })
-                .catch(res => {
-                    console.log(res)
-                })
+                if(arr.length > 0){
+                    str = arr.join(',')
+                }
+                let obj = {
+                    id: str
+                }
+                DeleteRoleNodeList(obj)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.page = 1
+                            this.nodeName = ''
+                            this.getNodeFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+                this.getNodeFun()
+            });
+            
         },
         newNodeFun(){
             let obj = {

@@ -174,7 +174,7 @@
             <div class="btn"><!--,实付金额￥{{payAmount}}，欠款￥{{arrears}}-->
                 <p>选择商品(共{{tableData.length}}种商品，合计￥{{totalPrice}})</p>
                 <el-button type="primary" @click="saveFieldFun" size="small">{{saveBtn}}</el-button>
-                <el-button type="primary" :style="add ? {display: 'block'} : {display: 'none'}" size="small">保存并记下一单</el-button>
+                <!--<el-button type="primary" :style="add ? {display: 'block'} : {display: 'none'}" size="small">保存并记下一单</el-button>-->
             </div>
         </div>
     </div>
@@ -342,7 +342,10 @@ export default {
         this.form.in_date = formatDate(currentTime)
         console.log(this.areaId)
         console.log(this.bigAreaId)
-        if(this.$route.params.param){
+        if(this.$route.params.types == 'again'){
+            this.add = true
+            this.saveBtn = '保存'
+        }else if(this.$route.params.param){
             this.add = false
             this.saveBtn = '修改'
         }
@@ -516,12 +519,15 @@ export default {
         },
         selectSuppliers(val){//选择供应商
             this.form.suppliersName = val
-            this.suppliersId = 9999999999999
+            if(!this.$route.params.types){
+                this.suppliersId = 9999999999999
+            }
             this.suppliersList.forEach((ele)=>{
                 if(ele.biz_name == val){
                     this.suppliersId = ele.shop_concacts_id;
                 }
             })
+            console.log(this.suppliersId)
         },
         // 选择商户
         selectGet(val){
@@ -618,7 +624,7 @@ export default {
                     obj[5] = ''
                 }
             }
-            obj.shopId = ele.ID
+            obj.shopIds = ele.ID
             this.tableData.unshift(obj)
             if(this.searchVal){
                 console.log(123)
@@ -734,6 +740,9 @@ export default {
                         this.form.suppliersName = param.seller_booth_name
                         this.form.in_date = param.in_date
                         this.detailTzFun()
+                        if(this.$route.params.types == 'again'){
+                            this.tzId = ''
+                        }
                         this.suppliersList.forEach((ele)=>{
                             // console.log(ele)
                             if(ele.biz_name === param.seller_booth_name){
@@ -821,19 +830,24 @@ export default {
                     var buyer_booth_id = this.form.value,
                         buyer_booth_name = this.merchants;
                 }
-                let goodObj = '[';
-                if(this.tzId != ''){
+                let goodObj = '',goodStr = '';
+                if(this.tableData.length > 0){
+                    goodObj += '['
                     this.tableData.forEach(ele => {
-                        this.tableData2.forEach(val => {
-                            if(ele[0] == val.GOODS_NAME){
+                        // this.tableData2.forEach(val => {
+                        //     if(ele[0] == val.GOODS_NAME){
                                 goodObj +=  '{"0":"' + ele[0] + '","1":"' + ele[1] + '","2":"' + ele[2] + '","3":"' + ele[3] 
-                                    + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","shopId":"'+ val.ID + '"},'
-                            }
-                        })
+                                    + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            // }
+                        // })
                     })
+                    goodObj += ']'
+                    if(goodObj != '[]'){
+                        goodStr = goodObj.substr(0, goodObj.length-2)+goodObj.substr(goodObj.length-1,goodObj.length)
+                    }else{
+                        goodStr = ''
+                    }
                 }
-                goodObj += ']'
-                let goodStr = goodObj.substr(0, goodObj.length-2)+goodObj.substr(goodObj.length-1,goodObj.length)
                 let debt_money = parseFloat(this.totalPrice-this.form3.payAmount).toFixed(2)
                 if(this.tzId == ''){
 
@@ -850,7 +864,7 @@ export default {
                         creater_id:localStorage.getItem('userId'),		//创建人
                         pay_state:Math.abs(this.arrears)>0 ?1:2,	//支付状态(是否欠款) 1欠款 2结清
                         debt_money: this.arrears, // this.form3.arrears
-                        goods: this.tzId != '' ? goodStr : JSON.stringify(this.tableData),
+                        goods: this.tzId == '' ? goodStr : JSON.stringify(this.tableData),
                         in_date: this.form.in_date,
                         tz_id: this.tzId,
                         flag: 'pc',
@@ -884,7 +898,7 @@ export default {
                             }
                         })
                 }else{
-                        let obj = {
+                    let obj = {
                         buyer_booth_id: buyer_booth_id, // 商户
                         buyer_booth_name: buyer_booth_name,
                         seller_booth_id: this.suppliersId, //卖方id 供应商9999999999999
@@ -897,7 +911,7 @@ export default {
                         creater_id:localStorage.getItem('userId'),		//创建人
                         pay_state:Math.abs(this.arrears)>0 ?1:2,	//支付状态(是否欠款) 1欠款 2结清
                         debt_money: this.arrears, // this.form3.arrears
-                        goods: this.tzId != '' ? goodStr : JSON.stringify(this.tableData),
+                        goods: goodStr,
                         in_date: this.form.in_date,
                         tz_id: this.tzId,
                         flag: 'pc',
@@ -957,10 +971,14 @@ export default {
                         detailsArr[i][5] = detailsArr[i].bzq
                         detailsArr[i].shopId = detailsArr[i].shop_booth_id
                     }
-                    console.log(tzListArr[0])
+                    // console.log(tzListArr[0])
                     this.tableData = detailsArr
                     this.userdefine = tzListArr[0].USERDEFINE
-                    this.is_oc_upload = tzListArr[0].IS_OC_UPLOAD
+                    if(this.$route.params.types == 'again'){
+                        this.is_oc_upload = ''
+                    }else{
+                        this.is_oc_upload = tzListArr[0].IS_OC_UPLOAD
+                    }
                     this.ghdwId = tzListArr[0].SUPPILER_ID
                     for(var k in this.userdefine){
                         arr[k] = this.userdefine[k]

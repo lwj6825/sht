@@ -199,7 +199,7 @@ export default {
             }
         },
         contactPeopleFormat(row, column) {
-            return `${row.contacts} (${row.telephone})`
+            return `${row.bootList[0].contacts} (${row.bootList[0].callphone})`
         },
         lookInfo(row) {
             this.$router.push({name:'LookInfo',params:{'row':row}})

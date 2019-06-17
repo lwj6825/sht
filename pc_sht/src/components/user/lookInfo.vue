@@ -269,8 +269,8 @@ export default {
                 this.form.code=this.$route.params.row.bootList[0].licenceNo;    
                 this.form.companyName=this.$route.params.row.bootList[0].booth_name;
                 this.form.idCard=this.$route.params.row.bootList[0].regId;
-                this.form.contantName=this.$route.params.row.name;
-                this.form.phone=this.$route.params.row.telephone;
+                this.form.contantName=this.$route.params.row.bootList[0].contacts;
+                this.form.phone=this.$route.params.row.bootList[0].callphone;
                 this.form.areaId=this.$route.params.row.bootList[0].area_id,
                 this.form.areaName=this.$route.params.row.bootList[0].area_name,
                 this.form.addr=this.$route.params.row.bootList[0].addr;

@@ -101,35 +101,35 @@
           </div>
           <!-- 编辑查看 -->
           <el-form :model="editForm" class="form" label-width="120px" v-show="isEdit">
-            <el-form-item label="商户编码："  prop="licenceNo">
+            <el-form-item label="商户编码：" >
               <el-input v-model="editForm.biz_id" readonly></el-input>
             </el-form-item>
-            <el-form-item label="营业执照号："  prop="licenceNo">
+            <el-form-item label="营业执照号：">
               <el-input v-model="editForm.licenceNo"></el-input>
             </el-form-item>
-            <el-form-item label="身份证号：" prop="regId">
+            <el-form-item label="身份证号：">
               <el-input v-model="editForm.regId"></el-input>
             </el-form-item>
-            <el-form-item label="商户名称：" prop="nodeName" >
+            <el-form-item label="商户名称：">
               <el-input v-model="editForm.nodeName"></el-input>
             </el-form-item>
             <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
-              <el-form-item label="企业名称：" prop="corporate_name" >
+              <el-form-item label="企业名称：">
                 <el-input v-model="editForm.corporate_name" style="width: 340px"></el-input>
               </el-form-item>
             </el-tooltip>
-            <el-form-item label="联系人：" prop="name">
+            <el-form-item label="联系人：">
               <el-input v-model="editForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="联系电话：" prop="callphone">
+            <el-form-item label="联系电话：">
               <el-input v-model="editForm.callphone"></el-input>
             </el-form-item>
-            <el-form-item label="地址：" prop="addr">
+            <el-form-item label="地址：">
               <el-cascader class="address" :options="addrOptions" v-model="editForm.addr" placeholder="省/市/县" 
                 clearable :props="props" change-on-select></el-cascader>
               <el-input v-model="editForm.addrInfo" placeholder="请输入详细地址"></el-input>
             </el-form-item>
-            <el-form-item label="摊位号：" prop="stallNo">
+            <el-form-item label="摊位号：">
               <el-input style="width: 70%" v-model="editForm.stallNo" ></el-input>
               <span>&nbsp;&nbsp;例：1厅10排</span>
             </el-form-item>
@@ -259,7 +259,18 @@ export default {
         stallNo: '',//摊位号
       },
       lookMsg:{},
-      editForm:{},
+      editForm:{
+        biz_id: '',
+        licenceNo: '',
+        regId: '',//身份证号
+        nodeName: '',//商户名称（商铺）
+        corporate_name: '', 
+        name: '',//店铺联系人
+        callphone: '',//店铺联系方式
+        addr:[],
+        addrInfo: '',//地址
+        stallNo: '',//摊位号
+      },
       addrOptions:[],
       props:{
           label: 'caption',

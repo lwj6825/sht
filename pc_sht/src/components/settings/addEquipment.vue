@@ -16,7 +16,7 @@
                 </el-form-item>
                 <el-form-item label="商户名称" prop="name">
                     <el-input style='width:260px;color:#333;' v-model="form.name" placeholder="请搜索" :disabled='true'></el-input>
-                    <span class="search-name" @click="searchName">查</span>                        
+                    <span class="search-name" @click="showBizFun">查</span>                        
                 </el-form-item>
                 <el-form-item label="设备生产厂家" prop="factory">
                     <el-select class="input" v-model="form.factory" placeholder="请选择">
@@ -59,6 +59,14 @@
                 <header class="title">
                     <span>商户名称列表</span><i class="close" @click='closeShowShopName()'>x</i>
                 </header>
+                <el-form ref="form" :inline="true" :model="form2" label-width="80px">
+                    <el-form-item label="商户名称">
+                        <el-input type="text" clearable v-model="form2.name"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" class="search-btn white-bth" @click="searchFun">搜索</el-button>
+                    </el-form-item>
+                </el-form>
                 <el-table :data="tableData" border style="width: 100%;" height='380'>
                     <el-table-column prop="booth_name" label="名称" :formatter='boothNameFormat'> </el-table-column>
                     <el-table-column prop="addr" label="地址" :formatter='addrFormat' width='420'> </el-table-column>
@@ -70,10 +78,9 @@
                 </el-table>
                 <div class="pagination">
                     <el-pagination background
-                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page.sync="currentPage"
-                        :page-size="15"
+                        :current-page.sync="page"
+                        :page-size="cols"
                         layout="total, prev, pager, next, jumper"
                         :total='dataTotal'>
                     </el-pagination>
@@ -163,6 +170,9 @@ export default {
             areaId: '',
             equipmenId:'',//编辑时设备ID
             equipmenBoothId:'',//编辑时设备下的boothID
+            form2: {
+                name: ''
+            }
         }
     },
     created(){
@@ -201,14 +211,13 @@ export default {
                 })
         },
         searchName(){//新增页查询商户名称
-            this.showShopName = false;
             let data = {
                 page:this.page,
                 cols:this.cols,
                 total:this.total,
                 userId:this.userId,
-                name:"",
-                boothName:"",
+                name: '',
+                boothName: this.form2.name,
                 stall_no:"",
                 region: this.areaId
             }
@@ -221,6 +230,11 @@ export default {
                 .catch(res => {
                     console.log(res)
                 })
+        },
+        showBizFun(){
+            this.page = 1
+            this.showShopName = false;
+            this.searchName()
         },
         formConfirm(formName){//设备信息提交按钮            
              this.$refs[formName].validate((valid) => {
@@ -289,6 +303,7 @@ export default {
             });
         },
         closeShowShopName(){//关闭选择商户名称
+            this.form2.name = ''
             this.showShopName = true;
         },
         selectCurrShop(item){//选择此商铺
@@ -301,15 +316,17 @@ export default {
         boothNameFormat(row){//商户名称格式化
             return row.bootList[0].booth_name;
         },
-        handleSizeChange(val) { //pageSize 改变时会触发
-            console.log(`每页 ${val} 条`);
-        },
         handleCurrentChange(val) { //currentPage 改变时会触发
-        
+            this.page = val
+            this.searchName()
         },
         addrFormat(row){//地址格式化
             return row.bootList[0].area_name;
         },
+        searchFun(){
+            this.page = 1
+            this.searchName()
+        }
     }
     
 }
@@ -343,7 +360,7 @@ export default {
             padding: 10px;
             box-sizing: border-box;
             width: 800px;
-            height: 500px;
+            height: 570px;
             background: #fff;
             .title{
                 padding: 10px;
