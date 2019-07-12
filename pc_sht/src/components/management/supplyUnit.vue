@@ -40,11 +40,10 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="tel" label="联系电话"> </el-table-column>
-                    <el-table-column label="操作" width="140">
+                    <el-table-column label="操作" width="180">
                         <template slot-scope="scope">
-                            <el-switch
-                                v-model="scope.row.status"
-                                active-text="启用" inactive-text="停用"
+                            <el-switch :width="widthNum" style="width: 150px;"
+                                v-model="scope.row.status" active-text="启用" inactive-text="停用"
                                 active-value="启用" inactive-value="停用" @change="changeFun(scope.row)">
                             </el-switch>
                         </template>
@@ -74,6 +73,7 @@ export default {
             node_id: '',
             selectArr: [],
             node_name: '',
+            widthNum: 70,
         }
     },
     mounted() {
@@ -284,6 +284,25 @@ export default {
 .supplyUnit{
     .el-table td{
         padding: 5px 0 !important;
+    }
+    .el-switch__label--left{
+        position: relative;
+        left: 60px;
+        color: #fff;
+        z-index: -1111;
+    }
+    .el-switch__label--right{
+        position: relative;
+        right: 60px;
+        color: #fff;
+        z-index: -1111;
+    }
+    .el-switch__label.is-active{
+        z-index: 1111;
+        color: #fff;
+    }
+    .el-switch__core{
+        width: 60px !important;
     }
 }
 </style>

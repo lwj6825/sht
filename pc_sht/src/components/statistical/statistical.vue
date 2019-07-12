@@ -1425,7 +1425,7 @@ export default {
                         display: flex;
                         justify-content: center;
                         .list-tit{
-                            width: 60px;
+                            padding: 0 2px;
                             height: 30px;
                             line-height: 30px;
                             text-align: center;

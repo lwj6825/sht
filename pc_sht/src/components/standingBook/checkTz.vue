@@ -133,14 +133,15 @@
           <el-table-column prop="check_date"  label="检测日期"></el-table-column>
           <el-table-column prop="booth_name" label="商户名称"></el-table-column>
           <el-table-column prop="stall_no" label="摊位号" v-if="isShow"></el-table-column>
-          <el-table-column prop="check_good" label="检测商品">
-
-          </el-table-column>
-          <el-table-column prop="check_result" :formatter="toCheckResult" label="检测结果">
-
-
-          </el-table-column>
+          <el-table-column prop="check_good" label="检测商品"></el-table-column>
+          <el-table-column prop="check_result" :formatter="toCheckResult" label="检测结果"></el-table-column>
           <el-table-column prop="remark" label="备注"></el-table-column>
+          <el-table-column prop="check_project" label="检测项目"></el-table-column>
+          <el-table-column prop="standard_value" label="检测值"></el-table-column>
+          <el-table-column prop="check_standard" label="检测标准"></el-table-column>
+          <el-table-column prop="check_res" label="检测结果值"></el-table-column>
+          <el-table-column prop="check_person" label="检测人"></el-table-column>
+          <el-table-column prop="check_mechanism" label="检测机构"></el-table-column><!---->
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="viewImg(scope.row)">查看附件</el-button>

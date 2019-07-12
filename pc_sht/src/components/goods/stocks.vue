@@ -14,11 +14,15 @@
     </div>
 
     <div class="option-wrapper" ref="optionWrapper">
-      <div class="option">
+      <div class="option serach-val">
         <span class="option-title">商品编码</span>
         <el-input class="fill-input" v-model="goodsCode" clearable placeholder="请输入内容"></el-input>
         <span class="option-title">商品名称</span>
         <el-input class="fill-input" v-model="goodsName" clearable placeholder="请输入内容"></el-input>
+        <span class="option-title">商品简称</span>
+        <el-input class="fill-input" v-model="j_name" clearable placeholder="请输入内容"></el-input>
+      </div>
+      <div class="option">
         <span class="option-title">供应商</span>
         <el-input class="fill-input" v-model="supplier" clearable placeholder="请输入内容"></el-input>
         <el-button type="primary" size="medium" class="search-btn" @click="searcGoods">搜索</el-button>
@@ -44,6 +48,7 @@
         <el-table :data="dataList"  border :header-cell-style="rowClass">
           <el-table-column prop="GOODS_CODE" label="商品编码"> </el-table-column>
           <el-table-column prop="GOODS_NAME" label="商品名称"> </el-table-column>
+          <el-table-column prop="J_NAME" label="商品简称"> </el-table-column>
           <el-table-column prop="GB_NAME" :formatter="formatter" label="品种"> </el-table-column>
           <el-table-column prop="PRICE" label="价格"> </el-table-column>
           <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
@@ -80,7 +85,7 @@
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area';
   import {GetSupplier} from '../../js/district/district.js'
-  import {baseUrl} from '../../js/address/url.js'
+  import {baseUrl2} from '../../js/address/url.js'
   export default {
     name: "stocks",
     data() {
@@ -115,6 +120,7 @@
         fileMsg: '',
         file: '',
         goodsCode: '',
+        j_name: '',
       }
     },
     created(){
@@ -197,7 +203,7 @@
       },
       // 下载
       loadFun(){
-        window.location.href = baseUrl + "goods/downloadPurchase?userId=" + this.userId + '&region=' + this.areaId
+        window.location.href = baseUrl2 + "goods/downloadPurchase?userId=" + this.userId + '&region=' + this.areaId
       },
       // 上传
       fileFun(event){
@@ -225,7 +231,7 @@
               })
             }  
             //http://192.168.1.14:8081/order_sht/goods/importPurchase
-            let url = baseUrl + 'goods/importPurchase'
+            let url = baseUrl2 + 'goods/importPurchase'
             ajaxPost(url,formData,config)
               .then(res => {
                 this.boxShow = true;
@@ -249,6 +255,7 @@
           region: this.areaId,
           userId: this.userId,
           total: '',
+          j_name: this.j_name
         }
         purchase(boothData)
           .then(res => {
@@ -533,12 +540,16 @@
     }
     .option-wrapper{
       clear: both;
+      display: flex;
+		  flex-wrap: wrap;
       margin: 10px 0;
       background: #fff;
       padding: 10px;
     }
+    .serach-val{
+      width: 710px;
+    }
     .option{
-      height: 40px;
       line-height: 40px;
       font-size: 14px;
       overflow: hidden;

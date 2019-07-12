@@ -1,6 +1,7 @@
 <template>
     <div class="content view-assets">
         <div class="box">
+            <div class="list-title">资产信息</div>
             <div class="view" v-if="btn == '修改'">
                 <div class="list">
                     <div class="data">
@@ -352,7 +353,7 @@
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase,QueryBusiness,AssetsUpdate,QueryChangeListByAssetsId,
+import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase2,QueryBusiness,AssetsUpdate,QueryChangeListByAssetsId,
     QueryInspectinfoListByAssetsId,QueryMaintaininfoListByAssetsId,QueryAssetsSpecifications,QueryAssetsNames,QueryAssetsManufacturers,
     } from '../../js/traceEquipment/traceEquipment.js'
 import {uploadPhotos} from '../../js/address/url.js'
@@ -846,7 +847,7 @@ export default {
         },
         // 查询 所有节点
         getQueryNodeBase(){
-            QueryNodeBase('')
+            QueryNodeBase2('')
                 .then(res => {
                     // console.log(res)
                     this.nodeArr = res.data.nodeBase
@@ -1103,6 +1104,14 @@ export default {
                     }
                 }
             }
+        }
+        .list-title{
+            padding-left: 20px;
+            line-height: 40px;
+            border-bottom: 1px solid #e4e7ed;
+        }
+        .view{
+            margin-top: 10px;
         }
         .big-img{
             position: fixed;

@@ -1,227 +1,85 @@
 <template>
   <div class="syacontent">
     <div>
-      <!--<div >-->
-
-
-      <!--最外层的壳子-->
-      <!--按钮-->
-      <!--<el-button type="primary" id="open_btn" class="sf-but" @click="symapplicationflag = true" size="small">申请溯源码-->
-      <!--</el-button>-->
-
-      <!--头部-->
-      <!--<div class="syotitle">-->
-
-        <!--&lt;!&ndash;产品名称   申请日期&ndash;&gt;-->
-        <!--<div class="title_row">-->
-          <!--<div class="title_row_left">-->
-            <!--<span>产品名称:</span>-->
-            <!--<el-input v-model="pz_name_local" placeholder="请输入内容" size="small"></el-input>-->
-          <!--</div>-->
-          <!--<div class="title_row_right">-->
-            <!--<span class="right_span">申请日期:</span>-->
-            <!--<el-date-picker-->
-              <!--v-model="start_date_local"-->
-              <!--value-format="yyyy-MM-dd"-->
-              <!--type="date"-->
-              <!--size="small"-->
-              <!--placeholder="选择日期">-->
-            <!--</el-date-picker>-->
-            <!--<span>&nbsp;&nbsp;至&nbsp;&nbsp;</span>-->
-            <!--<el-date-picker-->
-              <!--v-model="end_date_local"-->
-              <!--value-format="yyyy-MM-dd"-->
-              <!--type="date"-->
-              <!--size="small"-->
-              <!--placeholder="选择日期">-->
-            <!--</el-date-picker>-->
-          <!--</div>-->
-
-          <!--&lt;!&ndash;审核状态&ndash;&gt;-->
-
-
-        <!--</div>-->
-        <!--&lt;!&ndash;审核状态   申请单号&ndash;&gt;-->
-        <!--<div class="title_row">-->
-          <!--<div class="title_row_left_sh">-->
-            <!--<span>审核状态:</span>-->
-            <!--&lt;!&ndash;<el-input v-model="review_state_local" placeholder="请输入内容">&ndash;&gt;-->
-            <!--<el-select v-model="review_state_local" slot="append" placeholder="请选择" size="small"-->
-                       <!--class="select-width-me-sh">-->
-              <!--<el-option label="全部" value="全部"></el-option>-->
-              <!--<el-option label="审核通过" value="审核通过"></el-option>-->
-              <!--<el-option label="审核未通过" value="审核未通过"></el-option>-->
-            <!--</el-select>-->
-
-            <!--&lt;!&ndash;</el-input>&ndash;&gt;-->
-          <!--</div>-->
-
-          <!--<div class="title_row_left">-->
-            <!--<span>申请单号:</span>-->
-            <!--<el-input v-model="apply_num_local" placeholder="请输入内容" size="small"></el-input>-->
-          <!--</div>-->
-
-          <!--&lt;!&ndash;所属合作社&ndash;&gt;-->
-          <!--<div class="title_row_left">-->
-            <!--&lt;!&ndash;<div class="one">所属合作社:</div>&ndash;&gt;-->
-            <!--<span>所属合作社:</span>-->
-            <!--<el-select v-model="hzs_name_local" slot="append" placeholder="请选择" value-key="userId"-->
-                       <!--class="select-width-me" size="small" clearable filterable>-->
-              <!--<el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name"-->
-                         <!--:value="item"></el-option>-->
-            <!--</el-select>-->
-          <!--</div>-->
-
-        <!--</div>-->
-
-        <!--&lt;!&ndash;搜索 清空筛选条件&ndash;&gt;-->
-        <!--<div class="title_row_three_btn">-->
-          <!--<el-button type="primary" size="mini" plain @click="getSymList()">搜索</el-button>-->
-          <!--&lt;!&ndash;清空筛选条件&ndash;&gt;-->
-          <!--<el-button size="mini" type="text" @click="clearAllCondition()">清空筛选条件</el-button>-->
-
-        <!--</div>-->
-
-
-      <!--</div>-->
-
       <!--重新布局头部-->
       <div class="lz-filter">
         <div class="lz-filter-one">
           <div class="lz-filter-one-style">
-            <div class="lz-filter-name" >产品名称</div>
-            <!--<el-input v-model="place_name" placeholder="输入地块名称" size="small" style="width: 200px"></el-input>-->
+            <div class="lz-filter-name" >申请日期</div>
+            <el-date-picker v-model="local_date_start_end" type="daterange" value-format="yyyy-MM-dd" size="small"
+              style="width: 225px" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
+          </div>
+          <div class="lz-filter-one-style">
+            <div class="lz-filter-name" >申请商品</div>
             <el-input v-model="pz_name_local" placeholder="请输入内容" size="small" style="width: 225px"></el-input>
           </div>
           <div class="lz-filter-one-style">
-            <div class="lz-filter-name" >申请日期</div>
-            <el-date-picker
-              v-model="local_date_start_end"
-              type="daterange"
-              value-format="yyyy-MM-dd"
-              size="small"
-              style="width: 225px"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker>
-
-          </div>
-          <div class="lz-filter-one-style">
-            <div class="lz-filter-name-two" >所属合作社</div>
-            <!--<el-select v-model="hzs_name_local" slot="append" placeholder="请选择" value-key="userId"-->
-            <!--class="select-width-me-one" size="small" clearable filterable style="width: 200px">-->
-            <!--<el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name"-->
-            <!--:value="item"></el-option>-->
-            <!--</el-select>-->
-
-            <el-select v-model="hzs_name_local" slot="append" placeholder="请选择" value-key="userId"
-                       class="select-width-me" size="small" clearable filterable style="width: 225px">
-              <el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name"
-                         :value="item"></el-option>
-            </el-select>
-          </div>
-        </div>
-
-        <div class="lz-filter-one">
-          <div class="lz-filter-one-style">
-            <div class="lz-filter-name" >申请单号</div>
-            <!--<el-input v-model="place_name" placeholder="输入地块名称" size="small" style="width: 200px"></el-input>-->
-            <el-input v-model="apply_num_local" placeholder="请输入内容" size="small" style="width: 225px"></el-input>
-          </div>
-          <div class="lz-filter-one-style">
-            <div class="lz-filter-name" >审核状态</div>
-
-            <!--<el-date-picker-->
-            <!--v-model="cjsj"-->
-            <!--type="date"-->
-            <!--value-format="yyyy-MM-dd"-->
-            <!--placeholder="选择日期" class="my-el-date-picker" size="small" style="width: 200px">-->
-            <!--</el-date-picker>-->
-
-            <el-select v-model="review_state_local" slot="append" placeholder="请选择" size="small" style="width: 225px"
-                       class="select-width-me-sh">
+            <div class="lz-filter-name" >审核结果</div>
+            <el-select v-model="review_state_local" slot="append" placeholder="请选择" size="small" style="width: 225px" 
+              class="select-width-me-sh">
               <el-option label="全部" value="全部"></el-option>
               <el-option label="审核通过" value="审核通过"></el-option>
               <el-option label="审核未通过" value="审核未通过"></el-option>
             </el-select>
-
+          </div>
+        </div>
+        <div class="lz-filter-one">
+          <div class="lz-filter-one-style">
+            <div class="lz-filter-name-two" >所属企业</div>
+            <el-select v-model="hzs_name_local" slot="append" placeholder="请选择" value-key="userId" class="select-width-me" size="small" 
+              clearable filterable style="width: 225px">
+              <el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name" :value="item"></el-option>
+            </el-select>
+          </div>
+          <div class="lz-filter-one-style">
+            <div class="lz-filter-name" >申请单号</div>
+            <el-input v-model="apply_num_local" placeholder="请输入内容" size="small" style="width: 225px"></el-input>
           </div>
           <div class="lz-filter-one-style-three">
-            <!--<el-select v-model="hzs_name_local" slot="append" placeholder="请选择" value-key="userId"-->
-            <!--class="select-width-me-one" size="small" clearable filterable style="width: 200px">-->
-            <!--<el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name"-->
-            <!--:value="item"></el-option>-->
-            <!--</el-select>-->
-
-            <el-button type="primary" size="mini" plain @click="getSymList()">搜索</el-button>
+            <el-button type="primary" class="search-btn" size="mini" @click="getSymList()">搜索</el-button>
             <!--清空筛选条件-->
-            <el-button size="mini" type="text" @click="clearAllCondition()">清空筛选条件</el-button>
+            <el-button size="mini" class="span-clear" type="text" @click="clearAllCondition()">清空筛选条件</el-button>
           </div>
         </div>
       </div>
-
       <div class="lz-table-title">
         <div class="lz-table-title-left">
-
-          <div class="lz-feilei-wai">
-            <img class="lz-feilei" src="../../assets/images/fenleithree.png"/>
-          </div>
-
           <div class="lz-span">全部申请记录</div>
-          <!--<span>全部商品</span>-->
-
         </div>
         <div class="lz-table-title-right">
-          <!--<el-button type="primary" id="open_btn" class="sf-but" @click="jumpAddLayout()" size="mini">新增商品品种</el-button>-->
-          <!--<el-button type="primary" @click="addView()" size="mini">新增地块</el-button>-->
           <el-button type="primary" id="open_btn" class="sf-but" @click="symapplicationflag = true" size="small">申请溯源码
           </el-button>
         </div>
       </div>
-
-
       <!--表格内容-->
       <div class="syocontent">
-        <el-table
-          :data="tableSymSqList"
-          style="width: 100%"
-          :cell-style="getRowheight"
-          :header-cell-style="getRowClass">
-
-          <el-table-column
-            label="申请单号"
-            prop="apply_id">
-          </el-table-column>
-          <el-table-column
-            label="申请日期"
-            prop="apply_time">
-          </el-table-column>
-          <el-table-column
-            label="产品名称"
-            prop="pz_name">
-          </el-table-column>
-          <el-table-column
-            label="地块名称"
-            prop="place_name">
-          </el-table-column>
-          <el-table-column
-            label="审核状态"
-            prop="review_state"
-            :filters="[{ text: '审核通过', value: '1' }, { text: '审核未通过', value: '0' }]"
-            :filter-method="filterTag"
+        <el-table :data="tableSymSqList" style="width: 100%" :cell-style="getRowheight" :header-cell-style="getRowClass">
+          <el-table-column label="申请单号" prop="apply_id"> </el-table-column>
+          <el-table-column label="申请日期" prop="apply_time"> </el-table-column>
+          <el-table-column label="申请商品" prop="pz_name"> </el-table-column>
+          <el-table-column label="所属企业" prop="pz_name"> </el-table-column>
+          <el-table-column label="审核状态" prop="review_state"
+            :filters="[{ text: '审核通过', value: '1' }, { text: '审核未通过', value: '0' }]" :filter-method="filterTag" 
             filter-placement="bottom-end">
-
             <template slot-scope="scope">
               <span v-if="scope.row.review_state==='0'">审核未通过</span>
               <span v-if="scope.row.review_state==='1'">审核通过</span>
               <span v-if="scope.row.review_state==='2'">待审核</span>
             </template>
-
           </el-table-column>
+          <el-table-column label="地块名称" prop="place_name"> </el-table-column>
           <el-table-column type="expand" label="操作" width="100px">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
+                 <el-form-item label="生产批次号">
+                  <span>{{ props.row.apply_id }}</span>
+                </el-form-item>
+                <el-form-item label="申请数量">
+                  <span>{{ props.row.apply_num }}</span>
+                </el-form-item>
+                <el-form-item label="审核日期">
+                  <span>{{ props.row.review_time }}</span>
+                </el-form-item>
                 <el-form-item label="申请单号">
                   <span>{{ props.row.apply_id }}</span>
                 </el-form-item>
@@ -237,16 +95,10 @@
                 <el-form-item label="所属合作社">
                   <span>{{ props.row.booth_name}}</span>
                 </el-form-item>
-                <el-form-item label="申请数量">
-                  <span>{{ props.row.apply_num }}</span>
-                </el-form-item>
                 <el-form-item label="审核结果">
                   <span v-if="props.row.review_state==='0'">审核未通过</span>
                   <span v-if="props.row.review_state==='1'">审核通过</span>
                   <span v-if="props.row.review_state==='2'">待审核</span>
-                </el-form-item>
-                <el-form-item label="审核日期">
-                  <span>{{ props.row.review_time }}</span>
                 </el-form-item>
               </el-form>
             </template>
@@ -270,70 +122,56 @@
 
 
       <!--新的申请溯源码-->
-      <el-dialog
-        title="申请溯源码"
-        :visible.sync="symapplicationflag"
-        :before-close="handleClose"
-        :close-on-click-modal = "isclick"
+      <el-dialog title="申请溯源码" :visible.sync="symapplicationflag" :before-close="handleClose" :close-on-click-modal = "isclick"
         width="650px">
         <!--内容-->
         <!--选择地块-->
         <div class="tjsf-div2-row">
           <div class="left">选择地块:</div>
           <div class="right">
-
             <el-select v-model="place_name_add" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
-                       size="small" @change="changevalue()">
-              <el-option v-for="item in place_name_list" :key="item.id" :label="item.place_name"
-                         :value="item"></el-option>
+              size="small" @change="changevalue()">
+              <el-option v-for="item in place_name_list" :key="item.id" :label="item.place_name" :value="item"></el-option>
             </el-select>
-
           </div>
         </div>
-
         <!--所属合作社-->
         <div class="tjsf-div2-row">
-          <div class="left">所属合作社:</div>
+          <div class="left">所属企业:</div>
           <div class="right">
             <el-input v-model="sq_sym_Hzs" size="small" disabled placeholder="选择地块后会自动填充"></el-input>
-            <!--<el-input v-model="sq_sym_Hzs" size="small"  placeholder="选择地块后会自动填充"></el-input>-->
           </div>
         </div>
-
-
         <!--产品名称-->
         <div class="tjsf-div2-row">
-          <div class="left">产品名称:</div>
+          <div class="left">申请商品:</div>
           <div class="right">
-
-            <!--<el-input v-model="pz_add"  size="small" disabled placeholder="选择地块后会自动填充" ></el-input>-->
             <el-input v-model="pz_add_name" size="small" disabled placeholder="选择地块后会自动填充"></el-input>
-            <!--<el-select v-model="pz_add" slot="append" placeholder="请选择"  value-key="id" class="select-width-me" size="small">-->
-            <!--<el-option v-for="item in ns_sp_list" :key="item.id" :label="item.goods_Name" :value="item" ></el-option>-->
-            <!--</el-select>-->
-
           </div>
         </div>
-
+        <div class="tjsf-div2-row">
+          <div class="left">生产批次号:</div>
+          <div class="right">
+            <el-select v-model="place_name_add" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
+              size="small" @change="changevalue()">
+              <el-option v-for="item in place_name_list" :key="item.id" :label="item.place_name" :value="item"></el-option>
+            </el-select>
+          </div>
+        </div>
         <!--溯源码数量-->
         <div class="tjsf-div2-row">
           <div class="left">溯源码数量:</div>
           <div class="right">
             <el-input v-model="apply_num_add" placeholder="请输入申请数量" size="small" maxlength="11"
-                      onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
-                      onblur="this.v();"></el-input>
+              onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"></el-input>
           </div>
         </div>
-
         <span slot="footer" class="dialog-footer">
-            <el-button @click="handleClose()" size="small">取 消</el-button>
-            <el-button type="primary" @click="addSymSubmit()" size="small">保存</el-button>
-      </span>
+          <el-button @click="handleClose()" size="small">取 消</el-button>
+          <el-button type="primary" @click="addSymSubmit()" size="small">保存</el-button>
+        </span>
       </el-dialog>
-
-
     </div>
-
   </div>
 </template>
 
@@ -691,11 +529,23 @@
 <style scoped lang='less'>
 
   @lz-filter-name-width:70px;
-
+  .search-btn{
+    margin-top: 2px;
+    margin-right: 10px;
+    color: #409EFF;
+    background: #fff;
+  }
+  .span-clear {
+    color: #999999;
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 14px;
+  }
   .lz-table-title {
-    margin-top: 20px;
+    padding: 0 10px;
     height: 40px;
     display: flex;
+    background: #fff;
     .lz-table-title-left {
       flex: 1;
       display: flex;
@@ -704,6 +554,8 @@
       .lz-span{
         font-size: 13px;
         margin-bottom: 2px;
+        padding-left: 10px;
+        border-left: 2px solid #409EFF;
       }
       .lz-feilei-wai{
         width: 25px;
@@ -730,10 +582,12 @@
   }
 
   .lz-filter {
+    padding: 10px;
+    margin-bottom: 10px;
     height: 130px;
     /*margin-top: 12px;*/
     font-size: 14px;
-    background-color: #F5F5F5;
+    background-color: #fff;
     display: flex;
     flex-direction: column;
     border: 1px solid #f5f5f5;
@@ -847,8 +701,6 @@
   /*内容*/
 
   .syacontent {
-    background: #fff;
-    padding: 10px;
     height: 100%;
   }
 
@@ -905,7 +757,8 @@
 
 
   .syocontent {
-    background-color: #F5F5F5;
+    padding: 10px;
+    background-color: #fff;
     border-top: 1px solid #f4f4f4;
     border-left: 1px solid #f4f4f4;
     border-right: 1px solid #f4f4f4;
@@ -957,9 +810,9 @@
 
   .pageBlock {
     height: 80px;
-    margin-top: 11px;
     display: flex;
     justify-content: center;
+    background: #fff;
   }
 
   .lz-template-color {

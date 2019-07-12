@@ -1,12 +1,13 @@
 // base url
-// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.1.45:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.1.48:8081/order_sht/';
+export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
-// 
+
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口
@@ -46,14 +47,19 @@ export const superEdit = baseUrl + 'function/update'; //编辑功能
 
 
 //“管理”菜单
+// 商户
 export const getAllBiz = baseUrl + 'manage/getAllBiz';// 查询商户列表
 export const insertBiz = baseUrl + 'manage/insertBiz';// 新增商户
 export const lookShop = baseUrl + 'manage/getBootListById';//新增商户-查看店铺
 export const getAllBizType = baseUrl + 'manage/getAllBizType';//新增商户-商户类型
 export const UpdateBizUser = baseUrl + 'manage/UpdateBizUser';// 商户详情 修改用户信息
 export const UpdateBizBooth = baseUrl + 'manage/UpdateBizBooth';// 商户详情 修改商铺信息
+// 供应商
 export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
 export const insertGys = baseUrl + 'manage/insertGys';// 新增供应商
+export const downloadGys = baseUrl + 'manage/downloadGys';// 下载供应商
+export const importGys = baseUrl + 'manage/importGys';// 导入供应商
+// 客户
 export const insertKh = baseUrl + 'manage/insertKh';// 新增客户
 export const deleteGys = baseUrl + 'manage/deleteGys';// 删除供应商/商户
 export const updateGys = baseUrl + 'manage/updateGys';// 编辑保存
@@ -61,6 +67,7 @@ export const supplierList = baseUrl + 'manage/getAllGysForMoreBiz';// 管理供�
 export const bindingSupplier = baseUrl + 'manage/getAllGysForBind';//管理供应商 - 绑定供应商列表
 export const saveBindinSupplier  = baseUrl + 'manage/insertGysForBind';//管理供应商 - 绑定供应商保存
 export const getCenterBussinessInfo  = baseUrl + 'manage/getCenterBussinessInfo';//// 营业执照号
+//商品
 export const entryGgoodsList = baseUrl + 'goods/getAllPurchaseGoodsForMoreBiz';// 管理商品 - 进货
 export const sellGoodsList = baseUrl + 'goods/getAllSalesGoodsForMoreBiz';// 管理商品 - 销售
 export const bindingGoods = baseUrl + 'goods/getAllGoodsForBind';// 管理商品 - 绑定商品列表
@@ -269,11 +276,21 @@ export const toStop = baseUrl + 'supplier/toStop' // 禁用
 
 // 生产
 export const getAllProduction = baseUrl + 'production/getAllProduction' // 生产查询
+export const queryGoodsinfo = baseUrl + 'production/queryGoodsinfo' // 搜索商品
+export const queryPurchaseGoods = baseUrl + 'production/queryPurchaseGoods' // 查询进货商品信息
+export const queryGoodsBatchId = baseUrl + 'production/queryGoodsBatchId' // 查询进货商品的批次号  选择批次号后填写重量
+export const insertProduction = baseUrl + 'production/insertProduction' // 新增生产任务
+export const queryPurchaseInfo = baseUrl + 'production/queryPurchaseInfo' // 查询进货信息
+export const deleteProduction = baseUrl + 'production/deleteProduction' // 删除生产任务
+export const downloadProduction = baseUrl + 'production/downloadProduction' // 下载文件
+export const downloadBatchProduction = baseUrl + 'production/downloadBatchProduction' // 批量下载文件
+export const findProduction = baseUrl + 'production/findProduction' // 查看生产详情
 // 资产
 export const queryAssetsUser = baseUrl3 + 'assets/queryAssetsUser' // 查询 所有资产用户信息（需要确定用户类型类型）
 export const queryAssetsConf = baseUrl3 + 'assets/queryAssetsConf' // 2.查询 资产状态、所属期 等查询条件下拉框
 export const queryAssetsType = baseUrl3 + 'assets/queryAssetsType' // 3.查询 资产类型树
 export const queryNodeBase = baseUrl3 + 'assets/queryNodeBaseHasAssets' // 4.查询 所有节点
+export const queryNodeBase2 = baseUrl3 + 'assets/queryNodeBase' // 4.查询 所有节点
 export const queryBusiness = baseUrl3 + 'assets/queryBusiness' // 5.查询 所有商户
 export const queryAssetsBase = baseUrl3 + 'assets/queryAssetsBase' // 6.查询资产信息
 export const downloadAssetsBase = baseUrl3 + 'assets/downloadAssetsBase' // 7.导出资产信息

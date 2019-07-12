@@ -8,6 +8,9 @@
         <el-form-item label="商品名称：">
           <el-input v-model="form.goodsName"></el-input>
         </el-form-item>
+        <el-form-item label="商品简称：">
+            <el-input v-model="form.j_name" clearable></el-input>
+          </el-form-item>
         <el-form-item label="图片：" v-if="showFile">
           <div class="box-fileimg">
             <figure class="image" v-if="imgUrl">
@@ -132,6 +135,7 @@
           goodsID:'',
           selectVarieties:[],
           goodsName:"",
+          j_name: "",
           gbCode:"",
           gbName:"",
 
@@ -214,6 +218,7 @@
         this.form.userdefine_code_two = this.$route.params.goodsMsg.userdefine_code_two 
         this.showFile = true
         this.form.goodsName = this.$route.params.goodsMsg.GOODS_NAME;
+        this.form.j_name = this.$route.params.goodsMsg.J_NAME
         if(this.$route.params.goodsMsg.level_id){
           let str = this.$route.params.goodsMsg.level_id;
           this.form.selectVarieties = [str.slice(0,2),str.slice(0,5),str.slice(0,8)];
@@ -484,6 +489,7 @@
               let params = {
                 id:'',
                 goodsName:this.form.goodsName,
+                j_name: this.form.j_name,
                 gbCode:this.form.gbCode,
                 price:this.form.price,
                 goodsUnit:this.form.specifications,
@@ -522,6 +528,7 @@
               let params = {
                 id:this.$route.params.goodsMsg.ID,
                 goodsName:this.form.goodsName,
+                j_name: this.form.j_name,
                 gbCode:this.form.gbCode,
                 price:this.form.price,
                 goodsUnit:this.form.specifications,

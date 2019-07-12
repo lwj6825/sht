@@ -13,6 +13,7 @@ import district from './district.js'
 import lzproduce from "./lzproduce.js";
 import farmwork from "./farmwork.js";
 import traceEquipment from "./traceEquipment.js"
+import szDetection from "./szDetection.js"
 // import farmworksy from "./farmworksy.js";
 import farmworkcommodity from "./farmworkcommodity.js";
 import farmworkreview from "./farmworkreview.js";
@@ -60,7 +61,8 @@ export default new Router({
         ...differentSz,
         ...assets,
         ...production,
-        ...traceEquipment
+        ...traceEquipment,
+        ...szDetection
       ]
     },
   ]

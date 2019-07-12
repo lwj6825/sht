@@ -5,11 +5,15 @@
     </div>
     <div class="option-wrapper" ref="optionWrapper">
       <div class="option-wrappers" ref="optionWrapper">
-        <div class="option">
+        <div class="search-val">
           <span class="option-title">商品编码</span>
           <el-input class="fill-input" v-model="goodsCode" clearable placeholder="请输入内容"></el-input>
           <span class="option-title">商品名称</span>
           <el-input class="fill-input" v-model="goodsName" clearable placeholder="请输入内容"></el-input>
+          <span class="option-title">商品简称</span>
+          <el-input class="fill-input" v-model="j_name" clearable placeholder="请输入内容"></el-input>
+        </div>
+        <div>
           <el-button type="primary" size="medium" class="import" style="margin-left: 10px;" @click="searchConditions">搜索</el-button>
           <el-button type="primary" size="medium" class="file-btn">导出</el-button>
           <span class="span-clear" @click="clearConditions">清空筛选条件</span>
@@ -42,6 +46,7 @@
         <el-table :data="dataList"  border :header-cell-style="rowClass">
           <el-table-column prop="GOODS_CODE" label="商品编码"> </el-table-column>
           <el-table-column prop="GOODS_NAME" label="商品名称"> </el-table-column>
+          <el-table-column prop="J_NAME" label="商品简称"> </el-table-column>
           <el-table-column prop="GB_NAME" label="品种" :formatter="formatter"> </el-table-column>
           <el-table-column prop="PRICE" label="价格"> </el-table-column>
           <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
@@ -82,7 +87,7 @@
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area';
   import {GetSupplier} from '../../js/district/district.js'
-  import {baseUrl} from '../../js/address/url.js'
+  import {baseUrl2} from '../../js/address/url.js'
   export default {
     name: "market",
     data() {
@@ -115,10 +120,13 @@
         loginName: '',
         fileMsg: '',
         goodsCode: '',
+        j_name: '',
+        node_id: ''
       }
     },
     created() {
       this.userId = localStorage.getItem('userId')
+      this.node_id = localStorage.getItem('loginId')
     },
     mounted() {    
       this.queryNameData = JSON.parse(localStorage.getItem('queryNameData'))
@@ -140,7 +148,7 @@
         this.getSales()
       },
       loadFun(){
-        window.location.href = baseUrl + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId
+        window.location.href = baseUrl2 + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId + '&node_id=' + this.node_id
       },
       fileFun(event){
         let param = this.$refs.file.files[0];
@@ -166,7 +174,7 @@
                   })
               })
             }  
-            let url = baseUrl + 'goods/importSaleAndOrigin'
+            let url = baseUrl2 + 'goods/importSaleAndOrigin'
             ajaxPost(url,formData,config)
               .then(res => {
                 this.boxShow = true;
@@ -307,7 +315,8 @@
           suppliersName:this.supplier,
           region:this.areaId,
           userId: this.userId,
-          total: ''
+          total: '',
+          j_name: this.j_name
         }
         sales(boothData)
           .then(res => {
@@ -499,8 +508,13 @@
       padding: 10px;
       background: #fff;
     }
-    .option{
-      height: 40px;
+    .option-wrappers{
+      display: flex;
+		  flex-wrap: wrap;
+      line-height: 40px;
+    }
+    .search-val{
+      width: 710px;
       line-height: 40px;
       font-size: 14px;
       overflow: hidden;
@@ -546,8 +560,7 @@
       border-color: #eaeaea;
     }
     .search-btn{
-      margin-left: 78px;
-      margin-right: 15px;
+     
     }
     .import{
       color: #409EFF;

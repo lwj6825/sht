@@ -110,7 +110,7 @@
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase,QueryBusiness,AssetsAdd,
+import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase2,QueryBusiness,AssetsAdd,
     QueryAssetsSpecifications,QueryAssetsNames,QueryAssetsManufacturers,} from '../../js/traceEquipment/traceEquipment.js'
 import {uploadPhotos} from '../../js/address/url.js'
 import axios from 'axios';
@@ -457,7 +457,7 @@ export default {
         },
         // 查询 所有节点
         getQueryNodeBase(){
-            QueryNodeBase('')
+            QueryNodeBase2('')
                 .then(res => {
                     // console.log(res)
                     this.nodeArr = res.data.nodeBase

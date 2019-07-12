@@ -249,9 +249,6 @@ export default {
             }
         },
         fileFun(event,ele){
-            this.$nextTick(()=>{            
-               
-            })
             const loading = this.$loading({
                 lock: true,
                 text: 'Loading',

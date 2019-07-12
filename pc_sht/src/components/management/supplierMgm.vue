@@ -25,7 +25,13 @@
         <p class="tz-title">全部供应商</p>
         <div>
           <el-button type="primary" size="medium" class="new-add"  @click="newSupplierMgm">{{addSupplier}}</el-button>
-          <!--<el-button type="primary" size="medium" class="import">批量导入</el-button>-->
+          <span class="submit">
+              批量导入
+              <form id="upload" enctype="multipart/form-data" method="post"> 
+                  <input type="file" class="file" ref="file" @change="fileFun($event)">
+              </form>
+          </span>
+          <el-button size="medium" class="import" @click="downloadFun">下载</el-button><!---->
         </div>
       </div>
       <div class="booth-management-msg">
@@ -63,9 +69,11 @@
 </template>
 
 <script>
-  import {allGys,deleGys} from "../../js/management/management.js";
+  import {allGys,deleGys,DownloadGys} from "../../js/management/management.js";
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area'
+  import axios from 'axios';
+  import {downloadGys,importGys} from '../../js/address/url.js'
   export default {
     name: "commodityMgm",
     data() {
@@ -89,7 +97,8 @@
         dataTotal:0,
         isShow: true,
         isRegion: '',
-        scShopId: ''
+        scShopId: '',
+        file: ''
       }
     },
     created() {
@@ -107,6 +116,62 @@
       }
     },
     methods: {
+      downloadFun(){
+        window.location.href = downloadGys + "?userId=" + this.userId + '&region=' + this.areaId + '&biz_name=' + this.gysName 
+          + '&concact_name=' + this.concactName + '&type=1' + '&shop_booth_id=' + this.areaId
+      },
+      fileFun(event){
+        let loading = this.$loading({
+          lock: true,
+          text: '导入中...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        let that = this
+        this.file = event.target.files[0];
+        let formData = new FormData();
+        formData.append('gysFile', this.file);   
+        formData.append('userId', this.userId);   
+        formData.append('region', this.areaId);   
+        formData.append('biz_name', this.gysName);   
+        formData.append('concact_name', this.concactName);   
+        formData.append('type', '1');   
+        formData.append('shop_booth_id', this.areaId);   
+        let config = {
+            headers:{'Content-Type':'multipart/form-data'}
+        };
+        const ajaxPost = function (url, params,config) {
+          return new Promise((resolve, reject) => {
+            axios
+              .post(url, params,{config})
+              .then((res) => {
+                  resolve(res.data)
+              })
+              .catch(() => {
+                  reject('error')
+              })
+          })
+        }  
+        let url = importGys;
+        ajaxPost(url,formData,config)
+          .then(res => {
+            console.log(res)
+            if(res.result == true){
+              loading.close();
+              this.$message.success(res.message);
+              that.getAllGys()
+            }else{
+              loading.close();
+              this.$message.error(res.message);
+            }
+            that.file = null
+          })
+          .catch(res => {
+            loading.close();
+            console.log(res)
+            this.$message.error("出错了");
+          })    
+        },
       getAllGys(){
         if(this.isRegion == 'false'){
           let boothData = {
@@ -282,6 +347,31 @@
         display: flex;
         width: 300px;
         justify-content: flex-end;
+        .submit{
+          margin: 0 10px;
+          position: relative;
+          display: inline-block;
+          width: 90px;
+          height: 30px;
+          line-height: 30px;
+          color: #409EFF;
+          background: #fff;
+          text-align: center;
+          overflow: hidden;
+          border-radius: 5px;
+          font-size: 14px;
+          box-sizing: border-box;
+          border: 1px solid #409EFF;
+          .file{
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 90px;
+            height: 36px;
+            opacity: 0;
+            background: rgba(0,0,0,0);
+          }
+        }
       }
     }
     .file-btn{
@@ -295,6 +385,7 @@
     .import{
       color: #409EFF;
       background: #fff;
+      border-color: #409EFF;
     }
     .span-clear {
       color: #999999;

@@ -24,10 +24,9 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="单据上传">
-                        <el-select v-model="form.upload" placeholder="请选择上传状态">
-                            <el-option label="全部" value="1"></el-option>
-                            <el-option label="已上传" value="2"></el-option>
-                            <el-option label="未上传" value="3"></el-option>
+                        <el-select v-model="form.upload" clearable placeholder="请选择上传状态">
+                            <el-option label="未上传" value="0"></el-option>
+                            <el-option label="已上传" value="1"></el-option>
                         </el-select>
                     </el-form-item>
                     <!--<el-form-item label="欠款">
@@ -400,6 +399,7 @@ export default {
                     page: this.page,
                     cols: this.cols,
                     buyer_booth_name: this.buyerName,
+                    is_oc_upload: this.form.upload
                 }
                 GetEntryTz(obj)
                     .then(res => {
@@ -418,6 +418,7 @@ export default {
                     page: this.page,
                     cols: this.cols,
                     buyer_booth_name: this.buyerName,
+                    is_oc_upload: this.form.upload
                 }
                 GetEntryTz(obj)
                     .then(res => {

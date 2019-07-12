@@ -1,4 +1,5 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
+import axios from 'axios';
 import {getAllBiz,lookShop,
   insertBiz,
   getAllGys,
@@ -16,7 +17,8 @@ import {getAllBiz,lookShop,
   insertKh,
   UpdateBizUser,
   UpdateBizBooth,
-  getAllBizType
+  getAllBizType,
+  downloadGys
 } from '../address/url.js';
 
 // 查询商户列表
@@ -49,6 +51,19 @@ export const updateBizBooth = function(params){
 // 新增供应商--
 export const insGys  = function(params) {
   return ajaxPost(insertGys,params)
+}
+// 下载供应商
+export const DownloadGys = function(form) {
+  return axios({ // 用axios发送post请求
+      method: 'post',
+      url: downloadGys, // 请求地址
+      data: form, // 参数
+      // responseType: 'blob', // 表明返回服务器返回的数据类型
+      responseType: 'arraybuffer',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
 }
 // ---新增客户 
 export const InsertKh  = function(params) {

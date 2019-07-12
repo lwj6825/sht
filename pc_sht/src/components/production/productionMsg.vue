@@ -27,8 +27,14 @@
                 </el-form>
                 <!--收起-->
                 <el-form ref="form" :inline="true" :model="form" label-width="90px" :style="show ? {display: 'none'} : {display: 'block'}">
-                    <el-form-item label="生产批次号" prop="name">
-                        <el-input v-model="form.productionCode" placeholder="输入生产批次号"></el-input>
+                    <el-form-item label="生产日期" style="width: 400px;" >
+                        <el-date-picker clearable style="width: 300px"
+                            v-model="form.dataTime" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn white-bth" @click="searchFun">搜索</el-button>
@@ -44,27 +50,50 @@
                 <p class="tz-title">全部生产任务</p>
                 <div>
                     <el-button type="primary" class="blue-bth" @click="addProductionFun">添加生产任务</el-button>
-                    <el-button type="primary" class="import white-bth">批量下载</el-button>
+                    <el-button type="primary" class="import white-bth" @click="dowoloadAllFun">批量下载</el-button>
                 </div>
             </div>
             <div class="tables" >
-                <el-table  :data="tableData" :header-cell-style="rowClass">
+                <el-table  :data="tableData" :header-cell-style="rowClass" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55"> </el-table-column>
                     <el-table-column prop="SC_DATE" label="生产日期"> </el-table-column>
                     <el-table-column prop="BATCH_ID" label="生产批次号"> </el-table-column>
                     <el-table-column prop="GOODS_NAME" label="销售商品"> </el-table-column>
                     <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
                     <el-table-column prop="NUMBER" label="销售数量"> </el-table-column>
+                    <el-table-column width='140' label="进货商品信息">
+                        <template slot-scope="scope">
+                            <p class="btn" @click="viewFun2(scope.row)">查看进货商品信息</p>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作" width='200'>
                         <template slot-scope="scope">
-                            <el-button type="text" size="small">查看&emsp;|</el-button>
-                            <el-button type="text" size="small">删除&emsp;|</el-button>
-                            <el-button type="text" size="small">下载文件</el-button>
+                            <el-button type="text" size="small" @click="viewFun(scope.row)">查看&emsp;|</el-button>
+                            <el-button type="text" size="small" @click="deleteFun(scope.row)">删除&emsp;|</el-button>
+                            <el-button type="text" size="small" @click="dowoloadFun(scope.row)">下载文件</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
             <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination><!---->
+            <div class="passwrd" v-if="isShow">
+                <div class="text">
+                    <div class="box-title">
+                        <p class="tit">查看进货商品信息</p>
+                        <p class="iconfont icon-close close" @click="closeFun"></p>
+                    </div>
+                    <div class="view-table">
+                        <el-table :data="tableData2" :header-cell-style="rowClass">
+                            <el-table-column prop="or_goods_name" label="进货商品"> </el-table-column>
+                            <el-table-column prop="or_unit" label="规格"> </el-table-column>
+                            <el-table-column prop="or_number" label="数量"> </el-table-column>
+                            <el-table-column prop="or_batch_id" label="进货批次号"> </el-table-column>
+                        </el-table>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     </div>
 </template>
@@ -95,7 +124,18 @@ function formatDate(date) {
     var second = date.getSeconds(); 
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
-import {GetAllProduction} from '../../js/production/production.js';
+function getNowFormatDate() {//获取当前时间
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
+    var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
+    var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
+            + " "  + date.getHours()  + seperator2  + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate
+}
+import {GetAllProduction,QueryPurchaseInfo,DownloadProduction,DownloadBatchProduction,DeleteProduction} from '../../js/production/production.js';
 export default {
     name:"productionMsg",
     data() {
@@ -114,6 +154,9 @@ export default {
             page: 1,
             cols: 15,
             num: 0,
+            isShow: false,
+            tableData2: [],
+            selectArr: []
         }
     },
     mounted() {
@@ -126,6 +169,91 @@ export default {
         this.getDataFun()
     },
     methods: {
+        deleteFun(ele){
+            let params = {
+                id: ele.ID,
+                userdefine_batch_id: ele.BATCH_ID
+            }
+            DeleteProduction(params)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.page = 1
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch(() => {
+                    this.$message.error("出错啦!");
+                })
+        },
+        dowoloadAllFun(){
+            let arr = [],str = '';
+            if(this.selectArr.length > 0){
+                this.selectArr.forEach(val => {
+                    arr.push(val.ID)
+                })
+                if(arr.length > 0){
+                    str = arr.join(',')
+                    let params = {
+                        ids: str
+                    }
+                    DownloadBatchProduction(params)
+                        .then(res => {
+                            this.downFile(res)
+                        })
+                        .catch(() => {
+                            this.$message.error("出错啦!");
+                        })
+                }
+            }
+        },
+        dowoloadFun(ele){
+            let params = {
+                id: ele.ID
+            }
+            DownloadProduction(params)
+                .then(res => {
+                    this.downFile(res)
+                })
+                .catch(() => {
+                    this.$message.error("出错啦!");
+                })
+        },
+        downFile (data) {
+            if (!data) { return }
+            let url = window.URL.createObjectURL(new Blob([data]))
+            let link = document.createElement('a')
+            link.style.display = 'none';
+            link.href = url
+            link.setAttribute('download', 'download.txt')
+            
+            document.body.appendChild(link)
+            link.click()
+        },
+        getDataFun2(batch_id){
+            let obj = {
+                userdefine_batch_id: batch_id
+            }
+            QueryPurchaseInfo(obj)
+                .then(res => {
+                    this.tableData2 = res.data.dataList
+                })
+                .catch(() => {
+                    this.$message.error("出错啦!");
+                })
+        },
+        viewFun2(ele){
+            this.getDataFun2(ele.BATCH_ID)
+            this.isShow = true
+        },
+        closeFun(){
+            this.isShow = false
+        },
+        viewFun(ele){
+            this.$router.push({name: 'viewProduction',params: {param: ele}})
+        },
         getDataFun(){
             let obj = {
                 node_id: this.node_id,
@@ -145,9 +273,8 @@ export default {
                     this.$message.error("出错啦!");
                 })
         },
-        
         handleSelectionChange(val) {
-            console.log(val)
+            this.selectArr = val
         },
         handleCurrentChange(val) {
             this.page = val
@@ -177,7 +304,7 @@ export default {
             this.getDataFun()
         },
         addProductionFun(){
-            // this.$router.push({name: "addProduction"})
+            this.$router.push({name: "addProduction"})
         },
         timeChange(ele){
             if(this.form.dataTime){
@@ -205,6 +332,7 @@ export default {
 </script>
 
 <style scoped lang='less'>
+    @import '../../assets/css/common.css';
     .content{
         .searchs{
             padding: 10px 0;
@@ -265,11 +393,63 @@ export default {
                     justify-content: flex-end;
                 }
             }
+            
         }
         .el-pagination{
             text-align: center;
         }
-        
+        .btn{
+            color: #666;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .passwrd{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 666;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            .text{
+                position: relative;
+                top: 50%;
+                left: 50%;
+                margin-top: -200px;
+                margin-left: -300px;
+                width: 600px;
+                height: 400px;
+                background: #fff;
+                .box-title{
+                    margin: 0 10px;
+                    height: 40px;
+                    border-bottom: 1px solid #ccc;
+                    .tit{
+                        float: left;
+                        margin-left: 10px;
+                        width: 330px;
+                        line-height: 40px;
+                        font-size: 14px;
+                    }
+                }
+                .close{
+                    float: right;
+                    width: 40px;
+                    height: 40px;
+                    text-align: center;
+                    line-height: 40px;
+                    font-size: 16px;
+                    cursor: pointer;
+                }
+                .view-table{
+                    margin: 10px;
+                    height: 330px;
+                    overflow: auto;
+                }
+            }
+        }
     }
 
 </style>

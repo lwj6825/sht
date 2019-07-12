@@ -2,6 +2,7 @@ import production from '../components/production/production.vue'
 import productionMsg from '../components/production/productionMsg.vue'
 import viewProduction from '../components/production/viewProduction.vue'
 import addProduction from '../components/production/addProduction.vue'
+import szProcessing from '../components/production/szProcessing.vue'
 
 export default [
     {
@@ -24,15 +25,24 @@ export default [
             url:'addProduction',
         }
     },
-    // {
-    //     path: 'production/viewProduction',
-    //     component: resolve => require(['@/components/production/viewProduction'],resolve),
-    //     name:'viewProduction',
-    //     meta:{
-    //         id:'159',
-    //         node:'production',
-    //         url:'viewProduction',
-    //     }
-    // },
-    
+    {
+        path: 'production/viewProduction',
+        component: resolve => require(['@/components/production/viewProduction'],resolve),
+        name:'viewProduction',
+        meta:{
+            id:'274',
+            node:'production',
+            url:'viewProduction',
+        }
+    },
+    {
+        path: 'production/szProcessing',
+        component: resolve => require(['@/components/production/szProcessing'],resolve),
+        name:'SzProcessing',
+        meta:{
+            // id:'274',
+            node:'production',
+            url:'szProcessing',
+        }
+    },
 ]

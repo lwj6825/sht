@@ -87,8 +87,24 @@
           </div>
 
         </el-form-item>
-
-
+        <el-form-item label="检测项目">
+          <el-input v-model="check_project"></el-input>
+        </el-form-item>
+        <el-form-item label="检测值">
+          <el-input v-model="standard_value"></el-input>
+        </el-form-item>
+        <el-form-item label="检测标准">
+          <el-input v-model="check_standard"></el-input>
+        </el-form-item>
+        <el-form-item label="检测结果值">
+          <el-input v-model="check_res"></el-input>
+        </el-form-item><!---->
+        <el-form-item label="检测人">
+          <el-input v-model="check_person"></el-input>
+        </el-form-item>
+        <el-form-item label="检测机">
+          <el-input v-model="check_mechanism"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitFormLz">保存</el-button>
         </el-form-item>
@@ -127,6 +143,12 @@
         submit_biz_id: '',
         submit_shop_booth_id: '',
         local_booth_name_options: '',
+        check_project: '', // 检测项目
+        standard_value: '', // 检测值
+        check_standard: '',  //检测标准
+        check_res: '', // 检测结果值 
+        check_person: '', // 检测人
+        check_mechanism: '',  //检测机
 
 
         local_stall_no: '',
@@ -273,7 +295,12 @@
         formData.append('remark', this.local_remark);
         formData.append('img', this.file);
         formData.append('check_date', this.local_check_date);
-
+        formData.append('check_project', this.check_project); // 检测项目
+        formData.append('standard_value', this.standard_value); // 检测值
+        formData.append('check_standard', this.check_standard); //检测标准
+        formData.append('check_res', this.check_res); //检测结果值 
+        formData.append('check_person', this.check_person); // 检测人
+        formData.append('check_mechanism', this.check_mechanism); //检测机
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'

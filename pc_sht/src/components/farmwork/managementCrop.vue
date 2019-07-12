@@ -146,7 +146,6 @@ export default {
             }
             .search-btn{
                 margin-top: 2px;
-                padding: 0px 15px;
                 margin-right: 10px;
                 color: #409EFF;
                 background: #fff;

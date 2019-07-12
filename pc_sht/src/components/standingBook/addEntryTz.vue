@@ -1,111 +1,10 @@
 <template>
-    <div class="content addEntryTz">
-        <div class="msg">
-            <el-form ref="form" :model="form" class="form2" label-width="180px" size="mini" style="width: 1000px;">
-                <el-form-item label="商户信息" v-if="isShow">
-                    <span>
-                        <el-select filterable v-model="form.value" @change="selectGet" size="mini" placeholder="请选择"
-                        :style="add ? {display: 'block'} : {display: 'none'}">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.userId"
-                            :label="item.bootList[0].booth_name"
-                            :value="item.bootList[0].shop_booth_id">
-                            </el-option>
-                        </el-select>
-                        <p :style="add ? {display: 'none'} : {display: 'block'}">{{merchants}}</p>
-                    </span>
-                </el-form-item>
-                <el-form-item label="供应商" v-if="show.gys">
-                    <el-select v-model="form.gys" filterable allow-create placeholder="请选择供应商" size="mini" @change="selectSuppliers"
-                    :style="add ? {display: 'block'} : {display: 'none'}">
-                        <el-option  v-for="item in suppliersList" :key="item.shop_concacts_id" :label="item.biz_name" :value="item.biz_name" >
-                        </el-option>
-                    </el-select>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.gys}}</p>
-                </el-form-item>
-                <el-form-item label="进货日期" v-if="show.in_date">
-                    <el-date-picker :style="add ? {display: 'block'} : {display: 'none'}"
-                        v-model="form.in_date"
-                        type="date"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择日期">
-                    </el-date-picker>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.in_date}}</p>
-                </el-form-item>
-                <el-form-item label="运输车牌号" v-if="show.transport">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.transport"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.transport}}</p>
-                </el-form-item>
-                <el-form-item label="生产单位" v-if="show.ghdw">
-                    <el-select v-model="form.ghdw" filterable placeholder="生产单位" size="mini" @change="selectGhdw"
-                    :style="add ? {display: 'block'} : {display: 'none'}">
-                        <el-option  v-for="val in dwArr" :key="val.ID" :label="val.SUPPLIER_NAME" :value="val.SUPPLIER_NAME" >
-                        </el-option>
-                    </el-select> 
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.ghdw}}</p>
-                </el-form-item>
-                <el-form-item label="单据上传" v-if="show.djsc">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.djsc"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.djsc}}</p>
-                </el-form-item>
-                <el-form-item label="进货（厂家销售）凭证" v-if="show.cjxspz">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.cjxspz"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.cjxspz}}</p>
-                </el-form-item>
-                <el-form-item label="检测情况" v-if="show.jcqk">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.jcqk"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.jcqk}}</p>
-                </el-form-item>
-                <el-form-item label="动物检疫合格证明" v-if="show.dwjyhg">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.dwjyhg"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.dwjyhg}}</p>
-                </el-form-item>
-                <el-form-item label="产地证明" v-if="show.cdzm">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.cdzm"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.cdzm}}</p>
-                </el-form-item>
-                <el-form-item label="产地形式" v-if="show.cdxs">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.cdxs"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.cdxs}}</p>
-                </el-form-item>
-                <el-form-item label="肉品品质检疫合格证" v-if="show.rqqzjyhgz">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.rqqzjyhgz"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.rqqzjyhgz}}</p>
-                </el-form-item>
-                <el-form-item label="备注" v-if="show.remark">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.remark"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.remark}}</p>
-                </el-form-item>
-                <el-form-item label="打印" v-if="show.print">
-                    <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.print"></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.print}}</p>
-                </el-form-item>
-                <el-form-item label="产地：">
-                    <el-cascader :style="add ? {display: 'block'} : {display: 'none'}" :options="addrOptions" v-model="form.origin_name" placeholder="省/市/县" class="address" clearable :props="props" change-on-select></el-cascader>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.area_origin_name}}</p>
-                </el-form-item>
-            </el-form>
-
+    <div class="content addEntryTz" v-if="pageShow">
+        <!--<div class="msg">
             <el-form ref="form2" class="form2" :model="form2" label-width="180px" size="mini" style="width: 1000px;">
-                <el-form-item class="form2child"
-                    v-for="(value) in form2.tzUserdefineList"
-                    :label="value.TYPE_NAME" :style="value.IS_SHOW == '0' ? {display: 'none'} : {display: 'block'}"
-                    :key="value.ID">
-                    <el-date-picker v-if="value.PROPERTY_TYPE === 'date' "
-                        v-model="value.values"
-                        type="date"
-                        :style="add ? {display: 'block'} : {display: 'none'}"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择日期">
-                    </el-date-picker>
-                    <el-input v-model="value.values" :style="add ? {display: 'block'} : {display: 'none'}" v-else></el-input>
-                    <p :style="add ? {display: 'none'} : {display: 'block'}">{{value.values}}</p>
-                </el-form-item>
+                
             </el-form>
-            <!--<el-form ref="form3" class="form3" :model="form3" label-width="180px" size="mini" style="width: 800px;">
+            <el-form ref="form3" class="form3" :model="form3" label-width="180px" size="mini" style="width: 800px;">
                 <el-form-item label="付款方式">
                     <el-select :style="add ? {display: 'block'} : {display: 'none'}" v-model="form3.payWay" size="mini" clearable placeholder="请选择">
                         <el-option value="1" label="现金"></el-option>
@@ -116,38 +15,186 @@
                     <p :style="add ? {display: 'none'} : {display: 'block'}" v-else-if="form3.payWay == '2'">转账</p>
                     <p :style="add ? {display: 'none'} : {display: 'block'}" v-else>欠款</p>
                 </el-form-item>
-            </el-form>-->
-        </div>
-        <div class="table">
-            <div class="title">
-                <el-input prefix-icon="el-icon-search" placeholder="搜索商品" v-model="searchVal" clearable @focus="focusFun" @keyup.enter.native="searchFun" :style="add ? {display: 'block'} : {display: 'none'}"></el-input>
-                <div>
-                    <el-button size="mini">下载模板</el-button>
-                    <el-button size="mini">批量导入</el-button>
+            </el-form>
+        </div>-->
+        <div class="box">
+            <div class="list-title">台账信息</div>
+            <div class="view">
+                <div class="list">
+                    <div class="data" v-if="isShow">
+                        <div class="title">商户信息</div>
+                        <div class="msg">
+                            <el-select filterable v-model="form.value" @change="selectGet" size="mini" placeholder="请选择"
+                            :style="add ? {display: 'block'} : {display: 'none'}">
+                                <el-option
+                                v-for="item in options"
+                                :key="item.userId"
+                                :label="item.bootList[0].booth_name"
+                                :value="item.bootList[0].shop_booth_id">
+                                </el-option>
+                            </el-select>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{merchants ? merchants : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.gys">
+                        <div class="title">供应商</div>
+                        <div class="msg">
+                            <el-select v-model="form.gys" filterable allow-create placeholder="请选择供应商" size="mini" @change="selectSuppliers"
+                            :style="add ? {display: 'block'} : {display: 'none'}">
+                                <el-option  v-for="item in suppliersList" :key="item.shop_concacts_id" :label="item.biz_name" :value="item.biz_name" >
+                                </el-option>
+                            </el-select>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.gys ? form.gys : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.in_date">
+                        <div class="title">进货日期</div>
+                        <div class="msg">
+                            <el-date-picker :style="add ? {display: 'block'} : {display: 'none'}"
+                                v-model="form.in_date"
+                                type="date"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                placeholder="选择日期">
+                            </el-date-picker>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.in_date ? form.in_date : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.transport">
+                        <div class="title">运输车牌号</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.transport"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.transport ? form.transport : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.ghdw">
+                        <div class="title">生产单位</div>
+                        <div class="msg">
+                            <el-select v-model="form.ghdw" filterable placeholder="生产单位" size="mini" @change="selectGhdw"
+                            :style="add ? {display: 'block'} : {display: 'none'}">
+                                <el-option  v-for="val in dwArr" :key="val.ID" :label="val.SUPPLIER_NAME" :value="val.SUPPLIER_NAME" >
+                                </el-option>
+                            </el-select> 
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.ghdw ? form.ghdw : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data">
+                        <div class="title">产地</div>
+                        <div class="msg">
+                            <el-cascader :style="add ? {display: 'block'} : {display: 'none'}" filterable :options="addrOptions" v-model="form.origin_name" placeholder="省/市/县" class="address" clearable :props="props" change-on-select></el-cascader>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.area_origin_name ? form.area_origin_name: '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.djsc">
+                        <div class="title">单据上传</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.djsc"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.djsc ? form.djsc : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.cjxspz">
+                        <div class="title">进货（厂家销售）凭证</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.cjxspz"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.cjxspz ? form.cjxspz : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.jcqk">
+                        <div class="title">检测情况</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.jcqk"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.jcqk ? form.jcqk : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.dwjyhg">
+                        <div class="title">动物检疫合格证明</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.dwjyhg"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.dwjyhg ? form.dwjyhg : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.cdzm">
+                        <div class="title">产地证明</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.cdzm"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.cdzm ? form.cdzm : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.cdxs">
+                        <div class="title">产地形式</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.cdxs"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.cdxs ? form.cdxs : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.rqqzjyhgz">
+                        <div class="title">肉品品质检疫合格证</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.rqqzjyhgz"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.rqqzjyhgz ? form.rqqzjyhgz : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.remark">
+                        <div class="title">备注</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.remark"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.remark ? form.remark : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data" v-if="show.print">
+                        <div class="title">打印</div>
+                        <div class="msg">
+                            <el-input :style="add ? {display: 'block'} : {display: 'none'}" v-model="form.print"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{form.print ? form.print : '无'}}</p>
+                        </div>
+                    </div>
+                    <div class="data"v-for="(value) in form2.tzUserdefineList" 
+                    :style="value.IS_SHOW == '0' ? {display: 'none'} : {display: 'block'}" :key="value.ID">
+                        <div class="title">{{value.TYPE_NAME}}</div>
+                        <div class="msg">
+                            <el-date-picker v-if="value.PROPERTY_TYPE == 'date' "
+                                v-model="value.values" type="date" :style="add ? {display: 'block'} : {display: 'none'}" 
+                                format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期">
+                            </el-date-picker>
+                            <el-input v-model="value.values" :style="add ? {display: 'block'} : {display: 'none'}" v-else></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{value.values ? value.values : '无'}}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div :style="add ? {display: 'block'} : {display: 'none'}">
-                <el-button type="primary" size="mini" plain @click="focusFun" style="margin-top: 10px;" :style="tableShow ? {display: 'none'} : {display: 'block'}">添加商品</el-button>
-            </div>
-            <el-table class="show-good" :data="tableData" :style="tableShow ? {display: 'none'} : {display: 'block'}" style="width: 100%">
+        </div>
+        <div class="table">
+            <div class="list-title">商品信息<span>(已选{{count}}种商品，合计￥{{totalPrice}})</span></div>
+            <el-table class="show-good" :data="tableData" :style="tableShow ? {display: 'none'} : {display: 'block'}" style="width: 100%"
+            :header-cell-style="rowClass">
                 <el-table-column v-if="showId" prop="shopId">
                 </el-table-column>
                 <el-table-column v-for="(val,ind) in tableHead" :label="val.TYPE_NAME" :prop="val.NAME" :key="ind"
                 v-if="val.IS_SHOW === '1'">
                     <template slot-scope="scope">
-                        <el-date-picker v-if="val.PROPERTY_TYPE === 'date' "
-                            v-model="tableData[scope.$index][ind]"
-                             :style="add ? {display: 'block'} : {display: 'none'}"
-                            type="date" size="mini"
-                            format="yyyy-MM-dd" style="width: 100%;min-width: 130px"
-                            value-format="yyyy-MM-dd"
-                            placeholder="选择日期">
-                        </el-date-picker>
-                        <p v-else-if="val.TYPE_NAME == '进货商品'" :style="add ? {display: 'block'} : {display: 'none'}">{{tableData[scope.$index][ind]}}</p>
-                        <p v-else-if="val.TYPE_NAME == '规格'" :style="add ? {display: 'block'} : {display: 'none'}">{{tableData[scope.$index][ind]}}</p>
-                        <el-input v-model="tableData[scope.$index][ind]" size="mini" v-else style="width: 100%;"
-                        :style="add ? {display: 'block'} : {display: 'none'}"></el-input>
-                        <p :style="add ? {display: 'none'} : {display: 'block'}">{{tableData[scope.$index][ind]}}</p>
+                        <!--<p v-else-if="val.TYPE_NAME == '进货商品'" :style="add ? {display: 'block'} : {display: 'none'}">
+                        
+                        {{tableData[scope.$index][ind]}}</p>-->
+                        <el-select v-model="tableData[scope.$index][ind]" filterable v-if="val.TYPE_NAME == '进货商品'" 
+                        :style="add ? {display: 'block'} : {display: 'none'}" size="mini" @change="addGoods(scope.row[0],scope.$index)">
+                            <el-option  v-for="(val,index) in tableData2" :key="index" :label="val.GOODS_NAME" :value="val.GOODS_NAME" >
+                            </el-option>
+                        </el-select> 
+                        <div v-if="scope.row[0]">
+                        
+                            <el-date-picker v-if="val.PROPERTY_TYPE === 'date'"
+                                v-model="tableData[scope.$index][ind]"
+                                :style="add ? {display: 'block'} : {display: 'none'}"
+                                type="date" size="mini"
+                                format="yyyy-MM-dd" style="width: 100%;min-width: 130px"
+                                value-format="yyyy-MM-dd"
+                                placeholder="选择日期">
+                            </el-date-picker>
+                            <p v-else-if="val.TYPE_NAME == '规格'" :style="add ? {display: 'block'} : {display: 'none'}">{{tableData[scope.$index][ind]}}</p>
+                            <el-input v-model="tableData[scope.$index][ind]" size="mini" v-else-if="val.TYPE_NAME != '进货商品'" style="width: 100%;"
+                            :style="add ? {display: 'block'} : {display: 'none'}"></el-input>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{tableData[scope.$index][ind]}}</p>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100" v-if="add">
@@ -156,7 +203,11 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="good" :style="tableShow ? {display: 'block'} : {display: 'none'}" >
+            <div :style="add ? {display: 'block'} : {display: 'none'}">
+                <el-button class="add-btn" type="primary" plain size="medium" plain @click="focusFun" style="margin-top: 10px;" 
+                :style="tableShow ? {display: 'none'} : {display: 'block'}"> + 添加商品</el-button>
+            </div>
+            <!--<div class="good" :style="tableShow ? {display: 'block'} : {display: 'none'}" >
                 <el-table :data="tableData2" style="width: 100%;" >
                     <el-table-column prop="GOODS_NAME" label="商品名称"> </el-table-column>
                     <el-table-column prop="GB_NAME" :formatter="formatter" label="品种"> </el-table-column>
@@ -170,11 +221,10 @@
                 </el-table>
                 <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
                 layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
-            </div>
-            <div class="btn"><!--,实付金额￥{{payAmount}}，欠款￥{{arrears}}-->
-                <p>选择商品(共{{tableData.length}}种商品，合计￥{{totalPrice}})</p>
+            </div>-->
+            <div class="save-btn">
                 <el-button type="primary" @click="saveFieldFun" size="small">{{saveBtn}}</el-button>
-                <!--<el-button type="primary" :style="add ? {display: 'block'} : {display: 'none'}" size="small">保存并记下一单</el-button>-->
+                <el-button v-if="saveBtn == '保存' && this.ids && !types" @click="clearFun" size="small">取消</el-button>
             </div>
         </div>
     </div>
@@ -282,7 +332,7 @@ export default {
             areaIds:'', // 商户
             bigAreaId:'', // 大区userId
             page: 1,
-            cols: 15,
+            cols: 10000,
             totalPrice: 0,
             userId: '',
             merchants: '',
@@ -309,6 +359,9 @@ export default {
             suppliersId: '9999999999999',
             is_oc_upload: '',
             ids: '',
+            types: '',
+            count: 0,
+            pageShow: false
         }
     },
     created() {
@@ -343,6 +396,7 @@ export default {
         console.log(this.areaId)
         console.log(this.bigAreaId)
         if(this.$route.params.types == 'again'){
+            this.types = 'again'
             this.add = true
             this.saveBtn = '保存'
         }else if(this.$route.params.param){
@@ -355,7 +409,12 @@ export default {
             handler: function(newVal,oldVal){
                 let amount_money = 0
                 let total_price = 0
+                this.count = 0
                 newVal.forEach(v => {
+                    
+                    if(v[0] != ''){
+                        this.count++
+                    }
                     let total_price = (v[2]*v[4])
                     amount_money += total_price
                     this.totalPrice = parseFloat(amount_money).toFixed(2)
@@ -373,6 +432,11 @@ export default {
         }
     },
     methods: {
+        clearFun(){
+            this.getFieldFun()
+            this.saveBtn = '修改'
+            this.add = false
+        },
         getAddrList(){//获取地区列表
             getAddr()
                 .then(res => {
@@ -601,36 +665,130 @@ export default {
         searchFun(){
             this.getGoodsFun()
         },
-        focusFun(ele){
-            this.tableShow = true
+        focusFun(){
+            let obj = {
+                0: '',
+                1: '',
+                2: '',
+                3: '',
+                4: '',
+                5: '',
+                shopIds: '',
+            };
+            this.tableData.push(obj)                                         
         },
         // 添加商品
-        addGoods(ele){
-            this.tableShow = false
-            let tableHead = this.tableHead,
-                obj = {};
-            for(var key in tableHead){
-                if(tableHead[key].TYPE_NAME == '进货商品'){
-                    obj[0] = ele.GOODS_NAME
-                }else if(tableHead[key].TYPE_NAME == '规格'){
-                    obj[1] = ele.GOODS_UNIT
-                }else if(tableHead[key].TYPE_NAME == '价格'){
-                    obj[2] = ele.PRICE
-                }else if(tableHead[key].TYPE_NAME == '生产日期'){
-                    obj[3] = ''
-                }else if(tableHead[key].TYPE_NAME == '数量'){
-                    obj[4] = 1
-                }else if(tableHead[key].TYPE_NAME == '保质期'){
-                    obj[5] = ''
+        addGoods(ele,ele2){
+            let states = false;
+            let arr = [],newArr = [];
+            this.tableData.forEach((val,index) => {
+                arr.push(val[0])
+                // {
+                //     this.$message({
+                //         message: '不能选择同一商品',
+                //         type: 'warning',
+                //         offset: 200,
+                //     });
+                //     states = true
+                //     return
+                // }
+                    // if(val.shopIds && ele2 != (index+1)){
+                    //     console.log(index)
+                    //     console.log(ele2)
+                    //     if(ele == val[0]){
+                    //         console.log(1)
+                    //         this.$message({
+                    //             message: '不能选择同一商品',
+                    //             type: 'warning',
+                    //             offset: 200,
+                    //         });
+                    //         states = true
+                    //         return
+                    //     }
+                    // }
+                // // if(this.tableData[index].shopIds && this.tableData[index+1].shopIds){
+                //     if(this.tableData[index][0] == this.tableData[index+1][0]){
+                //         this.$message({
+                //             message: '不能选择同一商品',
+                //             type: 'warning',
+                //             offset: 200,
+                //         });
+                //         states = true
+                //         return
+                //     }
+                // }
+            })
+            arr.forEach(val => {
+                if(newArr.indexOf(val) == -1) {
+                    newArr.push(val)
+                }else{
+                    this.$message({
+                        message: '不能选择同一商品',
+                        type: 'warning',
+                        offset: 200,
+                    });
+                    states = true
+                    return
                 }
+            })
+            if(states == false){
+                this.tableData2.forEach(val => {
+                    if(ele == val.GOODS_NAME){
+                        this.tableData.forEach(val2 => {
+                            if(ele == val2[0]){
+                                val2[1] = val.GOODS_UNIT
+                                val2[2] = val.PRICE
+                                val2.shopIds = val.ID
+                                val2[3] = ''
+                                val2[4] = ''
+                                val2[5] = ''
+                            }
+                        })
+                    }
+                })
+                
+            }else{
+                this.tableData.splice(ele2,1)
+                this.tableData.length - 1
             }
-            obj.shopIds = ele.ID
-            this.tableData.unshift(obj)
-            if(this.searchVal){
-                console.log(123)
-                this.searchVal = ''
-                this.getGoodsFun()
-            }
+            // this.tableShow = false
+            // let tableHead = this.tableHead,
+            //     obj = {};
+            // for(var key in tableHead){
+            //     // if(tableHead[key].TYPE_NAME == '进货商品'){
+            //     //     obj[0] = ele.GOODS_NAME
+            //     // }else if(tableHead[key].TYPE_NAME == '规格'){
+            //     //     obj[1] = ele.GOODS_UNIT
+            //     // }else if(tableHead[key].TYPE_NAME == '价格'){
+            //     //     obj[2] = ele.PRICE
+            //     // }else if(tableHead[key].TYPE_NAME == '生产日期'){
+            //     //     obj[3] = ''
+            //     // }else if(tableHead[key].TYPE_NAME == '数量'){
+            //     //     obj[4] = 1
+            //     // }else if(tableHead[key].TYPE_NAME == '保质期'){
+            //     //     obj[5] = ''
+            //     // }
+            //     if(tableHead[key].TYPE_NAME == '进货商品'){
+            //         obj[0] = ''
+            //     }else if(tableHead[key].TYPE_NAME == '规格'){
+            //         obj[1] = ''
+            //     }else if(tableHead[key].TYPE_NAME == '价格'){
+            //         obj[2] = ''
+            //     }else if(tableHead[key].TYPE_NAME == '生产日期'){
+            //         obj[3] = ''
+            //     }else if(tableHead[key].TYPE_NAME == '数量'){
+            //         obj[4] = 1
+            //     }else if(tableHead[key].TYPE_NAME == '保质期'){
+            //         obj[5] = ''
+            //     }
+            // }
+            // // obj.shopIds = ele.ID
+            // console.log(obj)
+            // this.tableData.unshift(obj)
+            // if(this.searchVal){
+            //     this.searchVal = ''
+            //     this.getGoodsFun()
+            // }
         },
         // 获取商品列表
         getGoodsFun(){
@@ -674,6 +832,12 @@ export default {
         },
         // 获取字段列表
         getFieldFun(){
+            let loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             let obj = {
                 userId: this.userId,
                 tz_type: "1",
@@ -682,7 +846,13 @@ export default {
             let tzList = []
             UpdatePc(obj)
                 .then(res => {
+                    this.pageShow = true
                     this.tableHead = res.data.goods_property
+                    if(res.data.tzUserdefineList){
+                        res.data.tzUserdefineList.forEach(val => {
+                            val.values = val.values ? val.values : ''
+                        })
+                    }
                     this.form2.tzUserdefineList = res.data.tzUserdefineList
                     this.tzList = res.data.tzList
                     tzList = res.data.tzList
@@ -732,6 +902,7 @@ export default {
                         let param = this.$route.params.param
                         this.tzId = param.tz_id
                         this.ids = param.id
+                        this.detailTzFun()
                         this.form.value = param.buyer_booth_id
                         this.form.remark = param.remark
                         this.merchants = param.buyer_booth_name
@@ -739,7 +910,6 @@ export default {
                         this.form3.payWay = param.pay_way
                         this.form.suppliersName = param.seller_booth_name
                         this.form.in_date = param.in_date
-                        this.detailTzFun()
                         if(this.$route.params.types == 'again'){
                             this.tzId = ''
                         }
@@ -750,9 +920,11 @@ export default {
                             }
                         })
                     }
+                    loading.close();
                 })
                 .catch(res => {
                     console.log(res)
+                    loading.close();
                 })
         },
         // 获取商户
@@ -778,6 +950,18 @@ export default {
         // 保存商品
         saveFieldFun(){
             console.log(this.ghdwId)
+            // if(this.form.value == ''){
+            //     this.$message.error('商户信息不能为空');
+            //     return
+            // }
+            if(this.form.gys == ''){
+                this.$message.error('供应商不能为空');
+                return
+            }
+            if(this.form.ghdw == ''){
+                this.$message.error('生产单位不能为空');
+                return
+            }
             // console.log(this.form2)
             let addrArr = [], originArr = [];
                 this.addrOptions.forEach(ele => {
@@ -798,30 +982,33 @@ export default {
             if(this.saveBtn == '保存'){
                 let in_date = '',
                     noteMsg = '',
-                    gys = '';
-
+                    gys = '',
+                    state = false;
+                        
                 //     value, gys, in_date, transport, ghdw, djsc, cjxspz, jcqk, dwjyhg, cdzm, cdxs, rqqzjyhgz, remark, print
                 
                 let userdefine = '{';
-                if(this.form2.tzUserdefineList.length == 0){
-                    userdefine = ''
-                }else{
-                    this.form2.tzUserdefineList.forEach(val => {
-                        if(val.IS_SHOW === '1'){
-                            if(val.values == undefined){
-                                userdefine += '"' + val.TYPE_NAME + '":"' + '' + '",'
-                            }else{
-                                userdefine += '"' + val.TYPE_NAME + '":"' + val.values + '",'
-                            }
-                        }
-                    })
-                    userdefine += '}'
-                }
                 let str = ''
-                if(userdefine != '{}'){
-                    str = userdefine.substr(0, userdefine.length-2)+userdefine.substr(userdefine.length-1,userdefine.length)
-                }else{
-                    str = userdefine
+                if(this.form2.tzUserdefineList){
+                    if(this.form2.tzUserdefineList.length == 0){
+                        userdefine = ''
+                    }else{
+                        this.form2.tzUserdefineList.forEach(val => {
+                            if(val.IS_SHOW === '1'){
+                                if(val.values == undefined){
+                                    userdefine += '"' + val.TYPE_NAME + '":"' + '' + '",'
+                                }else{
+                                    userdefine += '"' + val.TYPE_NAME + '":"' + val.values + '",'
+                                }
+                            }
+                        })
+                        userdefine += '}'
+                    }
+                    if(userdefine != '{}'){
+                        str = userdefine.substr(0, userdefine.length-2)+userdefine.substr(userdefine.length-1,userdefine.length)
+                    }else{
+                        str = userdefine
+                    }
                 }
                 if(this.isRegion == 'false'){
                     var buyer_booth_id = this.scShopId,
@@ -836,8 +1023,24 @@ export default {
                     this.tableData.forEach(ele => {
                         // this.tableData2.forEach(val => {
                         //     if(ele[0] == val.GOODS_NAME){
-                                goodObj +=  '{"0":"' + ele[0] + '","1":"' + ele[1] + '","2":"' + ele[2] + '","3":"' + ele[3] 
-                                    + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            if(ele[0] == ''){
+                                this.$message.error('商品不能为空');
+                                state = true
+                                return
+                            }
+                            // if(ele[2] == '' || ele[2] == null){
+                            //     this.$message.error('价格不能为空');
+                            //     state = true
+                            //     return
+                            // }
+                            if(ele[4] == ''){
+                                this.$message.error('数量不能为空');
+                                state = true
+                                return
+                            }
+                            goodObj +=  '{"0":"' + ele[0] + '","1":"' + ele[1] + '","2":"' + (ele[2] ? ele[2] : 0) + '","3":"' + ele[3] 
+                                + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            
                             // }
                         // })
                     })
@@ -849,101 +1052,103 @@ export default {
                     }
                 }
                 let debt_money = parseFloat(this.totalPrice-this.form3.payAmount).toFixed(2)
-                if(this.tzId == ''){
-
-                    let obj = {
-                        buyer_booth_id: buyer_booth_id, // 商户
-                        buyer_booth_name: buyer_booth_name,
-                        seller_booth_id: this.suppliersId, //卖方id 供应商9999999999999
-                        seller_booth_name: this.form.gys,
-                        amount_money: this.totalPrice,	//应收金额
-                        actual_money: this.payAmount,	//实收金额
-                        discount_rate: '',	//折扣
-                        pay_way:this.form3.payWay,		//付款方式  现金/转账
-                        remark: this.form.remark,		// 备注
-                        creater_id:localStorage.getItem('userId'),		//创建人
-                        pay_state:Math.abs(this.arrears)>0 ?1:2,	//支付状态(是否欠款) 1欠款 2结清
-                        debt_money: this.arrears, // this.form3.arrears
-                        goods: this.tzId == '' ? goodStr : JSON.stringify(this.tableData),
-                        in_date: this.form.in_date,
-                        tz_id: this.tzId,
-                        flag: 'pc',
-                        userdefine: str,
-                        transport: this.form.transport, // 车牌号
-                        suppiler_id: this.ghdwId, // 供货单位
-                        suppiler_name: this.form.ghdw,
-                        area_origin_id: this.form.origin_name[this.form.origin_name.length -1],//产地
-                        area_origin_name: originArr.join(''),
-                        region: this.areaId,
-                        is_oc_upload: this.is_oc_upload
+                
+                if(state == false){
+                    if(this.tzId == ''){
+                        let obj = {
+                            buyer_booth_id: buyer_booth_id, // 商户
+                            buyer_booth_name: buyer_booth_name,
+                            seller_booth_id: this.suppliersId, //卖方id 供应商9999999999999
+                            seller_booth_name: this.form.gys,
+                            amount_money: this.totalPrice,	//应收金额
+                            actual_money: this.payAmount,	//实收金额
+                            discount_rate: '',	//折扣
+                            pay_way:this.form3.payWay,		//付款方式  现金/转账
+                            remark: this.form.remark,		// 备注
+                            creater_id:localStorage.getItem('userId'),		//创建人
+                            pay_state:Math.abs(this.arrears)>0 ?1:2,	//支付状态(是否欠款) 1欠款 2结清
+                            debt_money: this.arrears, // this.form3.arrears
+                            goods: this.tzId == '' ? goodStr : JSON.stringify(this.tableData),
+                            in_date: this.form.in_date,
+                            tz_id: this.tzId,
+                            flag: 'pc',
+                            userdefine: str,
+                            transport: this.form.transport, // 车牌号
+                            suppiler_id: this.ghdwId, // 供货单位
+                            suppiler_name: this.form.ghdw,
+                            area_origin_id: this.form.origin_name[this.form.origin_name.length -1],//产地
+                            area_origin_name: originArr.join(''),
+                            region: this.areaId,
+                            is_oc_upload: this.is_oc_upload
+                        }
+                        console.log(obj)
+                        TzAdd(obj)
+                            .then(res => {
+                                // console.log(res)
+                                if(this.tzId != ''){
+                                    if (res.result == true) {
+                                        this.$message.success('进货台账编辑成功');
+                                        this.$router.push('entryTz')
+                                    }else{
+                                        this.$message.error('进货台账编辑失败');
+                                    }
+                                }else{
+                                    if (res.result == true) {
+                                        this.$message.success(res.message);
+                                        this.$router.push('entryTz')
+                                    }else{
+                                        this.$message.error(res.message);
+                                    }
+                                }
+                            })
+                    }else{
+                        let obj = {
+                            buyer_booth_id: buyer_booth_id, // 商户
+                            buyer_booth_name: buyer_booth_name,
+                            seller_booth_id: this.suppliersId, //卖方id 供应商9999999999999
+                            seller_booth_name: this.form.gys,
+                            amount_money: this.totalPrice,	//应收金额
+                            actual_money: this.payAmount,	//实收金额
+                            discount_rate: '',	//折扣
+                            pay_way:this.form3.payWay,		//付款方式  现金/转账
+                            remark: this.form.remark,		// 备注
+                            creater_id:localStorage.getItem('userId'),		//创建人
+                            pay_state:Math.abs(this.arrears)>0 ?1:2,	//支付状态(是否欠款) 1欠款 2结清
+                            debt_money: this.arrears, // this.form3.arrears
+                            goods: goodStr,
+                            in_date: this.form.in_date,
+                            tz_id: this.tzId,
+                            flag: 'pc',
+                            userdefine: str,
+                            transport: this.form.transport, // 车牌号
+                            suppiler_id: this.ghdwId, // 供货单位
+                            suppiler_name: this.form.ghdw,
+                            area_origin_id: this.form.origin_name[this.form.origin_name.length -1],//产地
+                            area_origin_name: originArr.join(''),
+                            region: this.areaId,
+                            is_oc_upload: this.is_oc_upload
+                        }
+                        console.log(obj)
+                        TzUpdate(obj)
+                            .then(res => {
+                                // console.log(res)
+                                if(this.tzId != ''){
+                                    if (res.result == true) {
+                                        this.$message.success('进货台账编辑成功');
+                                        this.$router.push('entryTz')
+                                    }else{
+                                        this.$message.error('进货台账编辑失败');
+                                    }
+                                }else{
+                                    if (res.result == true) {
+                                        this.$message.success(res.message);
+                                        this.$router.push('entryTz')
+                                    }else{
+                                        this.$message.error(res.message);
+                                    }
+                                }
+                            })
                     }
-                    console.log(obj)
-                    TzAdd(obj)
-                        .then(res => {
-                            // console.log(res)
-                            if(this.tzId != ''){
-                                if (res.result == true) {
-                                    this.$message.success('进货台账编辑成功');
-                                    this.$router.push('entryTz')
-                                }else{
-                                    this.$message.error('进货台账编辑失败');
-                                }
-                            }else{
-                                if (res.result == true) {
-                                    this.$message.success(res.message);
-                                    this.$router.push('entryTz')
-                                }else{
-                                    this.$message.error(res.message);
-                                }
-                            }
-                        })
-                }else{
-                    let obj = {
-                        buyer_booth_id: buyer_booth_id, // 商户
-                        buyer_booth_name: buyer_booth_name,
-                        seller_booth_id: this.suppliersId, //卖方id 供应商9999999999999
-                        seller_booth_name: this.form.gys,
-                        amount_money: this.totalPrice,	//应收金额
-                        actual_money: this.payAmount,	//实收金额
-                        discount_rate: '',	//折扣
-                        pay_way:this.form3.payWay,		//付款方式  现金/转账
-                        remark: this.form.remark,		// 备注
-                        creater_id:localStorage.getItem('userId'),		//创建人
-                        pay_state:Math.abs(this.arrears)>0 ?1:2,	//支付状态(是否欠款) 1欠款 2结清
-                        debt_money: this.arrears, // this.form3.arrears
-                        goods: goodStr,
-                        in_date: this.form.in_date,
-                        tz_id: this.tzId,
-                        flag: 'pc',
-                        userdefine: str,
-                        transport: this.form.transport, // 车牌号
-                        suppiler_id: this.ghdwId, // 供货单位
-                        suppiler_name: this.form.ghdw,
-                        area_origin_id: this.form.origin_name[this.form.origin_name.length -1],//产地
-                        area_origin_name: originArr.join(''),
-                        region: this.areaId,
-                        is_oc_upload: this.is_oc_upload
-                    }
-                    console.log(obj)
-                    TzUpdate(obj)
-                        .then(res => {
-                            // console.log(res)
-                            if(this.tzId != ''){
-                                if (res.result == true) {
-                                    this.$message.success('进货台账编辑成功');
-                                    this.$router.push('entryTz')
-                                }else{
-                                    this.$message.error('进货台账编辑失败');
-                                }
-                            }else{
-                                if (res.result == true) {
-                                    this.$message.success(res.message);
-                                    this.$router.push('entryTz')
-                                }else{
-                                    this.$message.error(res.message);
-                                }
-                            }
-                        })
                 }
                 //TzUpdate
             }else{
@@ -1013,7 +1218,13 @@ export default {
                     console.log(res)
                     this.$message.error("出错了")
                 })
-        }
+        },
+        rowClass({ row, rowIndex}) {
+            return {
+                background: '#f2f2f2',
+                color: '#333'
+            }
+        },
 
     }
 
@@ -1022,12 +1233,10 @@ export default {
 
 <style lang='less' scoped>
     .content{
-        background: #fff;
         height: 100%;
-        overflow: auto;
         .msg{
             font-size: 14px;
-            margin-top: 20px;
+            margin: 12px 0;
             .form2{
                 .form2child{
                     float: left;
@@ -1043,9 +1252,42 @@ export default {
                 width: 170px;
             }
         }
+        .box{
+            clear: both;
+            padding: 10px 20px;
+            background: #fff;
+            .list{
+                margin-top: 10px;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .data{
+                margin: 5px 20px;
+                width: 20%;
+                font-size: 14px;
+                .title{
+                    margin-bottom: 10px;
+                }
+                .msg{
+                    color: #999;
+                }
+                .msg-item{
+                    margin: 10px 0;
+                    width: 500px;
+                    display: flex;
+                }
+            }
+            .btn{
+                clear: both;
+                margin-right: 100px;
+                text-align: right;
+            }
+        }
         .table{
             clear: both;
-            margin: 0 16px;
+            margin: 10px 0;
+            padding: 0 16px;
+            background: #fff;
             .title{
                 display: flex;
                 margin: 10px 0;
@@ -1069,8 +1311,30 @@ export default {
                 font-size: 14px;
             }
         }
+        .el-table{
+            margin-top: 20px;
+        }
+        .save-btn{
+            margin-top: 10px;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .add-btn{
+            margin: 10px 0;
+            width: 100%;
+        }
         .el-pagination{
             text-align: center;
+        }
+        .list-title{
+            padding-left: 20px;
+            line-height: 40px;
+            border-bottom: 1px solid #e4e7ed;
+            span{
+                padding-left: 10px;
+                font-size: 14px;
+                color: #666;
+            }
         }
     }
 </style>
@@ -1080,12 +1344,13 @@ export default {
         line-height: 30px;
     }
     .el-form-item{
-        width: 400px;
+        width: 25%;
     }
-    .good{
-        .el-table td{
-            padding: 0;
-        }
+    .el-table td{
+        padding: 8px 0 !important;
+    }
+    .el-cascader{
+        line-height: 30px;
     }
 }
 </style>

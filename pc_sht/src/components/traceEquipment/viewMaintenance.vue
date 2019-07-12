@@ -309,7 +309,7 @@
 </template>
 
 <script>
-import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase,QueryBusiness,AssetsUpdate,QueryMaintainId,DeleteMaintain,
+import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase2,QueryBusiness,AssetsUpdate,QueryMaintainId,DeleteMaintain,
     QueryAssetsSpecifications,QueryAssetsNames,QueryAssetsManufacturers,} from '../../js/traceEquipment/traceEquipment.js'
 import {uploadPhotos} from '../../js/address/url.js'
 import axios from 'axios';
@@ -735,7 +735,7 @@ export default {
         },
         // 查询 所有节点
         getQueryNodeBase(){
-            QueryNodeBase('')
+            QueryNodeBase2('')
                 .then(res => {
                     // console.log(res)
                     this.nodeArr = res.data.nodeBase
@@ -899,15 +899,18 @@ export default {
                 text-align: right;
             }
         }
+        .list-title{
+            padding-left: 20px;
+            line-height: 40px;
+            border-bottom: 1px solid #e4e7ed;
+        }
+        .view{
+            margin-top: 10px;
+        }
         .tab{
             margin: 10px 0;
             width: 100%;
             background: #fff;
-            .list-title{
-                padding-left: 20px;
-                line-height: 40px;
-                border-bottom: 1px solid #ccc;
-            }
             .tab-list{
                 display: flex;
                 flex-wrap: wrap;

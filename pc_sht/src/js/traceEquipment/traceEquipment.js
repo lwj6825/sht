@@ -5,7 +5,7 @@ import {baseUrl,queryAssetsUser,queryAssetsConf,queryAssetsType,queryNodeBase,qu
     queryMaintaininfoListByAssetsId,updateMoreAssetsStatus,inspectMoreAssets,addinspect,addAssetsType,setAssetsConf,deleteAssetsConf,
     queryInspect,queryInspectId,downloadInspect,deleteInspect,queryMaintain,bar_code,maintainAdd,downloadMaintain,queryMaintainId,
     deleteMaintain,queryInspectionRecord,importMaintain,queryMaintainName,updateAssetsType,deleteAssetsType,updateAssetsConf,
-    queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,
+    queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2
     } from "../address/url";
     
 // 查询 所有资产用户信息（需要确定用户类型类型）
@@ -23,6 +23,10 @@ export const QueryAssetsType = function(params) {
 // 查询 所有节点
 export const QueryNodeBase = function(params) {
     return ajaxGet(queryNodeBase +'?'+ params)
+}
+// 查询 所有节点 --- 新增
+export const QueryNodeBase2 = function(params) {
+    return ajaxGet(queryNodeBase2 +'?'+ params)
 }
 // 查询 所有商户
 export const QueryBusiness = function(params) {

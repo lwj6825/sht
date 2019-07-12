@@ -14,6 +14,9 @@ import ManageSuppliers from '@/components/management/manageSuppliers'
 import ManageGoods from '@/components/management/manageGoods'
 import MerchantsInfor from '@/components/management/merchantsInfor'
 import supplyUnit from '../components/management/supplyUnit.vue'
+import szViewEnterprise from '../components/management/szViewEnterprise.vue'
+import szEnterpriseList from '../components/management/szEnterpriseList.vue'
+import szAddEnterprise from '../components/management/szAddEnterprise.vue'
 
 export default [
     {
@@ -164,6 +167,36 @@ export default [
             id:'267',
             node:'management',
             url:'supplyUnit',
+        }
+    },
+    {
+        path: 'management/szViewEnterprise',
+        component: resolve => require(['@/components/management/szViewEnterprise'],resolve),
+        name:'SzViewEnterprise',
+        meta:{
+            // id:'132',
+            node:'management',
+            url:'szViewEnterprise',
+        }
+    },
+    {
+        path: 'management/szEnterpriseList',
+        component: resolve => require(['@/components/management/szEnterpriseList'],resolve),
+        name:'SzEnterpriseList',
+        meta:{
+            // id:'133',
+            node:'management',
+            url:'szEnterpriseList',
+        }
+    },
+    {
+        path: 'management/szAddEnterprise',
+        component: resolve => require(['@/components/management/szAddEnterprise'],resolve),
+        name:'SzAddEnterprise',
+        meta:{
+            // id:'267',
+            node:'management',
+            url:'szAddEnterprise',
         }
     }
   ]

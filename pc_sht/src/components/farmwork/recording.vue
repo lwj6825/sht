@@ -1,272 +1,160 @@
 <template>
-  <div class="syacontent">
+  <div class="syacontent recording">
     <div class="rcbody">
-
-
-      <!--<el-button type="primary" @click="addView()" size="small">新增地块</el-button>-->
-
-
-
       <!--加验证新增地块-->
-      <el-dialog
-        title="新增地块"
-        :visible.sync="centerDialogVisible"
-        :before-close="handleClose"
-        :close-on-click-modal = "isclick"
+      <el-dialog title="新增地块" :visible.sync="centerDialogVisible" :before-close="handleClose" :close-on-click-modal = "isclick"
         width="650px">
-
         <div class="lz-dialog-content">
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px">
             <!--所属合作社-->
-            <el-form-item label="所属合作社:" prop="hzs_name_local">
-              <el-select v-model="ruleForm.hzs_name_local" placeholder="请选择所属合作社" value-key="userId"
-                         class="select-width-me" filterable size="small">
-                <el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name"
-                           :value="item"></el-option>
+            <el-form-item label="所属企业:" prop="hzs_name_local">
+              <el-select v-model="ruleForm.hzs_name_local" placeholder="请选择合作社" value-key="userId"class="select-width-me" 
+              filterable size="small">
+                <el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <!--地块名称-->
             <el-form-item label="地块名称:" prop="place_name_add" class="lz-item-set">
-              <el-input v-model="ruleForm.place_name_add" placeholder="请输入地块名称" size="small"
-                        class="select-width-me"></el-input>
+              <el-input v-model="ruleForm.place_name_add" placeholder="请输入地块名称" size="small" class="select-width-me"></el-input>
             </el-form-item>
-
             <!--面积-->
-            <el-form-item label="面积:" prop="area_add" class="lz-item-set">
+            <el-form-item label="面积(亩):" prop="area_add" class="lz-item-set">
               <el-input v-model="ruleForm.area_add" placeholder="请输入面积" size="small" class="select-width-me"></el-input>
             </el-form-item>
-
             <!--品种-->
             <el-form-item label="品种:" prop="goods_name_search" class="lz-item-set">
-              <el-select v-model="ruleForm.goods_name_search" placeholder="请选择品种"
-                         class="select-width-me" filterable size="small" value-key="id">
-                <el-option v-for="item in ns_sp_list_type" :key="item.id" :label="item.goods_Name"
-                           :value="item"></el-option>
-                           <!--:value="item.goods_Name"></el-option>-->
+              <el-select v-model="ruleForm.goods_name_search" placeholder="请选择品种" class="select-width-me" filterable 
+              size="small" value-key="id">
+                <el-option v-for="item in ns_sp_list_type" :key="item.id" :label="item.goods_Name" :value="item"></el-option>
               </el-select>
-
-              <!--<el-select v-model="pz_add" slot="append" placeholder="请选择"  value-key="id" class="select-width-me" size="small">-->
-              <!--<el-option v-for="item in ns_sp_list" :key="item.id" :label="item.goods_Name" :value="item" ></el-option>-->
-              <!--</el-select>-->
-
             </el-form-item>
-
             <!--预计采摘时间-->
             <el-form-item label="预计采摘时间:" required class="lz-item-set">
-
               <el-col>
                 <el-form-item prop="pick_date_add">
-                  <!--<el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1"-->
-                  <!--style="width: 100%;"></el-date-picker>-->
-
-                  <el-date-picker
-                    v-model="ruleForm.pick_date_add"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    placeholder="选择日期" class="select-width-me"
-                    size="small"
-                  >
-                  </el-date-picker>
+                  <el-date-picker v-model="ruleForm.pick_date_add" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" 
+                  class="select-width-me" size="small" > </el-date-picker>
                 </el-form-item>
               </el-col>
-
-
             </el-form-item>
-
             <!--预产量-->
-            <el-form-item label="预产量(公斤):" prop="yield_add" class="lz-item-set">
-              <el-input v-model="ruleForm.yield_add" placeholder="请输入预产量" size="small"
-                        class="select-width-me"></el-input>
+            <el-form-item label="预产量(kg):" prop="yield_add" class="lz-item-set">
+              <el-input v-model="ruleForm.yield_add" placeholder="请输入预产量" size="small" class="select-width-me"></el-input>
             </el-form-item>
-
             <!--地块负责人-->
             <el-form-item label="地块负责人:" prop="fzr_add" class="lz-item-set">
-              <el-input v-model="ruleForm.fzr_add" placeholder="请输入地块负责人" size="small"
-                        class="select-width-me"></el-input>
+              <el-input v-model="ruleForm.fzr_add" placeholder="请输入地块负责人" size="small" class="select-width-me"></el-input>
             </el-form-item>
-
             <!--联系方式-->
             <el-form-item label="联系方式:" prop="telephone_add" class="lz-item-set">
-              <el-input v-model="ruleForm.telephone_add" placeholder="请输入电话" size="small" maxlength="11"
-                        class="select-width-me"></el-input>
+              <el-input v-model="ruleForm.telephone_add" placeholder="请输入电话" size="small" maxlength="11" class="select-width-me"></el-input>
             </el-form-item>
-
-
-            <!--<div class="lz-addfoot">-->
-            <!--<el-form-item >-->
-            <!--<el-button type="primary" @click="submitForm('ruleForm')" size="small">保存</el-button>-->
-            <!--<el-button @click="resetForm('ruleForm')" size="small">取消</el-button>-->
-            <!--</el-form-item>-->
-            <!--</div>-->
-
+            <el-form-item label="地块介绍:" class="lz-item-set">
+              <el-input v-model="ruleForm.dkjs" type="textarea" class="select-width-me"></el-input>
+            </el-form-item>
+            <el-form-item label="上传图片:">
+              <div class="msg-item">   
+                <div class="img-list">
+                  <ul>
+                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                      <figure class="image">
+                        <p class="icon-delete" @click="removeFun(index)">-</p><!---->
+                        <img :src="item.img_url">
+                      </figure>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="submit">
+                    上传图片
+                    <form id="upload" enctype="multipart/form-data" method="post"> 
+                      <input type="file" class="file" ref="file" @change="fileFun($event)">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </el-form-item>
           </el-form>
-
         </div>
         <div class="lz-addfoot">
           <el-button type="primary" @click="submitForm('ruleForm')" size="small">保存</el-button>
           <el-button @click="resetForm('ruleForm')" size="small">取消</el-button>
         </div>
       </el-dialog>
-
       <!--加验证编辑地块-->
-      <el-dialog
-        title="编辑地块"
-        :visible.sync="centerEditDialogVisible"
-        :before-close="handleCloseEdit"
-        :close-on-click-modal = "isclick"
+      <el-dialog title="编辑地块" :visible.sync="centerEditDialogVisible" :before-close="handleCloseEdit" :close-on-click-modal="isclick"
         width="650px">
-
         <div class="lz-dialog-content">
           <el-form :model="ruleFormEdit" :rules="rules" ref="ruleFormEdit" label-width="120px">
             <!--所属合作社-->
-            <el-form-item label="所属合作社:" >
-
+            <el-form-item label="所属企业:" >
               <el-select v-model="hzs_name_local_bianji" class="select-width-me" filterable size="small">
                 <el-option v-for="item in plotHzsDataListEdit" :key="item.userId" :label="item.booth_name"
-                           :value="item.userId"></el-option>
-              </el-select>
-
-              <!--<el-select v-model="ruleFormEdit.hzs_name_local" :placeholder="ruleFormEdit.ns_hzs_Edit"-->
-              <!--value-key="userId"-->
-              <!--class="select-width-me" filterable size="small">-->
-              <!--<el-option v-for="item in plotHzsDataListEdit" :key="item.userId" :label="item.booth_name"-->
-              <!--:value="item"></el-option>-->
-              <!--</el-select>-->
-
-
+                  :value="item.userId"></el-option></el-select>
             </el-form-item>
-
-
-            <!--更换思路之前-->
-            <!--<el-form-item label="所属合作社:" prop="hzs_name_local">-->
-              <!--&lt;!&ndash;@change="hzsName_change"&ndash;&gt;-->
-              <!--&lt;!&ndash;<el-select v-model="ruleFormEdit.hzs_name_local_edit"  value-key="userid"&ndash;&gt;-->
-              <!--<el-select v-model="ruleFormEdit.hzs_name_local" :placeholder="ruleFormEdit.ns_hzs_Edit"-->
-                         <!--value-key="userId"-->
-                         <!--class="select-width-me" filterable size="small">-->
-                <!--<el-option v-for="item in plotHzsDataListEdit" :key="item.userId" :label="item.booth_name"-->
-                           <!--:value="item"></el-option>-->
-              <!--</el-select>-->
-
-
-            <!--</el-form-item>-->
             <!--地块名称-->
             <el-form-item label="地块名称:" prop="place_name_add" class="lz-item-set">
-              <el-input v-model="ruleFormEdit.place_name_add" placeholder="请输入地块名称" size="small"
-                        class="select-width-me"></el-input>
+              <el-input v-model="ruleFormEdit.place_name_add" placeholder="请输入地块名称" size="small" class="select-width-me"></el-input>
             </el-form-item>
-
             <!--面积-->
-            <el-form-item label="面积:" prop="area_add" class="lz-item-set">
-              <el-input v-model="ruleFormEdit.area_add" placeholder="请输入面积" size="small"
-                        class="select-width-me"></el-input>
+            <el-form-item label="面积(亩):" prop="area_add" class="lz-item-set">
+              <el-input v-model="ruleFormEdit.area_add" placeholder="请输入面积" size="small" class="select-width-me"></el-input>
             </el-form-item>
-
             <!--品种-->
             <el-form-item label="品种:"  >
-
               <el-select v-model="pz_name_local_bianji" class="select-width-me"  size="small">
-                <el-option v-for="item in ns_sp_list_type" :key="item.id" :value="item.id" :label="item.goods_Name">
-
-                </el-option>
+                <el-option v-for="item in ns_sp_list_type" :key="item.id" :value="item.id" :label="item.goods_Name"></el-option>
               </el-select>
-
             </el-form-item>
-
-
-            <!--<el-form-item label="品种:" prop="goods_name_search" class="lz-item-set">-->
-              <!--&lt;!&ndash;<el-select v-model="ruleFormEdit.goods_name_search" :placeholder="ruleFormEdit.pz_add_Edit"&ndash;&gt;-->
-              <!--<el-select v-model="ruleFormEdit.goods_name_search" :placeholder="ruleFormEdit.pz_add_Edit"-->
-                         <!--class="select-width-me" filterable size="small" value-key="id" @change="pzxuanze()">-->
-                <!--<el-option v-for="item in ns_sp_list_type" :key="item.id" :label="item.goods_Name"-->
-                           <!--:value="item">{{item.goods_Name}}-->
-                <!--</el-option>-->
-              <!--</el-select>-->
-
-            <!--</el-form-item>-->
-
-            <!--<el-form-item label="品种:" prop="goods_name_search" class="lz-item-set">-->
-              <!--<el-select v-model="ruleForm.goods_name_search" placeholder="请选择品种"-->
-                         <!--class="select-width-me" filterable size="small" value-key="id">-->
-                <!--<el-option v-for="item in ns_sp_list_type" :key="item.id" :label="item.goods_Name"-->
-                           <!--:value="item"></el-option>-->
-                <!--&lt;!&ndash;:value="item.goods_Name"></el-option>&ndash;&gt;-->
-              <!--</el-select>-->
-
-            <!--预计采摘时间-->
             <!--预计采摘时间-->
             <el-form-item label="预计采摘时间:"  class="lz-item-set">
-
               <el-col>
                 <el-form-item >
-
-                  <el-date-picker
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    v-model="pick_date_add"
-                    class="select-width-me"
-                    size="small"
-                    :clearable="isclick"
-                  >
-                  </el-date-picker>
-
-                  <!--<el-date-picker-->
-                  <!--v-model="ruleFormEdit.pick_date_add"-->
-                  <!--type="date"-->
-                  <!--value-format="yyyy-MM-dd"-->
-                  <!--:placeholder="ruleFormEdit.editDate"-->
-                  <!--class="select-width-me"-->
-                  <!--size="small"-->
-                  <!--&gt;-->
-                  <!--</el-date-picker>-->
+                  <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="pick_date_add" class="select-width-me" size="small"
+                    :clearable="isclick"></el-date-picker>
                 </el-form-item>
               </el-col>
-
-
             </el-form-item>
-
-
-
-            <!--更新前采摘时间-->
-            <!--<el-form-item label="预计采摘时间:" required class="lz-item-set">-->
-
-              <!--<el-col>-->
-                <!--<el-form-item prop="pick_date_add">-->
-                  <!--&lt;!&ndash;<el-date-picker type="date" placeholder="选择日期" v-model="ruleFormEdit.date1"&ndash;&gt;-->
-                  <!--&lt;!&ndash;style="width: 100%;"></el-date-picker>&ndash;&gt;-->
-
-                  <!--<el-date-picker-->
-                    <!--v-model="ruleFormEdit.pick_date_add"-->
-                    <!--type="date"-->
-                    <!--value-format="yyyy-MM-dd"-->
-                    <!--:placeholder="ruleFormEdit.editDate" class="select-width-me"-->
-                    <!--size="small"-->
-                  <!--&gt;-->
-                  <!--</el-date-picker>-->
-                <!--</el-form-item>-->
-              <!--</el-col>-->
-
-
-            <!--</el-form-item>-->
-
             <!--预产量-->
-            <el-form-item label="预产量(公斤):" prop="yield_add" class="lz-item-set">
-              <el-input v-model="ruleFormEdit.yield_add" placeholder="请输入预产量" size="small"
-                        class="select-width-me"></el-input>
+            <el-form-item label="预产量(kg):" prop="yield_add" class="lz-item-set">
+              <el-input v-model="ruleFormEdit.yield_add" placeholder="请输入预产量" size="small" class="select-width-me"></el-input>
             </el-form-item>
 
             <!--地块负责人-->
             <el-form-item label="地块负责人:" prop="fzr_add" class="lz-item-set">
-              <el-input v-model="ruleFormEdit.fzr_add" placeholder="请输入地块负责人" size="small"
-                        class="select-width-me"></el-input>
+              <el-input v-model="ruleFormEdit.fzr_add" placeholder="请输入地块负责人" size="small" class="select-width-me"></el-input>
             </el-form-item>
 
             <!--联系方式-->
             <el-form-item label="联系方式:" prop="telephone_add" class="lz-item-set">
-              <el-input v-model="ruleFormEdit.telephone_add" placeholder="请输入电话" size="small" maxlength="11"
-                        class="select-width-me"></el-input>
+              <el-input v-model="ruleFormEdit.telephone_add" placeholder="请输入电话" size="small" maxlength="11" 
+                class="select-width-me"></el-input>
             </el-form-item>
-
+            <el-form-item label="地块介绍:" class="lz-item-set">
+              <el-input v-model="ruleForm.dkjs" type="textarea" class="select-width-me"></el-input>
+            </el-form-item>
+            <el-form-item label="上传图片:">
+              <div class="msg-item">   
+                <div class="img-list">
+                  <ul>
+                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                      <figure class="image">
+                        <p class="icon-delete" @click="removeFun(index)">-</p><!---->
+                        <img :src="item.img_url">
+                      </figure>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="submit">
+                    上传图片
+                    <form id="upload" enctype="multipart/form-data" method="post"> 
+                      <input type="file" class="file" ref="file" @change="fileFun($event)">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </el-form-item>
           </el-form>
 
         </div>
@@ -276,54 +164,43 @@
           <el-button @click="resetFormEdit('ruleFormEdit')" size="small">取消</el-button>
         </div>
       </el-dialog>
-
-
-
       <!--筛选条件重新布局-->
       <div class="lz-filter">
         <div class="lz-filter-one">
           <div class="lz-filter-one-style">
             <div class="lz-filter-name" >地块名称</div>
-            <el-input v-model="place_name" placeholder="输入地块名称" size="mini" style="width: 200px"></el-input>
+            <el-input v-model="place_name" placeholder="输入地块名称" size="mini" style="width: 170px"></el-input>
           </div>
           <div class="lz-filter-one-style">
-            <div class="lz-filter-name" >创建日期</div>
-
+            <div class="lz-filter-name" >创建时间</div>
+            <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd" type="daterange" 
+              @change="timeChange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+            </el-date-picker><!--
             <el-date-picker
               v-model="cjsj"
               type="date"
               value-format="yyyy-MM-dd"
               placeholder="选择日期" class="my-el-date-picker" size="mini" style="width: 200px">
-            </el-date-picker>
-
+            </el-date-picker>-->
           </div>
           <div class="lz-filter-one-style">
-            <div class="lz-filter-name-two" >所属合作社</div>
+            <div class="lz-filter-name-two" >所属企业</div>
             <el-select v-model="hzs_name_local" slot="append" placeholder="请选择" value-key="userId"
-                       class="select-width-me-one" size="mini" clearable filterable style="width: 200px">
-              <el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name"
-                         :value="item"></el-option>
+              class="select-width-me-one" size="mini" clearable filterable style="width: 170px">
+              <el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name" :value="item"></el-option>
             </el-select>
           </div>
         </div>
         <div class="lz-filter-two">
-          <el-button type="primary"  size="mini" @click="getList()">搜索</el-button>
-
-          <el-button size="mini" type="text" @click="cleanTj()">清空筛选条件</el-button>
-
+          <el-button type="primary" class="search-btn" size="mini" @click="getList()">搜索</el-button>
+          <el-button size="mini" class="span-clear" type="text" @click="cleanTj()">清空筛选条件</el-button>
         </div>
       </div>
 
       <div class="lz-table-title">
         <div class="lz-table-title-left">
-
-          <div class="lz-feilei-wai">
-            <img class="lz-feilei" src="../../assets/images/fenleithree.png"/>
-          </div>
-
           <div class="lz-span">全部地块信息</div>
           <!--<span>全部商品</span>-->
-
         </div>
         <div class="lz-table-title-right">
           <!--<el-button type="primary" id="open_btn" class="sf-but" @click="jumpAddLayout()" size="mini">新增商品品种</el-button>-->
@@ -332,98 +209,34 @@
       </div>
       <!--表格-->
       <div class="rctable">
-        <el-table
-          :data="plotDataList"
-          style="width: 100% "
-          :default-sort="{prop: 'date', order: 'descending'}"
-          :cell-style="getRowheight"
-          :header-cell-style="getRowClass">
-          <el-table-column
-            fixed
-            prop="cjsj"
-            min-width="98"
-            label="创建日期"
-          >
+        <el-table :data="plotDataList" style="width: 100% " :default-sort="{prop: 'date', order: 'descending'}"
+          :cell-style="getRowheight" :header-cell-style="getRowClass">
+          <el-table-column fixed prop="cjsj" min-width="98" label="创建日期" > </el-table-column>
+          <el-table-column prop="place_name" label="地块名称" >
           </el-table-column>
-          <el-table-column
-            prop="place_name"
-            label="地块名称"
-          >
+          <el-table-column prop="area" label="面积" > </el-table-column>
+          <el-table-column prop="pz" label="品种" >
           </el-table-column>
-          <el-table-column
-            prop="area"
-            label="面积"
-          >
+          <el-table-column prop="pick_date" label="预计采摘时间" min-width="109" > </el-table-column>
+          <el-table-column min-width="100" prop="yieldaddUnit" label="预计产量" >
           </el-table-column>
-          <el-table-column
-            prop="pz"
-            label="品种"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="pick_date"
-            label="预计采摘时间"
-            min-width="109"
-          >
-          </el-table-column>
-          <el-table-column
-            min-width="100"
-            prop="yieldaddUnit"
-            label="预计产量"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="fzrtel"
-            label="地块负责人"
-            min-width="170"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="booth_name"
-            label="所属合作社"
-            min-width="150"
-          >
-          </el-table-column>
-
+          <el-table-column prop="fzrtel" label="地块负责人" min-width="170" > </el-table-column>
+          <el-table-column prop="booth_name" label="所属企业" min-width="150" > </el-table-column>
           <el-table-column label="操作" min-width="190">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                @click="goView(scope.row)">
-                查看农事记录
-              </el-button>
-
-              <el-button
-                size="mini"
-                type="text"
-                @click="handleEditplot(scope.$index, scope.row)">编辑
-              </el-button>
-              <el-button
-                size="mini"
-                type="text"
-                @click="ifDelete(scope.$index, scope.row)">删除
-              </el-button>
+              <el-button size="mini" type="text" @click="goView(scope.row)">查看农事记录</el-button>
+              <el-button size="mini" type="text" @click="handleEditplot(scope.$index, scope.row)">修改</el-button>
+              <el-button size="mini" type="text" @click="ifDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
-
       </div>
-
       <div class="pageBlock">
-        <el-pagination background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          layout="total, prev, pager, next, jumper"
-          :total="totalPageSize">
+        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page="currentPage" layout="total, prev, pager, next, jumper" :total="totalPageSize">
         </el-pagination>
-
       </div>
-
-
     </div>
-
   </div>
 </template>
 
@@ -438,12 +251,35 @@
     updateFarmPlotPost,
     plotHzsList
   } from "../../js/farmthings/farmworkget.js";
-
-  import {
-    nsGoodsQueryPOST,
-  } from "../../js/farmthings/farmworkgoods.js";
+  import { nsGoodsQueryPOST, } from "../../js/farmthings/farmworkgoods.js";
   import {PlotBean} from './PlotBean';
-
+  import {baseUrl,baseUrl2} from '../../js/address/url.js'
+  import axios from 'axios';
+  // 时间戳转日期格式
+  function timestampToTime(timestamp) {
+      var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + '-';
+      var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+      var D = date.getDate() + ' ';
+      // var h = date.getHours() + ':';
+      // var m = date.getMinutes() + ':';
+      // var s = date.getSeconds();
+      // return Y+M+D+h+m+s;
+      return Y+M+D;
+  }
+  // 标准时间转日期格式
+  function formatTen(num) { 
+      return num > 9 ? (num + "") : ("0" + num); 
+  } 
+  function formatDate(date) { 
+      var year = date.getFullYear(); 
+      var month = date.getMonth() + 1; 
+      var day = date.getDate(); 
+      var hour = date.getHours(); 
+      var minute = date.getMinutes(); 
+      var second = date.getSeconds(); 
+      return year + "-" + formatTen(month) + "-" + formatTen(day); 
+  } 
   export default {
     name: '',
     components: {},
@@ -456,8 +292,6 @@
         hzs_name_local_bianji_lable: '',
         pz_name_local_bianji: null,
         pz_name_local_bianji_name: '',
-
-
 //        验证开始
         ruleForm: {
           hzs_name_local: '',
@@ -468,6 +302,7 @@
           fzr_add: '',
           telephone_add: '',
           pick_date_add: '',
+          dkjs: '',
         },
         ruleFormEdit: {
           hzs_name_local_edit: '',
@@ -483,27 +318,12 @@
           editDate: '',
         },
         rules: {
-//          hzs_name_local: [
-//            {required: true, message: '请选择合作社', trigger: 'change'},
-////            {required: true, message: '请选择合作社', trigger: 'blur'},
-//          ],
-//
-//          hzs_name_local_edit: [
-//            {required: true, message: '请选择合作社', trigger: 'blur'},
-//          ],
-
           place_name_add: [
             {required: true, message: '请输入地块名称', trigger: 'blur'},
           ],
           area_add: [
             {required: true, message: '请输入面积', trigger: 'blur'},
           ],
-
-//          goods_name_search: [
-//            {required: true, message: '请选择品种', trigger: 'change'},
-////            {required: true, message: '请选择品种', trigger: 'blur'},
-//          ],
-
           yield_add: [
             {required: true, message: '请输入预产量', trigger: 'blur'},
           ],
@@ -513,24 +333,13 @@
           ],
 
           telephone_add: [
-//            {required: true, message: '请输入电话', trigger: 'blur'},
             {min: 11, max: 11, message: '请输入正确的电话', trigger: 'blur'}
           ],
-
-//          pick_date_add: [
-////            {type: 'string', required: true, message: '请选择日期', trigger: 'change'}
-//            {type: 'string', required: true, message: '请选择日期', trigger: 'blur'}
-//          ],
-
-
         },
-
-
 //        上面是验证
         plotDataList: [],
         plotHzsDataList: [],
         plotHzsDataListEdit: [],
-
 //        合作社数据
         hzs_name_local: {},
         hzs_name_local_id: '',
@@ -541,12 +350,10 @@
         ns_sp_list_type: [],
         goods_name_search: '',
 //        搜索条件
-
 //            查询列表的参数
         currentPage: 0,
         totalPageSize: 0,
         page_local: '1',
-
         page: '',
         cols: '',
         total_local: 0,
@@ -554,7 +361,6 @@
         userId: "",
         place_name: "",
         cjsj: "",
-
 //        新增地块字段
         plotNamesr: '',
         place_name_add: "",
@@ -569,18 +375,137 @@
 //        userId: "28",
         localuserId: "",
         localnodeid: "",
-
 //        删除id
         idPost: '',
         centerDialogVisible: false,
         centerEditDialogVisible: false,
-
-
+        imgUrl: '',
+        form: {
+          dataTime: ''
+        },
+        startTime: '',
+        endTime: '',
+        imgArr1: []
       }
     },
-
+    mounted() {
+      this.getTime()
+      let arr = []
+      arr.push(this.startTime)
+      arr.push(this.endTime)
+      this.form.dataTime = arr
+      this.localuserId = JSON.parse(localStorage.getItem('userId'));
+      this.localnodeid = JSON.parse(localStorage.getItem('nodeidlocal'));
+      this.getList(this.page_local);
+      this.getHzsList();
+      this.getListNSsptype();
+    },
     methods: {
-//      开始验证
+      removeFun(ele){
+        // this.imgArr1.splice(ele,1)
+        // this.imgArr1.length - 1
+      },
+      timeChange(ele){
+        if(this.form.dataTime){
+          this.startTime = this.form.dataTime[0]
+          this.endTime = this.form.dataTime[1]
+        }else{
+          this.getTime()
+        }
+      },
+      getTime(){
+          var start = new Date();
+          var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+          this.startTime = timestampToTime(startTime)
+          var currentTime = new Date()
+          this.endTime = formatDate(currentTime)
+      },
+      fileFun(event){
+        // var that = this;
+        // let file = event.target.files;
+        // let reg = /.(jpg|png|PNG|JPG)+$/;           
+        // if(file[0].size){
+        //   let point = file[0].name.indexOf('.');
+        //   if(!reg.test((file[0].name).slice(point))){
+        //     this.$message.error("上传图片格式不支持");
+        //     return;
+        //   }
+        //   let size = file[0].size / 1024 / 1024 ;
+        //   if(size > 0.5){
+        //     that.clarity = 0.5/size;
+        //   }else{
+        //     that.clarity = 1;
+        //   }
+        //   let reader = new FileReader();
+        //   reader.readAsDataURL(file[0]); 
+        //   reader.onload = function(){                    
+        //     that.imgFun(reader.result,that.clarity,function(src){
+        //       that.imgArr.push(src.slice(23))
+        //     })
+        //   }
+        // }
+        // let timer = setInterval(()=>{
+        //   if(that.imgArr.length == file.length){
+        //     let formData = new FormData()  
+        //     formData.append('img_url', that.imgArr[0]);   
+        //     formData.append('node_id', that.node_id);  
+        //     formData.append('id', that.form.goodsID); 
+        //     let config = {
+        //       headers:{'Content-Type':'multipart/form-data'}
+        //     };
+        //     const ajaxPost = function (url, params,config) {
+        //       return new Promise((resolve, reject) => {
+        //         axios
+        //           .post(url, params,{config})
+        //           .then((res) => {
+        //               resolve(res.data)
+        //           })
+        //           .catch(() => {
+        //               reject('error')
+        //           })
+        //       })
+        //     }  
+        //     let url = baseUrl + 'goods/updateGoodsImgForTrace'
+        //     ajaxPost(url,formData,config)
+        //       .then(res => {
+        //         that.imgArr = []
+        //         that.imgUrl = res.data.img_url
+        //       })
+        //       .catch(res => {
+        //         console.log(res)
+        //       })
+        //     clearInterval(timer);
+        //   }
+        // },1000)
+      },
+      imgFun(path,quality,callback){
+        let img = new Image();
+        img.src = path;
+        img.onload = function(){
+          let that = this;
+          let w = that.width;
+          let h = that.height;
+          // console.log(w,h)
+          //生成canvas
+          let canvas = document.createElement('canvas');
+          let ctx = canvas.getContext('2d'); 
+          // 创建属性节点
+          let anw = document.createAttribute("width");
+          anw.nodeValue = w;
+          let anh = document.createAttribute("height");
+          anh.nodeValue = h;
+          canvas.setAttributeNode(anw);
+          canvas.setAttributeNode(anh); 
+            // 在canvas绘制前填充白色背景   
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(that, 0, 0, w, h);
+          let base64 = canvas.toDataURL('image/jpeg', quality );
+          // 回调函数返回base64的值
+          callback(base64);
+        }
+      },
+      // 开始验证
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -961,6 +886,11 @@
         this.cjsj = '';
         this.place_name = '';
         this.hzs_name_local = '';
+        this.form = {
+          dataTime: '',
+        }
+        this.getTime()
+        this.page = 1
         this.getList(this.page_local);
       },
       getRowClass({row, column, rowIndex, columnIndex}) {
@@ -1010,6 +940,9 @@
 
 //      新增布局
       addView() {
+        // this.$router.push({name: 'DetectionList'})
+        // this.$router.push({name: 'SzProcessing'})
+        // this.$router.push({name: 'SzEnterpriseList'})
         this.centerDialogVisible = true;
 
       },
@@ -1033,25 +966,136 @@
 
 
     },
-    mounted() {
-      this.localuserId = JSON.parse(localStorage.getItem('userId'));
-      this.localnodeid = JSON.parse(localStorage.getItem('nodeidlocal'));
-      this.getList(this.page_local);
-      this.getHzsList();
-      this.getListNSsptype();
-    },
 
   }
 </script>
 
 <style scoped lang='less'>
   @lz-filter-name-width:70px;
-
+  .search-btn{
+    margin-top: 2px;
+    margin-right: 10px;
+    color: #409EFF;
+    background: #fff;
+  }
+  .msg-item{
+    margin: 10px 0;
+    width: 500px;
+    display: flex;
+    .submit{
+      margin: 0 30px;
+      position: relative;
+      left: 0;
+      top: 20%;
+      display: inline-block;
+      width: 90px;
+      height: 30px;
+      line-height: 30px;
+      color: #409EFF;
+      background: #fff;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+      border: 1px solid #409EFF;
+      .file{
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 90px;
+        height: 30px;
+        opacity: 0;
+        background: rgba(0,0,0,0);
+      }
+    }
+    .img-list{
+      ul{
+        display: flex;
+        flex-wrap:wrap;
+        li{
+          position: relative;
+          top: 0;
+          left: 0;
+          margin: 10px;
+          .icon-delete{
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            text-align: center;
+            line-height: 7px;
+            font-size: 24px;
+            background: #990000;
+            color: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+          }
+          img{
+            width: 50px;
+            height: 50px;
+          }
+        }
+      }
+    }
+  }
+  .span-clear {
+    color: #999999;
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .box-fileimg{
+    display: flex;
+    width: 300px;
+    height: 100px;
+    .submit{
+      position: relative;
+      top: 36%;
+      left: 10px;
+      width: 90px;
+      height: 30px;
+      line-height: 30px;
+      color: #409EFF;
+      background: #fff;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+      border: 1px solid #409EFF;
+      .file{
+        position: absolute;
+        left: 0px;
+        top: 0;
+        width: 90px;
+        height: 36px;
+        opacity: 0;
+        background: rgba(0,0,0,0);
+      }
+    }
+    .image{
+      width: 200px;
+      height: 100px;
+      vertical-align: middle;
+      border: 1px solid #eaeaea;
+      overflow: hidden;
+      box-sizing: border-box;
+      img{
+        display: block;
+        border: none;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+  }
   .lz-table-title {
+    padding: 0 10px;
     /*width: 90%;*/
-    margin-top: 20px;
     height: 40px;
     display: flex;
+    background: #fff;
     .lz-table-title-left {
       flex: 1;
       display: flex;
@@ -1060,6 +1104,8 @@
       .lz-span{
         font-size: 13px;
         margin-bottom: 2px;
+        padding-left: 10px;
+        border-left: 2px solid #409EFF;
       }
       .lz-feilei-wai{
         width: 25px;
@@ -1087,21 +1133,21 @@
 
   .lz-filter {
     height: 130px;
-    /*margin-top: 12px;*/
+    margin-bottom: 10px;
+    background: #fff;
     font-size: 14px;
-    background-color: #f2f2f2;
     display: flex;
     flex-direction: column;
     color:black;
     .lz-filter-one{
       flex: 1;
-      margin-left: 45px;
+      margin-left: 20px;
       width: 950px;
       /*background-color: red;*/
       display: flex;
       align-items: center;
       .lz-filter-one-style{
-        flex: 1;
+        margin-right: 20px;
         display: flex;
         .lz-filter-name{
           width: @lz-filter-name-width;
@@ -1122,7 +1168,7 @@
       display: flex;
       /*align-items: flex-start;*/
       align-items: center;
-      margin-left: 115px;
+      margin-left: 20px;
     }
   }
 
@@ -1167,9 +1213,6 @@
   }
 
   .syacontent {
-
-    background: #fff;
-    padding: 10px;
     height: 100%;
 
   }
@@ -1335,6 +1378,8 @@
       }
     }
     .rctable {
+      padding: 10px;
+      background: #fff;
       /*margin-top: 19px;*/
       border-top: 1px solid #f4f4f4;
       border-left: 1px solid #f4f4f4;
@@ -1348,10 +1393,15 @@
 
   .pageBlock {
     height: 80px;
-    margin-top: 11px;
     display: flex;
     justify-content: center;
+    background: #fff;
   }
-
-
+</style>
+<style lang="less">
+  .recording{
+    .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
+        line-height: 24px;
+    }
+  }
 </style>

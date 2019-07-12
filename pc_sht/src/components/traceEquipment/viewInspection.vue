@@ -280,6 +280,10 @@
                     </div>
                     <div class="msg" v-else>无</div>
                 </div>
+                <div class="data">
+                    <div class="title">备注</div>
+                    <div class="msg">{{remark ? remark : '无'}}</div>
+                </div>
             </div>
         </div>
         <div class="big-img" v-show="isBigImg" ref="boxsize">
@@ -294,7 +298,7 @@
 </template>
 
 <script>
-import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase,QueryBusiness,AssetsUpdate,DeleteInspect,QueryInspectId,
+import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase2,QueryBusiness,AssetsUpdate,DeleteInspect,QueryInspectId,
     QueryAssetsSpecifications,QueryAssetsNames,QueryAssetsManufacturers,} from '../../js/traceEquipment/traceEquipment.js'
 import {uploadPhotos} from '../../js/address/url.js'
 import axios from 'axios';
@@ -349,6 +353,7 @@ export default {
             nameArr: [],
             zcggArr: [],
             sccjArr: [],
+            remark: ''
         }
     },
     mounted() {
@@ -473,6 +478,7 @@ export default {
                     this.getQueryBusiness()
                     let inspectList = res.data.inspectList[0]
                     this.name = inspectList.name
+                    this.remark = inspectList.remark
                     this.inspect_time = inspectList.inspect_time.substring(0,16)
                     let img_urls = inspectList.image_url
                     let imgArr1 = img_urls.split(',');
@@ -710,7 +716,7 @@ export default {
         },
         // 查询 所有节点
         getQueryNodeBase(){
-            QueryNodeBase('')
+            QueryNodeBase2('')
                 .then(res => {
                     // console.log(res)
                     this.nodeArr = res.data.nodeBase
@@ -873,15 +879,18 @@ export default {
                 text-align: right;
             }
         }
+        .list-title{
+            padding-left: 20px;
+            line-height: 40px;
+            border-bottom: 1px solid #e4e7ed;
+        }
+        .view{
+            margin-top: 10px;
+        }
         .tab{
             margin: 10px 0;
             width: 100%;
             background: #fff;
-            .list-title{
-                padding-left: 20px;
-                line-height: 40px;
-                border-bottom: 1px solid #ccc;
-            }
             .img-list{
                 ul{
                     display: flex;

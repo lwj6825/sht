@@ -1,185 +1,99 @@
 <template>
   <div class="syacontent">
     <!--<el-button type="primary" id="open_btn" class="sf-but" @click="jumpAddLayout()" size="small">新增商品品种</el-button>-->
-
     <!--头部-->
     <div class="syotitle">
       <span>商品品种</span>
         <el-select v-model="goods_name_search" slot="append" placeholder="请选择" size="small" clearable filterable>
-          <el-option v-for="item in ns_sp_list_type" :key="item.id" :label="item.goods_Name"
-                     :value="item.goods_Name"></el-option>
+          <el-option v-for="item in ns_sp_list_type" :key="item.id" :label="item.goods_Name" :value="item.goods_Name"></el-option>
         </el-select>
       <el-button type="primary" @click="getListNSsp()" class="btn-end" size="small">搜索</el-button>
     </div>
-
     <div class="lz-table-title">
       <div class="lz-table-title-left">
-
-        <div class="lz-feilei-wai">
-          <img class="lz-feilei" src="../../assets/images/fenleithree.png"/>
-        </div>
         <span>全部商品</span>
         <!--<span>全部商品</span>-->
-
       </div>
       <div class="lz-table-title-right">
         <el-button type="primary" id="open_btn" class="sf-but" @click="jumpAddLayout()" size="mini">新增商品品种</el-button>
       </div>
     </div>
-
     <!--内容区域-->
     <!--表格-->
     <div class="rctable" id="edit_open_btn" >
-      <el-table
-        :data="ns_sp_list"
-        style="width: 100%"
-        :default-sort="{prop: 'date', order: 'descending'}"
-        :cell-style = "getRowheight"
-        :header-cell-style="getRowClass">
-        <el-table-column
-          prop="code1"
-          label="商品编码">
-        </el-table-column>
-        <el-table-column
-          prop="goods_Name"
-          label="商品品种">
-        </el-table-column>
-
-        <el-table-column
-          prop="breed"
-          :formatter="formatter"
-          label="所属品种">
-        </el-table-column>
-
-
+      <el-table :data="ns_sp_list" style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}" 
+        :cell-style = "getRowheight" :header-cell-style="getRowClass">
+        <el-table-column prop="code1" label="商品编码"></el-table-column>
+        <el-table-column prop="goods_Name" label="商品品种"> </el-table-column>
+        <el-table-column prop="breed" :formatter="formatter" label="所属品种"> </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-
-            <el-button
-              class="edit_btn"
-              size="mini"
-              type="text"
-              @click="handleEdit(scope.$index, scope.row)">编辑
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="ifDelete(scope.$index, scope.row)">删除
-            </el-button>
+            <el-button class="edit_btn" size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text" @click="ifDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-
     </div>
-
     <!--分页-->
     <div class="pageBlock">
-      <el-pagination background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        layout="total, prev, pager, next, jumper"
-        :total="totalPageSize">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+        layout="total, prev, pager, next, jumper" :total="totalPageSize">
       </el-pagination>
-
     </div>
-
     <!--调试后的新增商品-->
-    <el-dialog
-      title="新增商品品种"
-      :visible.sync="comvarietyflag"
-      :before-close="handleClose"
-      :close-on-click-modal = "isclick"
+    <el-dialog title="新增商品品种" :visible.sync="comvarietyflag" :before-close="handleClose" :close-on-click-modal = "isclick"
       width="650px">
       <!--内容-->
         <!--商品编码-->
         <div class="tjsf-div2-row">
           <div class="left">商品编码:</div>
           <div class="right">
-
             <el-input v-model="Goods_num_add" placeholder="请输入商品品种"></el-input>
-
           </div>
         </div>
-
       <!--商品品种-->
         <div class="tjsf-div2-row">
           <div class="left">商品品种:</div>
           <div class="right">
-
             <el-input v-model="Goods_name_add" placeholder="请输入商品品种"></el-input>
-
           </div>
         </div>
-
         <!--溯源码数量-->
         <div class="tjsf-div2-row">
           <div class="left">所属品种:</div>
           <div class="right">
-
-            <el-cascader
-              :options="myoptions"
-              v-model="selectedOptions"
-              :props="props"
-              class="eljl"
-              filterable
-              @change="handleChange">
+            <el-cascader :options="myoptions" v-model="selectedOptions" :props="props" class="eljl" filterable @change="handleChange">
             </el-cascader>
-
           </div>
         </div>
-
-
-
-
       <span slot="footer" class="dialog-footer">
-            <el-button @click="handleClose()">取 消</el-button>
-            <el-button type="primary" @click="addNewNsGoods()">保存</el-button>
+        <el-button @click="handleClose()">取 消</el-button>
+        <el-button type="primary" @click="addNewNsGoods()">保存</el-button>
       </span>
     </el-dialog>
-
     <!--调试后的编辑商品-->
-    <el-dialog
-      title="编辑商品"
-      :visible.sync="comvarietyEditflag"
-      :before-close="handleClose"
-      :close-on-click-modal = "isclick"
+    <el-dialog title="编辑商品" :visible.sync="comvarietyEditflag" :before-close="handleClose" :close-on-click-modal = "isclick"
       width="650px">
-
       <!--商品编码-->
       <div class="tjsf-div2-row">
         <div class="left">商品编码:</div>
         <div class="right">
-
           <el-input v-model="Goods_num_add" placeholder="请输入商品品种" disabled></el-input>
-
         </div>
       </div>
-
         <!--溯源码数量-->
         <div class="tjsf-div2-row">
           <div class="left">商品品种:</div>
           <div class="right">
-
             <el-input v-model="Goods_name_add" placeholder="请输入商品品种"></el-input>
-
           </div>
         </div>
-
         <!--溯源码数量-->
         <div class="tjsf-div2-row">
           <div class="left">所属品种:</div>
           <div class="right">
-
-            <el-cascader
-              :options="myoptions"
-              v-model="selectedOptions"
-              :props="props"
-              class="eljl"
-              filterable
-            >
+            <el-cascader :options="myoptions" v-model="selectedOptions" :props="props" class="eljl" filterable>
             </el-cascader>
-
             <!--<el-cascader-->
               <!--:options="myoptions"-->
               <!--:placeholder="edittype"-->
@@ -189,22 +103,13 @@
               <!--class="eljl"-->
             <!--&gt;-->
             <!--</el-cascader>-->
-
           </div>
         </div>
-
-
-
-
-
-
       <span slot="footer" class="dialog-footer">
-            <el-button @click="handleClose()">取 消</el-button>
-            <el-button type="primary" @click="updateNsGoods()">保存</el-button>
+        <el-button @click="handleClose()">取 消</el-button>
+        <el-button type="primary" @click="updateNsGoods()">保存</el-button>
       </span>
     </el-dialog>
-
-
   </div>
 </template>
 
@@ -604,9 +509,10 @@
 <style scoped lang='less'>
 
   .lz-table-title {
-    margin-top: 20px;
+    padding: 0 10px;
     height: 40px;
     display: flex;
+    background: #fff;
     .lz-table-title-left {
       flex: 1;
       display: flex;
@@ -616,6 +522,8 @@
         /*display: flex;*/
         font-size: 13px;
         margin-bottom: 2px;
+        padding-left: 10px;
+        border-left: 2px solid #409EFF;
       }
       .lz-feilei-wai{
         width: 25px;
@@ -742,8 +650,6 @@
   }
 
   .syacontent {
-    background: #fff;
-    padding: 10px;
     height: 100%;
 
   }
@@ -751,7 +657,8 @@
 
 
   .rctable {
-
+    padding: 10px;
+    background: #fff;
     border-top: 1px solid #f4f4f4;
     border-left: 1px solid #f4f4f4;
     border-right: 1px solid #f4f4f4;
@@ -780,9 +687,11 @@
   /*}*/
 
   .syotitle {
+    padding: 0 10px;
+    margin-bottom: 10px;
     height: 100px;
     /*margin-top: 14px;*/
-    background-color: #F5F5F5;
+    background-color: #fff;
     font-size: 14px;
     display: flex;
     align-items: center;
@@ -810,7 +719,7 @@
 
   .pageBlock{
     height: 80px;
-    margin-top: 11px;
+    background: #fff;
     display: flex;
     justify-content: center;
   }

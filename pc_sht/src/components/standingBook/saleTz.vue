@@ -14,9 +14,16 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="销售日期" style="width: 480px;" >
-                        <el-date-picker v-model="form.value1" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" 
+                    <el-form-item label="销售日期">
+                        <!--<el-date-picker v-model="form.value1" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" 
                             start-placeholder="开始日期" end-placeholder="结束日期" :default-time="['00:00:00', '23:59:59']" @change="timeChange">
+                        </el-date-picker>-->
+                        <el-date-picker clearable style="width: 300px"
+                            v-model="form.value1" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
                     <!--<el-form-item label="欠款">
@@ -42,8 +49,15 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="销售日期" style="width: 480px;" >
-                        <el-date-picker v-model="form.value1" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" 
+                        <!--<el-date-picker v-model="form.value1" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" 
                             start-placeholder="开始日期" end-placeholder="结束日期" :default-time="['00:00:00', '23:59:59']" @change="timeChange">
+                        </el-date-picker>-->
+                        <el-date-picker clearable style="width: 300px"
+                            v-model="form.value1" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item>
@@ -95,22 +109,27 @@
                         </template> v-if="props.row.tz_id == goodMsg[0].tz_id"
                     </el-table-column>-->
                     <el-table-column type="expand">
-                        <template slot-scope="props">
+                        <template slot-scope="scope">
                             <div class="list">
                                 <ul class="item">
                                     <li>商品</li>
                                     <li>单价</li>
                                     <li>数量/重量</li>
                                 </ul>
-                                <ul class="item" v-for="(item,index) in goodMsg" :key="index">
+                                <ul class="item" v-for="(item,index) in scope.row.tz_detail_list" :key="index">
                                     <li>{{item.goods_name}}</li>
                                     <li>{{item.price}}元/公斤</li>
                                     <li>{{item.number}}公斤</li>
                                 </ul>
-                                <p class="price">总金额：{{totalPrice}}元</p>
+                                <!--<ul class="item" v-for="(item,index) in scope.row.tz_detail_list" :key="index">
+                                    <li>{{item.goods_name}}</li>
+                                    <li>{{item.price}}元/公斤</li>
+                                    <li>{{item.number}}公斤</li>
+                                </ul>-->
+                                <p class="price">总金额：{{scope.row.actual_money}}元</p>
                             </div>
                         </template>
-                    </el-table-column><!---->
+                    </el-table-column>
                 </el-table>
             </div>
             <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
@@ -131,8 +150,20 @@ function formatDate(date) {
     var hour = date.getHours(); 
     var minute = date.getMinutes(); 
     var second = date.getSeconds(); 
-    return year + "-" + formatTen(month) + "-" + formatTen(day) + ' 00:00:00'; 
+    return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
+// 时间戳转日期格式
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    var D = date.getDate() + ' ';
+    // var h = date.getHours() + ':';
+    // var m = date.getMinutes() + ':';
+    // var s = date.getSeconds();
+    // return Y+M+D+h+m+s;
+    return Y+M+D;
+}
 import AreaSelect from '../common/area';
 import Bus from '../common/bus.js';
 import {QueryArea} from '../../js/area/area.js';
@@ -162,7 +193,7 @@ export default {
             form: {
                 user: '',
                 source: '',
-                value1: [new Date(new Date().setHours(0, 0, 0, 0)),new Date(new Date().setHours(23, 59, 59, 59))],
+                value1: '',
                 value2: '',
                 upload: '',
             },
@@ -188,6 +219,10 @@ export default {
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
         this.getTime()
+        let arr = []
+        arr.push(this.startTime)
+        arr.push(this.endTime)
+        this.form.value1 = arr
         if(this.isRegion == 'false'){
             this.isShow = false
             this.getSaleTzFun()
@@ -206,10 +241,15 @@ export default {
                 + this.page + '&cols=' + this.cols
         },
         getTime(){
+            var start = new Date();
+            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+            this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
-            this.startTime = formatDate(currentTime)
-            // console.log(this.startTime)
-            this.endTime = this.startTime.substr(0, 10) + ' 23:59:59'
+            this.endTime = formatDate(currentTime)
+            // var currentTime = new Date()
+            // this.startTime = formatDate(currentTime)
+            // // console.log(this.startTime)
+            // this.endTime = this.startTime.substr(0, 10)
         },
         selectGet(val){
             if(val){
@@ -249,9 +289,10 @@ export default {
                 this.startTime = this.form.value1[0]
                 this.endTime = this.form.value1[1]
             }else{
-                var currentTime = new Date()
-                this.startTime = formatDate(currentTime)
-                this.endTime = ''
+                // var currentTime = new Date()
+                // this.startTime = formatDate(currentTime)
+                // this.endTime = ''
+                this.getTime()
             }
         },
         searchFun(){
@@ -361,6 +402,12 @@ export default {
                 })
         },
         getSaleTzFun(){
+            let loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             if(this.isRegion == 'false'){
                 let obj = {
                     region:  this.areaId,
@@ -373,11 +420,14 @@ export default {
                 }
                 GetSaleTz(obj)
                     .then(res => {
+                        this.loading = false
                         this.tableData = res.data.tzList
                         this.num = res.data.tzBean.total
+                        loading.close();
                     })
                     .catch(res => {
                         console.log(res)
+                        loading.close();
                     })
             }else{
                 let obj = {
@@ -393,9 +443,11 @@ export default {
                     .then(res => {
                         this.tableData = res.data.tzList
                         this.num = res.data.tzBean.total
+                        loading.close();
                     })
                     .catch(res => {
                         console.log(res)
+                        loading.close();
                     })
             }
         },
@@ -424,10 +476,22 @@ export default {
                         if(ele.userId == id){
                             this.bigAreaId = id;
                             this.areaId = ele.bootList[0].shop_booth_id;
+                            // var currentTime = new Date()
+                            // this.startTime = formatDate(currentTime)
+                            // this.form.value1 = [new Date(new Date().setHours(0, 0, 0, 0)),new Date(new Date().setHours(23, 59, 59, 59))]
+                            // this.endTime = ''
+                            var start = new Date();
+                            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+                            this.startTime = timestampToTime(startTime)
                             var currentTime = new Date()
-                            this.startTime = formatDate(currentTime)
-                            this.form.value1 = [new Date(new Date().setHours(0, 0, 0, 0)),new Date(new Date().setHours(23, 59, 59, 59))]
-                            this.endTime = ''
+                            this.endTime = formatDate(currentTime)
+                            let arr = []
+                            arr.push(this.startTime)
+                            arr.push(this.endTime)
+                            this.form.value1 = arr
+                            this.page = 1
+                            this.form.user = ''
+                            this.buyerName = ''
                             this.getSaleTzFun()
                             this.getMerchantsFun()
                         }
@@ -447,8 +511,14 @@ export default {
             }
             QueryXsTzDetailByTzId(data)
                 .then(res =>{
-                    this.goodMsg = res.data.tzDetailList
-                    this.totalPrice = res.data.tzList[0].ACTUAL_MONEY
+                    this.tableData.forEach(val => {
+                        if(ele.id == val.id){
+                            val.tz_detail_list = res.data.tzDetailList
+                            val.totalPrice = res.data.tzList[0].ACTUAL_MONEY
+                        }
+                    })
+                    // this.goodMsg = res.data.tzDetailList
+                    // this.totalPrice = res.data.tzList[0].ACTUAL_MONEY
                 })
                 .catch(res =>{
                     console.log(res)

@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <div class="iframe">
-            <iframe src="https://das.base.shuju.aliyun.com/token3rd/dashboard/view/pc.htm?pageId=12bdc1a7-c417-484b-a198-ab4d5b176470&accessToken=d99725d06ea3d7ce84e484a00be17204" 
+            <iframe src="https://das.base.shuju.aliyun.com/token3rd/dashboard/view/pc.htm?pageId=f0165bc8-a0ac-4f43-9cce-5018b620279c&accessToken=992a90e58a47854a9d4e6440df21df21" 
             scrolling="auto" width="100%" height="100%" frameborder="0" id="contentIframe"></iframe>
         </div>
     </div>
