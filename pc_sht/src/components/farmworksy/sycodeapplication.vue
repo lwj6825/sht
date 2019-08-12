@@ -47,8 +47,7 @@
           <div class="lz-span">全部申请记录</div>
         </div>
         <div class="lz-table-title-right">
-          <el-button type="primary" id="open_btn" class="sf-but" @click="symapplicationflag = true" size="small">申请溯源码
-          </el-button>
+          <el-button type="primary" id="open_btn" class="sf-but" @click="addFun" size="small">申请溯源码</el-button>
         </div>
       </div>
       <!--表格内容-->
@@ -71,7 +70,7 @@
           <el-table-column type="expand" label="操作" width="100px">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
-                 <el-form-item label="生产批次号">
+                <el-form-item label="生产批次号">
                   <span>{{ props.row.apply_id }}</span>
                 </el-form-item>
                 <el-form-item label="申请数量">
@@ -104,10 +103,7 @@
             </template>
           </el-table-column>
         </el-table>
-
       </div>
-
-
       <!--分页-->
       <div class="pageBlock">
         <el-pagination
@@ -117,10 +113,7 @@
           layout="total, prev, pager, next, jumper"
           :total="totalPageSize">
         </el-pagination>
-
       </div>
-
-
       <!--新的申请溯源码-->
       <el-dialog title="申请溯源码" :visible.sync="symapplicationflag" :before-close="handleClose" :close-on-click-modal = "isclick"
         width="650px">
@@ -130,7 +123,7 @@
           <div class="left">选择地块:</div>
           <div class="right">
             <el-select v-model="place_name_add" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
-              size="small" @change="changevalue()">
+              size="small" @change="changevalue()" filterable clearable>
               <el-option v-for="item in place_name_list" :key="item.id" :label="item.place_name" :value="item"></el-option>
             </el-select>
           </div>
@@ -153,7 +146,7 @@
           <div class="left">生产批次号:</div>
           <div class="right">
             <el-select v-model="place_name_add" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
-              size="small" @change="changevalue()">
+              size="small" @change="changevalue()" filterable clearable>
               <el-option v-for="item in place_name_list" :key="item.id" :label="item.place_name" :value="item"></el-option>
             </el-select>
           </div>
@@ -162,7 +155,7 @@
         <div class="tjsf-div2-row">
           <div class="left">溯源码数量:</div>
           <div class="right">
-            <el-input v-model="apply_num_add" placeholder="请输入申请数量" size="small" maxlength="11"
+            <el-input v-model="apply_num_add" placeholder="请输入申请数量" size="small" maxlength="11" clearable
               onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"></el-input>
           </div>
         </div>
@@ -174,7 +167,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
   import {
@@ -189,100 +181,99 @@
   import {
     nsGoodsQueryPOST
   } from "../../js/farmthings/farmworkgoods.js";
+  import {GetAllProduction} from '../../js/production/production.js';
 
   export default {
     name: '',
     components: {},
     data() {
       return {
-
         localuserId: '',
         localnodeid: '',
         isclick: false,
-
         local_date_start_end: '',
-
-//
         symapplicationflag: false,
-
-//产品名称   申请日期   审核状态   申请单号
+        // 产品名称   申请日期   审核状态   申请单号
         pz_name_local: '',
-
         start_date_local: '',
         end_date_local: '',
         review_state_local: '',
         review_state_local_submit: '',
         apply_num_local: '',
-
-        //        合作社数据
+        // 合作社数据
         hzs_name_local: {},
         plotHzsDataList: [],
-
-//        申请溯源码合作社
+        // 申请溯源码合作社
         sq_sym_Hzs: '',
-
-
-//       地块名称 产品名称
-        place_name_add: {},
-//        pz_add: {},
+        // 地块名称 产品名称
+        place_name_add: '',
+        // pz_add: {},
         pz_add: '',
-
-//        地块名称和id    产品名称和id
+        // 地块名称和id    产品名称和id
         place_name_add_name: '',
         place_name_add_id: '',
         pz_add_name: '',
         pz_add_id: '',
         pz_hzs_id: '',
-
         apply_num_add: '',
-
-
         tableSymSqList: [],
-
-//        地块list   产品名称
+        // 地块list   产品名称
         place_name_list: [],
         ns_sp_list: [],
-
-//        key:'',
+        // key:'',
         value: {},
-
-//        分页参数
+        // 分页参数
         currentPage: 0,
         totalPageSize: 0,
         page_local: '1',
-
-
       }
     },
     methods: {
+      getProductionFun(){
+        // let obj = {
+        //     node_id: this.node_id,
+        //     stk_batch_id: this.form.productionCode,
+        //     stk_goods_name: this.form.goodName,
+        //     start_time: this.startTime,
+        //     end_time: this.endTime,
+        //     page: this.page,
+        //     cols: this.cols
+        // }
+        // GetAllProduction(obj)
+        //     .then(res => {
+        //         this.tableData = res.data.dataList
+        //         this.num = res.data.condition.total
+        //     })
+        //     .catch(() => {
+        //         this.$message.error("出错啦!");
+        //     })
+      },
+      addFun(){
+        // this.$router.push({name: 'SlaughterList'})
+        // this.$router.push({name: 'FarmingList'})
+        this.symapplicationflag = true
+      },
       filterTag(value, row) {
         return row.review_state === value;
       },
-
-
-      //      申请溯源码
+      // 申请溯源码
       addSym() {
         var btn = document.getElementById('open_btn');
         var div = document.getElementById('background');
         var close = document.getElementById('close-button');
-
         btn.onclick = function show() {
           div.style.display = "block";
         };
-
         close.onclick = function close() {
           div.style.display = "none";
         }
-
         window.onclick = function close(e) {
           if (e.target == div) {
             div.style.display = "none";
           }
         }
       },
-
-//      获取POST数据      获取溯源码信息
-
+      // 获取POST数据      获取溯源码信息
       getSymList(page_local_par) {
         switch (this.review_state_local) {
           case "审核未通过":
@@ -309,11 +300,8 @@
           // userId: this.localuserId,
           node_id: this.localnodeid,
         };
-
-        console.log('=========='+this.localuserId);
         this.getsymPostList(params);
       },
-
       getsymPostList(params) {
         symGetAllsymPost(params)
           .then(res => {
@@ -324,80 +312,58 @@
             this.$message.error("数据加载失败!");
           })
       },
-
-//      获取合作社
+      // 获取合作社
       getHzsList(currentPageLocal) {
         let params = {
           userId: this.localuserId,
-
         }
-
         this.getPlotHzsList(params);
       },
-
       getPlotHzsList(params) {
         plotHzsList(params)
           .then(res => {
             this.plotHzsDataList = res.data.dataList;
-
           })
           .catch(() => {
             this.$message.error(res.message);
           })
       },
-
-      //      关闭申请弹窗
+      // 关闭申请弹窗
       handleClose(done) {
-
         this.clearnum();
-
       },
-
-      //      新增申请清空
+      // 新增申请清空
       clearnum() {
         this.symapplicationflag = false;
         this.apply_num_add = '';
         this.pz_add = '';
-        this.place_name_add = [];
+        this.place_name_add = '';
         this.sq_sym_Hzs = '';
-
       },
-
-
-//      清空条件
+      // 清空条件
       clearAllCondition() {
-
         this.pz_name_local = '';
         this.start_date_local = '';
         this.end_date_local = '';
         this.review_state_local = '';
         this.apply_num_local = '';
-        this.hzs_name_local = [];
+        this.hzs_name_local = '';
         this.local_date_start_end = '';
-
         this.getSymList(this.page_local);
-
-
       },
-
-
-//      申请溯源码
-
+      // 申请溯源码
       addSymSubmit() {
-
-//        合作社   合作社id   品种   品种id  地块
+        // 合作社   合作社id   品种   品种id  地块
         this.getdkId();
         let addparams = {
           pz_name: this.pz_add_name,
           pz_id: this.pz_add_id,
-
           biz_id: this.pz_hzs_id,
           apply_num: this.apply_num_add,
           userId: this.localuserId,
           place_id: this.place_name_add_id,
           place_name: this.place_name_add_name,
         };
-
         symInsert(addparams)
           .then(res => {
             this.$message.success(res.message);
@@ -408,22 +374,14 @@
           .catch(() => {
             this.$message.error(res.message);
           })
-
-
       },
-
-      //      关闭窗口
+      // 关闭窗口
       closeWindow() {
-
         var div = document.getElementById('background');
-
         div.style.display = 'none'
         this.getdkId();
-
       },
-
-
-      //          获取地块list
+      // 获取地块list
       getListdk() {
         let params = {
           page: 1,
@@ -434,10 +392,8 @@
           node_id:this.localnodeid,
           cjsj: "",
         }
-
         this.getPlotList(params);
       },
-
       getPlotList(params) {
         plotList(params)
           .then(res => {
@@ -448,18 +404,15 @@
             this.$message.error("数据加载失败!");
           })
       },
-
-      //      获取商品品种的信息
+      // 获取商品品种的信息
       getListNSsp() {
         let params = {
           page: 1,
           cols: 15,
           userId: this.localuserId,
         }
-
         this.getNsGoodsQueryPOST(params);
       },
-
       getNsGoodsQueryPOST(params) {
         nsGoodsQueryPOST(params)
           .then(res => {
@@ -469,19 +422,15 @@
             this.$message.error("数据加载失败!");
           })
       },
-
-
-//      h获取地块id
+      // h获取地块id
       getdkId() {
         this.place_name_add_name = this.place_name_add.place_name;
         this.place_name_add_id = this.place_name_add.id;
-//        this.pz_add_name = this.pz_add.goods_Name;
-//        this.pz_add_id = this.pz_add.id;
+        // this.pz_add_name = this.pz_add.goods_Name;
+        // this.pz_add_id = this.pz_add.id;
         this.pz_hzs_id = this.place_name_add.userId;
-
       },
-
-      //设置表格第一行的颜色
+      // 设置表格第一行的颜色
       getRowClass({row, column, rowIndex, columnIndex}) {
         if (rowIndex == 0) {
           return 'background:#F5F5F5;height:40px; padding: 0px 0;'
@@ -489,8 +438,7 @@
           return ''
         }
       },
-
-      //分页添加
+      // 分页添加
       handleSizeChange(val) {
       },
       handleCurrentChange(val) {
@@ -500,18 +448,14 @@
       getRowheight({row, column, rowIndex, columnIndex}) {
         return 'height:40px; padding: 0px 0;'
       },
-
-//     地块变化相应的变化    合作社   合作社id   品种   品种id  地块
+      // 地块变化相应的变化    合作社   合作社id   品种   品种id  地块
       changevalue() {
         console.log(this.place_name_add);
         this.sq_sym_Hzs = this.place_name_add.booth_name;
-//        this.pz_add = this.place_name_add.pz;
+        // this.pz_add = this.place_name_add.pz;
         this.pz_add_id = this.place_name_add.pzid;
         this.pz_add_name = this.place_name_add.pz
-
       }
-
-
     },
     mounted() {
       this.localuserId = JSON.parse(localStorage.getItem('userId'));
@@ -520,14 +464,11 @@
       this.getListdk();
       this.getListNSsp();
       this.getHzsList();
-
-
     }
   }
 </script>
 
 <style scoped lang='less'>
-
   @lz-filter-name-width:70px;
   .search-btn{
     margin-top: 2px;
@@ -549,7 +490,6 @@
     .lz-table-title-left {
       flex: 1;
       display: flex;
-      /*border: 1px solid red;*/
       align-items: center;
       .lz-span{
         font-size: 13px;
@@ -568,24 +508,18 @@
           height: 90%;
         }
       }
-      /*background-color: red;*/
     }
-
     .lz-table-title-right {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-
-
     }
   }
-
   .lz-filter {
     padding: 10px;
     margin-bottom: 10px;
     height: 130px;
-    /*margin-top: 12px;*/
     font-size: 14px;
     background-color: #fff;
     display: flex;
@@ -595,7 +529,6 @@
       flex: 1;
       margin-left: 45px;
       width: 950px;
-      /*background-color: red;*/
       display: flex;
       align-items: center;
       .lz-filter-one-style{
@@ -606,14 +539,12 @@
           display: flex;
           align-items: center;
         }
-
         .lz-filter-name-two{
           width: @lz-filter-name-width + 12px ;
           display: flex;
           align-items: center;
         }
       }
-
       .lz-filter-one-style-three{
         flex: 1;
         display: flex;
@@ -623,19 +554,14 @@
           align-items: center;
         }
       }
-
     }
     .lz-filter-two{
       flex: 1;
       display: flex;
-      /*align-items: flex-start;*/
       align-items: center;
       margin-left: 115px;
     }
   }
-
-
-
   /*遮罩层样式*/
   .tjsf-title {
     display: flex;

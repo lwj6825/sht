@@ -5,8 +5,8 @@
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
                     <el-form-item label="商品名称">
                         <el-select v-model="goodName" filterable clearable placeholder="请选择">
-                            <el-option v-for="item in goodList" :key="item.a_conf_id" :label="item.a_conf_item"
-                            :value="item.a_conf_id">
+                            <el-option v-for="(item,index) in goodList" :key="index" :label="item.GOODS_NAME"
+                            :value="item.ID">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -48,16 +48,16 @@
             </div>-->
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="assets_id" label="工艺名称"> </el-table-column>
-                    <el-table-column prop="assets_name" label="周期"> </el-table-column>
-                    <el-table-column prop="assets_type" label="工艺描述"> </el-table-column>
-                    <el-table-column prop="bar_code" label="排序"> </el-table-column>
-                    <el-table-column prop="serial_num" label="所属商品"> </el-table-column>
+                    <el-table-column prop="technology_name" label="工艺名称"> </el-table-column>
+                    <el-table-column prop="technology_cycle" label="周期"> </el-table-column>
+                    <el-table-column prop="technology_describe" label="工艺描述"> </el-table-column>
+                    <el-table-column prop="sort" label="排序"> </el-table-column>
+                    <el-table-column prop="goods_name" label="所属商品"> </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
                             <el-button type="text" size="small" @click="viewFun(scope.row)">查看附件</el-button>
-                            <el-button type="text" size="small">删除</el-button>
+                            <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -69,8 +69,8 @@
         <div class="big-img" v-show="isBigImg" ref="boxsize">
             <p class="close" @click="closeFun2">X</p>
             <div class="imgBox">
-                <figure class="images" v-for="(item,index) in imgArrs" :key="index" v-if="imgArrs.length > 0">
-                    <img :style="sizeObj" :src="item.img_url" v-if="item.img_url">
+                <figure class="images" v-for="(item,index) in imgArrs" :key="index">
+                    <img :style="sizeObj" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url" v-if="item.img_url">
                 </figure>
             </div>
         </div>
@@ -84,9 +84,8 @@
                 <el-form class="form" ref="form" :model="form" label-width="120px">
                     <el-form-item label="所属商品">
                         <el-select v-model="form.goodName" filterable clearable placeholder="请选择">
-                            <el-option v-for="item in goodArr" :key="item.a_conf_id" :label="item.a_conf_item"
-                            :value="item.a_conf_id">
-                            </el-option>
+                            <el-option v-for="(item,index) in goodList" :key="index" :label="item.GOODS_NAME"
+                            :value="item.ID"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="工艺名称">
@@ -96,19 +95,18 @@
                         <el-input clearable v-model="form.cycle" placeholder="如：3-5天"></el-input>
                     </el-form-item>
                     <el-form-item label="工艺描述">
-                        <el-input clearable v-model="form.cycle" type="textarea"></el-input>
+                        <el-input clearable v-model="form.describe" type="textarea"></el-input>
                     </el-form-item>
                     <el-form-item label="上传图片">
                         <div class="msg-item">   
                             <div class="img-list">
-                            <ul>
-                                <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
-                                    <figure class="image">
-                                        <p class="icon-delete" @click="removeFun(index)">-</p><!---->
-                                        <img :src="item.img_url">
-                                    </figure>
-                                </li>
-                            </ul>
+                                <ul>
+                                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                                        <figure class="image">
+                                            <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                        </figure>
+                                    </li>
+                                </ul>
                             </div>
                             <div>
                                 <div class="submit">
@@ -119,9 +117,9 @@
                                 </div>
                             </div>
                         </div>
-                    </el-form-item>
+                    </el-form-item><!---->
                     <el-form-item label="排序">
-                        <el-input clearable v-model="form.cycle" placeholder="数字越大 排序越靠后"></el-input>
+                        <el-input clearable v-model="form.sort" placeholder="同一商品数字越大 排序越靠后"></el-input>
                     </el-form-item>
                     <el-form-item class="btn">
                         <el-button @click="cancelFun">取消</el-button>
@@ -135,6 +133,8 @@
 </template>
 
 <script>
+import {GetAllProductionTech,InsertProductionTech,UpdateProductionTech,DeleteProductionTech} from '../../js/production/production.js'
+import {sales} from "../../js/goods/goods.js";
 export default {
     name:"szProcessing",
     data() {
@@ -144,9 +144,7 @@ export default {
             page: 1,
             cols: 15,
             num: 0,
-            tableData: [
-                {assets_id: '55416541564'}
-            ],
+            tableData: [],
             isBigImg: false,
             sizeObj: {},
             url: '',
@@ -158,27 +156,132 @@ export default {
                 goodName: '', // 所属商品
                 name: '', // 工艺名称
                 cycle: '', // 周期
+                describe: '', // 工艺描述
+                sort: '', // 排序
             },
             goodArr: [],
+            imgArr: [],
+            userId: '',
+            ids: '',
+            node_id: '',
+            node_name: '',
         }
     },
     mounted() {
-        
+        this.userId = localStorage.getItem('userId')
+        this.node_id = localStorage.getItem('loginId')
+        this.node_name = localStorage.getItem('loginName')
+        this.getSaleFun()
+        this.getDataFun()
     },
     methods: {
-        removeFun(ele){
-            // this.imgArr1.splice(ele,1)
-            // this.imgArr1.length - 1
+        deleteFun(ele){
+            let obj = {
+                id: ele.id
+            }
+            DeleteProductionTech(obj)
+                .then(res =>{
+                     if(res.result == true){
+                        this.$message.success(res.message);
+                        this.page = 1
+                        this.closeFun()
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch(res =>{
+                    console.log(res)
+                })
+        },
+        getSaleFun(){
+            let boothData = {
+                page: 1,
+                cols: '10000',
+                goodsName: '',
+                goodsCode: '',
+                suppliersName: '',
+                region: '',
+                userId: this.userId,
+                total: '',
+                j_name: ''
+            }
+            sales(boothData)
+                .then(res => {
+                    this.goodList = res.data.salesList
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
+        getDataFun(){
+            let obj = {
+                goods_id: this.goodName,
+                page: this.page,
+                cols: this.cols,
+                node_id: this.node_id,
+            }
+            GetAllProductionTech(obj)
+                .then(res =>{
+                    this.tableData = res.data.list
+                    this.num = res.data.bean.total
+                })
+                .catch(res =>{
+                    console.log(res)
+                })
         },
         submitForm(){
-            // this.$refs[formName].validate((valid) => {
-            //     if (valid) {
-            //         this.newAssetsTypeFun()
-            //     } else {
-            //         console.log('error submit!!');
-            //         return false;
-            //     }
-            // });
+            if(this.prompt == '创建'){
+                let obj = {
+                    goods_id: this.form.goodName,
+                    technology_name: this.form.name, 
+                    technology_cycle: this.form.cycle,
+                    technology_describe: this.form.describe,
+                    sort: this.form.sort,
+                    img_url: this.imgArr.length > 0 ? this.imgArr[0] : '',
+                    node_id: this.node_id,
+                    node_name: this.node_name
+                }
+                InsertProductionTech(obj)
+                    .then(res =>{
+                        if(res.result == true){
+                            this.$message.success(res.message);
+                            this.page = 1
+                            this.closeFun()
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res =>{
+                        console.log(res)
+                    })
+            }else{
+                let obj = {
+                    goods_id: this.form.goodName,
+                    technology_name: this.form.name, 
+                    technology_cycle: this.form.cycle,
+                    technology_describe: this.form.describe,
+                    sort: this.form.sort,
+                    img_url: this.imgArr.length > 0 ? this.imgArr[0] : '',
+                    id: this.ids
+                }
+                UpdateProductionTech(obj)
+                    .then(res =>{
+                        if(res.result == true){
+                            this.$message.success(res.message);
+                            this.page = 1
+                            this.closeFun()
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res =>{
+                        console.log(res)
+                    })
+            }
+            
         },
         cancelFun(){
             this.closeFun()
@@ -188,28 +291,141 @@ export default {
             this.isEdits = true
         },
         closeFun(){
+            this.form = {
+                goodName: '', // 所属商品
+                name: '', // 工艺名称
+                cycle: '', // 周期
+                describe: '', // 工艺描述
+                sort: '', // 排序
+            }
+            this.ids = ''
+            this.imgArr1 = []
+            this.imgArr = []
             this.isEdits = false
         },
         editFun(ele){
+            this.ids = ele.id
+            this.form.goodName = ele.goods_id
+            this.form.name = ele.technology_name
+            this.form.cycle = ele.technology_cycle
+            this.form.describe = ele.technology_describe
+            this.form.sort = ele.sort
+            let obj = {
+                img_url: ele.img_url
+            }
+            this.imgArr1.push(obj)
             this.prompt = '编辑'
             this.isEdits = true
         },
         viewFun(ele){
+            let obj = {
+                img_url: ele.img_url
+            }
+            this.imgArrs.push(obj)
             this.isBigImg = true
         },
         handleCurrentChange(val) {
             this.page = val
-            this.getQueryAssetsBase()
+            this.getDataFun()
         },
         searchFun(){
-
+            this.page = 1
+            this.getDataFun()
         },
         clearFun(){
             this.goodName = ''
+            this.page = 1 
+            this.getDataFun()
         },
         closeFun2(){
+            this.imgArrs = []
             this.isBigImg = false
         }, 
+        fileFun(event){
+            var that = this;
+            let file = event.target.files;
+            let reg = /.(jpg|png|PNG|JPG)+$/;           
+            if(file[0].size){
+                let point = file[0].name.indexOf('.');
+                if(!reg.test((file[0].name).slice(point))){
+                    this.$message.error("上传图片格式不支持");
+                    return;
+                }
+                let size = file[0].size / 1024 / 1024 ;
+                if(size > 0.5){
+                    that.clarity = 0.5/size;
+                }else{
+                    that.clarity = 1;
+                }
+                let reader = new FileReader();
+                reader.readAsDataURL(file[0]); 
+                reader.onload = function(){                    
+                    that.imgFun(reader.result,that.clarity,function(src){
+                        that.imgArr.push(src.slice(23))
+                    })
+                }
+            }
+            // let timer = setInterval(()=>{
+            //   if(that.imgArr.length == file.length){
+            //     let formData = new FormData()  
+            //     formData.append('img_url', that.imgArr[0]);   
+            //     formData.append('node_id', that.node_id);  
+            //     formData.append('id', that.form.goodsID); 
+            //     let config = {
+            //       headers:{'Content-Type':'multipart/form-data'}
+            //     };
+            //     const ajaxPost = function (url, params,config) {
+            //       return new Promise((resolve, reject) => {
+            //         axios
+            //           .post(url, params,{config})
+            //           .then((res) => {
+            //               resolve(res.data)
+            //           })
+            //           .catch(() => {
+            //               reject('error')
+            //           })
+            //       })
+            //     }  
+            //     let url = baseUrl + 'goods/updateGoodsImgForTrace'
+            //     ajaxPost(url,formData,config)
+            //       .then(res => {
+            //         that.imgArr = []
+            //         that.imgUrl = res.data.img_url
+            //       })
+            //       .catch(res => {
+            //         console.log(res)
+            //       })
+            //     clearInterval(timer);
+            //   }
+            // },1000)
+        },
+        imgFun(path,quality,callback){
+            let img = new Image();
+            img.src = path;
+            img.onload = function(){
+                let that = this;
+                let w = that.width;
+                let h = that.height;
+                // console.log(w,h)
+                //生成canvas
+                let canvas = document.createElement('canvas');
+                let ctx = canvas.getContext('2d'); 
+                // 创建属性节点
+                let anw = document.createAttribute("width");
+                anw.nodeValue = w;
+                let anh = document.createAttribute("height");
+                anh.nodeValue = h;
+                canvas.setAttributeNode(anw);
+                canvas.setAttributeNode(anh); 
+                    // 在canvas绘制前填充白色背景   
+                ctx.fillStyle = "#fff";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(that, 0, 0, w, h);
+                let base64 = canvas.toDataURL('image/jpeg', quality );
+                // 回调函数返回base64的值
+                callback(base64);
+            }
+        },
         rowClass({ row, rowIndex}) {
             return {
                 background: '#f2f2f2',
@@ -395,36 +611,6 @@ export default {
                     font-size: 14px;
                     text-align: center;
                 }
-                .submit{
-                    margin: 30px auto;
-                    position: relative;
-                    left: 40%;
-                    display: inline-block;
-                    width: 90px;
-                    height: 30px;
-                    line-height: 30px;
-                    color: #409EFF;
-                    background: #fff;
-                    text-align: center;
-                    overflow: hidden;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    box-sizing: border-box;
-                    border: 1px solid #409EFF;
-                    .file{
-                        position: absolute;
-                        left: 0px;
-                        top: 0px;
-                        width: 90px;
-                        height: 36px;
-                        opacity: 0;
-                        background: rgba(0,0,0,0);
-                    }
-                }
-                .submit:hover{
-                    background: #409EFF;
-                    color: #fff;
-                }
                 .btn{
                     margin-left: 270px;
                 }
@@ -475,8 +661,6 @@ export default {
             
         }
         .msg-item{
-            margin: 10px 0;
-            width: 500px;
             display: flex;
             .submit{
                 margin: 0 30px;
@@ -514,20 +698,6 @@ export default {
                         top: 0;
                         left: 0;
                         margin: 10px;
-                        .icon-delete{
-                            position: absolute;
-                            top: -6px;
-                            right: -6px;
-                            width: 12px;
-                            height: 12px;
-                            text-align: center;
-                            line-height: 7px;
-                            font-size: 24px;
-                            background: #990000;
-                            color: #fff;
-                            border-radius: 50%;
-                            cursor: pointer;
-                        }
                         img{
                             width: 50px;
                             height: 50px;

@@ -10,8 +10,7 @@
       </el-form-item>
       <el-form-item label='角色：' prop='role'>
         <el-select v-model="form.role" placeholder="请选择" clearable :disabled='true' class="input">
-          <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName"
-                     :value="item.roleId"></el-option>
+          <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
         </el-select>
       </el-form-item>
       <div>
@@ -19,8 +18,7 @@
           <el-input v-model="form.people" type='text' class="input" clearable></el-input>
         </el-form-item>
         <el-form-item label='联系方式：' prop='phoneNumber'>
-          <el-input v-model="form.phoneNumber" type='text' class="input" maxlength='11' :disabled='true'
-                    clearable></el-input>
+          <el-input v-model="form.phoneNumber" type='text' class="input" maxlength='11' :disabled='true' clearable></el-input>
           <el-checkbox style="display:inline-block;" v-model="checked">是否向商户发送短信告知账号信息？</el-checkbox>
         </el-form-item>
       </div>
@@ -41,34 +39,23 @@
         <el-input v-model="form.callphone" clearable class="shop-msg-input"></el-input>
       </el-form-item>
       <el-form-item label="地址：" prop="addr" class="block-item">
-        <el-cascader :options="addrOptions" v-model="form.addr" placeholder="省/市/县" class="shop-msg-input"
-                     clearable :props="props" change-on-select></el-cascader>
+        <el-cascader :options="addrOptions" v-model="form.addr" placeholder="省/市/县" class="shop-msg-input" clearable 
+          :props="props" change-on-select></el-cascader>
         <el-input v-model="form.inforAddr" placeholder="请输入详细地址" clearable class="add-infor-input"></el-input>
       </el-form-item>
-
       <el-form-item label="上传图片" prop="desc" class="block-item">
-
-        <div >
-
-
-          <div  v-if="allowAddImg">
+        <div>
+          <div v-if="allowAddImg">
             <input type="file" accept="image/*" @change="changeImg($event)" ref="inputcheckimg">
             <div class="filter"></div>
           </div>
-
-          <!--<div class="img_box" v-for="(item,index) in imgArr" :key="index">-->
           <div v-for="(item,index) in imgArr" :key="index">
             <div class="img_show_box">
-
               <img :src="item" alt="">
             </div>
           </div>
-
         </div>
-
       </el-form-item>
-
-
       <el-form-item class="block-item">
         <el-button type="primary" class="new-add" @click="submitForm('form')">保存</el-button>
       </el-form-item>
@@ -169,7 +156,7 @@
       this.getRoleType();
       this.form.account = this.$route.params.username;
       this.form.password = this.$route.params.password;
-//         this.form.role = this.$route.params.roleId;
+      // this.form.role = this.$route.params.roleId;
       this.form.role = '合作社';
       this.form.people = this.$route.params.name;
       this.form.phoneNumber = this.$route.params.tel;
@@ -331,18 +318,15 @@
 
       //  将图片转换成Base64位
       changeImg(e) {
-
         var _this = this;
         var imgLimit = 1024;
         var files = e.target.files;
         var image = new Image();
         if (files.length > 0) {
           var dd = 0;
-
           if (files.item(dd).type != 'image/png' && files.item(dd).type != 'image/jpeg' && files.item(dd).type != 'image/gif') {
             return false;
           }
-
           if (files.item(dd).size > imgLimit * 102400) {
             //to do sth
           } else {
@@ -365,42 +349,30 @@
               ctx.drawImage(image, 0, 0, w, h);
               var ext = image.src.substring(image.src.lastIndexOf(".") + 1).toLowerCase();//图片格式
               var base64 = canvas.toDataURL("image/" + ext, quality);
-
               _this.showBaseCode = base64.substring(22);
-
               if (_this.imgArr.length = 1) {
                 _this.imgArr.splice(0, 1, base64);
-
               }
             }
           }
-
         }
       },
-
       //  表单提交数据
       submitFormLz() {
         let formData = new FormData();
         formData.append('shop_booth_id', this.$route.params.shop_booth_id);
         formData.append('img_url', this.showBaseCode);
-
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
-
         axios.post(nsHeZuoSheImagUrl, formData, config).then((res) => {
           if (res.status === 200) {
-
             this.$message.success(res.data.message);
-
-
           }
         })
       },
-
-
     }
   }
 </script>

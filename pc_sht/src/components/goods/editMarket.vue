@@ -2,7 +2,7 @@
   <div class="content">
     <div class="big-box">
       <div class="section-content">
-        <el-form  label-width="120px"  :model="form" ref="form" >
+        <el-form  label-width="130px"  :model="form" ref="form" >
           <el-form-item label="商品编码：">
             <el-input v-model="form.goodsCode"></el-input>
           </el-form-item>
@@ -69,6 +69,35 @@
               </span>  
             </div>
           </el-form-item>
+          <el-form-item label="商品基地图片：" v-if="showFile">
+            <div class="img-box">
+              <ul class="list">
+                <li class="list-item" v-if="imgList.length > 0" v-for="(item,index) in imgList" :key="index">    
+                  <figure class="image">
+                    <p class="icon-delete" @click="deleteFun(item,index)">-</p> 
+                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
+                    <div class="submit-btn">
+                      更换图片
+                      <form id="upload" enctype="multipart/form-data" method="post"> 
+                        <input type="file" class="file" ref="file2" multiple accept="image/*" @change="replaceFun($event,2,item)">
+                      </form>
+                    </div>  
+                  </figure>
+                </li>
+                <li v-if="imgList.length < 5">
+                  <div class="submit" @change="replaceFun($event,1)">
+                    <div class="btn">
+                      <p class="icon-add">+</p>
+                      <p>添加图片</p>     
+                    </div>
+                    <form id="upload" enctype="multipart/form-data" method="post"> 
+                      <input type="file" class="file" ref="file2" multiple accept="image/*">
+                    </form>
+                  </div>  
+                </li>  
+              </ul>
+            </div>
+          </el-form-item>
           <p class="add-material" v-if="amount" @click="MaterialFun">+添加原料</p>
           <p class="add-material" v-if="!amount" @click="newFun">+去增加原料</p>
           <el-form-item label="标签编码：">
@@ -104,6 +133,10 @@
             <p class="close" @click="removeStkFun(item)">X</p>
             <ul class="item">
               <li>
+                <p>编码</p>
+                <p>{{item.or_goods_code}}</p>
+              </li>
+              <li>
                 <p>原料</p>
                 <p>{{item.or_goods_name}}</p>
               </li>
@@ -136,6 +169,10 @@
           <div class="material-item" v-for="(item, index) in newArr" :key="index">
             <p class="close" @click="removeStkFun2(index)">X</p>
             <ul class="item" style="padding-bottom: 16px;">
+              <li>
+                <p>编码</p>
+                <p>{{item.GOODS_CODE}}</p>
+              </li>
               <li>
                 <p>原料</p>
                 <p>{{item.GOODS_NAME}}</p>
@@ -173,11 +210,12 @@
           @select="handleSelectionChange" @select-all="handleSelectionChange">
           <!--@select="handleSelectionChange" @select-all="handleSelectionChange"-->
           <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column prop="GOODS_CODE" label="原料编码"></el-table-column>
           <el-table-column prop="GOODS_NAME" label="原料名称"></el-table-column>
           <el-table-column prop="GOODS_UNIT" label="规格/单位"></el-table-column>
-          <el-table-column label="投入品占比">
+          <el-table-column label="投入品占比" width="120">
             <template slot-scope="scope">
-              <el-input style="width: 110px;" placeholder="投入品占比" size="mini" v-model="scope.row.amount" clearable>
+              <el-input style="width: 100px;" placeholder="投入品占比" size="mini" v-model="scope.row.amount" clearable>
               </el-input>
             </template>
           </el-table-column>
@@ -198,9 +236,10 @@
 <script>
   import {getDefaultProductTypes,allSpecification,addPurchase,goodUpdate,GoodsCode} from "../../js/goods/goods.js";
   import {GetSupplier} from '../../js/district/district.js'
-  import {saleAdd,purchase,DeleteStkOr,GeStkOrigin,UpdateStkOr,InsertStkOr} from "../../js/goods/goods.js";
+  import {saleAdd,purchase,DeleteStkOr,GeStkOrigin,UpdateStkOr,InsertStkOr,GetGoodsJdImg,
+    DeleteGoodsJdImg} from "../../js/goods/goods.js";
   import {getAddr} from '../../js/user/user.js';
-  import {baseUrl,baseUrl2} from '../../js/address/url.js'
+  import {baseUrl,baseUrl2,updateGoodsJdImg} from '../../js/address/url.js'
   import axios from 'axios';
   export default {
     name: "",    
@@ -236,7 +275,6 @@
           goodsUnit:"",
           input:"",
           specifications:"",
-
           unit:'',
           unitList:[
             {
@@ -303,10 +341,12 @@
         showFile: false,
         newSelectArr: [],
         selectData: [],
+        imgList: [],
+        goodImgArr: [],
+        sort: 1,
       }
     },
     created() {
-      console.log(this.$route.params)
       this.form.userId = localStorage.getItem('userId')
       this.region = this.$route.params.areaId
       this.bigAreaId = this.$route.params.bigAreaId
@@ -467,11 +507,177 @@
         }
         this.form.addr = originArr
         this.getStkFun()
+        this.getGoodsJdImgFun()
       }else{
         this.getGoodsCode()
       }
     },
     methods: {
+      deleteFun(ele,index){
+        let str = 'id=' + ele.id
+        DeleteGoodsJdImg(str)
+          .then(res => {
+            if(res.result == true){
+              this.$message.success(res.message);
+              this.getGoodsJdImgFun()
+            }else{
+              this.$message.error(res.message);
+            }
+          })
+          .catch(res => {
+            console.log(res)
+          })
+      },
+      getGoodsJdImgFun(){
+        let str = 'goods_info_id=' + this.form.goodsID
+        GetGoodsJdImg(str)
+          .then(res => {
+            if(res.data.length > 0){
+              this.imgList = res.data
+              this.sort = this.imgList[this.imgList.length - 1].sort + 1
+            }
+          })
+          .catch(res => {
+            console.log(res);
+          })
+      },
+      replaceFun(event,ele,item){
+        if(ele == 1){
+          // 添加图片
+          var that = this;
+          let file = event.target.files;
+          let reg = /.(jpg|png)+$/;           
+          if(file[0].size){
+            let point = file[0].name.indexOf('.');
+            if(!reg.test((file[0].name).slice(point))){
+              this.$message.error("上传图片格式不支持");
+              return;
+            }
+            let size = file[0].size / 1024 / 1024 ;
+            if(size > 0.5){
+              that.clarity = 0.5/size;
+            }else{
+              that.clarity = 1;
+            }
+            let reader = new FileReader();
+            reader.readAsDataURL(file[0]); 
+            reader.onload = function(){                    
+              that.imgFun(reader.result,that.clarity,function(src){
+                that.goodImgArr.push(src.slice(23))
+              })
+            }
+          }
+          let timer = setInterval(()=>{
+            if(this.goodImgArr.length == file.length){
+              let formData = new FormData()  
+              formData.append('goods_info_id', that.form.goodsID);  
+              formData.append('node_id', that.node_id);  
+              formData.append('node_name', that.node_name);  
+              formData.append('goods_name', that.form.goodsName);  
+              formData.append('sort', that.sort);  
+              formData.append('img_url', that.goodImgArr[0]);   
+              let config = {
+                headers:{'Content-Type':'multipart/form-data'}
+              };
+              const ajaxPost = function (url, params,config) {
+                return new Promise((resolve, reject) => {
+                  axios
+                    .post(url, params,{config})
+                    .then((res) => {
+                      resolve(res.data)
+                    })
+                    .catch(() => {
+                      reject('error')
+                    })
+                })
+              }
+              let url = updateGoodsJdImg
+              ajaxPost(url,formData,config)
+                .then(res => {
+                  if(res.result == true){
+                    this.$message.success(res.message);
+                  }else{
+                    this.$message.error(res.message);
+                  }
+                  that.goodImgArr = []
+                  that.getGoodsJdImgFun()
+                })
+                .catch(res => {
+                  console.log(res)
+                })
+              clearInterval(timer);
+            }
+          },1000)
+        }else{
+          // 更换图片
+          console.log(item)
+          var that = this;
+          let file = event.target.files;
+          let reg = /.(jpg|png)+$/;           
+          if(file[0].size){
+            let point = file[0].name.indexOf('.');
+            if(!reg.test((file[0].name).slice(point))){
+              this.$message.error("上传图片格式不支持");
+              return;
+            }
+            let size = file[0].size / 1024 / 1024 ;
+            if(size > 0.5){
+              that.clarity = 0.5/size;
+            }else{
+              that.clarity = 1;
+            }
+            let reader = new FileReader();
+            reader.readAsDataURL(file[0]); 
+            reader.onload = function(){                    
+              that.imgFun(reader.result,that.clarity,function(src){
+                that.goodImgArr.push(src.slice(23))
+              })
+            }
+          }
+          let timer = setInterval(()=>{
+            if(this.goodImgArr.length == file.length){
+              let formData = new FormData()  
+              formData.append('id', item.id);  
+              formData.append('goods_info_id', that.form.goodsID);  
+              formData.append('node_id', that.node_id);  
+              formData.append('node_name', that.node_name);  
+              formData.append('goods_name', that.form.goodsName);  
+              formData.append('sort', item.sort);  
+              formData.append('img_url', that.goodImgArr[0]);
+              let config = {
+                headers:{'Content-Type':'multipart/form-data'}
+              };
+              const ajaxPost = function (url, params,config) {
+                return new Promise((resolve, reject) => {
+                  axios
+                    .post(url, params,{config})
+                    .then((res) => {
+                      resolve(res.data)
+                    })
+                    .catch(() => {
+                      reject('error')
+                    })
+                })
+              }
+              let url = updateGoodsJdImg
+              ajaxPost(url,formData,config)
+                .then(res => {
+                  if(res.result == true){
+                    this.$message.success(res.message);
+                  }else{
+                    this.$message.error(res.message);
+                  }
+                  that.goodImgArr = []
+                  that.getGoodsJdImgFun()
+                })
+                .catch(res => {
+                  console.log(res)
+                })
+              clearInterval(timer);
+            }
+          },1000)
+        }
+      },
       onSubmit(){
         let stk_goods_code = this.$route.params.goodsMsg.GOODS_CODE ? this.$route.params.goodsMsg.GOODS_CODE : '',
           stk_goods_name = this.$route.params.goodsMsg.GOODS_NAME,
@@ -1258,6 +1464,104 @@
   .content {
     height: 100%;
     box-sizing: border-box;
+    .img-box{
+      .list{
+        display: flex;
+        flex-wrap:wrap;
+        width: 360px;
+        li{
+          height: 80px;
+          margin: 10px; 
+        }
+        .list-item{   
+          .image{
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            box-sizing: border-box;
+            border: 1px dashed #ccc;
+            .icon-delete{
+              position: absolute;
+              top: -6px;
+              right: -6px;
+              width: 16px;
+              height: 16px;
+              text-align: center;
+              line-height: 10px;
+              font-size: 30px;
+              background: #990000;
+              color: #fff;
+              border-radius: 50%;
+              cursor: pointer;
+            }
+            img{
+              width: 100%;
+              height: 100%;
+            }
+            .submit-btn{
+              position: relative;
+              right: -28px;
+              bottom: 40px;
+              display: inline-block;
+              width: 50px;
+              height: 20px;
+              line-height: 20px;
+              color: #fff;
+              background:  #409EFF;
+              text-align: center;
+              overflow: hidden;
+              font-size: 12px;
+              .file{
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                width: 50px;
+                height: 20px;
+                opacity: 0;
+                background: rgba(0,0,0,0);
+              }
+            }
+          }
+        }
+        .submit{  
+          position: relative;
+          top: 0;
+          display: inline-block;
+          margin-bottom: -12px;
+          width: 80px;
+          height: 80px;
+          line-height: 30px;
+          color: #ccc;
+          background: #fff;
+          overflow: hidden;
+          border-radius: 5px;
+          font-size: 14px;
+          box-sizing: border-box;
+          border: 1px dashed #ccc;
+          .btn{
+            text-align: center;
+            p{
+              line-height: 30px;
+            }
+            .icon-add{ 
+              margin-top: 10px;
+              font-size: 26px;
+            }
+          }
+          .file{
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+            background: rgba(0,0,0,0);
+          }
+        }
+      }
+    }
     .box-fileimg{
       display: flex;
       width: 300px;
@@ -1362,9 +1666,9 @@
         position: relative;
         top: 50%;
         left: 50%;
-        margin-left: -270px;
+        margin-left: -320px;
         margin-top: -300px;
-        width: 540px;
+        width: 640px;
         height: 600px;
         background: #fff;
         .box-title{
@@ -1508,6 +1812,10 @@
     }
     .el-cascader{
       width: 380px;
+    }
+    .el-table{
+      height: 360px;
+      overflow: auto;
     }
   }
 </style>

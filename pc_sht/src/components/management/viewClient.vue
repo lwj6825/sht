@@ -9,7 +9,7 @@
             <el-form-item label="身份证号：">
               <span>{{form.regId}}</span>
             </el-form-item>
-            <el-form-item label="供应商名称："  prop="bizName">
+            <el-form-item label="客户名称："  prop="bizName">
               <span>{{form.bizName}}</span>
             </el-form-item>
             <el-form-item label="联系人：" prop="name">

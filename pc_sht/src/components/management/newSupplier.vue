@@ -22,7 +22,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="供货单位：" prop="ghdw">
+            <el-form-item label="供货单位：">
               <el-select v-model="form.ghdw" placeholder="请选择供货单位" @change="selectGhdw" filterable>
                 <el-option  v-for="val in dwArr" :key="val.ID" :label="val.SUPPLIER_NAME" :value="val.SUPPLIER_NAME" >
                 </el-option>
@@ -43,7 +43,7 @@
             <el-form-item label="详细地址：" prop="infoAddr">
               <el-input v-model="form.infoAddr" placeholder="请输入详细地址" clearable></el-input>
             </el-form-item>
-            <el-form-item label="产地：" prop="origin_name">
+            <el-form-item label="产地：">
               <el-cascader :options="addrOptions" v-model="form.origin_name" placeholder="省/市/县" class="address" clearable :props="props" change-on-select></el-cascader>
             </el-form-item>
 

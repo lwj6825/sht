@@ -1,8 +1,8 @@
 // base url
 export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.1.48:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
-// export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
+export const baseUrl2 = 'http://192.168.1.45:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 // export const baseUrl = 'http://shop.zhdtech.com/';//外网
@@ -67,6 +67,8 @@ export const supplierList = baseUrl + 'manage/getAllGysForMoreBiz';// 管理供�
 export const bindingSupplier = baseUrl + 'manage/getAllGysForBind';//管理供应商 - 绑定供应商列表
 export const saveBindinSupplier  = baseUrl + 'manage/insertGysForBind';//管理供应商 - 绑定供应商保存
 export const getCenterBussinessInfo  = baseUrl + 'manage/getCenterBussinessInfo';//// 营业执照号
+export const importCustomer  = baseUrl2 + 'manage/importCustomer';//// 导入
+export const downloadCustomer  = baseUrl2 + 'manage/downloadCustomer';//// 导出
 //商品
 export const entryGgoodsList = baseUrl + 'goods/getAllPurchaseGoodsForMoreBiz';// 管理商品 - 进货
 export const sellGoodsList = baseUrl + 'goods/getAllSalesGoodsForMoreBiz';// 管理商品 - 销售
@@ -102,6 +104,9 @@ export const updateGoodsImgForTrace = baseUrl + 'goods/updateGoodsImgForTrace';/
 //销售商品
 export const querySales = baseUrl + 'goods/querySales';// 查询销售商品列表
 export const salesAdd = baseUrl + 'goods/salesAdd';// 新增销售商品
+export const getGoodsJdImg = baseUrl + 'goods/getGoodsJdImg';// 获取销售商品的 基地图片
+export const updateGoodsJdImg = baseUrl + 'goods/updateGoodsJdImg';// 新增或者修改基地图片
+export const deleteGoodsJdImg = baseUrl + 'goods/deleteGoodsJdImg';// 删除 基地图片
 //单条商品
 export const lookGoods = baseUrl + 'goods/lookGoods';// 查看商品详情
 export const goodsUpdate = baseUrl + 'goods/goodsUpdate';// 编辑商品
@@ -285,6 +290,13 @@ export const deleteProduction = baseUrl + 'production/deleteProduction' // 删�
 export const downloadProduction = baseUrl + 'production/downloadProduction' // 下载文件
 export const downloadBatchProduction = baseUrl + 'production/downloadBatchProduction' // 批量下载文件
 export const findProduction = baseUrl + 'production/findProduction' // 查看生产详情
+
+// 加工工艺
+export const getAllProductionTech = baseUrl + 'farming/getAllProductionTech' // 查询加工工艺接口
+export const insertProductionTech = baseUrl + 'farming/insertProductionTech' // 新增加工工艺接口
+export const updateProductionTech = baseUrl + 'farming/updateProductionTech' // 更改加工工艺接口
+export const deleteProductionTech = baseUrl + 'farming/deleteProductionTech' // 删除加工工艺接口
+
 // 资产
 export const queryAssetsUser = baseUrl3 + 'assets/queryAssetsUser' // 查询 所有资产用户信息（需要确定用户类型类型）
 export const queryAssetsConf = baseUrl3 + 'assets/queryAssetsConf' // 2.查询 资产状态、所属期 等查询条件下拉框

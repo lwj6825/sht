@@ -117,10 +117,22 @@
     },
     methods: {
       downloadFun(){
+        let areaId = ''
+        if(this.isRegion == 'false'){
+          areaId = this.scShopId
+        }else{
+          areaId = this.areaId
+        }
         window.location.href = downloadGys + "?userId=" + this.userId + '&region=' + this.areaId + '&biz_name=' + this.gysName 
-          + '&concact_name=' + this.concactName + '&type=1' + '&shop_booth_id=' + this.areaId
+          + '&concact_name=' + this.concactName + '&type=1' + '&shop_booth_id=' + areaId
       },
       fileFun(event){
+        let areaId = ''
+        if(this.isRegion == 'false'){
+          areaId = this.scShopId
+        }else{
+          areaId = this.areaId
+        }
         let loading = this.$loading({
           lock: true,
           text: '导入中...',
@@ -136,7 +148,7 @@
         formData.append('biz_name', this.gysName);   
         formData.append('concact_name', this.concactName);   
         formData.append('type', '1');   
-        formData.append('shop_booth_id', this.areaId);   
+        formData.append('shop_booth_id', areaId);   
         let config = {
             headers:{'Content-Type':'multipart/form-data'}
         };
@@ -155,7 +167,9 @@
         let url = importGys;
         ajaxPost(url,formData,config)
           .then(res => {
-            console.log(res)
+            this.gysName =''; 
+            this.concactName = '';
+            this.page = 1
             if(res.result == true){
               loading.close();
               this.$message.success(res.message);
@@ -231,6 +245,7 @@
       clearConditions(){  //清空筛选条件      
         this.gysName =''; 
         this.concactName = '';
+        this.page = 1
         this.getAllGys()
       },
       newSupplierMgm(){//新增供应商

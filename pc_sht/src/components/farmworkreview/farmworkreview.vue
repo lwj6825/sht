@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import menu from "../../assets/test/menu";
   import TopHead from '../common/header';
   export default {

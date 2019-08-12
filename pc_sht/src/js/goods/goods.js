@@ -15,6 +15,9 @@ import {
   updateStkOr,
   deleteStkOr,
   insertStkOr,
+  getGoodsJdImg,
+  updateGoodsJdImg,
+  deleteGoodsJdImg
 } from '../address/url.js';
 
 
@@ -66,7 +69,18 @@ export const sales  = function(params) {
 export const saleAdd  = function(params) {
   return ajaxPost(salesAdd,params)
 }
-
+// 获取销售商品的 基地图片
+export const GetGoodsJdImg = function(params) {
+  return ajaxGet(getGoodsJdImg +'?'+ params)
+}
+// 新增或者修改基地图片
+export const UpdateGoodsJdImg  = function(params) {
+  return ajaxPost(updateGoodsJdImg,params)
+}
+// 删除
+export const DeleteGoodsJdImg  = function(params) {
+  return ajaxGet(deleteGoodsJdImg +'?'+ params)
+}
 // 原料
 // 查看原料
 export const GeStkOrigin  = function(params) {

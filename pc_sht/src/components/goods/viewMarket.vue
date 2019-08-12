@@ -24,6 +24,17 @@
               </figure> 
             </div>
           </el-form-item>
+          <el-form-item label="商品基地图片：">
+            <div class="img-box">
+              <ul class="list">
+                <li class="list-item" v-if="imgList.length > 0" v-for="(item,index) in imgList" :key="index">    
+                  <figure class="image">
+                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
+                  </figure>
+                </li> 
+              </ul>
+            </div>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" class="new-add" @click="modify()" >修改</el-button>
           </el-form-item>
@@ -36,6 +47,10 @@
         <div class="material-content">
           <div class="material-item" v-for="(item, index) in materialArr" :key="index">
             <ul class="item">
+              <li>
+                <p>编码</p>
+                <p>{{item.or_goods_code}}</p>
+              </li>
               <li>
                 <p>原料</p>
                 <p>{{item.or_goods_name}}</p>
@@ -62,6 +77,7 @@
   </div>
 </template>
 <script>
+  import {GetGoodsJdImg} from "../../js/goods/goods.js";
   export default {
     name: "",    
     data() {
@@ -77,6 +93,8 @@
         imgUrl: '',
         logoUrl: '',
         isShow:false,
+        imgList: [],
+        goodsID: '',
       }
     },
     mounted(){
@@ -84,6 +102,7 @@
       if(this.$route.params.goodsMsg.stk_list){
         this.materialArr = this.$route.params.goodsMsg.stk_list;
       }
+      this.goodsID = this.$route.params.goodsMsg.ID
       this.imgUrl = this.$route.params.goodsMsg.IMG_URL
       this.logoUrl = this.$route.params.goodsMsg.PRODUCT_IMG_URL
       this.supplier = this.$route.params.goodsMsg.SUPPLIERS_NAME;
@@ -102,8 +121,21 @@
       }else{
         this.measuringUnit = '';
       }
+      this.getGoodsJdImgFun()
     },
     methods: {
+      getGoodsJdImgFun(){
+        let str = 'goods_info_id=' + this.goodsID
+        GetGoodsJdImg(str)
+          .then(res => {
+            if(res.data.length > 0){
+              this.imgList = res.data
+            }
+          })
+          .catch(res => {
+            console.log(res);
+          })
+      },
       modify(){
         this.$router.push({name:'EditMarket',params:{'goodsMsg':this.$route.params.goodsMsg,areaId: this.$route.params.areaId}})
       }
@@ -117,6 +149,104 @@
     height: 100%;
     background: #fff;
     box-sizing: border-box;
+    .img-box{
+      .list{
+        display: flex;
+        flex-wrap:wrap;
+        width: 380px;
+        li{
+          height: 80px;
+          margin: 10px; 
+        }
+        .list-item{   
+          .image{
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            box-sizing: border-box;
+            border: 1px dashed #ccc;
+            .icon-delete{
+              position: absolute;
+              top: -6px;
+              right: -6px;
+              width: 16px;
+              height: 16px;
+              text-align: center;
+              line-height: 10px;
+              font-size: 30px;
+              background: #990000;
+              color: #fff;
+              border-radius: 50%;
+              cursor: pointer;
+            }
+            img{
+              width: 100%;
+              height: 100%;
+            }
+            .submit-btn{
+              position: relative;
+              right: -28px;
+              bottom: 40px;
+              display: inline-block;
+              width: 50px;
+              height: 20px;
+              line-height: 20px;
+              color: #fff;
+              background:  #409EFF;
+              text-align: center;
+              overflow: hidden;
+              font-size: 12px;
+              .file{
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                width: 50px;
+                height: 20px;
+                opacity: 0;
+                background: rgba(0,0,0,0);
+              }
+            }
+          }
+        }
+        .submit{  
+          position: relative;
+          top: 0;
+          display: inline-block;
+          margin-bottom: -12px;
+          width: 80px;
+          height: 80px;
+          line-height: 30px;
+          color: #ccc;
+          background: #fff;
+          overflow: hidden;
+          border-radius: 5px;
+          font-size: 14px;
+          box-sizing: border-box;
+          border: 1px dashed #ccc;
+          .btn{
+            text-align: center;
+            p{
+              line-height: 30px;
+            }
+            .icon-add{ 
+              margin-top: 10px;
+              font-size: 26px;
+            }
+          }
+          .file{
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+            background: rgba(0,0,0,0);
+          }
+        }
+      }
+    }
     .box-fileimg{
       display: flex;
       width: 300px;
@@ -173,7 +303,7 @@
       .material-item{
         margin: 16px 19px;
         width: 160px;
-        height: 160px;
+        height: 180px;
         background: #fff;
         .item{
           margin-top: 14px; 

@@ -102,7 +102,7 @@
         <el-form-item label="检测人">
           <el-input v-model="check_person"></el-input>
         </el-form-item>
-        <el-form-item label="检测机">
+        <el-form-item label="检测机构">
           <el-input v-model="check_mechanism"></el-input>
         </el-form-item>
         <el-form-item>

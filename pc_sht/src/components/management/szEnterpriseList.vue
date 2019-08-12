@@ -4,10 +4,11 @@
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
                     <el-form-item label="企业名称">
-                        <el-select v-model="form.enterprise" filterable clearable placeholder="请选择">
+                        <!--<el-select v-model="form.enterprise" filterable clearable placeholder="请选择">
                             <el-option v-for="item in enterpriseList" :key="item.a_conf_id" :label="item.a_conf_item" :value="item.a_conf_id">
                             </el-option>
-                        </el-select>
+                        </el-select>-->
+                        <el-input v-model="form.enterprise" clearable size="small"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn" @click="searchFun" style="margin-left: 10px;">搜索</el-button>
@@ -32,17 +33,17 @@
             </div>
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="in_date" label="编码"> </el-table-column>
-                    <el-table-column prop="buyer_booth_name" label="账号"> </el-table-column>
-                    <el-table-column prop="seller_booth_name" label="企业名称"> </el-table-column>
-                    <el-table-column prop="suppiler_name" label="联系人"> </el-table-column>
-                    <el-table-column prop="extra2" label="联系方式"> </el-table-column>
-                    <el-table-column prop="actual_money" label="状态"> </el-table-column>
-                    <el-table-column prop="actual_money" label="创建时间"> </el-table-column>
+                    <!--<el-table-column prop="in_date" label="编码"> </el-table-column>-->
+                    <el-table-column prop="username" label="账号"> </el-table-column>
+                    <el-table-column prop="booth_name" label="企业名称"> </el-table-column>
+                    <el-table-column prop="contacts" label="联系人"> </el-table-column>
+                    <el-table-column prop="callphone" label="联系方式"> </el-table-column>
+                    <!--<el-table-column prop="actual_money" label="状态"> </el-table-column>
+                    <el-table-column prop="actual_money" label="创建时间"> </el-table-column>-->
                     <el-table-column label="操作" width='220'>
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
-                            <el-button type="text" size="small" @click="deleteTzFun(scope.row)">删除</el-button>
+                            <!--<el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>-->
                         </template>
                     </el-table-column>
                 </el-table>
@@ -54,6 +55,7 @@
 </template>
 
 <script>
+import {CropMgm} from '../../js/farmthings/farmworkget.js'
 export default {
     name:"szEnterpriseList",
     data() {
@@ -61,39 +63,63 @@ export default {
             form: {
                 enterprise: '',
             },
-            tableData: [
-                {in_date: '5464646'}
-            ],
+            tableData: [],
             page: 1,
             cols: 15,
             num: 0,
-            enterpriseList: []
+            enterpriseList: [],
+            localuserId: '',
         }
     },
     mounted() {
-        
+        this.localuserId = JSON.parse(localStorage.getItem('userId'));
+        this.getCropList()
     },
     methods: {
+        deleteFun(ele){
+
+        },
+        getCropList(contactName,cropName){//获取合作社列表
+            let data = {
+                userId:this.localuserId,
+                contacts: '',
+                booth_name: this.form.enterprise,
+                page: this.page,
+                cols: this.cols,
+                total: '',
+            }
+            CropMgm(data)
+                .then(res => {
+                    this.tableData = res.data.dataList;
+                    this.num = res.data.condition.total
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         addFun(){
             this.$router.push({name: 'SzAddEnterprise'})
         },
-        detailTzFun(){
-            this.$router.push({name: 'SzViewEnterprise'})
+        detailTzFun(ele){
+            this.$router.push({name: 'SzViewEnterprise',params: ele})
         },
         deleteTzFun(){
 
         },
         handleCurrentChange(val) {
             this.page = val
+            this.getCropList()
         },
         searchFun(){
-
+            this.page = 1
+            this.getCropList()
         },
         clearFun(){
             this.form = {
                 enterprise: '',
             }
             this.page = 1
+            this.getCropList()
         },
         rowClass({ row, rowIndex}) {
             return {

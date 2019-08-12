@@ -106,7 +106,7 @@ export default {
                 phone: [
                     {required: true, message: '请输入联系电话',trigger: 'blur'},
                     {validator:function(rule,value,callback){
-                        if(/^((0\d{2,3}-\d{7,8})|(1[3584]\d{9})|(0\d{2,3}\d{7,8}))$/.test(value) == false){
+                        if(/^((\d{3,4}-\d{7,8})|(1[35874]\d{9})|(\d{3,4}\d{7,8}))$/.test(value) == false){
                             callback(new Error("请输入正确的手机号或座机号"));
                         }else{
                             callback();

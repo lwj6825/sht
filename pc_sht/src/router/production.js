@@ -40,7 +40,7 @@ export default [
         component: resolve => require(['@/components/production/szProcessing'],resolve),
         name:'SzProcessing',
         meta:{
-            // id:'274',
+            id:'342',
             node:'production',
             url:'szProcessing',
         }

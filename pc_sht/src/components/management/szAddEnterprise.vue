@@ -15,17 +15,28 @@
                         <el-input v-model="form.password" clearable></el-input>
                     </div>
                 </div>
-                <div class="data">
+                <!--<div class="data">
                     <div class="title">角色</div>
                     <div class="msg">
                         <el-select v-model="form.role" clearable placeholder="请选择">
-                            <el-option v-for="item in roleList" :key="item.a_conf_id" :label="item.a_conf_item"
-                                :value="item.a_conf_id">
+                            <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
                             </el-option>
                         </el-select>
                     </div>
+                </div>-->
+                <div class="data">
+                    <div class="title">联系人</div>
+                    <div class="msg">
+                        <el-input v-model="form.name" clearable></el-input>
+                    </div>
                 </div>
                 <div class="data">
+                    <div class="title">联系方式</div>
+                    <div class="msg">
+                        <el-input v-model="form.callphone" clearable></el-input>
+                    </div>
+                </div>
+                <!--<div class="data">
                     <div class="title">企业编码</div>
                     <div class="msg">
                         <el-input v-model="form.qyCoding" clearable></el-input>
@@ -44,7 +55,7 @@
                             inactive-text="停用" active-value="启用" inactive-value="停用" @change="changeFun">
                         </el-switch>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
         <el-form :model="form" class="form" ref="form"  label-width="120px" size="small">
@@ -55,13 +66,13 @@
             <el-form-item label="营业执照号">
                 <el-input v-model="form.licenceNo" clearable></el-input>
             </el-form-item>
-            <el-form-item label="营业执照附件">
+            <!--<el-form-item label="营业执照附件">
                 <div class="msg-item">   
                     <div class="img-list">
                         <ul>
                             <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
                                 <figure class="image">
-                                    <!--<p class="icon-delete" @click="removeFun(index)">-</p>-->
+                                    <p class="icon-delete" @click="removeFun(index)">-</p>
                                     <img :src="item.img_url">
                                 </figure>
                             </li>
@@ -76,10 +87,10 @@
                         </span>
                     </div>
                 </div>
-            </el-form-item>
-            <el-form-item label="法人代表">
+            </el-form-item>-->
+            <!--<el-form-item label="法人代表">
                 <el-input v-model="form.behalf" clearable></el-input>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="联系地址">
                 <el-cascader :options="addrOptions" v-model="form.addr" placeholder="省/市/县" 
                     clearable :props="props" change-on-select></el-cascader>
@@ -87,13 +98,13 @@
             <el-form-item label="详细地址">
                 <el-input v-model="form.inforAddr" placeholder="请输入详细地址" clearable class="add-infor-input"></el-input>
             </el-form-item>
-            <el-form-item label="经营范围">
+            <!--<el-form-item label="经营范围">
                 <el-select v-model="form.jyScope" clearable placeholder="请选择">
                     <el-option v-for="item in roleList" :key="item.a_conf_id" :label="item.a_conf_item"
                         :value="item.a_conf_id">
                     </el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item>--><!---->
             <div class="list-title">联系人信息</div>
             <el-form-item label="联系人">
                 <el-input v-model="form.name" clearable></el-input>
@@ -110,6 +121,9 @@
 </template>
 
 <script>
+import {getAddr} from '../../js/user/user.js';
+import {getRoleList} from '../../js/role/role.js';
+import {insBiz} from '../../js/management/management.js';
 export default {
     name:"szAddEnterprise",
     data() {
@@ -147,11 +161,83 @@ export default {
         }
     },
     mounted() {
-        
+        this.userId = JSON.parse(localStorage.getItem('userId'));
+        this.getAddrList()
+        this.getRoleType()
     },
     methods: {
+        getAddrList(){//获取地区列表
+            getAddr()
+            .then(res => {
+                this.addrOptions = res.data.dataList
+            })
+            .catch(res => {
+                console.log(res)
+            })
+        },
+        getRoleType(){//获取角色列表
+            let pageData = {
+                page:'1',
+                cols:'150',
+                roleName:'',
+                USERID: this.userId,
+            }
+            getRoleList(pageData)
+                .then(res => {
+                    this.roleList = res.data.roleList;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         saveFun(){
-
+            let addrArr = [];
+            this.addrOptions.forEach(ele => {
+                if(ele.szm == this.form.addr[0]){
+                    addrArr.push(ele.caption)
+                    ele.list.forEach(ele => {
+                        if(ele.szm == this.form.addr[1]){
+                            addrArr.push(ele.caption)
+                            ele.list.forEach(ele => {
+                                if(ele.szm == this.form.addr[2]){
+                                    addrArr.push(ele.caption)
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+            let data = {
+                userName:this.form.account,//账号
+                password:this.form.password,//密码
+                roleId: "7",//角色
+                contact:this.form.name,//联系人
+                telphone:this.form.callphone,// 联系方式
+                state:"1",
+                licenceNo:this.form.licenceNo,//营业执照号
+                regId: '',//身份证
+                nodeName:this.form.enterprise, // 企业名称
+                name:this.form.name,//联系人
+                callphone:this.form.callphone,//联系电话
+                areaId:this.form.addr[2],//地址序列号
+                areaName:addrArr.join(""),//地址名称
+                addr:this.form.inforAddr,//地址详细信息
+                userId:this.userId,//用户id
+            }
+            console.log(data)
+            insBiz(data)
+                .then(res => {
+                    if(res.result){
+                        this.$message.success(res.message)
+                        this.$router.push({name:'SzEnterpriseList'})
+                    }else{
+                        // console.log(res.message);
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch(res => {
+                    // console.log(res.message)
+                })
         },
         cancalFun(){
             this.$router.push({name: 'SzEnterpriseList'})
