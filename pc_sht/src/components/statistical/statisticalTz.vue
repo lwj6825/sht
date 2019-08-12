@@ -2,7 +2,7 @@
     <div class="content saleTz" ref="content" v-loading="loading">
         <div class="back" @click="back">返回</div>
         <div class="areaBox" ref="areaBox" v-if="isShow">
-            <AreaSelect @selectId='selectId'></AreaSelect>
+            <AreaSelect @selectId='selectId' :gooduserId="gooduserId"></AreaSelect>
         </div>
         <div class="searchs" ref="searchs">
             <div class="search">
@@ -84,7 +84,8 @@
                 <el-table :data="tableData" :header-cell-style="rowClass" @expand-change="detailTzFun"
                 :row-key='getRowKeys'>
                     <el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
-                    <el-table-column prop="buyer_booth_name" label="客户"> </el-table-column>
+                    
+                   
                     <el-table-column prop="in_date" label="销售日期"  width="180"> </el-table-column>
                     <el-table-column label="商品信息">
                         <template slot-scope="scope">
@@ -106,6 +107,7 @@
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
                         </template> v-if="props.row.tz_id == goodMsg[0].tz_id"
                     </el-table-column>-->
+                    <el-table-column prop="buyer_booth_name" label="客户"></el-table-column>
                     <el-table-column type="expand">
                         <template slot-scope="scope">
                             <div class="list">
@@ -128,6 +130,7 @@
                             </div>
                         </template>
                     </el-table-column>
+                     
                 </el-table>
             </div>
             <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
@@ -155,7 +158,7 @@ function timestampToTime(timestamp) {
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + '-';
     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate();
+    var D = date.getDate() + ' ';
     // var h = date.getHours() + ':';
     // var m = date.getMinutes() + ':';
     // var s = date.getSeconds();
@@ -215,35 +218,35 @@ export default {
                 return row.id
             },
             start_time:'',
-            end_time:''
-
+            end_time:'',
+            gooduserId:''
         }
     },
+    created(){
+            this.gooduserId = this.$route.query.gooduserId;
+     },
     mounted() {
         setTimeout(() => {
                 this.loading = false
         }, 2000);
         // 接受值
+        this.gooduserId = this.$route.query.gooduserId;
         this.start_time  = this.$route.query.startTime;
         this.end_time  = this.$route.query.endTime;
         this.form.value1 = [this.start_time,this.end_time]
+        this.startTime = this.form.value1[0];
+        this.endTime = this.form.value1[1];
         this.form.GoodList = this.$route.query.shopname;
         this.form.user = this.$route.query.merChant;
-        console.log(this.start_time)
-        console.log(this.end_time)
-        console.log(this.$route.query.shopname)
-        // console.log(this.form.value1);
-        // console.log(this.form.user)
         this.isRegion = localStorage.getItem('isRegion')
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
         this.local_node_id_id = localStorage.getItem('nodeidlocal');
-        this.getTime()
+        console.log(this.gooduserId)
+        console.log(this.$route.params)
+        // this.getTime()
         this.getGoodsFun()
-        let arr = []
-        arr.push(this.startTime)
-        arr.push(this.endTime)
-        this.form.value1 = arr
+        
         if(this.isRegion == 'false'){
             this.isShow = false
             this.getSaleTzFun()
@@ -272,7 +275,7 @@ export default {
         jcpurchase(boothData)
           .then(res => {
             this.local_check_good_options = res.data;
-            console.log(res,'商品列表')
+            // console.log(res,'商品列表')
           })
           .catch(res => {
           })
@@ -358,7 +361,6 @@ export default {
             }
             GetAllBiz(obj)
                 .then(res => {
-                    console.log(res.data,"dataList")
                     this.options = res.data.dataList
                 })
                 .catch(() => {
@@ -368,7 +370,7 @@ export default {
         fileFun(event){
             // if 文件类型 txt csv xls xlsx--- 大小不能超过 10M
             let param = this.$refs.file.files[0];
-            console.log(this.$refs.file.files)
+            // console.log(this.$refs.file.files)
             if(param.type == 'text/plain' || param.type == 'text/csv' || param.type == 'application/vnd.ms-excel' || param.type == 'text/csv' || param.type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
                 let fileSize = param.size / 1024
                 if(fileSize > 10240){
@@ -439,8 +441,17 @@ export default {
             QueryArea(data)
                 .then(res =>{
                     // console.log(res,"TZpost数据")
-                    this.bigAreaId = res.data.dataList[0].userId;
-                    this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
+                     if(this.$route.query.gooduserId){
+                        res.data.dataList.forEach(ele => {
+                            if(ele.userId == this.$route.query.gooduserId){
+                                this.bigAreaId = ele.userId;
+                                this.areaId = ele.bootList[0].shop_booth_id;
+                            }
+                        });
+                    }else{
+                        this.bigAreaId = res.data.dataList[0].userId;
+                        this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
+                    }
                     this.getSaleTzFun()
                     this.getMerchantsFun()
                 })
@@ -471,14 +482,14 @@ export default {
                 GetSaleTz(obj)
                     .then(res => {
                         // alert(res,"商品名字")
-                        this.loading = false
+                        // this.loading = false
                         this.tableData = res.data.tzList
                         this.num = res.data.tzBean.total
-                        loading.close();
+                        // loading.close();
                     })
                     .catch(res => {
                         console.log(res)
-                        loading.close();
+                        // loading.close();
                     })
             }else{
                 let obj = {
@@ -491,16 +502,16 @@ export default {
                     page: this.page,
                     cols: this.cols,
                 }
-                console.log(this.form.GoodList,"goodlist")
+                // console.log(this.form.GoodList,"goodlist")
                 GetSaleTz(obj)
                     .then(res => {
                         this.tableData = res.data.tzList
                         this.num = res.data.tzBean.total
-                        loading.close();
+                        // loading.close();
                     })
                     .catch(res => {
                         console.log(res)
-                        loading.close();
+                        // loading.close();
                     })
             }
         },
@@ -523,7 +534,7 @@ export default {
             }
             QueryArea(data)
                 .then(res =>{
-                    console.log(res,"aaa")
+                    // console.log(res,"aaa")
                     res.data.dataList.forEach(ele => {
                         // console.log(ele)
                         if(ele.userId == id){
@@ -738,7 +749,7 @@ export default {
             padding: 0 10px;
         }
         .el-date-editor .el-range__icon,.el-date-editor .el-range-separator{
-            line-height: 30px;
+            line-height: 21px;
         }
         .el-table__body-wrapper{
             font-size: 13px;
@@ -748,6 +759,9 @@ export default {
         }
         .content .el-date-editor .el-range-separator{
             line-height: 28px;
+        }
+        .saleTz .el-date-editor .el-range__icon, .saleTz .el-date-editor .el-range-separator{
+            line-height:21px;
         }
     }
 </style>

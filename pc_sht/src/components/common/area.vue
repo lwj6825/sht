@@ -15,7 +15,8 @@
 <script>
 import {QueryArea} from '../../js/area/area.js';
 export default {
-    name:'areaBox',    
+    name:'areaBox',  
+    props: ['gooduserId'],
     data(){
       return{
         areaList:[],
@@ -30,6 +31,7 @@ export default {
       if(this.isRegion == 'true'){
         this.getAreaList();//获取区域列表  
       }
+      this.selectArea = this.gooduserId
     },
     methods:{
       selectAddr(addrId){//选择地区
@@ -48,7 +50,11 @@ export default {
         QueryArea(data)
           .then(res =>{
             this.areaList = res.data.dataList;
-            this.selectArea = this.areaList[0].userId;
+            if(this.gooduserId){
+              this.selectArea = this.gooduserId
+            }else{
+              this.selectArea = this.areaList[0].userId;
+            }
           })
           .catch(res =>{
             console.log(res)
@@ -63,9 +69,10 @@ export default {
       overflow: hidden;
       .area-title{
         float: left;
+        padding-top: 7px;
         padding-left: 4px;
         width: 100px;
-        height: 20px;
+        height: 34px;
         line-height: 20px;
         font-size: 14px;
         box-sizing: border-box;

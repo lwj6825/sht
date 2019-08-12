@@ -145,7 +145,49 @@ const menu = [
     node:'statistical',
     icon:'icon-tongji',
     level:1,
-    shop_name:'水屯批发市场'
+    shop_name:'水屯批发市场',
+    children:{
+        nodeList:[
+              {
+                id:'02000101',
+                parentId:'010000',
+                name:'交易额',
+                url:'totalTransaction',
+                node:'statistical',
+                level:3,
+              },
+        ],
+        nodeList:[
+              {
+                id:'02000102',
+                parentId:'010000',
+                name:'商品交易额',
+                url:'commodityMoney',
+                node:'statistical',
+                level:3,
+              },
+        ],
+        nodeList:[
+              {
+                id:'02000103',
+                parentId:'010000',
+                name:'商户交易额',
+                url:'merchantMoney',
+                node:'statistical',
+                level:3,
+              },
+        ],
+        nodeList:[
+            {
+              id:'02000104',
+              parentId:'010000',
+              name:'销售台账',
+              url:'statisticalTz',
+              node:'statistical',
+              level:3,
+            },
+      ]
+    }
   },
   {
     id:'02',

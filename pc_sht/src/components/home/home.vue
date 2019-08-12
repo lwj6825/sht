@@ -16,7 +16,7 @@
                 <li class='type-list' v-for="type in typeArr" :key='type.index'>
                     <span class='type-name'>{{type}}</span>
                     <ul>
-                        <li class="menu-item" v-if='type==item.type' v-for="item in levelTwoMenu" :key='item.id' :class="{active:levelTwoCurrId == item.id}"
+                         <li class="menu-item" v-if='type==item.type' v-for="item in levelTwoMenu" :key='item.id' :class="{active:levelTwoCurrId == item.id}"
                             @click="selectMenu(item.id)">{{item.text}}</li>
                     </ul>
                 </li>
@@ -116,7 +116,54 @@ export default {
             this.fromPrevPageMsg = from.meta;
             this.toPrevPageMsg = to.meta;
             if(to.meta.node == 'statistical'){
-                this.enterChildPage = false;
+                // this.enterChildPage = false;
+                this.mainList.forEach(ele => {
+                   if(ele.node == 'statistical'){
+                        if(ele.children.id == toId){
+                            this.enterChildPage = false;
+                        }else{
+                            this.enterChildPage = true;
+                            this.mainList.forEach(ele => {
+                                if(ele.node == "statistical"){//market页操作
+                                    ele.children.nodeList.forEach(val=> {
+                                        if(val.id == toId){
+                                            this.parentName = ele.children.nav_title;
+                                            this.childrenName = val.text;
+                                        }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得子级名称
+                                if(ele.node == "statistical"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                       if(ele.children && ele.children.nodeList.length > 0){
+                                           ele.children.nodeList.forEach(val => {
+                                               if(val.id == toId ){
+                                                    parentId = val.parentId;
+                                                    if(to.params.name){
+                                                        this.childrenName = to.params.name;
+                                                    }else{
+                                                        this.childrenName = val.text;
+                                                    }
+
+                                                }
+                                           })
+                                       }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
+                                if(ele.node == "statistical"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                        if(ele.id == parentId){
+                                            this.parentName = ele.text;
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                   }
+               })
             }else if(to.meta.node == 'district'){
                 this.mainList.forEach(ele => {
                    if(ele.node == 'district'){
@@ -168,7 +215,7 @@ export default {
             }else{
                 this.mainList.forEach(ele=> {
                     if(ele.node == to.meta.node){
-                        if(ele.children && ele.children.node && ele.children.node != 'district'){
+                        if(ele.children && ele.children.node && ele.children.node != 'district' && ele.children && ele.children.node && ele.children.node != 'statistical'){
                             if(ele.children.nodeList.length > 0){
                                 ele.children.nodeList.forEach(ele=>{
                                     if(ele.id == toId){
@@ -233,7 +280,7 @@ export default {
     },
     methods:{
         changeMenu(tabTd){//菜单切换
-            if(tabTd == '87'){//是统计页
+            if(tabTd == '344'){//是统计页
                 this.isShowLevelTwo = false;
                 this.isHasDistance = false;
                 this.levelOneCurrId = tabTd;
@@ -246,7 +293,6 @@ export default {
                         this.$router.push({path:`/home/${ele.node}/${ele.url}`});
                     }
                 })
-
             }else if(tabTd == '158'){//是区域页
                 this.isShowLevelTwo = false;
                 this.isHasDistance = false;
@@ -336,7 +382,23 @@ export default {
             this.changeMenu(id)
         },
         backPrev(){//三级菜单返回上页
-            if(this.$route.meta.node == 'district'){
+            if(this.$route.meta.node == 'statistical'){
+                let name = '';
+                this.mainList.forEach(ele => {
+                    if(ele.node == 'statistical'){
+                        name = ele.children.nav_title
+                    }
+                })
+
+                if(this.parentName == name){
+                    this.enterChildPage = false;
+                    this.$router.push({name:'StatisticsMsg'})
+                }else{
+                    console.log(222)
+                    this.enterChildPage = true;
+                    this.$router.push({path:this.fromPrevPageMsg.url})
+                }
+            }else if(this.$route.meta.node == 'district'){
                 let name = '';
                 this.mainList.forEach(ele => {
                     if(ele.node == 'district'){
@@ -462,7 +524,7 @@ export default {
             height: 100%;
             background: #33363f;
             color: #fff;
-            z-index: 102;
+            z-index: 5000;
             overflow: hidden;
             transition: all .5s ease-in;
             .text{
