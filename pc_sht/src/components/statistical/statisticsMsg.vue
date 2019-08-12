@@ -150,7 +150,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="商户交易额" name="second"> 
                     <div class="box">
-                        <ul class="list-title1">
+                        <ul class="list-title1" style="z-index:99">
                                 <li class="list-tit" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</li>
                         </ul>
                         <div class="text">
