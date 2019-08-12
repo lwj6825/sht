@@ -30,6 +30,8 @@ export default {
         }
     },
     mounted(){        
+        
+        console.log(this.$route)
         let titleObj  = this.$route.meta.title;
         let arr = [];
         for (var i in titleObj) {

@@ -417,7 +417,7 @@ function getLastYearYestdy(date){
         }
         jcpurchase(boothData)
           .then(res => {
-
+            console.log(res,'商品列表')
             this.local_check_good_options = res.data;
 
           })

@@ -48,6 +48,7 @@ export const superEdit = baseUrl + 'function/update'; //编辑功能
 
 //“管理”菜单
 // 商户
+export const queryMoneyLittleTime = baseUrl + 'redis/queryMoneyLittleTime'; //查询月总交易额
 export const getAllBiz = baseUrl + 'manage/getAllBiz';// 查询商户列表
 export const insertBiz = baseUrl + 'manage/insertBiz';// 新增商户
 export const lookShop = baseUrl + 'manage/getBootListById';//新增商户-查看店铺
@@ -244,6 +245,9 @@ export const BaseImgUrl = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' // 
 export const jcqueryPurchase = baseUrl + 'check/queryCheckGoods ';// 查询进货商品列表
 
 // 统计
+export const queryMoneyAndWeightForMarket = baseUrl + 'redis/queryMoneyAndWeightForMarket' //查询商品商户总额
+export const queryMoneyAndWeightForBiz = baseUrl + 'redis/queryMoneyAndWeightForBiz' //查询商户交易额统计
+export const queryMoneyAndWeightForGoods = baseUrl + 'redis/queryMoneyAndWeightForGoods' //查询商品交易额统计
 export const queryGoodsRankCurrentYear = baseUrl + 'redis/queryGoodsRankCurrentYear' // 查询当年商品交易额排行
 export const queryGoodsRankCurrentMonth = baseUrl + 'redis/queryGoodsRankCurrentMonth' // 查询当月商品交易额排行
 export const queryGoodsRankCurrentWeek = baseUrl + 'redis/queryGoodsRankCurrentWeek' // 查询当周商品交易额排行
@@ -263,6 +267,7 @@ export const queryMoneyCurrentWeek = baseUrl + 'redis/queryMoneyCurrentWeek' // 
 export const queryMoneyCurrentMonth = baseUrl + 'redis/queryMoneyCurrentMonth' // 查询本月交易额数据
 export const queryMoneyCurrentDayHour = baseUrl + 'redis/queryMoneyCurrentDayHour' // 查询当天24小时交易额数据
 export const queryMoneyCurrentYear = baseUrl + 'redis/queryMoneyCurrentYear' // 查询当年商户交易额排行
+
 
 // 供货单位
 export const querySupplier = baseUrl + 'supplier/querySupplier' // 供货单位管理查询（超管）

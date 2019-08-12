@@ -83,9 +83,12 @@ export default {
             inline: true,
             isShow: true,
             isRegion: '',
+            start_time:'',
+            end_time:''
         }
     },
     mounted() {
+        
         this.isRegion = localStorage.getItem('isRegion')
         if(this.isRegion == 'false'){
             this.isShow = false

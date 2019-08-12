@@ -1,10 +1,11 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryGoodsRankCurrentYear,queryGoodsRankCurrentMonth,queryGoodsRankCurrentWeek,queryGoodsRankCurrentDay,
     queryBizRankCurrentWeek,queryBizRankCurrentDay,queryBizRankCurrentMonth,queryBizRankCurrentYear,
-    getTzInfoUploadDays,getTzInfoUploadBizNum,getBizOnlineTime,getGoodsWeightRankAndAvgPrice,
-    computNode,computNodeNumWeek,computPluNumWeek,
-    queryMoneyCurrentWeek,queryMoneyCurrentMonth,queryMoneyCurrentDayHour,queryMoneyCurrentYear
+    getTzInfoUploadDays,getTzInfoUploadBizNum,getBizOnlineTime,getGoodsWeightRankAndAvgPrice,queryMoneyAndWeightForBiz,
+    computNode,computNodeNumWeek,computPluNumWeek,queryMoneyLittleTime,queryMoneyAndWeightForGoods,
+    queryMoneyCurrentWeek,queryMoneyCurrentMonth,queryMoneyCurrentDayHour,queryMoneyCurrentYear,queryMoneyAndWeightForMarket
 } from '../address/url.js';
+
 
 // 查询当年商品交易额排行
 export const QueryGoodsRankCurrentYear = function(params) {
@@ -81,4 +82,20 @@ export const QueryMoneyCurrentDayHour = function(params) {
 // 查询当年商户交易额排行
 export const QueryMoneyCurrentYear = function(params) {
     return ajaxGet(queryMoneyCurrentYear +'?'+ params)
+}
+//查询月总交易额的接口
+export const QueryMoneyLittleTime = function(params) {
+     return ajaxGet(queryMoneyLittleTime + '?' + params)
+}
+//查询商品交易额的数据
+export const QueryMoneyAndWeightForGoods = function(params) {
+    return ajaxGet(queryMoneyAndWeightForGoods + '?' + params)
+}
+//查询商户交易额的数据
+export const QueryMoneyAndWeightForBiz = function(params) {
+    return ajaxGet(queryMoneyAndWeightForBiz + '?'+ params)
+}
+//查询商户交易额明细总额
+export const QueryMoneyAndWeightForMarket = function(params){
+    return ajaxGet(queryMoneyAndWeightForMarket + '?' + params)
 }
