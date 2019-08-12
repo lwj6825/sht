@@ -114,7 +114,7 @@
         </div>
         <div class="second" v-loading="loading" >
             <div class="conditions">
-                <ul>
+                <ul style="z-index:99">
                     <li v-for="(item,index) in keyGroup" :key="index" :class="{style:index == currId}" @click="focusFun(index,item)">{{item.name}}</li>
                 </ul>
                 <el-date-picker v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" :picker-options="pickerOptions"
