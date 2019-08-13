@@ -1,6 +1,5 @@
 <template>
     <div class="content saleTz" ref="content" v-loading="loading">
-        <div class="back" @click="back">返回</div>
         <div class="areaBox" ref="areaBox" v-if="isShow">
             <AreaSelect @selectId='selectId'></AreaSelect>
         </div>
@@ -256,10 +255,6 @@ export default {
         
     },
     methods: {
-        back(){
-            window.history.go(-1);
-            let Time = localStorage.getItem("Time");
-        },
         getGoodsFun() {
             // alert(this)
         let boothData = {
@@ -590,16 +585,6 @@ export default {
 <style lang='less' scoped>
     .content{
         height: 100%;
-        .back{
-            width:100%;
-            height:20px;
-            line-height: 20px;
-            margin-bottom:10px;
-            background-Color:white;
-            padding-left:20px;
-            font-size:15px;
-            cursor: pointer;
-        }
         .back:hover{
             color:#409EFF;  //
             text-decoration: underline;

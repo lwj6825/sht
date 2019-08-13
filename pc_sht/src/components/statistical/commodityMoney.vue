@@ -6,7 +6,7 @@
          </div> -->
          <!-- <div class="back" @click="back">返回</div> -->
          <div class="areaBox" ref="areaBox">
-              <AreaSelect @selectId='selectId' :gooduserId="gooduserId"></AreaSelect>
+              <AreaSelect @selectId='selectId'></AreaSelect>
         </div>
         <div class="seacher">
                          <p class="data_time" >日期&nbsp;</p>
@@ -32,7 +32,7 @@
             <div class="table_cell_title"  style="margin-left:20px;">
                     商品交易额明细&nbsp;&nbsp;&nbsp;[总交易额:{{this.totol_price}}元， 总交易量:{{this.weight}}公斤]
             </div>
-            <el-table :data="tableData"  style="width:100%;margin-left:20px;" :header-cell-style="{background:'#f5f5f5'}" fit
+            <el-table :data="tableData"  border style="width:100%;margin-left:20px;" :header-cell-style="{background:'#f5f5f5'}" fit
                    v-loading="loading"  :row-style="{height:'40px'}"  >
                 <el-table-column prop="plu_name" label="商品名称" fit></el-table-column>
                 <el-table-column prop="price" sortable  label="商品总交易额(元)"></el-table-column>
@@ -106,28 +106,32 @@ export default {
             totalCount:0, //所有数据
             TodayTime:'',
             loading: true,
-            dataMore:'',
-            gooduserId: ''
+            dataMore:''
         }
      },
      created(){
-            this.gooduserId = this.$route.params.gooduserId;
+        //  console.log(localStorage.getItem("Time"));
+        //  this.start_time = Time[0];
+        //  this.end_time = Time[1];
+        //  this.input = Time[2];   
      },
      mounted(){
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId')
           this.defaultTzFun();
           this.getTime();
-          this.gooduserId = this.$route.params.gooduserId;
-            if(localStorage.getItem("Time")){
+        //   this.handleBtnQuery()
+        //   this.getqueryMoneyAndWeightForGoodsFun()
+        //   this.getQueryMoneyAndWeightForMarketFun()
+          if(localStorage.getItem("Time")){
               var arr = localStorage.getItem("Time").split(",")
               this.start_time = arr[0];
               this.end_time = arr[1];
               this.time = [this.start_time,this.end_time]
               this.input = arr[2];
-              this.gooduserId = arr[3]
               localStorage.removeItem('Time')
           }else{
+         
              localStorage.removeItem('Time')
           }
      },
@@ -149,7 +153,8 @@ export default {
             this.start_time = this.$route.params.startTime; 
             this.end_time  = this.$route.params.endTime;
             this.time = [this.start_time,this.end_time]
-            this.gooduserId = this.$route.params.gooduserId;
+            // console.log(this.time,this.start_time,this.end_time)
+            // console.log(this.$route.params.start_time)
             this.input = this.$route.params.shopname;  
             if(!this.input){
                 this.input = ""
@@ -162,6 +167,8 @@ export default {
         handleBtnQuery() {
             var start_time = this.time[0];
             var end_time = this.time[1];
+            this.start_time = start_time;
+            this.end_time = end_time;
             this.getQueryMoneyAndWeightForMarketFun();
             this.getqueryMoneyAndWeightForGoodsFun();
             setTimeout(() => {
@@ -181,17 +188,18 @@ export default {
             this.getqueryMoneyAndWeightForGoodsFun()
         },
         handleClick(row) {
-            let dataMore = [this.time,this.input,this.gooduserId]
+            let dataMore = [this.time,this.input]
             localStorage.setItem("Time", dataMore);
             this.input = row.plu_name
             this.$router.push({name:'StatisticalTz',
                            query:{shopname:this.input, 
                            startTime:this.start_time,  
-                           endTime:this.end_time,
-                           gooduserId:this.gooduserId
-                           }
-            })
-            console.log(this.gooduserId)
+                           endTime:this.end_time
+                           } 
+            },
+                                
+            )
+            // console.log(this)
         },
         skipStatistical(){  // 返回统计页面
             this.$router.push({path:'statistical'})
@@ -208,20 +216,8 @@ export default {
             GetMarkets(data)
                 .then(res =>{
                     // console.log(data,"更多post数据")
-                    if(this.$route.params.gooduserId){
-                            
-                        res.data.dataList.forEach(ele => {
-                            if(ele.userId == this.$route.params.gooduserId){
-                                this.bigAreaId = ele.userId;
-                                this.areaId = ele.bootList[0].shop_booth_id;
-                            }
-                            
-                        });
-                    }else{
-
-                        this.bigAreaId = res.data.dataList[0].userId;
-                        this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
-                    }
+                    this.bigAreaId = res.data.dataList[0].userId;
+                    this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
                     this.handleBtnQuery();
                 })
                 .catch(res =>{
@@ -243,13 +239,11 @@ export default {
                 .then(res =>{
                     // console.log(res,"post请求")
                     this.titArr = res.data.dataList
-                    
                     res.data.dataList.forEach(ele => {
-                        if(ele.userId == id){
-                            this.bigAreaId = id;
-                            this.areaId = ele.bootList[0].shop_booth_id;
-                        }
-                        
+                    if(ele.userId == id){
+                        this.bigAreaId = id;
+                        this.areaId = ele.bootList[0].shop_booth_id;
+                    }
                     });
                     this.getqueryMoneyAndWeightForGoodsFun()
                     // this.input=''
@@ -274,7 +268,6 @@ export default {
              
         },
         getqueryMoneyAndWeightForGoodsFun(){  //商品交易量
-            
         let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page='+this.currentPage+'&cols='+this.pageSize+'&name='+this.input;
              QueryMoneyAndWeightForGoods(str)
                   .then(res=>{

@@ -161,6 +161,8 @@ export default {
          handleBtnQuery() {
             var start_time = this.time[0];
             var end_time = this.time[1];
+            this.start_time = start_time;
+            this.end_time = end_time;
             this.getQueryMoneyAndWeightForBizFun();
             this.getQueryMoneyAndWeightForMarketFun();
             this.currentPage = 1;

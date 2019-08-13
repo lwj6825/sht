@@ -433,6 +433,16 @@ export default {
         handleClick(){
             this.start_time = this.time[0];
             this.end_time = this.time[1];
+            function formatTen(num) { 
+                    return num > 9 ? (num + "") : ("0" + num); 
+                }
+                var start = new Date(); 
+                var year = start.getFullYear(); 
+                var month = start.getMonth() + 1; 
+                var day = start.getDate(); 
+                this.start_time = year + "-"+formatTen(month) + "-" +formatTen(day)
+                this.end_time = year + "-"+formatTen(month) + "-" +formatTen(day)
+                this.time = [this.start_time,this.end_time]
             this.getGoodsWeightRankAndAvgPriceFun(this.titArr[0]);
             this.currId2 = this.titArr[0].userId
             if(this.activeName == 'first'){
@@ -448,6 +458,7 @@ export default {
                                 title.push(val.plu_name)
                                 priceArr.push(val.avg.toFixed(2))
                             })
+                            this.getGoodsWeightRankAndAvgPriceFun(val)
                             this.getChartFun4(title,numArr,priceArr)
                             this.goodArr = res.data.list.slice(0,10);
                             
@@ -471,6 +482,7 @@ export default {
                                 title.push(val.biz_name).slice(0,10)
                                 numArr.push(val.price.toFixed(2)).slice(0,10)
                             })
+                            this.getDayFun2(val)
                             this.getChartFun7(title,numArr)
                             this.merchantsArr = res.data.list.slice(0,10)
                             
