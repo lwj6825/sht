@@ -72,7 +72,7 @@ export default {
                 callphone: [
                     {required: true, message: '请输入联系方式',trigger: 'blur'},
                     {validator:function(rule,value,callback){
-                        if(/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9})|(0\d{2,3}\d{7,8}))$/.test(value) == false){
+                        if(/^((\d{3,4}-\d{7,8})|(1[34578]\d{9})|(\d{3,4}\d{7,8}))$/.test(value) == false){
                         // (/^1[34578]\d{9}$/.test(value) == false || /^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/ == false)
                             callback(new Error("请输入正确的手机号或座机号"));
                         }

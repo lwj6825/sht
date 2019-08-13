@@ -14,6 +14,8 @@ import lzproduce from "./lzproduce.js";
 import farmwork from "./farmwork.js";
 import traceEquipment from "./traceEquipment.js"
 import szDetection from "./szDetection.js"
+import tzFarming from "./tzFarming"
+import tzSlaughter from "./tzSlaughter"
 // import farmworksy from "./farmworksy.js";
 import farmworkcommodity from "./farmworkcommodity.js";
 import farmworkreview from "./farmworkreview.js";
@@ -62,7 +64,9 @@ export default new Router({
         ...assets,
         ...production,
         ...traceEquipment,
-        ...szDetection
+        ...szDetection,
+        ...tzFarming,
+        ...tzSlaughter
       ]
     },
   ]

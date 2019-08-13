@@ -3,123 +3,74 @@
     <div class="areaBox" ref="areaBox" v-if="isShow">
       <AreaSelect @selectId='selectId'></AreaSelect>
     </div>
-
     <!--筛选条件-->
     <div class="lz-search-condition">
-
       <!--展开前的样式-->
       <div class="lz-search-item-style-one" v-show="isshowcondition">
         <div class="lz-filter-one-style">
           <div class="lz-filter-name">检测日期</div>
-          <el-date-picker clearable style="width: 300px"
-            v-model="form.dataTime" value-format="yyyy-MM-dd"
-            type="daterange" @change="timeChange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
+          <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd"
+            type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
           </el-date-picker>
           <el-button type="primary" class="search-bth white-bth" style="margin-left: 10px;" @click="checkListSearch" >搜索</el-button>
           <el-button class="file-btn no-btn">导出</el-button>
           <el-button class="lz-margin-left clear-content" @click="clearcondition" type="text">清空筛选条件</el-button>
-          <!--<el-button class="lz-margin-left" @click="clearcondition" type="text">清空筛选条件</el-button>-->
-
           <div class="lz-three-item"></div>
         </div>
         <div class="lz-search-item-style-one-button" style="height: 30px">
           <el-button type="text" @click="goExpend">展开筛选条件</el-button>
         </div>
       </div>
-
-
       <!--展开后的样式-->
       <div class="lz-search-item-style-two" v-show="!isshowcondition">
-
-
         <div class="lz-filter-one-style">
-
           <!--检测日期-->
           <div class="lz-three-item">
             <div class="lz-filter-name">检测日期</div>
-            <el-date-picker clearable style="width: 300px"
-              v-model="form.dataTime" value-format="yyyy-MM-dd"
-              type="daterange" @change="timeChange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
+            <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd"
+              type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
             </el-date-picker>
           </div>
-
-
           <!--商户名称-->
           <div class="lz-three-item">
             <div class="lz-filter-name">商户名称</div>
-
             <el-select v-model="local_booth_name" slot="append" placeholder="请选择" value-key="userId"
-                       class="select-width-me" size="small" filterable  clearable filterable style="width: 225px">
-              <el-option
-                v-for="item in local_booth_name_options"
-                :key="item.bootList[0].shop_booth_id"
-                :label="item.bootList[0].booth_name"
-                :value="item.bootList[0].shop_booth_id">
+                class="select-width-me" size="small" filterable  clearable style="width: 225px">
+              <el-option v-for="item in local_booth_name_options" :key="item.bootList[0].shop_booth_id"
+                :label="item.bootList[0].booth_name" :value="item.bootList[0].shop_booth_id">
               </el-option>
             </el-select>
           </div>
-
           <!--检测结果-->
           <div class="lz-three-item">
             <div class="lz-filter-name">检测结果</div>
-
             <el-select v-model="local_check_result" slot="append" placeholder="请选择" value-key="userId"
-                       class="select-width-me" size="small" clearable filterable style="width: 225px">
-              <el-option
-                v-for="item in check_result_options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
+              class="select-width-me" size="small" clearable filterable style="width: 225px">
+              <el-option v-for="item in check_result_options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-
           </div>
-
-
         </div>
-
         <!--第二行筛选条件-->
         <div class="lz-filter-one-style">
           <!--检测商品-->
           <div class="lz-three-item">
             <div class="lz-filter-name">检测商品</div>
-
             <el-select v-model="local_check_good" filterable clearable placeholder="请选择商品" size="small" value-key="ID" style="width: 225px">
               <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME" :value="item" ></el-option>
             </el-select>
-
-
           </div>
-
-
           <div class="lz-three-item">
             <el-button type="primary" class="search-bth white-bth" style="margin-left: 10px;" @click="checkListSearch">搜索</el-button>
             <el-button class="file-btn no-btn">导出</el-button>
             <el-button class="lz-margin-left clear-content" @click="clearcondition" type="text">清空筛选条件</el-button>
           </div>
-
           <div class="lz-three-item"></div>
         </div>
-
-
         <div class="lz-search-item-style-one-button">
-
           <el-button type="text" @click="goCollapse">收起筛选条件</el-button>
-
-          <!--<div>{{ msg | capitalize}}</div>-->
         </div>
-
-
       </div>
-
     </div>
-
     <!--表格-->
     <div class="table">
       <div class="title">
@@ -134,14 +85,14 @@
           <el-table-column prop="booth_name" label="商户名称"></el-table-column>
           <el-table-column prop="stall_no" label="摊位号" v-if="isShow"></el-table-column>
           <el-table-column prop="check_good" label="检测商品"></el-table-column>
-          <el-table-column prop="check_result" :formatter="toCheckResult" label="检测结果"></el-table-column>
-          <el-table-column prop="remark" label="备注"></el-table-column>
           <el-table-column prop="check_project" label="检测项目"></el-table-column>
+          <el-table-column prop="check_result" :formatter="toCheckResult" label="检测结果"></el-table-column>
+          <el-table-column prop="check_mechanism" label="检测机构"></el-table-column><!--
+          <el-table-column prop="remark" label="备注"></el-table-column>
           <el-table-column prop="standard_value" label="检测值"></el-table-column>
           <el-table-column prop="check_standard" label="检测标准"></el-table-column>
           <el-table-column prop="check_res" label="检测结果值"></el-table-column>
-          <el-table-column prop="check_person" label="检测人"></el-table-column>
-          <el-table-column prop="check_mechanism" label="检测机构"></el-table-column><!---->
+          <el-table-column prop="check_person" label="检测人"></el-table-column>-->
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="viewImg(scope.row)">查看附件</el-button>
@@ -150,32 +101,15 @@
           </el-table-column>
         </el-table>
       </div>
-
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        layout="total, prev, pager, next, jumper"
-        :total="totalPageSize">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+        layout="total, prev, pager, next, jumper" :total="totalPageSize">
       </el-pagination>
     </div>
-
-
     <!--显示图片-->
-    <el-dialog
-      :visible.sync="centerDialogVisible"
-      :before-close="handleClose"
-      :close-on-click-modal = "isclick">
-      <!--width="650px"-->
-      <!--height="650px">-->
-
+    <el-dialog :visible.sync="centerDialogVisible" :before-close="handleClose" :close-on-click-modal = "isclick">
       <div class="lz-dialog-content">
-        <!--<img class="lz-checkimag" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/'+viewImgUrl"/>-->
         <img class="lz-checkimag" :src="BaseImgUrl+viewImgUrl"/>
-
       </div>
-
     </el-dialog>
   </div>
 </template>
@@ -183,85 +117,73 @@
 <script>
 // 时间戳转日期格式
 function timestampToTime(timestamp) {
-    var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-    var Y = date.getFullYear() + '-';
-    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate() + ' ';
-    // var h = date.getHours() + ':';
-    // var m = date.getMinutes() + ':';
-    // var s = date.getSeconds();
-    // return Y+M+D+h+m+s;
-    return Y+M+D;
+  var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  var Y = date.getFullYear() + '-';
+  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+  var D = date.getDate();
+  // var h = date.getHours() + ':';
+  // var m = date.getMinutes() + ':';
+  // var s = date.getSeconds();
+  // return Y+M+D+h+m+s;
+  return Y+M+D;
 }
 // 标准时间转日期格式
 function formatTen(num) { 
-    return num > 9 ? (num + "") : ("0" + num); 
+  return num > 9 ? (num + "") : ("0" + num); 
 } 
 function formatDate(date) { 
-    var year = date.getFullYear(); 
-    var month = date.getMonth() + 1; 
-    var day = date.getDate(); 
-    var hour = date.getHours(); 
-    var minute = date.getMinutes(); 
-    var second = date.getSeconds(); 
-    return year + "-" + formatTen(month) + "-" + formatTen(day); 
+  var year = date.getFullYear(); 
+  var month = date.getMonth() + 1; 
+  var day = date.getDate(); 
+  var hour = date.getHours(); 
+  var minute = date.getMinutes(); 
+  var second = date.getSeconds(); 
+  return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
 function getLastYearYestdy(date){   
-    var datastr = ''
-     var strYear = date.getFullYear() - 1;     
-     var strDay = date.getDate();     
-     var strMonth = date.getMonth()+1;   
-     if(strMonth<10)     
-     {     
-        strMonth='0'+strMonth;     
-     }   
-     if(strDay<10)     
-     {     
-        strDay= '0'+strDay;     
-     }   
-     datastr = strYear+'-'+strMonth+'-'+strDay;   
-     return datastr;   
-  }  
+  var datastr = ''
+  var strYear = date.getFullYear() - 1;     
+  var strDay = date.getDate();     
+  var strMonth = date.getMonth()+1;   
+  if(strMonth<10){     
+    strMonth='0'+strMonth;     
+  }   
+  if(strDay<10){     
+    strDay= '0'+strDay;     
+  }   
+  datastr = strYear+'-'+strMonth+'-'+strDay;   
+  return datastr;   
+}  
   import AreaSelect from '../common/area';
   import {QueryArea} from '../../js/area/area.js';
   import {getCheckList,GetAllBiz, DeteleCheckItem, Parse,jcpurchase} from '../../js/standingBook/standingBook.js'
   import {purchase, getDefaultProductTypes,} from "../../js/goods/goods.js";
-
   import {BaseImgUrl} from '../../js/address/url.js';
-
   export default {
     name: "saleTz",
     data() {
       return {
-
         isclick:false,
-
         msg:'测试过滤器',
         BaseImgUrl:'',
-
-        //  检测日期  商户名称  摊位号  检测商品   检测结果  备注
+        // 检测日期  商户名称  摊位号  检测商品   检测结果  备注
         local_check_date: '',
         local_booth_name: '',
         local_booth_name_options: '',
         form: {
           dataTime: ''
         },
-
         local_stall_no: '',
         local_check_good: '',
         local_check_good_options: [],
-
         goods_name_Arr: [],
-
         submit_goods_name: '',
-
         local_remark: '',
         local_date_start_end: '',
         local_node_id: '',
         local_node_id_id: '',
         local_area_booth_name: '',
-
-        //检测结果
+        // 检测结果
         local_check_result: '',
         check_result_options: [{
           value: '1',
@@ -270,19 +192,14 @@ function getLastYearYestdy(date){
           value: '0',
           label: '不合格'
         }],
-
-
         totalItemNum: '',
         tableData: [],
         centerDialogVisible: false,
         viewImgUrl: '',
         isshowcondition: true,
-
-
         currentPage: 0,
         totalPageSize: 0,
         page_local: '1',
-
         userId: '',
         areaId: '', // 大区的shop_booth_id
         // bigAreaId: '', // 大区userId
@@ -299,57 +216,42 @@ function getLastYearYestdy(date){
       }
     },
     mounted() {
-
       this.BaseImgUrl = BaseImgUrl;
-
-      // console.log("这是图片地址"+BaseImgUrl);
-
       //获取  区域的  shop_booth_id   node_id   商户的    shop_booth_id
       this.isRegion = localStorage.getItem('isRegion');
       this.scShopId = localStorage.getItem('scShopId');
       this.userId = localStorage.getItem('userId');
-      // this.user_shop_booth_id = localStorage.getItem('scShopId');
-
-      // this.getGoodsFun();
       this.getTime()
       this.local_node_id_id = localStorage.getItem('nodeidlocal');
       let arr = []
       arr.push(this.startTime)
       arr.push(this.endTime)
       this.form.dataTime = arr
-
       if(this.isRegion == 'false'){
-
         // nodeidlocal
         this.local_node_id = localStorage.getItem('nodeidlocal');
-
         this.isShow = false;
         this.getCheckListtable(this.page_local);
         this.getMerchantsFun();
         this.getGoodsFun();
       }else{
         this.getArear();
-
       }
-
-
-
     },
     methods: {
       getTime(){
-          var start = new Date();
-          // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-          this.startTime = getLastYearYestdy(start)
-          var currentTime = new Date()
-          // console.log(getLastYearYestdy(currentTime))
-          this.endTime = formatDate(currentTime)
+        var start = new Date();
+        // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+        this.startTime = getLastYearYestdy(start)
+        var currentTime = new Date()
+        this.endTime = formatDate(currentTime)
       },
       timeChange(ele){
         if(this.form.dataTime){
-            this.startTime = this.form.dataTime[0]
-            this.endTime = this.form.dataTime[1]
+          this.startTime = this.form.dataTime[0]
+          this.endTime = this.form.dataTime[1]
         }else{
-            this.getTime()
+          this.getTime()
         }
       },
       toCheckResult(row, column) {
@@ -366,32 +268,23 @@ function getLastYearYestdy(date){
             return '未知';
         }
       },
-
-      //分页添加
+      // 分页添加
       handleSizeChange(val) {
       },
       handleCurrentChange(val) {
         this.page_local = val;
         this.getCheckListtable(this.page_local);
       },
-
-      //      关闭按钮
+      // 关闭按钮
       handleClose(done) {
-
         done();
-
-
       },
-
       //点击搜索
       checkListSearch(){
         this.timeChange()
         this.getCheckListtable(this.page_local);
-
       },
-
       //清空筛选条件
-
       clearcondition(){
         this.getTime()
         this.local_date_start_end = null;
@@ -403,12 +296,9 @@ function getLastYearYestdy(date){
         this.form = {
           dataTime: ''
         }
-
         this.getCheckListtable(this.page_local);
       },
-
-      //  获取商品列表
-
+      // 获取商品列表
       getGoodsFun() {
         let boothData = {
           region: this.areaId,
@@ -417,13 +307,10 @@ function getLastYearYestdy(date){
         }
         jcpurchase(boothData)
           .then(res => {
-            console.log(res,'商品列表')
             this.local_check_good_options = res.data;
-
           })
           .catch(res => {
           })
-
       },
       // 获取商户
       getMerchantsFun() {
@@ -440,14 +327,11 @@ function getLastYearYestdy(date){
         GetAllBiz(obj)
           .then(res => {
             this.local_booth_name_options = res.data.dataList
-
           })
           .catch(() => {
             this.$message.error("商户数据获取失败");
           })
       },
-
-
       //获取区域
       getArear(){
         let data = {
@@ -466,25 +350,19 @@ function getLastYearYestdy(date){
             this.getMerchantsFun();
             this.getGoodsFun();
             this.getCheckListtable(this.page_local)
-
           })
           .catch(res =>{
             // console.log(res)
           })
       },
-
-
       goExpend() {
         this.isshowcondition = false;
       },
-
       goCollapse() {
         this.isshowcondition = true;
       },
-
       //显示表格中得图片
       viewImg(index, rows) {
-
         if(index.img_url != ''){
           this.centerDialogVisible = true;
           this.viewImgUrl = index.img_url;
@@ -493,18 +371,12 @@ function getLastYearYestdy(date){
             message: '没有上传附件',
             type: 'warning'
           });
-        }
-        ;
-
-
+        };
       },
-
       //去新增界面
       goAddCheck() {
-
         this.$router.push({name:'AddCheckTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name }})
       },
-
       //设置table表头
       rowClass({row, rowIndex}) {
         return {
@@ -512,7 +384,6 @@ function getLastYearYestdy(date){
           color: '#333'
         }
       },
-
       //获取检测列表
       getCheckListtable(currentPageLocal) {
         let obj = {
@@ -528,63 +399,50 @@ function getLastYearYestdy(date){
         }
         getCheckList(obj)
           .then(res => {
-
             this.currentPage = parseInt(res.data.condition.page);
             this.totalPageSize =parseInt(res.data.condition.total) ;
-
             this.totalItemNum = res.data.dataList.length;
-
             this.tableData = res.data.dataList;
-
           })
           .catch(res => {
           })
       },
-
-
       //删除数据
       ifDelete(index, rows) {
         this.$confirm('此操作将永久删除该检测信息, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
+        })
+        .then(() => {
           this.deleteCheckItem(rows.id);
           this.$message({
             type: 'success',
             message: '删除成功!'
           });
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           });
         });
       },
-
-
       //      删除检测数据
       deleteCheckItem(a) {
         let deleteParams = {
           id: a,
         };
-
         DeteleCheckItem(deleteParams)
           .then(res => {
             this.$message.success(res.message);
             this.getCheckListtable();
-
           })
           .catch(() => {
             this.$message.error(res.message);
           })
-
-
       },
-
-
       //搜索条件
-
       selectId(id) {//选择区域
         this.getTime()
         let arr = []
@@ -616,22 +474,17 @@ function getLastYearYestdy(date){
             // console.log(res)
           })
       },
-
-
     },
     components: {
       AreaSelect,
     },
     filters:{
       isCheck:function(value){
-
         if(value == '1'){
           return '合格'
         }
-
       }
     },
-
   }
 </script>
 

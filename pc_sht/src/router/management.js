@@ -174,7 +174,7 @@ export default [
         component: resolve => require(['@/components/management/szViewEnterprise'],resolve),
         name:'SzViewEnterprise',
         meta:{
-            // id:'132',
+            id:'341',
             node:'management',
             url:'szViewEnterprise',
         }
@@ -184,7 +184,7 @@ export default [
         component: resolve => require(['@/components/management/szEnterpriseList'],resolve),
         name:'SzEnterpriseList',
         meta:{
-            // id:'133',
+            id:'339',
             node:'management',
             url:'szEnterpriseList',
         }
@@ -194,7 +194,7 @@ export default [
         component: resolve => require(['@/components/management/szAddEnterprise'],resolve),
         name:'SzAddEnterprise',
         meta:{
-            // id:'267',
+            id:'340',
             node:'management',
             url:'szAddEnterprise',
         }

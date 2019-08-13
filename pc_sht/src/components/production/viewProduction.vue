@@ -26,14 +26,19 @@
             <el-button type="text" size="small" @click="searchFun">搜索</el-button>
         </div>
         <el-table :data="tableData2" :header-cell-style="rowClass">
-            <el-table-column prop="in_date" label="日期"> </el-table-column>
+            <el-table-column prop="in_date" label="日期"> 
+                <template slot-scope="scope">
+                    <p>{{entryTime}}</p>
+                </template>
+            </el-table-column>
             <el-table-column prop="goods_name" label="生产商品"> </el-table-column>
             <el-table-column prop="box_no" label="箱码号"> </el-table-column>
             <el-table-column prop="batch_id" label="批次号"> </el-table-column>
-            <el-table-column prop="erweima" label="二维码" width="360">
+            <el-table-column prop="erweima" label="二维码" width="510">
                 <template slot-scope="scope">
-                    <!--<iframe :src="scope.row.erweima" width="96%"frameborder="0" id="contentIframe"></iframe>-->
-                    <el-button type="text" size="small" @click="lookFun(scope.row)">{{scope.row.erweima}}</el-button>
+                    <p class="btn" @click="lookFun(scope.row)">{{scope.row.erweima}}</p>
+                    <!--<iframe :src="scope.row.erweima" width="96%"frameborder="0" id="contentIframe"></iframe>
+                    <el-button type="text" size="small" @click="lookFun(scope.row)">{{scope.row.erweima}}</el-button>-->
                 </template>
             </el-table-column>
         </el-table>
@@ -170,6 +175,11 @@ export default {
         .iframe{
             width: 96%;
             height: 700px;
+        }
+        .btn{
+            font-size: 13px;
+            color: #409EFF;
+            cursor: pointer;
         }
         .search{
             display: flex;

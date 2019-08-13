@@ -24,7 +24,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-             <el-form-item label="所属企业">
+            <el-form-item label="所属企业">
                 <el-select v-model="form.enterprise" filterable clearable placeholder="请选择">
                     <el-option v-for="item in enterpriseList" :key="item.a_conf_id" :label="item.a_conf_item" :value="item.a_conf_id">
                     </el-option>
@@ -137,7 +137,7 @@ export default {
     },
     methods: {
         cancelFun(){
-
+            this.$router.push({name: 'DetectionList'})
         },
         saveFun(){
 

@@ -1,6 +1,5 @@
 <template>
   <div class="syacontent">
-    <!--<el-button type="primary" id="open_btn" class="sf-but" @click="jumpAddLayout()" size="small">新增商品品种</el-button>-->
     <!--头部-->
     <div class="syotitle">
       <span>商品品种</span>
@@ -94,15 +93,6 @@
           <div class="right">
             <el-cascader :options="myoptions" v-model="selectedOptions" :props="props" class="eljl" filterable>
             </el-cascader>
-            <!--<el-cascader-->
-              <!--:options="myoptions"-->
-              <!--:placeholder="edittype"-->
-              <!--v-model="selectedOptions"-->
-              <!--:props="props"-->
-              <!--filterable-->
-              <!--class="eljl"-->
-            <!--&gt;-->
-            <!--</el-cascader>-->
           </div>
         </div>
       <span slot="footer" class="dialog-footer">
@@ -112,7 +102,6 @@
     </el-dialog>
   </div>
 </template>
-
 
 <script>
 
@@ -131,41 +120,32 @@
     components: {},
     data() {
       return {
-
         props: {
           label: 'type_name',
           value: 'level_id',
           children: 'systemDefaultTypeList'
         },
-
         comvarietyflag:false,
         comvarietyEditflag:false,
         isclick:false,
-
         // selectedOptions: '',
         selectedOptions: [],
         edittype: '',
-
         Goods_name_add: '',
         Goods_num_add: '',
         apply_num_add: '',
-
         goods_name_search: '',
-
         myoptions: [],
         ns_sp_list: [],
         ns_sp_list_type: [],
-
-//        编辑属性
+        // 编辑属性
         yiji: '',
         yjstring: '',
         editId : '',
         editTypeId : '',
-       editTypeIdSubmit : '',
-
+        editTypeIdSubmit : '',
         typeNameStr: '',
-
-        //        分页参数
+        // 分页参数
         currentPage: 0,
         totalPageSize: 0,
         page_local:'1',
@@ -174,8 +154,7 @@
       }
     },
     methods: {
-
-//设置表格第一行的颜色
+      // 设置表格第一行的颜色
       getRowClass({row, column, rowIndex, columnIndex}) {
         if (rowIndex == 0) {
           return 'background:#F5F5F5;height:40px; padding: 0px 0;'
@@ -183,7 +162,6 @@
           return ''
         }
       },
-
       //分页添加
       handleSizeChange(val) {
       },
@@ -194,8 +172,7 @@
       getRowheight({row, column, rowIndex, columnIndex}) {
         return 'height:40px; padding: 0px 0;'
       },
-
-//      获取商品品种表格信息
+      // 获取商品品种表格信息
       getListNSsp(page_local_par) {
         let params = {
           page: page_local_par,
@@ -204,10 +181,8 @@
           goods_Name: this.goods_name_search,
 
         }
-
         this.getNsGoodsQueryPOST(params);
       },
-
       getNsGoodsQueryPOST(params) {
         nsGoodsQueryPOST(params)
           .then(res => {
@@ -218,16 +193,13 @@
             this.$message.error("数据加载失败!");
           })
       },
-
-      //      获取商品编码信息
+      // 获取商品编码信息
       getListNSspNumber() {
         let params = {
           userId: this.localuserId,
         }
-
         this.getNsGoodsNumberPOST(params);
       },
-
       getNsGoodsNumberPOST(params) {
         nsGoodsNumberPOST(params)
           .then(res => {
@@ -237,18 +209,15 @@
             this.$message.error("数据加载失败!");
           })
       },
-
-//      获取商品类别
+      // 获取商品类别
       getListNSsptype() {
         let params = {
           page: 1,
           cols: 15,
           userId: this.localuserId,
         }
-
         this.getNsGoodsQueryPOSTType(params);
       },
-
       getNsGoodsQueryPOSTType(params) {
         nsGoodsQueryPOST(params)
           .then(res => {
@@ -258,34 +227,20 @@
             this.$message.error("数据加载失败!");
           })
       },
-
-
-
-
-
-
-
-//      编辑商品调用的方法
+      // 编辑商品调用的方法
       handleEdit(index, row) {
-
         this.Goods_name_add = row.goods_Name;
         this.edittype = this.formatter(row, index);
         this.editId = row.id;
         this.editTypeId = row.level_id;
         this.Goods_num_add = row.code1;
-
         this.comvarietyEditflag = true;
-
         this.selectedOptions.push(row.level_id.substring(0,2));
         this.selectedOptions.push(row.level_id.substring(0,5));
         this.selectedOptions.push(row.level_id.substring(0,8));
         this.selectedOptions.push(row.level_id.substring(0,12));
       },
-
-
-
-
-//      新增商品接口
+      // 新增商品接口
       addNewNsGoods() {
         let addparams = {
           goods_Name: this.Goods_name_add,
@@ -293,30 +248,23 @@
           gb_Code: this.selectedOptions[3],
           userId: this.localuserId,
         };
-
         nsGoodsInsertPOST(addparams)
           .then(res => {
             this.$message.success(res.message);
             this.getListNSsp(this.page_local);
             this.getListNSsptype();
             this.handleClose();
-
           })
           .catch(() => {
             this.$message.error(res.message);
           })
-
-
       },
-
-//      编辑商品接口
+      // 编辑商品接口
       updateNsGoods() {
-
         if (this.selectedOptions[3] === undefined) {
           this.editTypeIdSubmit = this.editTypeId
         } else {
           this.editTypeIdSubmit = this.selectedOptions[3]
-
         }
         let updateParams = {
           goods_Name: this.Goods_name_add,
@@ -324,7 +272,6 @@
           id: this.editId,
           userId: this.localuserId,
         };
-
         nsGoodsUpdatePOST(updateParams)
           .then(res => {
             this.$message.success("保存成功!");
@@ -332,29 +279,18 @@
             this.getListNSsptype();
             this.handleClose();
             this.cleanEditPro();
-
-
-
           })
           .catch(() => {
             this.$message.error("数据加载失败!");
           })
-
-
       },
-
-//      清除Edit属性
+      // 清除Edit属性
       cleanEditPro(){
         this.selectedOptions = [];
-
       },
-
-
       handleChange(value) {
       },
-
-
-//      删除商品功能
+      // 删除商品功能
       ifDelete(index, rows) {
         this.$confirm('此操作将永久删除该品种, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -373,31 +309,24 @@
           });
         });
       },
-
       deleteRow(index, rows) {
         this.deletePlot(rows.id);
       },
-
-//      删除地块后台服务器数据
+      // 删除地块后台服务器数据
       deletePlot(a) {
         let deleteParams = {
           id: a,
         };
-
         nsGoodsDeletePOST(deleteParams)
           .then(res => {
             this.$message.success(res.message);
             this.getListNSsp(this.page_local);
-
           })
           .catch(() => {
             this.$message.error("数据加载失败!");
           })
-
-
       },
-
-//      获取对应的名称
+      // 获取对应的名称
       formatter(row, column) {
         let typeName = '';
         let level_1_name = '';
@@ -405,7 +334,6 @@
         let level_3_name = '';
         let level_4_name = '';
         let queryNameData = this.queryNameData;
-
         if (row.level_id.length == 2) {
           level_1_name = queryNameData[0].type_name;
           typeName = level_1_name;
@@ -454,29 +382,22 @@
         }
         return typeName;
       },
-
-      //      默认的三级联动
+      // 默认的三级联动
       created() {
         getDefaultProductTypes()
           .then(res => {
             this.myoptions = res;
-
             localStorage.setItem('queryNameData', JSON.stringify(res));
           })
           .catch(res => {
             this.$message.error("数据加载失败!");
           })
       },
-
-
-      //      关闭申请弹窗
+      // 关闭申请弹窗
       handleClose(done) {
-
         this.clearnum();
-
       },
-
-      //      新增商品品种清空
+      // 新增商品品种清空
       clearnum(){
         this.comvarietyflag = false;
         this.comvarietyEditflag = false;
@@ -484,11 +405,8 @@
         this.selectedOptions = '';
         this.goods_Code = '';
         this.cleanEditPro();
-
       },
-
-
-//      新增商品布局
+      // 新增商品布局
       jumpAddLayout(){
         this.comvarietyflag = true;
         this.getListNSspNumber();
@@ -501,13 +419,11 @@
       this.getListNSsptype();
       this.getListNSspNumber();
       this.created();
-
     }
   }
 </script>
 
 <style scoped lang='less'>
-
   .lz-table-title {
     padding: 0 10px;
     height: 40px;
@@ -516,10 +432,8 @@
     .lz-table-title-left {
       flex: 1;
       display: flex;
-      /*border: 1px solid red;*/
       align-items: center;
       span{
-        /*display: flex;*/
         font-size: 13px;
         margin-bottom: 2px;
         padding-left: 10px;
@@ -536,21 +450,15 @@
           height: 90%;
         }
       }
-      /*background-color: red;*/
     }
-
     .lz-table-title-right {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-
-
     }
   }
-
   /*遮罩层样式*/
-
   .tjsf-title {
     display: flex;
     justify-content: center;
@@ -568,8 +476,6 @@
       border-bottom: 0.5px solid #D7D7D7;
     }
   }
-
-
   .tjsf-div2-row {
     height: 55px;
     display: flex;
@@ -590,34 +496,28 @@
       margin-left: 10px;
     }
   }
-
   .eljl{
     width: 300px;
   }
-
   .tjsf-foot {
     padding: 10px;
     display: flex;
     justify-content: flex-end;
     margin-top: 14px;
   }
-
   .my-el-date-picker {
     width: 253px;
   }
-
   #close-button {
     font-size: 25px;
     color: gray;
     cursor: pointer;
   }
-
   #editclose-button {
     font-size: 25px;
     color: gray;
     cursor: pointer;
   }
-
   #background {
     display: none;
     position: fixed;
@@ -628,7 +528,6 @@
     z-index: 10;
     background-color: rgba(0, 0, 0, 0.5);
   }
-
   #editbackground {
     display: none;
     position: fixed;
@@ -639,7 +538,6 @@
     z-index: 10;
     background-color: rgba(0, 0, 0, 0.5);
   }
-
   .div1 {
     background: #ffffff;
     width: 438px;
@@ -648,14 +546,9 @@
     margin: 17% auto;
     overflow: auto;
   }
-
   .syacontent {
     height: 100%;
-
   }
-
-
-
   .rctable {
     padding: 10px;
     background: #fff;
@@ -663,34 +556,10 @@
     border-left: 1px solid #f4f4f4;
     border-right: 1px solid #f4f4f4;
   }
-
-  /*.syotitle {*/
-    /*height: 100px;*/
-    /*margin-top: 14px;*/
-    /*background-color: #F5F5F5;*/
-    /*font-size: 14px;*/
-    /*display: flex;*/
-    /*align-items: center;*/
-    /*span {*/
-      /*margin-left: 50px;*/
-      /*width: 75px;*/
-    /*}*/
-
-    /*.input-middle {*/
-      /*width: 300px;*/
-    /*}*/
-
-    /*.btn-end {*/
-      /*margin-left: 50px;*/
-    /*}*/
-
-  /*}*/
-
   .syotitle {
     padding: 0 10px;
     margin-bottom: 10px;
     height: 100px;
-    /*margin-top: 14px;*/
     background-color: #fff;
     font-size: 14px;
     display: flex;
@@ -700,29 +569,19 @@
       margin-left: 50px;
       width: 75px;
     }
-
     .input-middle {
       width: 300px;
     }
-
     .btn-end {
       margin-left: 50px;
       color: #409EFF;
       background: #fff;
     }
-
   }
-
-  /*.rctable {*/
-    /*margin-top: 20px;*/
-  /*}*/
-
   .pageBlock{
     height: 80px;
     background: #fff;
     display: flex;
     justify-content: center;
   }
-
-
 </style>

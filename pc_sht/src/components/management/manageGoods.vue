@@ -24,7 +24,7 @@
                     <el-pagination background
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page.sync="firstCurrentPage"
+                        :current-page.sync="page"
                         :page-size="15"
                         layout="total, prev, pager, next, jumper"
                         :total='firstDataTotal'>
@@ -54,7 +54,7 @@
                     <el-pagination background
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page.sync="secondCurrentPage"
+                        :current-page.sync="page"
                         :page-size="15"
                         layout="total, prev, pager, next, jumper"
                         :total='secondDataTotal'>
@@ -63,7 +63,7 @@
             </el-tab-pane>
         </el-tabs>
         <div class="msg-box" v-if="addNew">
-            <div class="container">
+            <div class="list">
                 <header class="title">绑定商品<i class="icon-close" @click="closeMsgBox">x</i></header>
                 <div class="search">
                     <el-input class="search-input" v-model="searchGoodsName" placeholder="请输入商品名称" clearable></el-input>
@@ -71,7 +71,7 @@
                     <el-button class="search-button" type="primary" v-else @click="seaechXsFun">搜索</el-button>
                 </div>
                 <div class="msg-table">
-                    <el-table :data="dataList" border style="width: 100%" height='153'>
+                    <el-table :data="dataList" border style="width: 100%" height='360'>
                         <el-table-column prop="id" label="" width='50'>
                             <template slot-scope="scope">
                                 <el-checkbox @change="changeFun(scope.row)"/>
@@ -81,6 +81,12 @@
                         <el-table-column prop="goods_Unit" label="规格"> </el-table-column>
                     </el-table>   
                 </div>
+                <el-pagination background
+                        :page-size="15" @current-change="handleCurrentChange2"
+                        :current-page.sync="page2"
+                        layout="total, prev, pager, next"
+                        :total='total'>
+                    </el-pagination>
                 <div class="add-new" v-if="good == '1'" @click="addEntryFun">新增商品</div>
                 <div class="add-new" v-else @click="addSaleFun">新增商品</div>
                 <el-button class="msg-save-btn" type="primary" @click="addGoodsSave">保存</el-button>
@@ -115,12 +121,20 @@ export default {
             secondDataTotal:0,
             currtab:'',
             good: '',
+            page: 1,
+            page2: 1,
+            total: 0,
         }
     },
     mounted(){
         this.getGoodsList(1,this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
     },
     methods: {
+        handleCurrentChange2(val){
+            console.log(val)
+            this.page2 = val
+            this.getBindingGoodsList()
+        },
         seaechJhFun(){
             this.getBindingGoodsList()
         },
@@ -135,9 +149,16 @@ export default {
         },  
         handleSizeChange(val) { //pageSize 改变时会触发
             console.log(`每页 ${val} 条`);
+            this.page = val
+            // this.page = val
+            if(this.activeName == 'first'){
+                this.getEntryGoodsList();
+            }else{          
+                this.getSellGoodsList();
+            } 
         },
         handleCurrentChange(val) { //currentPage 改变时会触发
-            if(tab.name == 'first'){
+            if(this.activeName == 'first'){
                 this.getEntryGoodsList();
             }else{          
                 this.getSellGoodsList();
@@ -161,6 +182,7 @@ export default {
             this.getSellGoodsList(msgData);         
         },
         tabsClick(tab, event) {
+            this.page = 1
             // console.log(tab.name); 
             this.currtab = tab.name; 
             if(tab.name == 'first'){
@@ -171,7 +193,7 @@ export default {
         },
         getEntryGoodsList(){
             let msgData = {
-                page:1,
+                page:this.page,
                 cols:"15",
                 userId:this.$route.params.searchMsg.currShop_userId,
                 region:this.$route.params.searchMsg.region,
@@ -190,7 +212,7 @@ export default {
         },
         getSellGoodsList(){
             let msgData = {
-                page:1,
+                page: this.page,
                 cols:"15",
                 userId:this.$route.params.searchMsg.currShop_userId,
                 region:this.$route.params.searchMsg.region,
@@ -217,7 +239,7 @@ export default {
         },
         getBindingGoodsList(){
             let data = {
-                page : "1",
+                page : this.page2,
                 cols : "15",   
                 goods_name:this.searchGoodsName,             
                 goods_Type: this.addGoodsType,  
@@ -231,6 +253,7 @@ export default {
                 .then(res => {
                     console.log(res)
                     this.dataList = res.data.dataList
+                    this.total = res.data.condition.total
                 })
                 .catch(res => {
                     console.log(res)
@@ -239,6 +262,7 @@ export default {
         closeMsgBox(){//关闭添加商品弹层
             this.addNew = false;
             this.searchGoodsName = ''
+            this.page2 = 1
         },
         changeFun(item){//复选框勾选
             if(this.selectGoodsList.includes(item.id)){
@@ -282,6 +306,7 @@ export default {
                     this.getGoodsList(this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
                     this.getBindingGoodsList() 
                     this.addNew = false;
+                    this.page2 = 1
                 })
                 .catch(res => {
                     this.$message.error('抱歉，绑定失败！');
@@ -314,14 +339,15 @@ export default {
         bottom: 0;
         z-index: 999;
         background: rgba(0,0,0,.5);      
-        .container{
-            position: absolute;
+        .list{
+            position: relative;
             top:50%;
             left: 50%;
+            margin-top: -325px;
+            margin-left: -250px;
             padding: 20px;
             width: 500px;
-            height: 404px;
-            transform: translateX(-250px) translateY(-202px);
+            height: 650px;
             box-sizing: border-box;
             background: #fff;
             .title{
@@ -355,6 +381,7 @@ export default {
                 margin-bottom: 20px;
                 padding: 2px 3px;
                 width: 70px;
+                text-align: center;
                 font-size: 14px;
                 color: #409EFF;
                 border-radius: 3px;
@@ -399,5 +426,12 @@ export default {
     }
 }
 
+</style>
+<style lang="less">
+    .manageGoods{
+        .el-table--enable-row-transition .el-table__body td{
+            padding: 5px 0;
+        }
+    }
 </style>
 

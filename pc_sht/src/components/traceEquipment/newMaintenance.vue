@@ -13,8 +13,8 @@
             <el-form-item label="解决方案">
                 <el-input class="textarea" type="textarea" v-model="ruleForm.jjfa"></el-input>
             </el-form-item>
-            <el-form-item label="更换部件">
-                <el-select v-model="ruleForm.ghbj" filterable clearable placeholder="请选择" @change="bjFun">
+            <el-form-item label="更换部件"><!---->
+                <el-select v-model="ruleForm.ghbj" multiple filterable clearable placeholder="请选择" @change="bjFun">
                     <el-option v-for="item in bjArr" :key="item.a_conf_id" :label="item.a_conf_item"
                         :value="item.a_conf_item">
                     </el-option>
@@ -265,9 +265,10 @@ export default {
                 })
         },
         bjFun(ele){
+            console.log(ele)
             this.bjArr.forEach(val => {
                 if(val.a_conf_id == ele){
-                    this.bj_name = val.a_conf_item
+                    this.bj_name += val.a_conf_item + ','
                 }
             })
         },
@@ -353,7 +354,8 @@ export default {
                 assets_name: this.ruleForm.name.trim(), // 设备名称
                 cause: this.ruleForm.sbwt.trim(), // 设备问题 
                 solution: this.ruleForm.jjfa.trim(), // 解决方案
-                change_unit: this.ruleForm.ghbj, // 更换部件
+                // change_unit: this.ruleForm.ghbj, // 更换部件
+                change_unit: this.ruleForm.ghbj ? this.ruleForm.ghbj.join(',') : '', // 更换部件
                 m_result: this.ruleForm.wxjg, // 维修结果(0:维修完毕，1:未完成)
                 m_time: this.ruleForm.data + timeStr, // 维修时间
                 m_creator: this.ruleForm.people, // 维修人

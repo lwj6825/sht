@@ -11,7 +11,6 @@
         <el-col :span="4"><el-input  v-model="concatType" placeholder="输入联系人或联系方式" clearable></el-input></el-col>
         <el-col :span="10">
           <el-button type="primary" size="medium" class="import"  style="margin-left: 10px" @click="searchConditions">搜索</el-button>
-          <el-button type="primary" size="medium" class="file-btn">导出</el-button>
           <span class="span-clear" @click="clearConditions">清空筛选条件</span>
         
         </el-col>
@@ -22,12 +21,18 @@
         <p class="tz-title">全部客户</p>
         <div>
           <el-button type="primary" size="medium" class="new-add"  @click="newClientMgm" >{{addClient}}</el-button>
-          <el-button type="primary" size="medium" class="import">批量导入</el-button>
+          <span class="submit">
+            批量导入
+            <form id="upload" enctype="multipart/form-data" method="post"> 
+              <input type="file" class="file" ref="file" @change="fileFun($event)">
+            </form>
+          </span>
+          <el-button type="primary" size="medium" class="import" @click="downloadFun">下载</el-button>
         </div>
       </div>
       <div class="booth-management-msg">
         <el-table :data="dataList"  border>
-          <el-table-column prop="biz_name" label="客户名称"> </el-table-column>
+          <el-table-column prop="concact_name" label="客户名称"> </el-table-column>
           <el-table-column prop="concact_name" label="联系人"> </el-table-column>
           <el-table-column prop="cellphone" label="联系方式"> </el-table-column>
           <el-table-column label="地址"> 
@@ -63,6 +68,8 @@
   import {allGys,deleGys} from "../../js/management/management.js";
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area'
+  import {baseUrl2,importCustomer,downloadCustomer} from '../../js/address/url.js'
+  import axios from 'axios';
   export default {
     name: "commodityMgm",
     created() {
@@ -89,12 +96,15 @@
         isShow: true,
         isRegion: '',
         scShopId: '',
-        areaId: ''
+        areaId: '',
+        file: '',
+        userId: '',
       }
     },
     mounted() {      
       this.isRegion = localStorage.getItem('isRegion')
       this.scShopId = localStorage.getItem('scShopId');
+      this.userId = localStorage.getItem('userId')
       if(this.isRegion == 'false'){
         this.isShow = false
         this.getAllGys()
@@ -103,6 +113,63 @@
       }
     },
     methods: {
+      downloadFun(){
+        let areaId = ''
+        if(this.isRegion == 'false'){
+          areaId = this.scShopId
+        }else{
+          areaId = this.areaId
+        }
+        window.location.href = downloadCustomer + "?userId=" + this.userId + '&region=' + this.areaId + '&biz_name=' + this.customerName 
+          + '&concact_name=' + this.concatType + '&type=2' + '&shop_booth_id=' + areaId
+      },
+      fileFun(event){
+        let areaId = ''
+        if(this.isRegion == 'false'){
+          areaId = this.scShopId
+        }else{
+          areaId = this.areaId
+        }
+        this.file = event.target.files[0];
+        let formData = new FormData();
+        formData.append('customerFile', this.file);  
+        formData.append('userId', this.userId);  
+        formData.append('region',this.areaId); 
+        formData.append('biz_name',this.customerName); 
+        formData.append('concact_name',this.concatType); 
+        formData.append('type', '2'); 
+        formData.append('shop_booth_id',areaId); 
+        let config = {
+            headers:{'Content-Type':'multipart/form-data'}
+        };
+        const ajaxPost = function (url, params,config) {
+          return new Promise((resolve, reject) => {
+            axios
+              .post(url, params,{config})
+              .then((res) => {
+                resolve(res.data)
+              })
+              .catch(() => {
+                reject('error')
+              })
+          })
+        }  
+        let url = baseUrl2 + 'manage/importCustomer'
+        ajaxPost(url,formData,config)
+          .then(res => {
+            if(res.result == true){
+              this.$message.success(res.message);
+            }else{
+              this.$message.error(res.message);
+            }
+            this.getAllGys()
+            this.$refs.file.value = null
+          })
+          .catch(res => {
+              console.log(res)
+              this.$message.error("出错了");
+          })
+      },
       getAllGys(){
         if(this.isRegion == 'false'){
           let boothData = {
@@ -312,6 +379,31 @@
         display: flex;
         width: 300px;
         justify-content: flex-end;
+        .submit{
+          margin: 0 10px;
+          position: relative;
+          display: inline-block;
+          width: 90px;
+          height: 30px;
+          line-height: 30px;
+          color: #409EFF;
+          background: #fff;
+          text-align: center;
+          overflow: hidden;
+          border-radius: 5px;
+          font-size: 14px;
+          box-sizing: border-box;
+          border: 1px solid #409EFF;
+          .file{
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 90px;
+            height: 30px;
+            opacity: 0;
+            background: rgba(0,0,0,0);
+          }
+        }
       }
     }
     .file-btn{

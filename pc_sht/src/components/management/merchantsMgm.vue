@@ -181,7 +181,7 @@ export default {
             })
                
 
-        },
+      },
       loadFun(){
         window.location.href = baseUrl + 'manage/downloadBiz'
         // window.location.href = 'http://192.168.1.14:8081/order_sht/manage/downloadBiz'

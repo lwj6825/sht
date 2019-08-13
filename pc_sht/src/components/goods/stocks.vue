@@ -85,7 +85,7 @@
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area';
   import {GetSupplier} from '../../js/district/district.js'
-  import {baseUrl2} from '../../js/address/url.js'
+  import {baseUrl,baseUrl2} from '../../js/address/url.js'
   export default {
     name: "stocks",
     data() {
@@ -203,7 +203,7 @@
       },
       // 下载
       loadFun(){
-        window.location.href = baseUrl2 + "goods/downloadPurchase?userId=" + this.userId + '&region=' + this.areaId
+        window.location.href = baseUrl + "goods/downloadPurchase?userId=" + this.userId + '&region=' + this.areaId
       },
       // 上传
       fileFun(event){
@@ -231,7 +231,7 @@
               })
             }  
             //http://192.168.1.14:8081/order_sht/goods/importPurchase
-            let url = baseUrl2 + 'goods/importPurchase'
+            let url = baseUrl + 'goods/importPurchase'
             ajaxPost(url,formData,config)
               .then(res => {
                 this.boxShow = true;

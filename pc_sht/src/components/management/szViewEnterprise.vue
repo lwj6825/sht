@@ -12,6 +12,14 @@
                     <div class="msg">{{form.password}}</div>
                 </div>
                 <div class="data">
+                    <div class="title">联系人</div>
+                    <div class="msg">{{form.name}}</div>
+                </div>
+                <div class="data">
+                    <div class="title">联系方式</div>
+                    <div class="msg">{{form.callphone}}</div>
+                </div>
+                <!--<div class="data">
                     <div class="title">角色</div>
                     <div class="msg">{{form.role}}</div>
                 </div>
@@ -30,7 +38,7 @@
                             inactive-text="停用" active-value="启用" inactive-value="停用">
                         </el-switch>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
         <div class="enterprise">
@@ -43,7 +51,7 @@
                 <div class="title">营业执照号</div>
                 <div class="msg">{{form.licenceNo}}</div>
             </div>
-            <div class="data">
+            <!--<div class="data">
                 <div class="title">营业执照附件</div>
                 <div class="msg">
                     <div class="msg-item">   
@@ -51,7 +59,7 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
                                     <figure class="image">
-                                        <!--<p class="icon-delete" @click="removeFun(index)">-</p>-->
+                                        <p class="icon-delete" @click="removeFun(index)">-</p>
                                         <img :src="item.img_url">
                                     </figure>
                                 </li>
@@ -59,11 +67,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="data">
+            </div>-->
+            <!--<div class="data">
                 <div class="title">法人代表</div>
                 <div class="msg">{{form.behalf}}</div>
-            </div>
+            </div>-->
             <div class="data">
                 <div class="title">联系地址</div>
                 <div class="msg">{{form.addr}}</div>
@@ -72,10 +80,10 @@
                 <div class="title">详细地址</div>
                 <div class="msg">{{form.inforAddr}}</div>
             </div>
-            <div class="data">
+            <!--<div class="data">
                 <div class="title">经营范围</div>
                 <div class="msg">{{form.jyScope}}</div>
-            </div>
+            </div>-->
             <div class="list-title">联系人信息</div>
             <div class="data">
                 <div class="title">联系人</div>
@@ -115,7 +123,16 @@ export default {
         }
     },
     mounted() {
-        
+        console.log(this.$route.params)
+        let param = this.$route.params
+        this.form.account = param.username
+        this.form.password = param.password
+        this.form.enterprise = param.name
+        this.form.licenceNo = param.licence_no
+        this.form.addr = param.area_name
+        this.form.inforAddr = param.addr
+        this.form.name = param.contacts
+        this.form.callphone = param.callphone
     },
     methods: {
         

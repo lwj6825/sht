@@ -27,7 +27,6 @@ import {
 export const plotList = function (params) {
   return ajaxPost(getFarmPlotListUrl, params)
 }
-
 export const plotHzsList = function (params) {
   return ajaxPost(viewFarmHzs, params)
 }
