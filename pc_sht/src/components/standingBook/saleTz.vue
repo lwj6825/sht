@@ -50,11 +50,12 @@
                         </el-select>
                     </el-form-item> 
                     <el-form-item label="商品名称" v-if="isShow2">
-                        <el-select clearable filterable v-model="form.GoodList"  placeholder="请选择">
+                        <!-- <el-select clearable filterable v-model="form.GoodList"  placeholder="请选择">
                             <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME"
                             :value="item.GOODS_NAME">
                             </el-option>
-                        </el-select>
+                        </el-select> -->
+                         <el-input v-model="form.GoodList" clearable style="width:175px;" placeholder="请输入商品名称"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn white-bth" @click="searchFun">搜索</el-button>
@@ -249,10 +250,6 @@ export default {
         
     },
     methods: {
-        back(){
-            window.history.go(-1);
-            let Time = localStorage.getItem("Time");
-        },
         getGoodsFun() {
             // alert(this)
         let boothData = {
@@ -576,16 +573,6 @@ export default {
 <style lang='less' scoped>
     .content{
         height: 100%;
-        .back{
-            width:100%;
-            height:20px;
-            line-height: 20px;
-            margin-bottom:10px;
-            background-Color:white;
-            padding-left:20px;
-            font-size:15px;
-            cursor: pointer;
-        }
         .back:hover{
             color:#409EFF;  //
             text-decoration: underline;

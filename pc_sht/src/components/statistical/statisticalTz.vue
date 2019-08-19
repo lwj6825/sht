@@ -14,6 +14,7 @@
                             :value="item.bootList[0].booth_name">
                             </el-option>
                         </el-select>
+                      
                     </el-form-item>
                      <el-form-item>
                         <el-button type="primary" @click="searchFun" class="search-btn white-bth" style="margin-left: 10px;">搜索</el-button>
@@ -51,11 +52,12 @@
                         </el-form-item> 
                     </el-form-item>
                     <el-form-item label="商品名称" v-if="isShow2">
-                        <el-select clearable filterable v-model="form.GoodList"  placeholder="请选择">
+                        <!-- <el-select clearable filterable v-model="form.GoodList"  placeholder="请选择">
                             <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME"
                             :value="item.GOODS_NAME">
                             </el-option>
-                        </el-select>
+                        </el-select> -->
+                        <el-input v-model="form.GoodList" clearable style="width:175px;" placeholder="请输入商品名称"></el-input>
                     </el-form-item>
                     
                     <el-form-item>
@@ -242,8 +244,8 @@ export default {
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
         this.local_node_id_id = localStorage.getItem('nodeidlocal');
-        console.log(this.gooduserId)
-        console.log(this.$route.params)
+        // console.log(this.gooduserId)
+        // console.log(this.$route.params)
         // this.getTime()
         this.getGoodsFun()
         
@@ -265,20 +267,19 @@ export default {
         },
         getGoodsFun() {
             // alert(this)
-        let boothData = {
-        //   region:this.areaId,
-          region:920,
-          userId:this.userId,
-          node_id:this.local_node_id_id,
-        }
-            //   console.log(boothData ,'areaid')
-        jcpurchase(boothData)
-          .then(res => {
-            this.local_check_good_options = res.data;
-            // console.log(res,'商品列表')
-          })
-          .catch(res => {
-          })
+            let boothData = {
+            //   region:this.areaId,
+            region:920,
+            userId:this.userId,
+            node_id:this.local_node_id_id,
+            }
+                //   console.log(boothData ,'areaid')
+            jcpurchase(boothData)
+            .then(res => {
+                this.local_check_good_options = res.data;
+            })
+            .catch(res => {
+            })
 
       },
         exportFun(){
@@ -288,10 +289,10 @@ export default {
         },
         getTime(){
             var start = new Date();
-            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
-            this.startTime = timestampToTime(startTime)
-            var currentTime = new Date()
-            this.endTime = formatDate(currentTime)
+            // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+            // this.startTime = timestampToTime(startTime)
+            // var currentTime = new Date()
+            // this.endTime = formatDate(currentTime)
             // var currentTime = new Date()
             // this.startTime = formatDate(currentTime)
             // // console.log(this.startTime)
@@ -544,11 +545,13 @@ export default {
                             // this.startTime = formatDate(currentTime)
                             // this.form.value1 = [new Date(new Date().setHours(0, 0, 0, 0)),new Date(new Date().setHours(23, 59, 59, 59))]
                             // this.endTime = ''
-                            var start = new Date();
-                            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
-                            this.startTime = timestampToTime(startTime)
-                            var currentTime = new Date()
-                            this.endTime = formatDate(currentTime)
+                            // var start = new Date();
+                            // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+                            // this.startTime = timestampToTime(startTime)
+                            // var currentTime = new Date()
+                            // this.endTime = formatDate(currentTime)
+                            var start = this.start_time;
+                            var endTime = this.endTime;
                             let arr = []
                             arr.push(this.startTime)
                             arr.push(this.endTime)

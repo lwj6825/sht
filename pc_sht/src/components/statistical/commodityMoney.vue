@@ -162,8 +162,8 @@ export default {
         handleBtnQuery() {
             var start_time = this.time[0];
             var end_time = this.time[1];
-            this.getQueryMoneyAndWeightForMarketFun();
-            this.getqueryMoneyAndWeightForGoodsFun();
+            this.start_time = start_time;
+            this.end_time = end_time;
             setTimeout(() => {
                  this.loading = false
             }, 2000);
@@ -171,6 +171,8 @@ export default {
                 this.currentPage = 1;
                  this.getqueryMoneyAndWeightForGoodsFun();
             }
+            this.getQueryMoneyAndWeightForMarketFun();
+            this.getqueryMoneyAndWeightForGoodsFun();
         },
         handleSizeChange(val) {  //触发每页条数
             this.pageSize = val ;
