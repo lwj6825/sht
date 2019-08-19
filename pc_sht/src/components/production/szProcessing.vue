@@ -24,7 +24,7 @@
                     <el-button type="primary" @click="newFun"> + 创建加工工艺</el-button>
                     <!--<el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
                     <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>-->
-                </div>
+                </div> 
             </div>
             <!--<div class="file-btns" v-if="isfile">
                 <div>
