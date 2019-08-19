@@ -50,11 +50,12 @@
                         </el-form-item> 
                     </el-form-item>
                     <el-form-item label="商品名称" v-if="isShow2">
-                        <el-select clearable filterable v-model="form.GoodList"  placeholder="请选择">
+                        <!-- <el-select clearable filterable v-model="form.GoodList"  placeholder="请选择">
                             <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME"
                             :value="item.GOODS_NAME">
                             </el-option>
-                        </el-select>
+                        </el-select> -->
+                         <el-input v-model="form.GoodList" clearable style="width:175px;" placeholder="请输入商品名称"></el-input>
                     </el-form-item>
                     
                     <el-form-item>
