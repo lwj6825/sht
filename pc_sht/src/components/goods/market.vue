@@ -148,7 +148,7 @@
         this.getSales()
       },
       loadFun(){
-        window.location.href = baseUrl + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId + '&node_id=' + this.node_id
+        window.location.href = baseUrl2 + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId + '&node_id=' + this.node_id
       },
       fileFun(event){
         let param = this.$refs.file.files[0];
@@ -174,7 +174,7 @@
                   })
               })
             }  
-            let url = baseUrl + 'goods/importSaleAndOrigin'
+            let url = baseUrl2 + 'goods/importSaleAndOrigin'
             ajaxPost(url,formData,config)
               .then(res => {
                 this.boxShow = true;

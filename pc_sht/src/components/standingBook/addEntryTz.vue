@@ -958,10 +958,10 @@ export default {
                 this.$message.error('供应商不能为空');
                 return
             }
-            if(this.form.ghdw == ''){
-                this.$message.error('生产单位不能为空');
-                return
-            }
+            // if(this.form.ghdw == ''){
+            //     this.$message.error('生产单位不能为空');
+            //     return
+            // }
             // console.log(this.form2)
             let addrArr = [], originArr = [];
                 this.addrOptions.forEach(ele => {

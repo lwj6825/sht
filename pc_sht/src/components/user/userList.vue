@@ -38,6 +38,11 @@
             </div>
             <el-table :data="tableData"  border style="margin-top:10px;">
                 <el-table-column prop="userName" label="账号" align="center" fixed> </el-table-column>
+                <el-table-column prop="roleName" label="节点名称" align="center">
+                    <template slot-scope="scope">
+                        <p>{{scope.row.bootList[0].node_name}}</p>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="name" :formatter='nameFormat' label="企业名称" align="center"> </el-table-column>
                 <el-table-column prop="contacts" label="联系人" :formatter='contactPeopleFormat'  align="center"> </el-table-column>
                 <el-table-column prop="roleName" label="系统角色" align="center"> </el-table-column>

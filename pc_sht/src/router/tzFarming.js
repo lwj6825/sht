@@ -8,7 +8,7 @@ export default [
         component: resolve => require(['@/components/tzFarming/tzFarming'],resolve),
         name:'TzFarming',
         meta:{
-            // id:'87',
+            id:'347',
             node:'tzFarming',
             url:'tzFarming',
         }
@@ -18,7 +18,7 @@ export default [
         component: resolve => require(['@/components/tzFarming/farmingList'],resolve),
         name:'FarmingList',
         meta:{
-            // id:'87',
+            id:'349',
             node:'tzFarming',
             url:'farmingList',
         }
@@ -28,7 +28,7 @@ export default [
         component: resolve => require(['@/components/tzFarming/viewFarming'],resolve),
         name:'ViewFarming',
         meta:{
-            // id:'87',
+            id:'350',
             node:'tzFarming',
             url:'viewFarming',
         }

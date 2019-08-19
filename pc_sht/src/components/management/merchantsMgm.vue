@@ -99,7 +99,7 @@ import {allBizs} from "../../js/management/management.js";
 import {QueryArea} from '../../js/area/area.js';
 import AreaSelect from '../common/area';
 import axios from 'axios';
-import {baseUrl} from '../../js/address/url.js'
+import {baseUrl,baseUrl2} from '../../js/address/url.js'
 
 export default {
     name: "merchantsMgm",   
@@ -183,7 +183,8 @@ export default {
 
       },
       loadFun(){
-        window.location.href = baseUrl + 'manage/downloadBiz'
+        window.location.href = baseUrl2 + 'manage/downloadBiz?userId=' + this.userId + '&region=' + this.areaId + '&boothName=' 
+          + this.boothName + '&name=' + this.name + '&stall_no=' + this.stall_no
         // window.location.href = 'http://192.168.1.14:8081/order_sht/manage/downloadBiz'
       },
       handleSizeChange(val) { //pageSize 改变时会触发

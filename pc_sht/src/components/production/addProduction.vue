@@ -23,18 +23,25 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="goods_unit" width="100" label="规格"> </el-table-column>
+                <el-table-column prop="goods_unit" width="100" label="单位/规格"> </el-table-column>
                 <el-table-column prop="buyer_booth_name" label="数量">
                     <template slot-scope="scope">
                         <el-input class="input" v-model="scope.row.goodNum" size="mini" ></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column prop="buyer_booth_name" label="进货商品信息">
+                <el-table-column prop="buyer_booth_name" label="原料名称">
                     <template slot-scope="scope">
                         <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
                             <p style="padding-left: 20px;" calss="material-name">{{item2.or_goods_name}}</p>
                         </div>
                     </template>
+                </el-table-column>
+                <!--<el-table-column prop="buyer_booth_name" label="原料单位/规格">
+                    <template slot-scope="scope">
+                        <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
+                            <p style="padding-left: 20px;" calss="material-name">{{item2.or_goods_name}}</p>
+                        </div>
+                    </template>-->
                 </el-table-column>
                 <el-table-column prop="buyer_booth_name" label="批次信息">
                     <template slot-scope="scope">

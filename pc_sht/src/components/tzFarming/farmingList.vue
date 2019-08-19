@@ -4,10 +4,11 @@
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="90px">
                     <el-form-item label="养殖场名称">
-                        <el-select v-model="form.farmingName" filterable clearable placeholder="请选择">
+                        <!--<el-select v-model="form.farmingName" filterable clearable placeholder="请选择">
                             <el-option v-for="item in farmingList" :key="item.a_conf_id" :label="item.a_conf_item" :value="item.a_conf_id">
                             </el-option>
-                        </el-select>
+                        </el-select>-->
+                        <el-input clearable v-model="form.farmingName"></el-input>
                     </el-form-item>
                     <el-form-item label="创建时间" style="width: 390px;" >
                         <el-date-picker clearable style="width: 300px"
@@ -20,7 +21,7 @@
                     </el-form-item>
                     <el-form-item label="所属企业">
                         <el-select v-model="form.enterprise" filterable clearable placeholder="请选择">
-                            <el-option v-for="item in enterpriseList" :key="item.a_conf_id" :label="item.a_conf_item" :value="item.a_conf_id">
+                            <el-option v-for="item in enterpriseList" :key="item.a_conf_id"  :label="item.booth_name" :value="item.userId">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -47,13 +48,13 @@
             </div>
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="in_date" label="创建日期"> </el-table-column>
-                    <el-table-column prop="buyer_booth_name" label="编号"> </el-table-column>
-                    <el-table-column prop="seller_booth_name" label="养殖场名称"> </el-table-column>
-                    <el-table-column prop="suppiler_name" label="养殖规模"> </el-table-column>
-                    <el-table-column prop="extra2" label="养殖品种"> </el-table-column>
-                    <el-table-column prop="extra2" label="负责人"> </el-table-column>
-                    <el-table-column prop="actual_money" label="所属企业"> </el-table-column>
+                    <el-table-column prop="record_time" label="创建日期"> </el-table-column>
+                    <el-table-column prop="yzc_code" label="编号"> </el-table-column>
+                    <el-table-column prop="yzc_name" label="养殖场名称"> </el-table-column>
+                    <el-table-column prop="yzc_gm" label="养殖规模"> </el-table-column>
+                    <el-table-column prop="yzc_pz" label="养殖品种"> </el-table-column>
+                    <el-table-column prop="yzc_fzr" label="负责人"> </el-table-column>
+                    <el-table-column prop="booth_name" label="所属企业"> </el-table-column>
                     <el-table-column label="操作" width='220'>
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看养殖档案</el-button>
@@ -76,8 +77,7 @@
                 <el-form class="form" ref="form2" :model="form2" label-width="120px">
                     <el-form-item label="所属企业">
                         <el-select v-model="form2.enterprise" filterable clearable placeholder="请选择">
-                            <el-option v-for="item in enterpriseList" :key="item.a_conf_id" :label="item.a_conf_item" 
-                                :value="item.a_conf_id">
+                            <el-option v-for="item in enterpriseList" :key="item.a_conf_id"  :label="item.booth_name" :value="item.userId">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -91,14 +91,10 @@
                         <el-input clearable v-model="form2.yzcSize"></el-input>
                     </el-form-item>
                     <el-form-item label="养殖品种">
-                        <el-select v-model="form2.varieties" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in varietiesArr" :key="index" :label="item.a_conf_item"
-                            :value="item.a_conf_id">
+                        <el-select v-model="form2.varieties" filterable clearable placeholder="请选择" @change="pzChange">
+                            <el-option v-for="(item,index) in varietiesArr" :key="index" :label="item.goods_Name" :value="item.id">
                             </el-option>
                         </el-select>
-                        <!--<el-cascader v-model="form2.varieties" :options="systemDefaultType"
-                            filterable @change="handleChange" :props="props" change-on-select>
-                        </el-cascader>-->
                     </el-form-item>
                     <el-form-item label="地址">
                         <el-cascader :options="addrOptions" v-model="form2.addr" placeholder="省/市/县" class="address" clearable 
@@ -122,8 +118,8 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
                                     <figure class="image">
-                                        <p class="icon-delete" @click="removeFun(index)">-</p><!---->
-                                        <img :src="item.img_url">
+                                        <!--<p class="icon-deletes" @click="removeFun(index,item)" v-if="item.id">-</p>-->
+                                        <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
                                     </figure>
                                 </li>
                             </ul>
@@ -155,7 +151,7 @@ function timestampToTime(timestamp) {
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + '-';
     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate() + ' ';
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
     // var h = date.getHours() + ':';
     // var m = date.getMinutes() + ':';
     // var s = date.getSeconds();
@@ -175,8 +171,12 @@ function formatDate(date) {
     var second = date.getSeconds(); 
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
-import {getDefaultProductTypes} from "../../js/goods/goods.js";
 import {getAddr} from '../../js/user/user.js';
+import { plotHzsList } from "../../js/farmthings/farmworkget.js";
+import {GetAllYzcxx, InsertYzcxx, GetYzcImg, DeleteYzcImg, UpdateYzcxx, DeleteYzcxx} from "../../js/tzFarming/tzFarming.js"
+import { nsGoodsQueryPOST, } from "../../js/farmthings/farmworkgoods.js";
+import {uploadImg} from '../../js/address/url.js'
+import axios from 'axios';
 export default {
     name:"farmingList",
     data() {
@@ -191,9 +191,7 @@ export default {
             enterpriseList: [],
             farmingList: [],
             file: '',
-            tableData: [
-                {in_date: '07-11'}
-            ],
+            tableData: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -214,59 +212,146 @@ export default {
                 phone: '', // 联系方式
                 introduce: '', // 养殖场介绍
             },
-            enterpriseList: [],
             varietiesArr: [],
-            // systemDefaultType:[],
-            // props: {
-            //     value: 'level_id',
-            //     label: 'type_name',
-            //     children: 'systemDefaultTypeList'
-            // },
+            varieties: '',
             addrOptions:[],
             propes:{
                 label: 'caption',
                 value:'szm',
                 children: 'list'
             },
+            userId: '',
+            node_id: '',
+            node_name: '',
+            list_id: '',
+            editImgArr: [],
+            img_id: '',
+            count: 0,
         }
     },
     mounted() {
-        this.systemDefaultTypeLists()
+        this.userId = JSON.parse(localStorage.getItem('userId'));
+        this.node_id = localStorage.getItem('loginId')
+        this.node_name = localStorage.getItem('loginName')
         this.getAddrList()
         this.getTime()
         let arr = []
         arr.push(this.startTime)
         arr.push(this.endTime)
         this.form.dataTime = arr
+        this.getPlotHzsList()
+        this.getNsGoodsQueryPOSTType()
+        this.getDataFun()
     },
     methods: {
+        pzChange(ele){
+            this.varietiesArr.forEach(val => {
+                if(ele == val.id){
+                    this.varieties = val.goods_Name
+                }
+            })
+        },
+        getDataFun(){
+            let obj = { 
+                userId: this.form.enterprise, // 所属企业
+                yzc_name: this.form.farmingName, // 养殖场名称
+                start_time: this.startTime,
+                end_time: this.endTime,
+                page: this.page,
+                cols: this.cols,
+            }
+            GetAllYzcxx(obj)
+                .then(res => {
+                    this.tableData = res.data.dataList;
+                    this.num = res.data.condition.total
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        // 品种
+        getNsGoodsQueryPOSTType() {
+            let param = {
+                page: 1,
+                cols: 10000,
+                userId: this.userId,
+            }
+            nsGoodsQueryPOST(param)
+            .then(res => {
+                this.varietiesArr = res.data.dataList;
+            })
+            .catch(() => {
+                this.$message.error("数据加载失败!");
+            })
+        },
+        // 所属企业
+        getPlotHzsList() {
+            let param = {
+                userId: this.userId,
+            }
+            plotHzsList(param)
+                .then(res => {
+                    this.enterpriseList = res.data.dataList;
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
         editFun(ele){
+            this.list_id = ele.id
+            // this.getImgFun()
             this.prompt = '修改'
+            let originArr = [];
+            if(ele.area_id){
+                if(ele.area_id.slice(4,6) != '00'){
+                    originArr.unshift(ele.area_id);
+                }
+                if(ele.area_id.slice(2,4) != '00'){
+                    originArr.unshift(ele.area_id.slice(0,4)+'00');
+                }
+                if(ele.area_id.slice(0,2) != '00'){
+                    originArr.unshift(ele.area_id.slice(0,2)+'0000');
+                }
+            }
+            if(ele.img_list.length > 0){
+                this.imgArr1 = ele.img_list
+                this.img_id = ele.img_list[0].id
+            }
+            this.form2.addr = originArr
+            this.form2.enterprise = JSON.stringify(ele.userId)  
+            this.form2.yzcNum = ele.yzc_code
+            this.form2.yzcName = ele.yzc_name
+            this.form2.yzcSize = ele.yzc_gm
+            this.form2.varieties = ele.yzc_pzid
+            this.form2.addrName = ele.addr
+            this.form2.people = ele.yzc_fzr
+            this.form2.phone = ele.yzc_tel
+            this.form2.introduce = ele.remark
+            this.varieties = ele.yzc_pz
             this.isEdits = true
         },
-        handleChange(value) {
-            this.form2.varieties =value[value.length - 1];
-        },
-        // 查询品种列表
-        systemDefaultTypeLists(){
-            getDefaultProductTypes()
-                .then(res =>{
-                    this.systemDefaultType = res;
+        getImgFun(){
+            let str = 'id=' + this.list_id + '&type=1'
+            GetYzcImg(str)
+                .then(res => {
+                    if(res.data.length > 0){
+                        this.imgArr1 = res.data
+                    }
                 })
-                .catch(() => {
-                    this.$message.error("出错啦!");
+                .catch((res) => {
+                    console.log(res)
                 })
         },
         submitForm(){
             let addrArr = [];
             this.addrOptions.forEach(ele => {
-                if(ele.szm == this.form.addr[0]){
+                if(ele.szm == this.form2.addr[0]){
                     addrArr.push(ele.caption)
                     ele.list.forEach(ele => {
-                        if(ele.szm == this.form.addr[1]){
+                        if(ele.szm == this.form2.addr[1]){
                             addrArr.push(ele.caption)
                             ele.list.forEach(ele => {
-                                if(ele.szm == this.form.addr[2]){
+                                if(ele.szm == this.form2.addr[2]){
                                     addrArr.push(ele.caption)                              
                                 }
                             })
@@ -274,6 +359,85 @@ export default {
                     })
                 }
             })
+            let arr = []
+            if(this.imgArr1.length > 0){
+                this.imgArr1.forEach(val => {
+                    arr.push(val.img_url)
+                })
+            }
+            if(this.list_id == ''){
+                // 新增
+                let obj = {
+                    userid: this.form2.enterprise,  // 所属企业
+                    node_id: this.node_id, // 节点编码
+                    node_name: this.node_name, // 节点名称
+                    yzc_name: this.form2.yzcName, // 地块名称
+                    yzc_code: this.form2.yzcNum, // 地块编码
+                    yzc_pz: this.varieties, // 品种
+                    yzc_pzid: this.form2.varieties, // 品种id
+                    yzc_gm: this.form2.yzcSize, // 养殖场规模
+                    yzc_tel: this.form2.phone, // 联系方式
+                    userId: this.userId, // 登陆人ID
+                    yzc_fzr: this.form2.people, // 地块负责人
+                    record_time: '', // 
+                    addr: this.form2.addrName, 
+                    remark: this.form2.introduce, // 描述
+                    area_id: this.form2.addr[this.form2.addr.length-1], 
+                    area_name: addrArr.join(""), 
+                    img_url: arr.length > 0 ? arr.join(",") : ''
+                }
+                InsertYzcxx(obj)
+                    .then(res => {
+                        if(res.result == true){
+                            this.$message.success(res.message);
+                            this.page = 1
+                            this.closeFun()
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }else{
+                if(this.img_id && this.count == 1){
+                    this.removeFun()
+                }
+                // 编辑
+                let obj = {
+                    id: this.list_id,
+                    yzc_name: this.form2.yzcName, // 地块名称
+                    yzc_code: this.form2.yzcNum, // 地块编码
+                    yzc_pz: this.varieties, // 品种
+                    yzc_pzid: this.form2.varieties, // 品种id
+                    yzc_gm: this.form2.yzcSize, // 养殖场规模
+                    yzc_tel: this.form2.phone, // 联系方式
+                    userId: this.userId, // 登陆人ID
+                    yzc_fzr: this.form2.people, // 地块负责人
+                    record_time: '', // 
+                    addr: this.form2.addrName, 
+                    area_id: this.form2.addr[this.form2.addr.length-1], 
+                    remark: this.form2.introduce, // 描述
+                    area_name: addrArr.join(""), 
+                    img_url: this.editImgArr.length > 0 ? this.editImgArr.join(",") : '',
+                    userid: this.form2.enterprise,  // 所属企业
+                }
+                UpdateYzcxx(obj)
+                    .then(res => {
+                        if(res.result == true){
+                            this.$message.success(res.message);
+                            this.page = 1
+                            this.closeFun()
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }
             // areaOriginId: this.form.addr[this.form.addr.length-1],
             // areaOriginNname: addrArr.join(""),
             // this.$refs[formName].validate((valid) => {
@@ -306,22 +470,61 @@ export default {
                 introduce: '', // 养殖场介绍
 
             }
+            this.count = 0
+            this.imgArr1 = []
+            this.editImgArr = []
+            this.img_id = ''
+            this.varieties = ''
             this.isEdits = false
+            this.list_id = ''
         },
         detailTzFun(ele){
-            this.$router.push({name: 'ViewFarming'})
+            this.$router.push({name: 'ViewFarming',params: ele})
         },
         deleteTzFun(ele){
-
+            let param = {
+                id: ele.id,
+            }
+            DeleteYzcxx(param)
+                .then(res => {
+                    if(res.result == true){
+                        this.$message.success(res.message);
+                        this.page = 1
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
         },
         handleCurrentChange(val) {
             this.page = val
+            this.getDataFun()
+        },
+        removeFun(ele,item){
+            this.imgArr1 = []
+            let obj = {
+                id: this.img_id
+            }
+            DeleteYzcImg(obj)
+                .then(res => {
+                    this.img_id = ''
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+            this.getImgFun()
         },
         fileFun(event){
+            this.count = 1
+            this.imgArr1 = []
+            this.editImgArr = []
             let that = this
             this.file = event.target.files[0];
             let formData = new FormData();
-            formData.append('importAssets', this.file);   
+            formData.append('img_url', this.file);   
             let config = {
                 headers:{'Content-Type':'multipart/form-data'}
             };
@@ -338,25 +541,36 @@ export default {
                         })
                 })
             }  
-            // let url = importAssets + '?userid=' + this.userId
-            // ajaxPost(url,formData,config)
-            //     .then(res => {
-            //         if(res[0].result == true){
-            //             this.$message.success(res[0].message);
-            //         }else{
-            //             this.$message.error(res[0].message);
-            //         }
-            //         // that.$refs.file.value = null
-            //         this.file = null
-            //     })
-            //     .catch(res => {
-            //         console.log(res)
-            //         this.$message.error("出错了");
-            //     })
+            let url = uploadImg
+            ajaxPost(url,formData,config)
+                .then(res => {
+                    if(res.result == true){
+                        this.imgArr1 = []
+                        let obj = {
+                            img_url: res.data
+                        }
+                        let arr = []
+                        arr.push(obj)
+                        this.imgArr1 = arr
+                        if(this.prompt == '修改'){
+                            this.editImgArr.push(res.data)
+                        }
+                        this.$message.success(res.message);
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                    that.$refs.file.value = null
+                    this.file = null
+                })
+                .catch(res => {
+                    console.log(res)
+                    this.$message.error("出错了");
+                })
 
         },
         searchFun(){
-
+            this.page = 1
+            this.getDataFun()
         },
         clearFun(){
             this.form = {
@@ -366,6 +580,11 @@ export default {
             }
             this.getTime()
             this.page = 1
+            let arr = []
+            arr.push(this.startTime)
+            arr.push(this.endTime)
+            this.form.dataTime = arr
+            this.getDataFun()
         },
         getAddrList(){//获取地区列表
             getAddr()
@@ -700,7 +919,7 @@ export default {
                         top: 0;
                         left: 0;
                         margin: 10px;
-                        .icon-delete{
+                        .icon-deletes{
                             position: absolute;
                             top: -6px;
                             right: -6px;

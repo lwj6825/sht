@@ -101,9 +101,9 @@
                         <div class="msg-item">   
                             <div class="img-list">
                                 <ul>
-                                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                                    <li v-if="img_url">
                                         <figure class="image">
-                                            <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                            <img :src="img_url">
                                         </figure>
                                     </li>
                                 </ul>
@@ -165,6 +165,7 @@ export default {
             ids: '',
             node_id: '',
             node_name: '',
+            img_url: '',
         }
     },
     mounted() {
@@ -301,6 +302,7 @@ export default {
             this.ids = ''
             this.imgArr1 = []
             this.imgArr = []
+            this.img_url = ''
             this.isEdits = false
         },
         editFun(ele){
@@ -310,10 +312,9 @@ export default {
             this.form.cycle = ele.technology_cycle
             this.form.describe = ele.technology_describe
             this.form.sort = ele.sort
-            let obj = {
-                img_url: ele.img_url
+            if(ele.img_url){
+                this.img_url = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + ele.img_url
             }
-            this.imgArr1.push(obj)
             this.prompt = '编辑'
             this.isEdits = true
         },
@@ -361,6 +362,7 @@ export default {
                 reader.readAsDataURL(file[0]); 
                 reader.onload = function(){                    
                     that.imgFun(reader.result,that.clarity,function(src){
+                        that.img_url = src
                         that.imgArr.push(src.slice(23))
                     })
                 }

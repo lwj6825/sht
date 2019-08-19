@@ -55,16 +55,15 @@
             </el-form-item>-->
             <el-form-item label="上传图片:">
               <div class="msg-item">   
-                <!--<div class="img-list">
+                <div class="img-list">
                   <ul>
-                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                    <li v-if="img_url">
                       <figure class="image">
-                        <p class="icon-delete" @click="removeFun(index)">-</p>
-                        <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' +item.img_url">
+                        <img :src="img_url">
                       </figure>
                     </li>
                   </ul>
-                </div>-->
+                </div>
                 <div>
                   <div class="submit">
                     上传图片
@@ -135,9 +134,9 @@
               <div class="msg-item">   
                 <div class="img-list">
                   <ul>
-                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                    <li v-if="img_url">
                       <figure class="image">
-                        <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                        <img :src="img_url">
                       </figure>
                     </li>
                   </ul>
@@ -250,7 +249,7 @@
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + '-';
     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate();
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
     // var h = date.getHours() + ':';
     // var m = date.getMinutes() + ':';
     // var s = date.getSeconds();
@@ -360,7 +359,7 @@
         telephone_add: "",
         plot_id: "",
         fzr_add: "",
-        img_url: "/nsjd/1111111000.jpg",
+        img_url: "",
         // userId: "28",
         localuserId: "",
         localnodeid: "",
@@ -430,6 +429,7 @@
           reader.readAsDataURL(file[0]); 
           reader.onload = function(){                    
             that.imgFun(reader.result,that.clarity,function(src){
+              that.img_url = src
               that.imgArr.push(src.slice(23))
             })
           }
@@ -546,6 +546,8 @@
         this.pz_name_local_bianji = ''
         this.pick_date_add = ''
         this.imgArr = []
+        this.imgArr1 = []
+        this.img_url = ''
         this.$refs[formNameEdit].resetFields();
         this.centerEditDialogVisible = false;
       },
@@ -580,6 +582,7 @@
         // 点击关闭 数据重置
         this.imgArr = []
         this.imgArr1 = []
+        this.img_url = ''
         this.$refs['ruleForm'].resetFields();
       },
       // 关闭按钮
@@ -591,6 +594,7 @@
         this.pick_date_add = ''
         this.imgArr = []
         this.imgArr1 = []
+        this.img_url = ''
         this.$refs['ruleFormEdit'].resetFields();
       },
       // 编辑地块
@@ -610,10 +614,9 @@
         this.ruleFormEdit.telephone_add = row.telphone;
         this.ruleFormEdit.plot_id = row.id;
         this.ruleFormEdit.hzs_name_local_id = row.userId;
-        let obj = {
-          img_url: row.img_url
+        if(row.img_url){
+          this.img_url = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + row.img_url
         }
-        this.imgArr1.push(obj)
       },
       hzsName_change(selVal) {
         this.$set(this.ruleFormEdit.hzs_name_local_edit = selVal.booth_name);
@@ -686,7 +689,7 @@
             .then(res => {
               this.$message.success(res.message);
               this.hzs_name_local = '';
-              this.getList(this.page_local);
+              this.getList(1);
               getDataObject.resetFields();
             })
             .catch(() => {
@@ -717,7 +720,7 @@
       getList(currentPageLocal) {
         let params = {
           page: currentPageLocal,
-          cols: "10",
+          cols: "15",
           total: this.total_local.toString(),
           userId: this.hzs_name_local.userId,
           place_name: this.place_name,
@@ -887,7 +890,6 @@
     background: #fff;
   }
   .msg-item{
-    margin: 10px 0;
     width: 500px;
     display: flex;
     .submit{
@@ -925,7 +927,6 @@
           position: relative;
           top: 0;
           left: 0;
-          margin: 10px;
           .icon-delete{
             position: absolute;
             top: -6px;

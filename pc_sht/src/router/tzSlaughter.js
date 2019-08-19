@@ -9,7 +9,7 @@ export default [
         component: resolve => require(['@/components/tzSlaughter/tzSlaughter'],resolve),
         name:'TzSlaughter',
         meta:{
-            // id:'87',
+            id:'351',
             node:'tzSlaughter',
             url:'tzSlaughter',
         }
@@ -19,7 +19,7 @@ export default [
         component: resolve => require(['@/components/tzSlaughter/newSlaughter'],resolve),
         name:'NewSlaughter',
         meta:{
-            // id:'87',
+            id:'354',
             node:'tzSlaughter',
             url:'newSlaughter',
         }
@@ -29,7 +29,7 @@ export default [
         component: resolve => require(['@/components/tzSlaughter/slaughterList'],resolve),
         name:'SlaughterList',
         meta:{
-            // id:'87',
+            id:'353',
             node:'tzSlaughter',
             url:'slaughterList',
         }
@@ -39,7 +39,7 @@ export default [
         component: resolve => require(['@/components/tzSlaughter/viewSlaughter'],resolve),
         name:'ViewSlaughter',
         meta:{
-            // id:'87',
+            id:'355',
             node:'tzSlaughter',
             url:'viewSlaughter',
         }

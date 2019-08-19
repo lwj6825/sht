@@ -1,6 +1,5 @@
 <template>
     <div class="content saleTz" ref="content" v-loading="loading">
-        <div class="back" @click="back">返回</div>
         <div class="areaBox" ref="areaBox" v-if="isShow">
             <AreaSelect @selectId='selectId'></AreaSelect>
         </div>
@@ -15,14 +14,14 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                     <el-form-item>
+                    <el-form-item>
                         <el-button type="primary" @click="searchFun" class="search-btn white-bth" style="margin-left: 10px;">搜索</el-button>
                         <el-button class="file-btn no-btn">导出</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
                 <!--收起-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}" v-if="isShow">
+                <el-form ref="forms" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}">
                     <el-form-item label="商户信息" v-if="isShow2">
                         <el-select clearable filterable v-model="form.user" @change="selectGet" placeholder="请选择">
                             <el-option v-for="item in options" :key="item.NAME" :label="item.bootList[0].booth_name"
@@ -30,7 +29,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="销售日期"  >
+                    <el-form-item label="销售日期">
                         <!-- <el-date-picker v-model="form.value1" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" 
                             start-placeholder="开始日期" end-placeholder="结束日期" :default-time="['00:00:00', '23:59:59']" @change="timeChange">
                         </el-date-picker> -->
@@ -41,15 +40,15 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
-                        <el-form-item label="数据来源" v-if="isShow2">
-                            <el-select clearable filterable placeholder="请选择" @change="selectGet" v-model="form.source" >
-                                <el-option label="电子秤（称重）" value="1"></el-option>
-                                <el-option label="手动录入" value="2"></el-option>
-                                <el-option label="电子秤（收银）" value="3"></el-option>
-                                <el-option label="解析数据" value="4"></el-option> 
-                            </el-select>
-                        </el-form-item> 
                     </el-form-item>
+                    <el-form-item label="数据来源" v-if="isShow2">
+                        <el-select clearable filterable placeholder="请选择" @change="selectGet" v-model="form.source" >
+                            <el-option label="电子秤（称重）" value="1"></el-option>
+                            <el-option label="手动录入" value="2"></el-option>
+                            <el-option label="电子秤（收银）" value="3"></el-option>
+                            <el-option label="解析数据" value="4"></el-option> 
+                        </el-select>
+                    </el-form-item> 
                     <el-form-item label="商品名称" v-if="isShow2">
                         <el-select clearable filterable v-model="form.GoodList"  placeholder="请选择">
                             <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME"
@@ -57,7 +56,6 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    
                     <el-form-item>
                         <el-button type="primary" class="search-btn white-bth" @click="searchFun">搜索</el-button>
                         <el-button class="file-btn no-btn" @click="exportFun">导出</el-button>
@@ -155,7 +153,7 @@ function timestampToTime(timestamp) {
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + '-';
     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate();
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
     // var h = date.getHours() + ':';
     // var m = date.getMinutes() + ':';
     // var s = date.getSeconds();
@@ -199,7 +197,7 @@ export default {
                 upload: '',
                 GoodList:'',//选中商品信息
             },
-            unfold: '展开',
+            unfold: '收起',
             show: true,
             inline: true,
             isShow2: true,
@@ -229,11 +227,6 @@ export default {
         this.form.value1 = [this.start_time,this.end_time]
         this.form.GoodList = this.$route.query.shopname;
         this.form.user = this.$route.query.merChant;
-        console.log(this.start_time)
-        console.log(this.end_time)
-        console.log(this.$route.query.shopname)
-        // console.log(this.form.value1);
-        // console.log(this.form.user)
         this.isRegion = localStorage.getItem('isRegion')
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
@@ -272,7 +265,6 @@ export default {
         jcpurchase(boothData)
           .then(res => {
             this.local_check_good_options = res.data;
-            console.log(res,'商品列表')
           })
           .catch(res => {
           })
@@ -358,7 +350,6 @@ export default {
             }
             GetAllBiz(obj)
                 .then(res => {
-                    console.log(res.data,"dataList")
                     this.options = res.data.dataList
                 })
                 .catch(() => {
@@ -474,11 +465,9 @@ export default {
                         this.loading = false
                         this.tableData = res.data.tzList
                         this.num = res.data.tzBean.total
-                        loading.close();
                     })
                     .catch(res => {
                         console.log(res)
-                        loading.close();
                     })
             }else{
                 let obj = {
@@ -491,16 +480,13 @@ export default {
                     page: this.page,
                     cols: this.cols,
                 }
-                console.log(this.form.GoodList,"goodlist")
                 GetSaleTz(obj)
                     .then(res => {
                         this.tableData = res.data.tzList
                         this.num = res.data.tzBean.total
-                        loading.close();
                     })
                     .catch(res => {
                         console.log(res)
-                        loading.close();
                     })
             }
         },

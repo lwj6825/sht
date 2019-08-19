@@ -32,7 +32,7 @@
       </div>
       <div class="booth-management-msg">
         <el-table :data="dataList"  border>
-          <el-table-column prop="concact_name" label="客户名称"> </el-table-column>
+          <el-table-column prop="biz_name" label="客户名称"> </el-table-column>
           <el-table-column prop="concact_name" label="联系人"> </el-table-column>
           <el-table-column prop="cellphone" label="联系方式"> </el-table-column>
           <el-table-column label="地址"> 
@@ -68,7 +68,7 @@
   import {allGys,deleGys} from "../../js/management/management.js";
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area'
-  import {baseUrl2,importCustomer,downloadCustomer} from '../../js/address/url.js'
+  import {baseUrl,baseUrl2,importCustomer,downloadCustomer} from '../../js/address/url.js'
   import axios from 'axios';
   export default {
     name: "commodityMgm",

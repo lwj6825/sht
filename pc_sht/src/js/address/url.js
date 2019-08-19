@@ -49,7 +49,7 @@ export const superEdit = baseUrl + 'function/update'; //编辑功能
 //“管理”菜单
 // 商户
 export const queryMoneyLittleTime = baseUrl + 'redis/queryMoneyLittleTime'; //查询月总交易额
-export const getAllBiz = baseUrl + 'manage/getAllBiz';// 查询商户列表
+export const getAllBiz = baseUrl2 + 'manage/getAllBiz';// 查询商户列表
 export const insertBiz = baseUrl + 'manage/insertBiz';// 新增商户
 export const lookShop = baseUrl + 'manage/getBootListById';//新增商户-查看店铺
 export const getAllBizType = baseUrl + 'manage/getAllBizType';//新增商户-商户类型
@@ -58,8 +58,8 @@ export const UpdateBizBooth = baseUrl + 'manage/UpdateBizBooth';// 商户详情 
 // 供应商
 export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
 export const insertGys = baseUrl + 'manage/insertGys';// 新增供应商
-export const downloadGys = baseUrl + 'manage/downloadGys';// 下载供应商
-export const importGys = baseUrl + 'manage/importGys';// 导入供应商
+export const downloadGys = baseUrl2 + 'manage/downloadGys';// 下载供应商
+export const importGys = baseUrl2 + 'manage/importGys';// 导入供应商
 // 客户
 export const insertKh = baseUrl + 'manage/insertKh';// 新增客户
 export const deleteGys = baseUrl + 'manage/deleteGys';// 删除供应商/商户
@@ -68,7 +68,7 @@ export const supplierList = baseUrl + 'manage/getAllGysForMoreBiz';// 管理供�
 export const bindingSupplier = baseUrl + 'manage/getAllGysForBind';//管理供应商 - 绑定供应商列表
 export const saveBindinSupplier  = baseUrl + 'manage/insertGysForBind';//管理供应商 - 绑定供应商保存
 export const getCenterBussinessInfo  = baseUrl + 'manage/getCenterBussinessInfo';//// 营业执照号
-export const importCustomer  = baseUrl2 + 'manage/importCustomer';//// 导入
+export const importCustomer  = baseUrl + 'manage/importCustomer';//// 导入
 export const downloadCustomer  = baseUrl2 + 'manage/downloadCustomer';//// 导出
 //商品
 export const entryGgoodsList = baseUrl + 'goods/getAllPurchaseGoodsForMoreBiz';// 管理商品 - 进货
@@ -103,20 +103,20 @@ export const getDefaultProductType = baseUrl + 'comm/getDefaultProductType';// �
 export const goodsCode = baseUrl + 'goods/GoodsCode';// 商品编码
 export const updateGoodsImgForTrace = baseUrl + 'goods/updateGoodsImgForTrace';// 上传商品图片 + 上传追溯精选图片
 //销售商品
-export const querySales = baseUrl + 'goods/querySales';// 查询销售商品列表
-export const salesAdd = baseUrl + 'goods/salesAdd';// 新增销售商品
+export const querySales = baseUrl2 + 'goods/querySales';// 查询销售商品列表
+export const salesAdd = baseUrl2 + 'goods/salesAdd';// 新增销售商品
 export const getGoodsJdImg = baseUrl + 'goods/getGoodsJdImg';// 获取销售商品的 基地图片
-export const updateGoodsJdImg = baseUrl + 'goods/updateGoodsJdImg';// 新增或者修改基地图片
-export const deleteGoodsJdImg = baseUrl + 'goods/deleteGoodsJdImg';// 删除 基地图片
+export const updateGoodsJdImg = baseUrl2 + 'goods/updateGoodsJdImg';// 新增或者修改基地图片
+export const deleteGoodsJdImg = baseUrl2 + 'goods/deleteGoodsJdImg';// 删除 基地图片
 //单条商品
-export const lookGoods = baseUrl + 'goods/lookGoods';// 查看商品详情
-export const goodsUpdate = baseUrl + 'goods/goodsUpdate';// 编辑商品
-export const deleteGoods = baseUrl + 'goods/deleteGoods';// 删除商品
+export const lookGoods = baseUrl2 + 'goods/lookGoods';// 查看商品详情
+export const goodsUpdate = baseUrl2 + 'goods/goodsUpdate';// 编辑商品
+export const deleteGoods = baseUrl2 + 'goods/deleteGoods';// 删除商品
 // 原料
-export const geStkOrigin = baseUrl + 'goods/geStkOrigin';// 查看原料
-export const updateStkOr = baseUrl + 'goods/updateStkOr';// 编辑原料
-export const deleteStkOr = baseUrl + 'goods/deleteStkOr';// 删除原料
-export const insertStkOr = baseUrl + 'goods/insertStkOr';// 新增原料
+export const geStkOrigin = baseUrl2 + 'goods/geStkOrigin';// 查看原料
+export const updateStkOr = baseUrl2 + 'goods/updateStkOr';// 编辑原料
+export const deleteStkOr = baseUrl2 + 'goods/deleteStkOr';// 删除原料
+export const insertStkOr = baseUrl2 + 'goods/insertStkOr';// 新增原料
 
 
 
@@ -345,3 +345,28 @@ export const updateAssetsConf = baseUrl3 + 'assetsSet/updateAssetsConf' // 配�
 export const queryAssetsSpecifications = baseUrl3 + 'assets/queryAssetsSpecifications' // 查询所有资产规格
 export const queryAssetsNames = baseUrl3 + 'assets/queryAssetsNames' // 查询所有资产名称
 export const queryAssetsManufacturers = baseUrl3 + 'assets/queryAssetsManufacturers' // 查询所有资产生产厂家
+
+// 养殖场
+export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询
+export const insertYzcxx = baseUrl + 'farming/insertYzcxx' // 新增养殖场
+export const updateYzcxx = baseUrl + 'farming/updateYzcxx' // 更新养殖场
+export const deleteYzcxx = baseUrl + 'farming/deleteYzcxx' // 删除养殖场
+export const uploadImg = baseUrl + 'farming/uploadImg' // 上传图片
+export const getYzcImg = baseUrl + 'farming/getYzcImg' // 获取上传图片?id=1&type=1 id 为每个主体的主键，type （1：养殖场图片，2：档案图片，3：防疫图片。4：饲养图片）
+export const deleteYzcImg = baseUrl + 'farming/deleteYzcImg' // 删除图片
+export const getAllYzcda = baseUrl + 'farming/getAllYzcda' // 查看养殖场档案信息
+export const insertYzcda = baseUrl + 'farming/insertYzcda' // 新增养殖场档案
+export const updateYzcda = baseUrl + 'farming/updateYzcda' // 更新养殖场档案
+export const deleteYzcda = baseUrl + 'farming/deleteYzcda' // 删除养殖场档案
+export const getAllYzcfy = baseUrl + 'farming/getAllYzcfy' // 查看养殖场防疫
+export const insertYzcfy = baseUrl + 'farming/insertYzcfy' // 新增养殖场防疫
+export const updateYzcfy = baseUrl + 'farming/updateYzcfy' // 更新养殖场防疫
+export const deleteYzcfy = baseUrl + 'farming/deleteYzcfy' // 删除养殖场防疫
+export const getAllYzcsy = baseUrl + 'farming/getAllYzcsy' // 查询养殖场饲养
+export const insertYzcsy = baseUrl + 'farming/insertYzcsy' // 新增养殖场饲养
+export const updateYzcsy = baseUrl + 'farming/updateYzcsy' // 更新养殖场饲养记录
+export const deleteYzcsy = baseUrl + 'farming/deleteYzcsy' // 删除养殖场饲养
+// 屠宰
+export const getAllYzctzjg = baseUrl + 'farming/getAllYzctzjg' // 查询屠宰加工
+export const insertYzctzjg = baseUrl + 'farming/insertYzctzjg' // 新增屠宰加工
+export const deleteYzctzjg = baseUrl + 'farming/deleteYzctzjg' // 删除屠宰加工
