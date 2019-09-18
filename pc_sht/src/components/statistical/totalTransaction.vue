@@ -10,7 +10,7 @@
                     <el-date-picker style="width:300px;float:left;margin-top:23px;margin-left:65px;"
                         v-model="time" value-format="yyyy-MM-dd" default-value="2019-07-25" 
                         type="daterange" 
-                        align="right" :picker-options="pickerOptions"
+                        align="left" :picker-options="pickerOptions"
                         unlink-panels
                         range-separator="至" clear-icon	
                         start-placeholder="开始日期"
@@ -26,12 +26,12 @@
          </div>
          <div class="totol" v-loading="loading">
               <div class="title">交易额明细&nbsp;&nbsp;【总交易额:&nbsp;{{title_count}}元；</div>
-              <p style="margin-top:6px;font-size:15px;float:left;" v-for="(item,index) in count_price" :key="index" >
+              <p style="margin-top:6px;font-size:13px;float:left;" v-for="(item,index) in count_price" :key="index" >
                  &nbsp;&nbsp;{{item.name}}交易额：{{item.交易额}}元(占{{item.百分比}})；
               </p>
               <p style="margin-top:6px;font-size:15px;float:left;">】</p>
               <el-table :data="this.tableData"  style="width:100%;margin-left:20px;" :default-sort = "{prop: 'date', order: 'descending'}" fit :row-style="{height:'40px'}" :header-cell-style="{background:'#f5f5f5'}" >
-                <el-table-column v-for="(item,index) in headerList" :key='index' sortable :label="item" fit :prop='item'>
+                <el-table-column v-for="(item,index) in headerList" :key='index'  :label="item" fit :prop='item'>
                  </el-table-column>  
              </el-table>
              <div class="block">
@@ -241,7 +241,7 @@ export default {
             border: 1px solid #ccc;
             float: left;
             .title{
-                font-size: 15px;
+                font-size: 13px;
                 color:#ccc;
                 margin-left: 10px;
                 margin-top: 20px;
