@@ -98,7 +98,7 @@ export default {
     },
     mounted(){
         this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
-        console.log(this.mainList)
+        // console.log(this.mainList)
         this.levelOneCurrId = this.mainList[0].id;//选择第一项
         this.changeMenu(this.levelOneCurrId);
         // 查询品种列表

@@ -1069,6 +1069,7 @@ export default {
                             this.more = true;
                         }
                         if(res.data.list == []){
+                            alert()
                             this.more1 = true;
                         }
                         let arr = res.data,

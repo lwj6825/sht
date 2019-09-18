@@ -20,7 +20,4 @@ ol,ul{list-style:none;}
 a{text-decoration:none;}
 textarea{ box-sizing: content-box; border:none;outline: none;}
 input{outline:none;-webkit-tap-highlight-color:rgba(0,0,0,0);border-radius:0; box-sizing: content-box;border: none;}
-.el-picker-panel{
-  left:45px;
-}
 </style>

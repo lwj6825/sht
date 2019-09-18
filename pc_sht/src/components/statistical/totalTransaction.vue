@@ -26,16 +26,12 @@
          </div>
          <div class="totol" v-loading="loading">
               <div class="title">交易额明细&nbsp;&nbsp;【总交易额:&nbsp;{{title_count}}元；</div>
-              <p style="margin-top:6px;font-size:13px;float:left;" v-for="(item,index) in count_price" :key="index" >
+              <p style="margin-top:6px;font-size:15px;float:left;" v-for="(item,index) in count_price" :key="index" >
                  &nbsp;&nbsp;{{item.name}}交易额：{{item.交易额}}元(占{{item.百分比}})；
               </p>
               <p style="margin-top:6px;font-size:15px;float:left;">】</p>
               <el-table :data="this.tableData"  style="width:100%;margin-left:20px;" :default-sort = "{prop: 'date', order: 'descending'}" fit :row-style="{height:'40px'}" :header-cell-style="{background:'#f5f5f5'}" >
-<<<<<<< HEAD
-                <el-table-column v-for="(item,index) in headerList" :key='index'  :label="item" fit :prop='item'>
-=======
                 <el-table-column v-for="(item,index) in headerList" :key='index' :label="item" fit :prop='item'>
->>>>>>> 0e7ab5693c8d7f225657f7ce5d5bd66506d670d9
                  </el-table-column>  
              </el-table>
              <div class="block">
@@ -177,7 +173,7 @@ export default {
                         this.title.total.regionList.forEach(val=>{
                             
                             this.count_price.push(val);
-                            console.log(this.count_price)
+                            // console.log(this.count_price)
                         })
                          this.tableData = res.data.list ; // 存储表格数据  
                          this.cols = res.data.cols;   // 每页10条
@@ -245,7 +241,7 @@ export default {
             border: 1px solid #ccc;
             float: left;
             .title{
-                font-size: 13px;
+                font-size: 15px;
                 color:#ccc;
                 margin-left: 10px;
                 margin-top: 20px;
