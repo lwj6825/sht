@@ -5,7 +5,7 @@
             <ul class="menu-list">
                 <li class="menu-item" v-for="item in mainList" :key="item.id" :class="{active:levelOneCurrId == item.id}"
                     @click="selectMenu(item.id)">
-                    <p style="width: 40px"><i class="icon" :class="item.icon"></i></p>
+                    <p style="width: 40px"><i class="icon" :class="'icon-' + item.url"></i></p>
                     <span style="width: 200px" class="text">{{item.text}}</span>
                 </li>
             </ul>
@@ -98,6 +98,7 @@ export default {
     },
     mounted(){
         this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
+        console.log(this.mainList)
         this.levelOneCurrId = this.mainList[0].id;//选择第一项
         this.changeMenu(this.levelOneCurrId);
         // 查询品种列表
@@ -574,31 +575,88 @@ export default {
                 vertical-align: text-top;
             }
         }
-
-        .icon-tongji{
-            background: url('../../assets/images/u4151.png') no-repeat center center;
-            background-size: 75% 75%;
+        .icon-tzFarming{
+            background: url('../../assets/images/tzFarming.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
-        .icon-taizhang{
-            background: url('../../assets/images/u4154.png') no-repeat center center;
-            background-size: 75% 75%;
+        .icon-standingBook{
+            background: url('../../assets/images/standingBook.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
-        .icon-order{
-            background: url('../../assets/images/u4148.png') no-repeat center center;
-            background-size: 75% 75%;
+        .icon-production{
+            background: url('../../assets/images/production.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
-        .icon-guanli{
-            background: url('../../assets/images/u4148.png') no-repeat center center;
-            background-size: 75% 75%;
+        .icon-tzSlaughter{
+            background: url('../../assets/images/tzSlaughter.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-management{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-user{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
         .icon-goods{
-            background: url('../../assets/images/u4148.png') no-repeat center center;
-            background-size: 75% 75%;
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
-        .icon-setings{
-            background: url('../../assets/images/u4171.png') no-repeat center center;
-            background-size: 75% 75%;
+        .icon-farmworksy{
+            background: url('../../assets/images/farmworksy.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
+        .icon-settings{
+            background: url('../../assets/images/settings.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-differentSz{
+            background: url('../../assets/images/settings.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+
+        .icon-farmwork{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-statistical{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-district{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-role{
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-fun{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-analyze{
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-traceEquipment{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-farmwork{
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-farmwork{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-assets{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        
         .level-two-menu{
             position: fixed;
             left: 50px;

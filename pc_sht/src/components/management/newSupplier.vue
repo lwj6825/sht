@@ -48,7 +48,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" class="new-add" @click="submitForm('form')" >保存</el-button>
+              <el-button type="primary" class="new-add" @click="submitForm('form')" :disabled="disabled">保存</el-button>
             </el-form-item>
 
           </el-form>
@@ -150,6 +150,7 @@
         ],
         biz_id: '',
         node_id: '',
+        disabled: false,
       }
     },
     created() {
@@ -165,13 +166,13 @@
     },
     watch: {
       'form.licenceNo': function (val) {
-          if (val.length == 0) {
-            this.show = false
-            this.value4 = ''
-          } else{
-            this.show = true
-            this.getYyzhFun()
-          } 
+        if (val.length == 0) {
+          this.show = false
+          this.value4 = ''
+        } else{
+          this.show = true
+          this.getYyzhFun()
+        } 
       }
     },
     methods: {
@@ -203,7 +204,6 @@
       },
       // 选择供货单位
       selectGhdw(val){
-        console.log(val)
         this.dwArr.forEach((ele)=>{ 
           if(ele.SUPPLIER_NAME == val){
             this.ghdwId = ele.SUPPLIER_ID;
@@ -244,14 +244,12 @@
       },
       // 经营范围
       boothChange(val){
-        console.log(val)
         this.boothArr.forEach((ele)=>{ 
           if(ele.code == val){
             this.boothName = ele.name;
 
           }
         })
-        console.log(this.boothName)
       },
       getAddrList(){//获取地区列表
         getAddr()
@@ -268,6 +266,7 @@
         }else{   
           this.$refs[formName].validate((valid) => {
             if (valid) {
+              this.disabled = true
               // 根据地区序列号查询地址
               let addrArr = [], originArr = [];
               this.addrOptions.forEach(ele => {
@@ -321,6 +320,7 @@
               };
               insGys(params)
                 .then(res => {
+                  this.disabled = false
                   if (res.message == "保存成功") {
                     this.$message.success(res.message);
                     this.$router.push({path:'supplierMgm'});
@@ -329,6 +329,7 @@
                   }
                 })
                 .catch(() => {
+                  this.disabled = false
                   this.$message.error("出错啦!");
                 })
             } else {

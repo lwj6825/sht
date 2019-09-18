@@ -1,5 +1,5 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
-import {symQueryUrl,symGetAllUrl,symInsertUrl} from '../address/url.js';
+import {symQueryUrl,symGetAllUrl,symInsertUrl,queryTzSymApply,getAllTzSymApply} from '../address/url.js';
 
 
 
@@ -13,6 +13,10 @@ import {symQueryUrl,symGetAllUrl,symInsertUrl} from '../address/url.js';
 export const symQuery  = function(params) {
   return ajaxPost(symQueryUrl,params)
 }
+//溯源码查询
+export const GetAllTzSymApply  = function(params) {
+  return ajaxPost(getAllTzSymApply,params)
+}
 
 // 溯源码获取全部
 export const symGetAllsymPost  = function(params) {
@@ -24,7 +28,10 @@ export const symInsert  = function(params) {
   return ajaxPost(symInsertUrl,params)
 }
 
-
+//溯源码查询兔子
+export const QueryTzSymApply  = function(params) {
+  return ajaxPost(queryTzSymApply,params)
+}
 
 
 

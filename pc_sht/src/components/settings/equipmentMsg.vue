@@ -8,6 +8,13 @@
                 <span class='label'>设备信息</span>
                 <el-input class="input" v-model="msg" placeholder="请输入内容" clearable></el-input>
             </div>
+            <div class="type-item left-distance">
+                <span class='label'>商户信息</span>
+                <el-select class="input" v-model="sh_name" placeholder="请选择" clearable>
+                    <el-option v-for="(item,index) in shArr" :key="index" :label="item.bootList[0].booth_name" :value="item.bootList[0].booth_name">
+                    </el-option>
+                </el-select>
+            </div>
             <div class="type-item left-distance" v-show="isUnfold">
                 <span class='label'>设备状态</span>
                 <el-select class="input" v-model="status" placeholder="请选择" clearable>
@@ -154,6 +161,7 @@ import {
     DownLoadDoc,
 } from '../../js/settings/settings.js'
 import {baseUrl} from '../../js/address/url.js'
+import {allBizs} from "../../js/management/management.js";
 export default {
     name:'EquipmentMsg',
     data(){
@@ -318,7 +326,9 @@ export default {
             deviceId:'',//设备ID
             boxShow: false,
             fileMsg: '',
-            file: ''
+            file: '',
+            shArr: [],
+            sh_name: '',
         }
     },
     computed:{
@@ -338,6 +348,26 @@ export default {
         this.getAllRegion('');//获取大区ID  
     },
     methods:{
+        getAllBizs(){
+            let boothData = {
+            page: 1,
+            cols: 1000,
+            total: 0,
+            userId: this.userId,
+            name: '',
+            boothName: '',
+            stall_no: '',
+            region:this.areaId,
+            }
+            allBizs(boothData)
+                .then(res => {
+                    this.shArr = res.data.dataList;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+
+        },
         handleCurrentChange(val) {
             this.page = val
             this.getAllEquipmentList()
@@ -506,7 +536,7 @@ export default {
                         this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
                         this.getAllEquipmentList();//获取所有设备信息列表   
                     }
-                                   
+                    this.getAllBizs() // 商户
                 })
                 .catch(res => {
                     console.log(res)
@@ -520,6 +550,8 @@ export default {
                 factory:this.factory,
                 page:this.page,
                 cols:this.cols,
+                booth_name: this.sh_name
+
             }
             EquipmentManagementList(data)
                 .then(res => {
@@ -532,6 +564,7 @@ export default {
         },
         selectId(id){//选择区域展示设备信息列表 
             this.getAllRegion(id);
+            this.getAllBizs() // 商户
         },
         search(){//按条件搜索         
             this.getAllRegion(this.bigAreaId);
@@ -540,6 +573,8 @@ export default {
             this.msg = '';
             this.status = '';
             this.factory = '';
+            this.sh_name = '';
+            this.getAllEquipmentList()
         },
         unfold(){//是否展开筛选条件
             this.isUnfold = !this.isUnfold;

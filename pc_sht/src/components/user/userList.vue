@@ -22,8 +22,14 @@
                 </el-select>
             </section>
             <section>
+                <span class="float-lt margin-rt">节点名称</span>
+                <el-select class="float-lt" v-model="nodeId" clearable filterable placeholder="请选择">
+                    <el-option v-for="(item,index) in nodeList" :key="index" :label="item.node_name" :value="item.node_id"></el-option>
+                </el-select>
+            </section>
+            <section>
                 <el-button type="primary" class="search-btn" @click="search()">搜索</el-button>
-                <el-button class="margin-rt file-btn">导出</el-button>
+                <!--<el-button class="margin-rt file-btn">导出</el-button>-->
                 <span class="clear-all" @click="clearAll()">清空筛选条件</span>
             </section>
         </div>
@@ -38,6 +44,11 @@
             </div>
             <el-table :data="tableData"  border style="margin-top:10px;">
                 <el-table-column prop="userName" label="账号" align="center" fixed> </el-table-column>
+                <el-table-column prop="roleName" label="节点名称" align="center">
+                    <template slot-scope="scope">
+                        <p>{{scope.row.bootList[0].node_name}}</p>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="name" :formatter='nameFormat' label="企业名称" align="center"> </el-table-column>
                 <el-table-column prop="contacts" label="联系人" :formatter='contactPeopleFormat'  align="center"> </el-table-column>
                 <el-table-column prop="roleName" label="系统角色" align="center"> </el-table-column>
@@ -65,7 +76,7 @@
 </template>
 
 <script>
-import {getUserList,deleteUser} from '../../js/user/user.js'
+import {getUserList,deleteUser,GetAllNode} from '../../js/user/user.js'
 import {getRoleList} from '../../js/role/role.js'
 export default {
     name:'userList',
@@ -90,7 +101,9 @@ export default {
             ],
             tableData: [],
             currentPage:1,
-            dataTotal:0
+            dataTotal:0,
+            nodeList: [],
+            nodeId: '',
         }
     },
     mounted(){
@@ -116,7 +129,9 @@ export default {
             userName:'',  
             roleId:'', 
             boothName:'',  
-            state:''}
+            state:'',
+            nodeId: this.nodeId,
+        }
         getUserList(userDate)
             .then(res => {      
                 // console.log(res)
@@ -131,8 +146,18 @@ export default {
             .catch(res => {
                 console.log(res)
             })
+        this.getNodeFun()
     },
     methods: {
+        getNodeFun(){
+            GetAllNode()
+                .then(res => {
+                    this.nodeList = res.data.dataList
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         addMarketFun(){
             this.$router.push({name: 'addMarekt'})
         },
@@ -150,7 +175,8 @@ export default {
                     userName:this.account,  
                     roleId:this.systemRole, 
                     boothName:this.enterpriseName,  
-                    state:this.enterpriseStatus
+                    state:this.enterpriseStatus,
+                    nodeId: this.nodeId
                 }
                 getUserList(userDate)
                     .then(res => {                
@@ -174,7 +200,8 @@ export default {
                     userName:this.account,  
                     roleId:this.systemRole, 
                     boothName:this.enterpriseName,  
-                    state:this.enterpriseStatus
+                    state:this.enterpriseStatus,
+                    nodeId: this.nodeId
                 }
                 getUserList(userDate)
                     .then(res => {                
@@ -213,7 +240,7 @@ export default {
                     deleteUser(row.userId)
                         .then(res => {
                             //获取用户列表
-                            let userDate = { startDate:'',  endDate:'',  userName:'',  roleId:'', boothName:'',  state:''}
+                            let userDate = {page: 1,cols: 15, startDate:'',  endDate:'',  userName:'',  roleId:'', boothName:'',  state:'', nodeId: ''}
                             getUserList(userDate)
                                 .then(res => {
                                     this.tableData = res.data.dataList
@@ -250,7 +277,9 @@ export default {
                     userName:this.account,
                     roleId:this.systemRole,
                     boothName:this.enterpriseName,
-                    state:this.enterpriseStatus
+                    state:this.enterpriseStatus,
+                    nodeId: this.nodeId,
+                    page: 1,cols: 15,
                 }
                 getUserList(userDate)
                     .then(res => {
@@ -267,7 +296,9 @@ export default {
                     userName:this.account,
                     roleId:this.systemRole,
                     boothName:this.enterpriseName,
-                    state:this.enterpriseStatus
+                    state:this.enterpriseStatus,
+                    nodeId: this.nodeId,
+                    page: 1,cols: 15,
                 }
                 getUserList(userDate)
                     .then(res => {
@@ -286,8 +317,9 @@ export default {
             this.systemRole='';
             this.enterpriseName='';
             this.enterpriseStatus='';
+            this.nodeId = ''
             //获取用户列表
-            let userDate = { startDate:'',  endDate:'',  userName:'',  roleId:'', boothName:'',  state:''}
+            let userDate = {page: 1,cols: 15, startDate:'',  endDate:'',  userName:'',  roleId:'', boothName:'',  state:'',nodeId: ''}
             getUserList(userDate)
                 .then(res => {
                     this.tableData = res.data.dataList

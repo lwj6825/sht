@@ -18,17 +18,18 @@
         <div class="plot-info-one-row">
           <div class="columnone">所属企业：{{viewHzs}}</div>
           <div class="columntwo">创建日期：{{dataTime}}</div>
-          <div class="columnthree columnoneimg">
+          <div class="column">
+            <span style="color: #000;">地块介绍：
+              {{dkjs.length > 40 ? (dkjs.substring(0,40) + '...') : dkjs }} </span>
+            <span class="more" v-if="dkjs.length > 40" @click="moreFun">更多</span>
+          </div>
+        </div>
+        <div class="plot-info-one-row">
+          <div class="columnoneimg">
             <p>地块信息:</p>
             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + img_url" v-if="img_url">
           </div>
-        </div>
-        <!--<div class="plot-info-one-row">
-          <div class="columnoneimg">
-            <p>地块信息:</p>
-            <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + img_url">
-          </div>
-        </div>-->
+        </div><!---->
       </div>
       <!--种植信息-->
       <div class="plant-info">
@@ -106,7 +107,7 @@
               <div class="sf-table">
                 <el-table :data="viewNsjlList" style="width: 100%" :cell-style = "getRowheight" :header-cell-style="getRowClass">
                   <el-table-column prop="in_date" label="日期" width="300"></el-table-column>
-                  <el-table-column prop="in_date" label="农事类型"></el-table-column>
+                  <!--<el-table-column prop="in_date" label="农事类型"></el-table-column>-->
                   <el-table-column prop="nsjl_describe" label="农事记录"> </el-table-column>
                   <el-table-column prop="img_url" label="图片">
                     <template slot-scope="scope">
@@ -191,13 +192,13 @@
         <div class="left">上传图片:</div>
         <div class="right">
           <div class="box-fileimg">
-            <!--<figure class="image" v-if="imgUrl">
-              <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + imgUrl">
-            </figure>-->
+            <figure class="image" v-if="imgUrl">
+              <img :src="imgUrl">
+            </figure><!---->
             <div class="submit">
               上传图片
               <form enctype="multipart/form-data" method="post"> 
-                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
+                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event,1)">
               </form>
             </div>  
           </div>
@@ -205,7 +206,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary" @click="addNewTrsf()">保存</el-button>
+        <el-button type="primary" @click="addNewTrsf()" :disabled="disabled">保存</el-button>
       </span>
     </el-dialog>
     <!--编辑土壤施肥-->
@@ -266,12 +267,12 @@
         <div class="right">
           <div class="box-fileimg">
             <figure class="image" v-if="imgUrl">
-              <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + imgUrl">
+              <img :src="imgUrl">
             </figure>
             <div class="submit">
               上传图片
               <form enctype="multipart/form-data" method="post"> 
-                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
+                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event,1)">
               </form>
             </div>  
           </div>
@@ -279,7 +280,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary" @click="updateTrsf()">保存</el-button>
+        <el-button type="primary" @click="updateTrsf()" :disabled="disabled">保存</el-button>
       </span>
     </el-dialog>
     <!--新增病虫害防治   bchflag-->
@@ -341,13 +342,13 @@
         <div class="left">上传图片:</div>
         <div class="right">
           <div class="box-fileimg">
-            <!--<figure class="image" v-if="imgUrl2">
-              <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + imgUrl2">
-            </figure>-->
+            <figure class="image" v-if="imgUrl2">
+              <img :src="imgUrl2">
+            </figure><!---->
             <div class="submit">
               上传图片
               <form enctype="multipart/form-data" method="post"> 
-                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
+                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event,2)">
               </form>
             </div>  
           </div>
@@ -355,7 +356,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary" @click="addNewBchfzjl()">保存</el-button>
+        <el-button type="primary" @click="addNewBchfzjl()" :disabled="disabled">保存</el-button>
       </span>
     </el-dialog>
     <!--编辑病虫害防治   bchflag-->
@@ -418,12 +419,12 @@
         <div class="right">
           <div class="box-fileimg">
             <figure class="image" v-if="imgUrl2">
-              <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + imgUrl2">
+              <img :src="imgUrl2">
             </figure>
             <div class="submit">
               上传图片
               <form enctype="multipart/form-data" method="post"> 
-                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
+                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event,2)">
               </form>
             </div>  
           </div>
@@ -431,7 +432,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary" @click="updateBchfzjl()">保存</el-button>
+        <el-button type="primary" @click="updateBchfzjl()" :disabled="disabled">保存</el-button>
       </span>
     </el-dialog>
     <!--新增农事记录   nsjlflag-->
@@ -463,17 +464,17 @@
           <el-input v-model="nsjl_describe_ns_add" placeholder="请输入内容" type="textarea" :rows="3"></el-input>
         </div>
       </div>
-      <div class="tjsf-div2-row">
+      <div class="tjsf-div2-row file-img">
         <div class="left">上传图片:</div>
         <div class="right">
           <div class="box-fileimg">
-            <!--<figure class="image" v-if="imgUrl3">
-              <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + imgUrl3">
-            </figure>-->
+            <figure class="image" v-if="imgUrl3">
+              <img :src="imgUrl3">
+            </figure><!---->
             <div class="submit">
               上传图片
               <form enctype="multipart/form-data" method="post"> 
-                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
+                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event,3)">
               </form>
             </div>  
           </div>
@@ -481,7 +482,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary" @click="addNewNsjl()">保存</el-button>
+        <el-button type="primary" @click="addNewNsjl()" :disabled="disabled">保存</el-button>
       </span>
     </el-dialog>
     <!--编辑农事记录   nsjlflag-->
@@ -518,12 +519,12 @@
         <div class="right">
           <div class="box-fileimg">
             <figure class="image" v-if="imgUrl3">
-              <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + imgUrl3">
+              <img :src="imgUrl3">
             </figure>
             <div class="submit">
               上传图片
               <form enctype="multipart/form-data" method="post"> 
-                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
+                <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event,3)">
               </form>
             </div>  
           </div>
@@ -531,7 +532,13 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary" @click="updateNsjl()">保存</el-button>
+        <el-button type="primary" @click="updateNsjl()" :disabled="disabled">保存</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog top="100px" title="地块介绍" :visible.sync="isMoreMsg" width="600" :before-close="closeFun">
+      <div class="more-msg">{{dkjs}}</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeFun">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -622,6 +629,10 @@
         nsTypes: '',
         img_url: '',
         imgArr: [],
+        disabled: false,
+        dkjs: '',
+        isMore: true,
+        isMoreMsg: false,
       }
     },
     mounted() {
@@ -632,7 +643,15 @@
       this.getViewFarmNsjl(this.$route.query.viewFarm.id,this.page_local_nsjl);
     },
     methods: {
-      fileFun(event){
+      moreFun(){
+        this.isMoreMsg = true
+      },
+      closeFun(){
+        this.isMoreMsg = false
+      },
+      fileFun(event,ele){
+        this.img_url = ''
+        this.imgArr = []
         var that = this;
         let file = event.target.files;
         let reg = /.(jpg|png|PNG|JPG)+$/;           
@@ -652,43 +671,17 @@
           reader.readAsDataURL(file[0]); 
           reader.onload = function(){                    
             that.imgFun(reader.result,that.clarity,function(src){
+              if(ele == 1){
+                that.imgUrl = src
+              }else if(ele == 2){
+                that.imgUrl2 = src
+              }else if(ele == 3){
+                that.imgUrl3 = src
+              }
               that.imgArr.push(src.slice(23))
             })
           }
         }
-        // let timer = setInterval(()=>{
-        //   if(that.imgArr.length == file.length){
-        //     let formData = new FormData()  
-        //     formData.append('img_url', that.imgArr[0]);   
-        //     formData.append('node_id', that.node_id);  
-        //     formData.append('id', that.form.goodsID); 
-        //     let config = {
-        //       headers:{'Content-Type':'multipart/form-data'}
-        //     };
-        //     const ajaxPost = function (url, params,config) {
-        //       return new Promise((resolve, reject) => {
-        //         axios
-        //           .post(url, params,{config})
-        //           .then((res) => {
-        //               resolve(res.data)
-        //           })
-        //           .catch(() => {
-        //               reject('error')
-        //           })
-        //       })
-        //     }  
-        //     let url = baseUrl + 'goods/updateGoodsImgForTrace'
-        //     ajaxPost(url,formData,config)
-        //       .then(res => {
-        //         that.imgArr = []
-        //         that.imgUrl = res.data.img_url
-        //       })
-        //       .catch(res => {
-        //         console.log(res)
-        //       })
-        //     clearInterval(timer);
-        //   }
-        // },1000)
       },
       imgFun(path,quality,callback){
         let img = new Image();
@@ -697,7 +690,6 @@
           let that = this;
           let w = that.width;
           let h = that.height;
-          // console.log(w,h)
           //生成canvas
           let canvas = document.createElement('canvas');
           let ctx = canvas.getContext('2d'); 
@@ -760,6 +752,7 @@
             this.viewYield = res.data.dkxx_list[0].yield;
             this.viewFzr = res.data.dkxx_list[0].fzr;
             this.viewHzs = res.data.dkxx_list[0].booth_name;
+            this.dkjs = res.data.dkxx_list[0].remark
             this.viewTrsfList = res.data.trsf_data.trsf_list;
             this.totalPageSize =parseInt(res.data.trsf_data.condition.total) ;
           })
@@ -817,6 +810,7 @@
       },
       // 新增土壤施肥fw
       addNewTrsf() {
+        this.disabled = true
         let addparams = {
           nsjl_dkxx_id: this.publicAllId,
           in_date: this.in_date_add,
@@ -831,50 +825,66 @@
         };
         addFarmAddTrsfPost(addparams)
           .then(res => {
-            this.$message.success("施肥记录保存成功!");
-            this.getViewFarmTrsf(this.publicAllId,this.page_local);
-            this.cleartrsf();
+            this.disabled = false
+            if(res.result == true){
+              this.imgUrl = ''
+              this.imgArr = []
+              this.$message.success(res.message);
+              this.getViewFarmTrsf(this.publicAllId,this.page_local);
+              this.cleartrsf();
+            }else{
+              this.$message.error(res.message);
+            }
           })
           .catch(() => {
             this.$message.error("数据加载失败!");
+            this.disabled = false
           })
       },
       // 编辑土壤施肥fw
       updateTrsfjl(index, row) {
-        this.flmc_add = row.flmc,
-        this.sfmd_add = row.sfmd,
-        this.sl_add = row.sl,
-        this.in_date_add = row.in_date,
-        this.syfs_add = row.syfs,
-        this.scdw_add = row.scdw,
-        this.trsf_describe_add = row.trsf_describe,
-        this.trsf_id_add = row.id,
-        this.imgUrl = row.img_url
+        this.flmc_add = row.flmc
+        this.sfmd_add = row.sfmd
+        this.sl_add = row.sl
+        this.in_date_add = row.in_date
+        this.syfs_add = row.syfs
+        this.scdw_add = row.scdw
+        this.trsf_describe_add = row.trsf_describe
+        this.trsf_id_add = row.id
+        if(row.img_url){
+          this.imgUrl = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + row.img_url
+        }
         this.editTrsfFlag = true;
       },
       // 编辑病虫害防治
       updateEditBch(index, row) {
-        this.in_date_bch_add = row.in_date,
-        this.scdw_bch_add = row.scdw,
-        this.symc_add = row.symc,
-        this.fzdx_add = row.fzdx,
-        this.sybs_add = row.sybs,
-        this.syl_add = row.syl,
-        this.bchfz_describe_add = row.bchfz_describe,
+        this.in_date_bch_add = row.in_date
+        this.scdw_bch_add = row.scdw
+        this.symc_add = row.symc
+        this.fzdx_add = row.fzdx
+        this.sybs_add = row.sybs
+        this.syl_add = row.syl
+        this.bchfz_describe_add = row.bchfz_describe
         this.bch_id_add = row.id;
         this.editBchflag = true;
-        this.imgUrl2 = row.img_url
+        if(row.img_url){
+          this.imgUrl2 = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + row.img_url
+        }
       },
       // 编辑农事记录
       updateEditNsjl(index, row) {
-        this.in_data_ns_add = row.in_date,
-          this.nsjl_describe_ns_add = row.nsjl_describe,
-          this.nsjl_id_add = row.id,
+        this.in_data_ns_add = row.in_date
+          this.nsjl_describe_ns_add = row.nsjl_describe
+          this.nsjl_id_add = row.id
           this.editNsjlflag = true;
           this.imgUrl3 = row.img_url
+          if(row.img_url){
+            this.imgUrl3 = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + row.img_url
+          }
       },
       // 保存编辑土壤施肥接口
       updateTrsf() {
+        this.disabled = true
         let addparams = {
           flmc: this.flmc_add,
           sfmd: this.sfmd_add,
@@ -889,12 +899,20 @@
         };
         updateFarmTrsfPost(addparams)
           .then(res => {
-            this.$message.success(res.message);
-            this.getViewFarmTrsf(this.publicAllId,this.page_local);
-            this.cleartrsf();
+            this.disabled = false
+            if(res.result == true){
+              this.imgUrl = ''
+              this.imgArr = []
+              this.$message.success(res.message);
+              this.getViewFarmTrsf(this.publicAllId,this.page_local);
+              this.cleartrsf();
+            }else{
+              this.$message.error(res.message);
+            }
           })
           .catch(() => {
             this.$message.error(res.message);
+            this.disabled = false
           })
       },
       // 关闭trsf按钮
@@ -905,6 +923,9 @@
       cleartrsf() {
         this.nsTypes = ''
         this.imgArr = []
+        this.imgUrl = ''
+        this.imgUrl2 = ''
+        this.imgUrl3 = ''
         this.centerEditDialogVisible = false;
         this.bchflag = false;
         this.nsjlflag = false;
@@ -935,6 +956,7 @@
       },
       // 病虫害防治记录fw
       addNewBchfzjl() {
+        this.disabled = true
         let addparams = {
           nsjl_dkxx_id: this.publicAllId,
           in_date: this.in_date_bch_add,
@@ -950,18 +972,25 @@
         };
         addFarmAddBchfzPost(addparams)
           .then(res => {
-            // this.plotDataList = res.data.dataList;
-            this.$message.success("病虫害保存成功!");
-            this.getViewFarmBchjl(this.publicAllId,this.page_local_bchfz);
-            this.cleartrsf();
-
+            this.disabled = false
+            if(res.result == true){
+              this.imgUrl2 = ''
+              this.imgArr = []
+              this.$message.success(res.message);
+              this.getViewFarmBchjl(this.publicAllId,this.page_local_bchfz);
+              this.cleartrsf();
+            }else{
+              this.$message.error(res.message);
+            }
           })
           .catch(() => {
             this.$message.error("数据加载失败!");
+            this.disabled = false
           })
       },
       // 编辑病虫害防治记录接口
       updateBchfzjl() {
+        this.disabled = true
         let addparams = {
           symc: this.symc_add,
           fzdx: this.fzdx_add,
@@ -975,18 +1004,25 @@
         };
         updateFarmBchfzPost(addparams)
           .then(res => {
-            // this.plotDataList = res.data.dataList;
-            this.$message.success(res.message);
-            this.getViewFarmBchjl(this.publicAllId,this.page_local_bchfz);
-            // this.cleartrsf();
-            this.handleClose();
+            this.disabled = false
+            if(res.result == true){
+              this.imgUrl2 = ''
+              this.imgArr = []
+              this.$message.success(res.message);
+              this.getViewFarmBchjl(this.publicAllId,this.page_local_bchfz);
+              this.handleClose();
+            }else{
+              this.$message.error(res.message);
+            }
           })
           .catch(() => {
             this.$message.error("数据加载失败!");
+            this.disabled = false
           })
       },
       // Ns记录fw
       addNewNsjl() {
+        this.disabled = true
         let addparams = {
           nsjl_dkxx_id: this.publicAllId,
           in_date: this.in_data_ns_add,
@@ -996,16 +1032,25 @@
         };
         addFarmAddNsjlPost(addparams)
           .then(res => {
-            this.$message.success("农事记录保存成功!");
-            this.getViewFarmNsjl(this.publicAllId,this.page_local_nsjl);
-            this.cleartrsf();
+            this.disabled = false
+            if(res.result == true){
+              this.imgUrl3 = ''
+              this.imgArr = []
+              this.$message.success(res.message);
+              this.getViewFarmNsjl(this.publicAllId,this.page_local_nsjl);
+              this.cleartrsf();
+            }else{
+              this.$message.error(res.message);
+            }
           })
           .catch(() => {
             this.$message.error("数据加载失败!");
+            this.disabled = false
           })
       },
       // 更新Ns记录fw
       updateNsjl() {
+        this.disabled = true
         let addparams = {
           id: this.nsjl_id_add,
           in_date: this.in_data_ns_add,
@@ -1015,9 +1060,17 @@
         };
         updateFarmNsjlPost(addparams)
           .then(res => {
-            this.$message.success(res.message);
-            this.getViewFarmNsjl(this.publicAllId,this.page_local_nsjl);
-            this.cleartrsf();
+            this.disabled = false
+            if(res.result == true){
+              this.imgUrl3 = ''
+              this.imgArr = []
+              this.$message.success(res.message);
+              this.getViewFarmNsjl(this.publicAllId,this.page_local_nsjl);
+              this.cleartrsf();
+            }else{
+              this.disabled = false
+              this.$message.error(res.message);
+            }
           })
           .catch(() => {
             this.$message.error("数据加载失败!");
@@ -1174,6 +1227,14 @@
 </script>
 
 <style scoped lang='less'>
+  .more{
+    padding: 0 10px;
+    color: #409EFF;
+    cursor: pointer;
+  }
+  .more-msg{
+    text-indent: 30px;
+  }
   .img{
     width: 80px;
     height: 80px;
@@ -1181,10 +1242,10 @@
   .box-fileimg{
     display: flex;
     width: 300px;
-    height: 100px;
+    height: 80px;
     .submit{
       position: relative;
-      top: 36%;
+      top: 30%;
       left: 10px;
       width: 90px;
       height: 30px;
@@ -1422,6 +1483,10 @@
         .columnthree {
           display: flex;
           justify-content: start;
+          width: 380px;
+        }
+        .column{
+          
           width: 380px;
         }
         .columnone-dk{

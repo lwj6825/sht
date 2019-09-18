@@ -1,13 +1,13 @@
 // base url
-// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.1.45:8081/order_sht/';
+export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
 // export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
-// export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
+export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口
@@ -25,6 +25,8 @@ export const superGetAddr = baseUrl + 'comm/getAllSSQX';//获取地区
 export const getAllNode = baseUrl + 'login/getAllNode';//创建用户--所属节点
 export const insertNodeInfo = baseUrl + 'login/insertNodeInfo';//添加市场
 export const updateState = baseUrl + 'login/updateState';// 用户详情禁用启用
+export const updatePasswordByUserId = baseUrl + 'login/updatePasswordByUserId';// 修改密码
+
 // superadmin角色模块地址
 export const superRoleList = baseUrl + 'role/query'; //角色查询
 export const superAddRole = baseUrl + 'role/add'; //创建角色
@@ -60,16 +62,16 @@ export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
 export const insertGys = baseUrl + 'manage/insertGys';// 新增供应商
 export const downloadGys = baseUrl + 'manage/downloadGys';// 下载供应商
 export const importGys = baseUrl + 'manage/importGys';// 导入供应商
+export const updateGys = baseUrl + 'manage/updateGys';// 编辑保存
 // 客户
 export const insertKh = baseUrl + 'manage/insertKh';// 新增客户
 export const deleteGys = baseUrl + 'manage/deleteGys';// 删除供应商/商户
-export const updateGys = baseUrl + 'manage/updateGys';// 编辑保存
 export const supplierList = baseUrl + 'manage/getAllGysForMoreBiz';// 管理供应商
 export const bindingSupplier = baseUrl + 'manage/getAllGysForBind';//管理供应商 - 绑定供应商列表
 export const saveBindinSupplier  = baseUrl + 'manage/insertGysForBind';//管理供应商 - 绑定供应商保存
 export const getCenterBussinessInfo  = baseUrl + 'manage/getCenterBussinessInfo';//// 营业执照号
-export const importCustomer  = baseUrl2 + 'manage/importCustomer';//// 导入
-export const downloadCustomer  = baseUrl2 + 'manage/downloadCustomer';//// 导出
+export const importCustomer  = baseUrl + 'manage/importCustomer';//// 导入
+export const downloadCustomer  = baseUrl + 'manage/downloadCustomer';//// 导出
 //商品
 export const entryGgoodsList = baseUrl + 'goods/getAllPurchaseGoodsForMoreBiz';// 管理商品 - 进货
 export const sellGoodsList = baseUrl + 'goods/getAllSalesGoodsForMoreBiz';// 管理商品 - 销售
@@ -176,8 +178,10 @@ export const viewFarmUpdateNsjl = baseUrl + 'farming/updateNsjl';// 更新农事
 
 //溯源的相关的地址
 export const symQueryUrl = baseUrl + 'farming/querySymApply';// 溯源码查询
+export const getAllTzSymApply = baseUrl + 'farming/getAllTzSymApply';// 溯源码查询列表 ===> 兔子
 export const symGetAllUrl = baseUrl + 'farming/getAllSymApply';// 获取所有溯源码
 export const symInsertUrl = baseUrl + 'farming/insertSymApply';// 溯源码新增
+export const queryTzSymApply = baseUrl + 'farming/queryTzSymApply';// 溯源码查询 ===> 兔子
 
 //农事商品相关地址   
 export const nsGoodsQueryUrl = baseUrl + 'farming/queryGoodsBreed';// 农事商品查询
@@ -231,7 +235,8 @@ export const updatePc = baseUrl + 'setting/updatePc';// 点击编辑按钮默认
 export const queryInTzDetailByTzId = baseUrl + 'tz/queryInTzDetailByTzId';// 台账详情
 export const querySuppiler = baseUrl + 'tz/querySuppiler';// 供货单位
 export const deleteDoc = baseUrl + 'originalDoc/deleteOriginalDoc';//删除单据
-export const searchDoc =  baseUrl + 'originalDoc/getAllOriginalDoc';//查询单据originalDoc/insertOriginalDocFile
+export const searchDoc =  baseUrl + 'originalDoc/getAllOriginalDoc';//查询单据
+export const downloadInTzDetail =  baseUrl + 'tz/downloadInTzDetail';//导出
 // 销售台账
 export const queryXsTzDetailRegion = baseUrl + 'tz/queryXsTzDetailRegion' // 列表
 export const downloadXsTzDetail = baseUrl + 'tz/downloadXsTzDetail' // 导出
@@ -345,3 +350,28 @@ export const updateAssetsConf = baseUrl3 + 'assetsSet/updateAssetsConf' // 配�
 export const queryAssetsSpecifications = baseUrl3 + 'assets/queryAssetsSpecifications' // 查询所有资产规格
 export const queryAssetsNames = baseUrl3 + 'assets/queryAssetsNames' // 查询所有资产名称
 export const queryAssetsManufacturers = baseUrl3 + 'assets/queryAssetsManufacturers' // 查询所有资产生产厂家
+
+// 养殖场
+export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询
+export const insertYzcxx = baseUrl + 'farming/insertYzcxx' // 新增养殖场
+export const updateYzcxx = baseUrl + 'farming/updateYzcxx' // 更新养殖场
+export const deleteYzcxx = baseUrl + 'farming/deleteYzcxx' // 删除养殖场
+export const uploadImg = baseUrl + 'farming/uploadImg' // 上传图片
+export const getYzcImg = baseUrl + 'farming/getYzcImg' // 获取上传图片?id=1&type=1 id 为每个主体的主键，type （1：养殖场图片，2：档案图片，3：防疫图片。4：饲养图片）
+export const deleteYzcImg = baseUrl + 'farming/deleteYzcImg' // 删除图片
+export const getAllYzcda = baseUrl + 'farming/getAllYzcda' // 查看养殖场档案信息
+export const insertYzcda = baseUrl + 'farming/insertYzcda' // 新增养殖场档案
+export const updateYzcda = baseUrl + 'farming/updateYzcda' // 更新养殖场档案
+export const deleteYzcda = baseUrl + 'farming/deleteYzcda' // 删除养殖场档案
+export const getAllYzcfy = baseUrl + 'farming/getAllYzcfy' // 查看养殖场防疫
+export const insertYzcfy = baseUrl + 'farming/insertYzcfy' // 新增养殖场防疫
+export const updateYzcfy = baseUrl + 'farming/updateYzcfy' // 更新养殖场防疫
+export const deleteYzcfy = baseUrl + 'farming/deleteYzcfy' // 删除养殖场防疫
+export const getAllYzcsy = baseUrl + 'farming/getAllYzcsy' // 查询养殖场饲养
+export const insertYzcsy = baseUrl + 'farming/insertYzcsy' // 新增养殖场饲养
+export const updateYzcsy = baseUrl + 'farming/updateYzcsy' // 更新养殖场饲养记录
+export const deleteYzcsy = baseUrl + 'farming/deleteYzcsy' // 删除养殖场饲养
+// 屠宰
+export const getAllYzctzjg = baseUrl + 'farming/getAllYzctzjg' // 查询屠宰加工
+export const insertYzctzjg = baseUrl + 'farming/insertYzctzjg' // 新增屠宰加工
+export const deleteYzctzjg = baseUrl + 'farming/deleteYzctzjg' // 删除屠宰加工

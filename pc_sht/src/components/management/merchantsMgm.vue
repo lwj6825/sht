@@ -44,7 +44,7 @@
         </div>
       </div>
       <div class="booth-management-msg" >    
-        <el-table :data="dataList"  border >
+        <el-table :data="dataList"  border>
           <el-table-column label="商铺名称">
             <template slot-scope="scope">
               <ul>
@@ -99,7 +99,7 @@ import {allBizs} from "../../js/management/management.js";
 import {QueryArea} from '../../js/area/area.js';
 import AreaSelect from '../common/area';
 import axios from 'axios';
-import {baseUrl} from '../../js/address/url.js'
+import {baseUrl,baseUrl2} from '../../js/address/url.js'
 
 export default {
     name: "merchantsMgm",   
@@ -142,7 +142,6 @@ export default {
         this.getAllBizs()
       },
       fileFun(event){
-            
         this.file = event.target.files[0];
         let formData = new FormData();
         formData.append('bizFile', this.file);  
@@ -151,46 +150,42 @@ export default {
         formData.append('region',this.areaId); 
         formData.append('node_name',this.loginName); 
         let config = {
-            headers:{'Content-Type':'multipart/form-data'}
+          headers:{'Content-Type':'multipart/form-data'}
         };
         const ajaxPost = function (url, params,config) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .post(url, params,{config})
-                    .then((res) => {
-
-                        resolve(res.data)
-                    })
-                    .catch(() => {
-                        reject('error')
-                    })
-            })
+          return new Promise((resolve, reject) => {
+            axios
+              .post(url, params,{config})
+              .then((res) => {
+                resolve(res.data)
+              })
+              .catch(() => {
+                reject('error')
+              })
+          })
         }  
         let url = baseUrl + 'manage/importBiz'
         // http://192.168.1.14:8081/order_sht/manage/importBiz
         //'http://shtordertest.zhdtech.com:8080/order_sht/manage/importBiz'
         ajaxPost(url,formData,config)
-            .then(res => {
-              this.boxShow = true;
-              this.fileMsg = res.message
-              this.$refs.file.value = null
-            })
-            .catch(res => {
-                console.log(res)
-                this.$message.error("出错了");
-            })
-               
-
+          .then(res => {
+            this.boxShow = true;
+            this.fileMsg = res.message
+            this.$refs.file.value = null
+          })
+          .catch(res => {
+              console.log(res)
+              this.$message.error("出错了");
+          })
       },
       loadFun(){
-        window.location.href = baseUrl + 'manage/downloadBiz'
-        // window.location.href = 'http://192.168.1.14:8081/order_sht/manage/downloadBiz'
+        window.location.href = baseUrl2 + 'manage/downloadBiz?userId=' + this.userId + '&region=' + this.areaId + '&boothName=' 
+          + this.boothName + '&name=' + this.name + '&stall_no=' + this.stall_no
       },
       handleSizeChange(val) { //pageSize 改变时会触发
         // console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) { //currentPage 改变时会触发
-        // console.log(`当前页: ${val}`);
         this.page = val
         this.getAllBizs()
       },
@@ -330,7 +325,7 @@ export default {
         
       },
       inforHandle(index,row){//详情
-         this.$router.push({name:'MerchantsInfor',params:{inforMsg:row}})
+        this.$router.push({name:'MerchantsInfor',params:{inforMsg:row}})
       },
       getList(){ //首页展示-获取商户列表
         let data = {
@@ -343,7 +338,6 @@ export default {
         }
         QueryArea(data)
           .then(res => {        
-            // console.log(res)
             this.bigAreaId = res.data.dataList[0].userId;
             this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
             let boothId = res.data.dataList[0].bootList[0].shop_booth_id;
@@ -386,7 +380,6 @@ export default {
         }
         QueryArea(data)
           .then(res =>{
-            // console.log(res)
             res.data.dataList.forEach(ele => {
               if(ele.userId == id){
                 this.bigAreaId = id;
@@ -400,8 +393,6 @@ export default {
             console.log(res)
           })
       }
-      
-      
     },
     components:{
       AreaSelect,

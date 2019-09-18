@@ -10,8 +10,8 @@
         <div class="data">
             <p>屠宰企业</p>
             <div>
-                <el-select v-model="enterprise" filterable clearable placeholder="请选择">
-                    <el-option v-for="(item,index) in enterpriseList" :key="index" :label="item.GOODS_NAME" :value="item.ID">
+                <el-select v-model="enterprise" filterable clearable placeholder="请选择" @change="selectTzqyFun">
+                    <el-option v-for="(item,index) in enterpriseList" :key="index"  :label="item.biz_name" :value="item.shop_concacts_id">
                     </el-option>
                 </el-select>
             </div>
@@ -30,7 +30,7 @@
                 <el-table-column prop="in_date" label="商品名称">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.goodVal" filterable placeholder="请选择" @change="selectGoodFun(scope.row.goodVal,scope.$index)">
-                            <el-option v-for="(item,index) in scope.row.goodArr" :key="index" :label="item.goods_name" :value="item.goods_code">
+                            <el-option v-for="(item,index) in scope.row.goodArr"  :key="index" :label="item.GOODS_NAME" :value="item.ID">
                             </el-option>
                         </el-select>
                     </template>
@@ -41,18 +41,12 @@
                         <el-input class="input" v-model="scope.row.goodNum" size="mini" ></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column prop="buyer_booth_name" label="原料信息">
-                    <template slot-scope="scope">
-                        <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
-                            <p style="padding-left: 20px;" calss="material-name">{{item2.or_goods_name}}</p>
-                        </div>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="ylName" label="原料信息"></el-table-column>
                 <el-table-column prop="buyer_booth_name" label="进货批次">
                     <template slot-scope="scope">
-                        <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
-                            <el-select v-model="item2.batchId" filterable placeholder="批次信息">
-                                <el-option v-for="(item3,index3) in item2.batch" :key="index3" :label="item3.BATCH_ID" :value="item3.BATCH_ID">
+                        <div class="material">
+                            <el-select v-model="scope.row.jhBatchId" filterable>
+                                <el-option v-for="(item3,index3) in scope.row.jhBatchArr" :key="index3" :label="item3.BATCH_ID" :value="item3.BATCH_ID">
                                 </el-option>
                             </el-select>
                         </div>
@@ -60,16 +54,27 @@
                 </el-table-column>
                 <el-table-column prop="buyer_booth_name" label="原料数量">
                     <template slot-scope="scope">
-                        <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
-                            <el-input v-model="item2.materialNum" size="mini" placeholder="数量"></el-input>
+                        <div class="material">
+                            <el-input v-model="scope.row.ylNum" size="mini" placeholder="数量"></el-input>
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="buyer_booth_name" label="送宰批次">
+                <el-table-column prop="buyer_booth_name" label="养殖场">
                     <template slot-scope="scope">
-                        <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
-                            <el-select v-model="item2.szBatchId" filterable placeholder="批次信息">
-                                <el-option v-for="(item3,index3) in item2.batch" :key="index3" :label="item3.BATCH_ID" :value="item3.BATCH_ID">
+                        <div class="material">
+                            <el-select v-model="scope.row.yzcName" filterable @change="selectYzcFun(scope.row.yzcName)">
+                                <el-option v-for="(item3,index3) in scope.row.yzcArr" :key="index3" :label="item3.yzc_name" :value="item3.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="buyer_booth_name" label="档案批次">
+                    <template slot-scope="scope">
+                        <div class="material">
+                            <el-select v-model="scope.row.batchId" filterable>
+                                <el-option v-for="(item3,index3) in scope.row.batchList" :key="index3" :label="item3.yzc_dapc"
+                            :value="item3.yzc_dapc">
                                 </el-option>
                             </el-select>
                         </div>
@@ -82,7 +87,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-button class="add-btn" size="medium" @click="addGoodFun">添加商品</el-button>
+            <el-button class="add-btn" v-if="tableData.length == 0" size="medium" @click="addGoodFun">添加商品</el-button>
             <div class="save-btn">
                 <el-button size="small" @click="cancalFun">取消</el-button>
                 <el-button type="primary" size="small" @click="saveFun">保存</el-button>
@@ -92,6 +97,11 @@
 </template>
 
 <script>
+import {InsertYzctzjg} from '../../js/tzSlaughter/tzSlaughter.js'
+import {allGys} from "../../js/management/management.js";
+import {sales} from "../../js/goods/goods.js";
+import {GetAllYzcda,GetAllYzcxx} from '../../js/tzFarming/tzFarming.js'
+import {QueryPurchaseGoods} from '../../js/production/production.js'
 // 标准时间转日期格式
 function formatTen(num) { 
     return num > 9 ? (num + "") : ("0" + num); 
@@ -114,62 +124,180 @@ export default {
             describe: '',
             tableData: [],
             node_id: '',
+            node_name: '',
             goodArr: [],
             batchId: '',
             szBatchId: '',
             enterpriseList: [],
+            userId: '',
+            batchList: [],
+            yzcArr: [],
+            stk_goods_code: '',
+            stk_goods_name: '',
         }
     },
     mounted() {
+        this.userId = JSON.parse(localStorage.getItem('userId'));
+        this.scShopId = localStorage.getItem('scShopId');
+        this.node_id = localStorage.getItem('loginId')
+        this.node_name = localStorage.getItem('loginName')
+        this.getPlotHzsList()
         var currentTime = new Date()
         this.in_date = formatDate(currentTime)
-        this.node_id = localStorage.getItem('loginId')
+        this.getNsGoodsQueryPOSTType()
+        this.getDataFun()
     },
     methods: {
+        selectTzqyFun(ele){
+            let suppliersName = ''
+            this.enterpriseList.forEach(val => {
+                if(ele == val.shop_concacts_id){
+                    suppliersName = val.biz_name
+                }
+            })
+            this.getNsGoodsQueryPOSTType(suppliersName)
+        },
+        selectYzcFun(ele){
+            this.ids = ele
+            this.getDapcFun(ele)
+        },
+        // 养殖场
+        getDataFun(){
+            let obj = { 
+                userId: '', // 所属企业
+                yzc_name: '', // 养殖场名称
+                start_time: '',
+                end_time: '',
+                page: 1,
+                cols: 10000,
+                node_id: this.node_id
+            }
+            GetAllYzcxx(obj)
+                .then(res => {
+                    this.yzcArr = res.data.dataList;
+                    this.ids = res.data.dataList[0].id
+                    this.getDapcFun()
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        // 档案批次
+        getDapcFun(ele){
+            let obj = { 
+                page: this.page,
+                cols: '10000',
+                id: this.ids
+            }
+            GetAllYzcda(obj)
+                .then(res => {
+                    this.batchList = res.data.dataList;
+                    if(ele){
+                        this.tableData.forEach(val => {
+                            if(val.yzcName == ele){
+                                val.batchList = this.batchList
+                                if(val.batchList.length > 0){
+                                    val.batchId = val.batchList[0].yzc_dapc
+                                }else{
+                                    val.batchId = ''
+                                }
+                            }
+                        })
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+
+        },
+        // 商品
+        getNsGoodsQueryPOSTType(ele) {
+            let boothData = {
+                page: 1,
+                cols: 10000,
+                goodsName: '',
+                goodsCode: '',
+                suppliersName: ele,
+                region: '',
+                userId: this.userId,
+                total: '',
+                j_name: ''
+            }
+            sales(boothData)
+                .then(res => {
+                    if(this.tableData.length > 0){
+                        this.tableData[0].goodArr = res.data.salesList;
+                    }else{
+
+                        this.goodArr = res.data.salesList;
+                    }
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
+        // 所属企业
+        getPlotHzsList() {
+            let boothData = {
+                page: 1,
+                cols: 100000,
+                userId: this.userId,
+                type:'1',
+                concact_name: '',
+                biz_name: '',
+                region: this.areaId,
+                shop_booth_id:this.scShopId,
+          }
+          allGys(boothData)
+            .then(res => {
+                this.enterpriseList = res.data.dataList;
+            })
+            .catch(res => {
+                console.log(res)
+            })
+        },
         cancalFun(){
             this.$router.push({name: 'SlaughterList'})
         },
         deleteFun(ele){
-            // this.tableData.splice(ele,1)
-            // this.tableData.length - 1
+            this.tableData.splice(ele,1)
+            this.tableData.length - 1
         },
         saveFun(){
-            // let str = '', userdefine = '';
-            // if(this.tableData.length > 0){
-            //     this.tableData.forEach(val => {
-            //         val.goodArr.forEach(val2 => {
-            //             if(val.goodVal == val2.goods_code){
-            //                 str += '{"node_id":"' + val2.node_id + '","node_name":"' + val2.node_name + '","stk_goods_code":"' + val2.goods_code
-            //                     + '","stk_goods_name":"' + val2.goods_name + '","stk_gb_code":"' + val2.gb_code + '","stk_gb_name":"' + val2.gb_name
-            //                     + '","stk_unit":"' + val2.goods_unit + '","stk_number":"' + val.goodNum + '","userdefine_code_two":"' + val2.userdefine_code_two
-            //                     + '","sc_data":"' + this.in_date + '","userdefine_category":"' + val2.userdefine_category + '","or":['
-            //             }
-            //         })
-            //         val.gooaMsgArr.forEach((val3,index) => {
-            //             str += '{"or_goods_code":"' + val3.or_goods_code + '","or_goods_name":"' + val3.or_goods_name + '","or_unit":"' + val3.or_unit
-            //             + '","or_batch_id":"' + val3.batchId + '","or_weight":' + '""' + ',"or_number":"' + val3.materialNum + '","main_or":' + '"0"}'+ ( (index==val.gooaMsgArr.length-1)? "":',')
-            //         })
-            //         str += ']},' 
-            //     })
-            //     if(str != ''){
-            //         userdefine = str.substring(0,str.length - 1)
-            //     }
-            //     let params = {
-            //         data: userdefine ? ('[' + userdefine + ']') : ''
-            //     }
-            //     InsertProduction(params)
-            //         .then(res => {
-            //             if (res.result == true) {
-            //                 this.$message.success(res.message);
-            //                 this.$router.push({name: 'productionMsg'})
-            //             }else{
-            //                 this.$message.error(res.message);
-            //             }
-            //         })
-            //         .catch(() => {
-            //             this.$message.error("出错啦!");
-            //         })
-            // }
+            if(this.tableData.length == 0){
+                this.$message.error('请填写屠宰信息！');
+                return;
+            }
+            let obj = {
+                node_id: this.node_id, // 节点编码
+                node_name: this.node_name, // 节点名称
+                tz_rq: this.in_date, // 屠宰日期
+                tz_qy: this.enterprise, // 屠宰企业 对应的是 供应商 shop_contact 的id
+                tz_remark: this.describe, // 屠宰描述
+                stk_batch_id: this.tableData[0].goodVal, //成品 信息批次 id 一般为兔白条 的 关联兔子白条 的进货台账
+                stk_goods_code: this.stk_goods_code, //养殖场 成品的 商品码
+                stk_goods_name: this.stk_goods_name, // 成品的商品名称 兔白条
+                stk_num: this.tableData[0].goodNum, // 成品的数量 
+                or_batch_id: this.tableData[0].jhBatchId, //原料 的批次码  可以为空
+                or_goods_code: this.tableData[0].ylCode, //原料商品码
+                or_goods_name: this.tableData[0].ylName, //原料商品名称
+                or_num: this.tableData[0].ylNum, //原料数量
+                da_batch_id: this.tableData[0].batchId, //关联活兔 的饲养记录的档案 批次
+                yzc_id: this.tableData[0].yzcName,
+            }
+            console.log(obj)
+            InsertYzctzjg(obj)
+                .then(res => {
+                    if(res.result == true){
+                        this.$message.success(res.message);
+                        this.$router.push({name: 'SlaughterList'})
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
         },
         // 进货商品信息
         selectGoodMsgFun(ele){
@@ -194,81 +322,69 @@ export default {
         },
         // 选择商品
         selectGoodFun(ele,ele2){
-            // let states = false;
-            // this.tableData.forEach(val => {
-            //     if(val.gooaMsgArr.length > 0){
-            //         if(ele == val.goodVal){
-            //             this.$message({
-            //                 message: '不能选择同一商品',
-            //                 type: 'warning',
-            //                 offset: 200,
-            //             });
-            //             states = true
-            //             return
-            //         }
-            //     }
-                
-            // })
-            // if(states == false){
-            //     let goods_unit = '',obj = {};
-            //     this.goodArr.forEach(val => {
-            //         if(ele == val.goods_code){
-            //             goods_unit = val.goods_unit
-            //         }
-            //     })
-            //     let params = {
-            //         node_id: this.node_id,
-            //         stk_goods_code: ele,
-            //     }
-            //     QueryPurchaseGoods(params)
-            //         .then(res => {
-            //             let dataList = res.data.dataList
-            //             this.tableData.forEach(val => {
-            //                 if(val.goodVal == ele){
-            //                     dataList.forEach(val2 => {
-            //                         val2.batchId = ''
-            //                         val2.szBatchId = '
-            //                         val2.materialNum = ''
-            //                     })
-            //                     val.gooaMsgArr = dataList
-            //                     val.goods_unit = goods_unit
-            //                     if(dataList == 0){
-            //                         this.$message({
-            //                             message: '匹配不全',
-            //                             type: 'warning',
-            //                             offset: 200,
-            //                         });
-            //                     }
-            //                 }
-            //             })
-            //         })
-            //         .catch(() => {
-            //             this.$message.error("出错啦!");
-            //         })
-            // }else{
-            //     this.tableData.splice(ele2,1)
-            //     this.tableData.length - 1
-            // }
-        },
-        getGoodFun(){
-            // let params = {
-            //     node_id: this.node_id,
-            //     goods_Name: '',
-            // }
-            // QueryGoodsinfo(params)
-            //     .then(res => {
-            //         this.goodArr = res.data.dataList
-            //     })
-            //     .catch(() => {
-            //         this.$message.error("出错啦!");
-            //     })
+            let goods_unit = '', dataList = [], goods_code = '';
+            this.goodArr.forEach(val => {
+                if(ele == val.ID){
+                    goods_unit = val.GOODS_UNIT
+                    dataList = val.stk_list
+                    this.stk_goods_code = val.GOODS_CODE
+                    this.stk_goods_name = val.GOODS_NAME
+                }
+            })
+            this.tableData.forEach(val => {
+                if(val.goodVal == ele){  
+                    val.gooaMsgArr = dataList
+                    val.goods_unit = goods_unit
+                    val.batchList = this.batchList
+                    if(val.yzcArr.length > 0){
+                        val.yzcName = val.yzcArr[0].id
+                    }
+                    val.yzcName = val.yzcArr[0].id
+                    if(val.batchList.length > 0){
+                        val.batchId = val.batchList[0].yzc_dapc
+                    }
+                    if(dataList.length > 0){
+                        val.ylName = dataList[0].or_goods_name
+                        val.ylCode = dataList[0].or_goods_code
+                    }
+                }
+            })
+            let params = {
+                node_id: this.node_id,
+                stk_goods_code: this.stk_goods_code,
+            }
+            QueryPurchaseGoods(params)
+                .then(res => {
+                    this.tableData.forEach(val => {
+                        if(val.goodVal == ele){
+                            if(res.data.dataList.length > 0){
+                                val.jhBatchArr = res.data.dataList[0].batch
+                                val.jhBatchId = res.data.dataList[0].batch[0].BATCH_ID
+                            }else{
+                                val.jhBatchArr = []
+                                val.jhBatchId = ''
+                            }
+                            
+                        }
+                    })
+                })
         },
         addGoodFun(){
             let obj = {
-                goodArr: this.goodArr,
-                gooaMsgArr: [],
-                goodVal: '',
-                goodNum: '',   
+                goodArr: this.goodArr, // 商品信息
+                gooaMsgArr: [], // 原料信息
+                batchList: [], // 档案批次
+                goodVal: '', // 商品名称
+                goodNum: '', // 数量
+                goods_unit: '', // 规格
+                jhBatchId: '', // 进货批次
+                jhBatchArr: [], // 进货批次
+                batchId: '', // 档案批次
+                ylNum: '', // 原料数量
+                yzcArr: this.yzcArr, // 养殖场
+                yzcName: '', // 养殖场名称
+                ylName: '', // 原料名称
+                ylCode: '', //原料商品码
             }
             this.tableData.unshift(obj)
         },
@@ -320,7 +436,7 @@ export default {
             display: flex;
         }
         .el-input{
-            width: 130px;
+            width: 88px;
         }
         .select-godmsg{
             margin: 0 20px;

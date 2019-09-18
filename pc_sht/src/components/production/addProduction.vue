@@ -23,18 +23,25 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="goods_unit" width="100" label="规格"> </el-table-column>
+                <el-table-column prop="goods_unit" width="100" label="单位/规格"> </el-table-column>
                 <el-table-column prop="buyer_booth_name" label="数量">
                     <template slot-scope="scope">
                         <el-input class="input" v-model="scope.row.goodNum" size="mini" ></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column prop="buyer_booth_name" label="进货商品信息">
+                <el-table-column prop="buyer_booth_name" label="原料名称">
                     <template slot-scope="scope">
                         <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
                             <p style="padding-left: 20px;" calss="material-name">{{item2.or_goods_name}}</p>
                         </div>
                     </template>
+                </el-table-column>
+                <!--<el-table-column prop="buyer_booth_name" label="原料单位/规格">
+                    <template slot-scope="scope">
+                        <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
+                            <p style="padding-left: 20px;" calss="material-name">{{item2.or_goods_name}}</p>
+                        </div>
+                    </template>-->
                 </el-table-column>
                 <el-table-column prop="buyer_booth_name" label="批次信息">
                     <template slot-scope="scope">
@@ -166,19 +173,34 @@ export default {
         // 选择商品
         selectGoodFun(ele,ele2){
             let states = false;
+            let arr = [],newArr = [];
             this.tableData.forEach(val => {
                 if(val.gooaMsgArr.length > 0){
                     if(ele == val.goodVal){
-                        this.$message({
-                            message: '不能选择同一商品',
-                            type: 'warning',
-                            offset: 200,
-                        });
-                        states = true
-                        return
+                        // this.$message({
+                        //     message: '不能选择同一商品',
+                        //     type: 'warning',
+                        //     offset: 200,
+                        // });
+                        arr.push(val.goodVal)
+                        // states = true
+                        // return
                     }
                 }
                 
+            })
+            arr.forEach(val => {
+                if(newArr.indexOf(val) == -1) {
+                    newArr.push(val)
+                }else{
+                    this.$message({
+                        message: '不能选择同一商品',
+                        type: 'warning',
+                        offset: 200,
+                    });
+                    states = true
+                    return
+                }
             })
             if(states == false){
                 let goods_unit = '',obj = {};
@@ -271,7 +293,7 @@ export default {
         }
         .save-btn{
             margin-top: 20px;
-            margin-left: 400px;
+            margin-left: 48%;
         }
         .add-btn{
             margin: 10px 0;

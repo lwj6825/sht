@@ -122,7 +122,6 @@
           label: 'type_name',
           children: 'systemDefaultTypeList'
         },
-
         form: {
           userdefineCategory: '',
           bzq: '',
@@ -138,7 +137,6 @@
           j_name: "",
           gbCode:"",
           gbName:"",
-
           price:"",
           goodsUnit:"",
           input:"",
@@ -171,15 +169,14 @@
               name:'L',
             }
           ],
-
           suppliersId:"",
           suppliersName:"",
         },
         addrOptions:[],
         propes:{
-            label: 'caption',
-            value:'szm',
-            children: 'list'
+          label: 'caption',
+          value:'szm',
+          children: 'list'
         },
         suppliersList:[],
         specificationList:[],
@@ -252,14 +249,13 @@
           if(this.$route.params.goodsMsg.areaOriginId.slice(0,2) != '00'){
             originArr.unshift(this.$route.params.goodsMsg.areaOriginId.slice(0,2)+'0000');
           }
+          this.form.addr = originArr
         }
-        this.form.addr = originArr
       }else{
         this.getGoodsCode()
       }
     },
     methods: {
-      
       fileFun(event){
         var that = this;
         let file = event.target.files;
@@ -414,32 +410,59 @@
                 let areaName = this.$route.params.goodsMsg.areaOriginNname
                 if(areaName.slice(0,3) == '北京市'){
                   this.addrOptions.forEach(ele => {
-                      addrArr.push('110000')
-                      ele.list.forEach(ele => {
-                        if(areaName.slice(3,6) == ele.caption){
-                          addrArr.push(ele.szm)
-                          ele.list.forEach(ele => {
-                            if(areaName.slice(6) == ele.caption){
-                              addrArr.push(ele.szm)                              
-                            }
-                          })
-                        }
-                      })
+                    addrArr.push('110000')
+                    ele.list.forEach(ele => {
+                      if(areaName.slice(3,6) == ele.caption){
+                        addrArr.push(ele.szm)
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(6) == ele.caption){
+                            addrArr.push(ele.szm)                              
+                          }
+                        })
+                      }
+                    })
                   })
                 }else if(areaName.slice(0,3) == '上海市'){
+                  addrArr.push('310000')
                   this.addrOptions.forEach(ele => {
-                      addrArr.push('310000')
-                      ele.list.forEach(ele => {
-                        if(areaName.slice(3,6) == ele.caption){
-                          addrArr.push(ele.szm)
-                          ele.list.forEach(ele => {
-                            // console.log(ele)
-                            if(areaName.slice(6) == ele.caption){
-                              addrArr.push(ele.szm)                              
-                            }
-                          })
-                        }
-                      })
+                    ele.list.forEach(ele => {
+                      if(areaName.slice(3,6) == ele.caption){
+                        addrArr.push(ele.szm)
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(6) == ele.caption){
+                            addrArr.push(ele.szm)                              
+                          }
+                        })
+                      }
+                    })
+                  })
+                }else if(areaName.slice(0,3) == '天津市'){
+                  addrArr.push('120000')
+                  this.addrOptions.forEach(ele => {
+                    ele.list.forEach(ele => {
+                      if(areaName.slice(3,6) == ele.caption){
+                        addrArr.push(ele.szm)
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(6) == ele.caption){
+                            addrArr.push(ele.szm)                              
+                          }
+                        })
+                      }
+                    })
+                  })
+                }else if(areaName.slice(0,3) == '重庆市'){
+                  addrArr.push('500000')
+                  this.addrOptions.forEach(ele => {
+                    ele.list.forEach(ele => {
+                      if(areaName.slice(3,6) == ele.caption){
+                        addrArr.push(ele.szm)
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(6) == ele.caption){
+                            addrArr.push(ele.szm)                              
+                          }
+                        })
+                      }
+                    })
                   })
                 }else{
                   return
@@ -579,7 +602,6 @@
         this.form.goodsUnit = '/'+value;
       },
       selectSuppliers(val){//选择供应商
-        console.log(val)
         this.suppliersList.forEach((ele)=>{ 
           if(ele.SHOP_CONCACTS_ID === val){
             this.form.suppliersName = ele.BIZ_NAME;
@@ -653,7 +675,6 @@
         this.getAllSuppliers()
         //查询规格列表
         this.getAllSpecification()
-
       }
     }
   };

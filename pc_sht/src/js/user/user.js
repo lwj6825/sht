@@ -19,7 +19,8 @@ import {
     getNodeApply,
     updateNodeApply,
     queryMonitoring,
-    getNodeInfoXt
+    getNodeInfoXt,
+    updatePasswordByUserId
 } from '../address/url.js';
 
 //所有用户信息
@@ -103,4 +104,8 @@ export const  QueryMonitoring  = function(params) {
 // 接入系统备案
 export const  GetNodeInfoXt  = function(params) {
   return ajaxPost(getNodeInfoXt,params)
+}
+//修改密码
+export const  UpdatePasswordByUserId  = function(params) {
+  return ajaxPost(updatePasswordByUserId,params)
 }

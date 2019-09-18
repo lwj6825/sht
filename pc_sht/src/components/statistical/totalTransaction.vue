@@ -31,7 +31,11 @@
               </p>
               <p style="margin-top:6px;font-size:15px;float:left;">】</p>
               <el-table :data="this.tableData"  style="width:100%;margin-left:20px;" :default-sort = "{prop: 'date', order: 'descending'}" fit :row-style="{height:'40px'}" :header-cell-style="{background:'#f5f5f5'}" >
+<<<<<<< HEAD
                 <el-table-column v-for="(item,index) in headerList" :key='index'  :label="item" fit :prop='item'>
+=======
+                <el-table-column v-for="(item,index) in headerList" :key='index' :label="item" fit :prop='item'>
+>>>>>>> 0e7ab5693c8d7f225657f7ce5d5bd66506d670d9
                  </el-table-column>  
              </el-table>
              <div class="block">

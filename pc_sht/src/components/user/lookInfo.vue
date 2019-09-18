@@ -6,10 +6,11 @@
                 <span class="text">账号：</span>
                 <span class="account-text">{{form.account}}</span>
                 <span class="text">密码：</span>
-                <input type="hidden" v-model="form.password">
-                <span style="display:inline-block;min-width:50px;" v-if="form.password">******</span>
+                <span class="account-text">{{form.password}}</span>
+                <span class="edit-btn" @click="editFun">修改</span>
+                <!-- <span style="display:inline-block;min-width:50px;" v-if="form.password">******</span>
                 <span style="display:inline-block;min-width:50px;" v-else></span>                
-                <!-- <el-button class="reset-password" type="info" plain @click="resetPassword()">重置密码</el-button> -->
+                <el-button class="reset-password" type="info" plain @click="resetPassword()">重置密码</el-button> -->
             </el-form-item>
             <el-form-item>
                 <span class="text">系统角色：</span>
@@ -147,11 +148,25 @@
                 <el-button type="primary" @click="resetAddr()">确 定</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="修改" :visible.sync="isPassword" class="edit-msg" :before-close="closeFun">
+            <el-form :model="passwordForm">               
+                <el-form-item label="账号">
+                    <el-input class="fill-input" v-model="passwordForm.account" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                    <el-input class="fill-input" v-model="passwordForm.password" clearable></el-input>
+                </el-form-item> 
+            </el-form> 
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeFun">取 消</el-button>
+                <el-button type="primary" @click="editPasswordFun">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import {getAddr,editUser,GetAllNode,UpdateState} from '../../js/user/user.js'
+import {getAddr,editUser,GetAllNode,UpdateState,UpdatePasswordByUserId} from '../../js/user/user.js'
 import {getRoleList} from '../../js/role/role.js'
 export default {
     name:"loolInfo",
@@ -212,9 +227,12 @@ export default {
 
             nodeDialog:false,//修改所属节点
             nodeForm:{
-                node:''
+                node:'',
             },
-
+            passwordForm: {
+                password: '',
+                account: '',
+            },
             addrDialog: false,//修改地址            
             addrForm: {
                 addr:[],
@@ -233,7 +251,9 @@ export default {
                     value: '110114107',
                     label: '水屯批发市场'
                 }
-            ]
+            ],
+            isPassword: false,
+            telphone: '',
         }        
     },
     mounted(){
@@ -260,6 +280,9 @@ export default {
             this.form.password=this.$route.params.row.password;
             this.form.role=this.$route.params.row.roleName;
             this.form.roleId = this.$route.params.row.roleId;
+            this.telphone = this.$route.params.row.telphone
+            this.passwordForm.account=this.$route.params.row.userName;
+            this.passwordForm.password=this.$route.params.row.password;
             if(this.$route.params.row.scbj == '启用'){
                 this.form.switchStatus = '1'
             }else{
@@ -311,6 +334,40 @@ export default {
             })
     },    
     methods:{
+        closeFun(){
+            this.isPassword = false
+            this.passwordForm.account=this.$route.params.row.userName;
+            this.passwordForm.password=this.$route.params.row.password;
+        },
+        editFun(){
+            this.isPassword = true
+        },
+        editPasswordFun(){
+            let data = {
+                userName:this.passwordForm.account,
+                password: this.passwordForm.password,
+                userId: JSON.stringify(this.form.userId),   
+            }
+            UpdatePasswordByUserId(data)
+                .then(res => {
+                    if(res.result == true){
+                        this.$router.push({path:'userList'})
+                        this.$message({
+                            type: 'success',
+                            message: res.message
+                        });
+                        this.isPassword = false
+                    }else{
+                        this.$message({
+                            type: 'error',
+                            message: res.message
+                        });
+                    }
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         getNodeFun(){
             GetAllNode()
                 .then(res => {
@@ -796,6 +853,11 @@ export default {
         height: 100%; 
         background: #fff;
         box-sizing: border-box;
+        .edit-btn{
+            padding: 0 10px;
+            color: #409EFF;
+            cursor: pointer;
+        }
         .form{
             color: #606266;
             font-size: 14px;

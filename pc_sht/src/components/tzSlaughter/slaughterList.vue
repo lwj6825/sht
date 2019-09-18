@@ -2,7 +2,7 @@
     <div class="content slaughterList">
         <div class="searchs" ref="searchs">
             <div class="search">
-                <el-form ref="form" :inline="true" :model="form" label-width="90px">
+                <el-form ref="form" :inline="true" :model="form" label-width="90px" clearable>
                     <el-form-item label="屠宰批次号" prop="name">
                         <el-input v-model="form.batch"></el-input>
                     </el-form-item>
@@ -17,7 +17,6 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="searchFun" class="search-btn white-bth" style="margin-left: 10px;">搜索</el-button>
-                        <el-button class="file-btn no-btn">导出</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
@@ -33,12 +32,12 @@
             </div>
             <div class="tables" >
                 <el-table  :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="data" label="屠宰日期"> </el-table-column>
-                    <el-table-column prop="BATCH_ID" label="屠宰批次号"> </el-table-column>
-                    <el-table-column prop="GOODS_NAME" label="商品信息"> </el-table-column>
-                    <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
-                    <el-table-column prop="NUMBER" label="数量"> </el-table-column>
-                    <el-table-column prop="NUMBER" label="屠宰企业"> </el-table-column>
+                    <el-table-column prop="tz_rq" label="屠宰日期"> </el-table-column>
+                    <el-table-column prop="stk_batch_id" label="屠宰批次号"> </el-table-column>
+                    <el-table-column prop="stk_goods_name" label="商品信息"> </el-table-column>
+                    <!--<el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>-->
+                    <el-table-column prop="stk_num" label="数量"> </el-table-column>
+                    <el-table-column prop="biz_name" label="屠宰企业"> </el-table-column>
                     <el-table-column label="操作" width='200'>
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
@@ -54,12 +53,13 @@
 </template>
 
 <script>
+import {GetAllYzctzjg,DeleteYzctzjg} from '../../js/tzSlaughter/tzSlaughter.js'
 // 时间戳转日期格式
 function timestampToTime(timestamp) {
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + '-';
     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate();
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
     // var h = date.getHours() + ':';
     // var m = date.getMinutes() + ':';
     // var s = date.getSeconds();
@@ -90,9 +90,7 @@ export default {
             node_id: '',
             startTime: '',
             endTime: '',
-            tableData: [
-                {data: '5465465'}
-            ],
+            tableData: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -105,8 +103,26 @@ export default {
         arr.push(this.startTime)
         arr.push(this.endTime)
         this.form.dataTime = arr
+        this.getDataFun()
     },
     methods: {
+        getDataFun(){
+            let obj = { 
+                stk_batch_id: this.form.batch,
+                start_time: this.startTime,
+                end_time: this.endTime,
+                page: this.page,
+                cols: this.cols,
+            }
+            GetAllYzctzjg(obj)
+                .then(res => {
+                    this.tableData = res.data.dataList;
+                    this.num = res.data.condition.total
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
         addFun(){
             this.$router.push({name: 'NewSlaughter'})
         },
@@ -114,10 +130,25 @@ export default {
             this.page = val
         },
         viewFun(ele){
-            this.$router.push({name: 'ViewSlaughter'})
+            this.$router.push({name: 'ViewSlaughter',params: ele})
         },
         deleteFun(ele){
-
+            let obj = { 
+                id: ele.id
+            }
+            DeleteYzctzjg(obj)
+                .then(res => {
+                    if(res.result == true){
+                        this.$message.success(res.message);
+                        this.page = 1
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
         },
         clearFun(){
             this.form = {
@@ -125,10 +156,16 @@ export default {
                 dataTime: ''
             }
             this.getTime()
+            let arr = []
+            arr.push(this.startTime)
+            arr.push(this.endTime)
+            this.form.dataTime = arr
             this.page = 1
+            this.getDataFun()
         },
         searchFun(){
             this.page = 1
+            this.getDataFun()
         },
         timeChange(ele){
             if(this.form.dataTime){

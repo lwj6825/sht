@@ -75,7 +75,7 @@
                 <li class="list-item" v-if="imgList.length > 0" v-for="(item,index) in imgList" :key="index">    
                   <figure class="image">
                     <p class="icon-delete" @click="deleteFun(item,index)">-</p> 
-                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
+                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url"  v-if="item.img_url">
                     <div class="submit-btn">
                       更换图片
                       <form id="upload" enctype="multipart/form-data" method="post"> 
@@ -97,6 +97,12 @@
                 </li>  
               </ul>
             </div>
+          </el-form-item>
+          <el-form-item label="是否下发：">
+            <el-radio-group v-model="disgrant">
+              <el-radio label="未下发" value="未下发" name="disgrant"></el-radio>
+              <el-radio label="已下发" value="已下发" name="disgrant"></el-radio>
+            </el-radio-group>
           </el-form-item>
           <p class="add-material" v-if="amount" @click="MaterialFun">+添加原料</p>
           <p class="add-material" v-if="!amount" @click="newFun">+去增加原料</p>
@@ -222,9 +228,9 @@
         </el-table>
         <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
         layout="total, prev, pager, next, jumper" :total="num"> </el-pagination>
-        <p style="margin: 10px 20px;">
+        <!--<p style="margin: 10px 20px;">
           <el-button size="mini" @click="addMaterialFun">新增原料</el-button>
-        </p>
+        </p>-->
         <div class="btn">
           <el-button class="sure-btn" type="primary" @click="saveMaterial">保存</el-button>
         </div>  
@@ -305,6 +311,7 @@
           suppliersId:"",
           suppliersName:"",
         },
+        disgrant: '未下发',
         specificationList:[],
         region: '',
         bigAreaId: '',
@@ -453,7 +460,6 @@
       }
     },
     mounted() {
-      console.log(this.$route.params.goodsMsg)
       this.node_id = localStorage.getItem('loginId')
       this.node_name = localStorage.getItem('loginName')
       this.isRegion = localStorage.getItem('isRegion')
@@ -461,6 +467,11 @@
       this.initData();
       this.getAddrList()
       if(JSON.stringify(this.$route.params.goodsMsg)){ 
+        if(this.$route.params.goodsMsg.DISGRANT == 0){
+          this.disgrant = '未下发'
+        }else if(this.$route.params.goodsMsg.DISGRANT == 1){
+          this.disgrant = '已下发'
+        }
         this.form.userdefineCategory = this.$route.params.goodsMsg.USERDEFINE_CATEGORY
         this.form.bzq = this.$route.params.goodsMsg.BZQ
         this.form.brand = this.$route.params.goodsMsg.BRAND
@@ -779,7 +790,6 @@
         }
         UpdateStkOr(obj)
           .then(res => {
-            console.log(res)
             if (res.result == true) {
               this.$message.success(res.message);
             }else{
@@ -815,7 +825,7 @@
         let obj = {
           node_id: this.node_id,
           goodsName: this.$route.params.goodsMsg.GOODS_NAME,
-          geStkOrigin:  this.form.goodsCode,
+          goodsCode:  this.form.goodsCode,
         }
         GeStkOrigin(obj)
           .then(res => {
@@ -950,7 +960,6 @@
           let that = this;
           let w = that.width;
           let h = that.height;
-          // console.log(w,h)
           //生成canvas
           let canvas = document.createElement('canvas');
           let ctx = canvas.getContext('2d'); 
@@ -1316,6 +1325,7 @@
                 userdefineCategory: this.form.userdefineCategory,
                 bzq: this.form.bzq,
                 brand: this.form.brand,
+                disgrant: this.disgrant == "未下发" ? 0 : 1
               };
               goodUpdate(params)
                 .then(res => {
@@ -1348,7 +1358,6 @@
                     + '","or_gb_code":"' + ele.GB_CODE + '","or_gb_name":"' + ele.GB_NAME
                     + '","or_unit":"' + ele.GOODS_UNIT + '"},'
                 }
-                // "[{'or_goods_code':'892799','or_goods_name':'苹果','or_number':'1','or_unit':'斤'}
               })
               str += "]"
               let stk = '';
@@ -1358,7 +1367,6 @@
               }else{
                 this.selectStr = ''
               }
-              console.log(stk)
               this.selectStr = stk
               // 新增商品
               let params = {
@@ -1384,8 +1392,8 @@
                 userdefineCategory: this.form.userdefineCategory,
                 bzq: this.form.bzq,
                 brand: this.form.brand,
+                disgrant: this.disgrant == "未下发" ? 0 : 1
               };
-              console.log(params)
               saleAdd(params)
                 .then(res => {
                   if (res.result == true) {
@@ -1664,10 +1672,10 @@
       background: rgba(0,0,0,.6);
       .material{
         position: relative;
-        top: 50%;
+        top: 0;
         left: 50%;
         margin-left: -320px;
-        margin-top: -300px;
+        margin-top: 100px;
         width: 640px;
         height: 600px;
         background: #fff;

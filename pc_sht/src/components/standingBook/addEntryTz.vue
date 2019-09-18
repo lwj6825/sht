@@ -496,36 +496,64 @@ export default {
             let addrArr = [];
             if(areaName){
                 if(areaName.slice(0,3) == '北京市'){
-                  this.addrOptions.forEach(ele => {
-                      addrArr.push('110000')
-                      ele.list.forEach(ele => {
-                        if(areaName.slice(3,6) == ele.caption){
-                          addrArr.push(ele.szm)
-                          ele.list.forEach(ele => {
-                            if(areaName.slice(6) == ele.caption){
-                              addrArr.push(ele.szm)                              
+                    this.addrOptions.forEach(ele => {
+                        addrArr.push('110000')
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
                             }
-                          })
-                        }
-                      })
-                  })
+                        })
+                    })
                 }else if(areaName.slice(0,3) == '上海市'){
                   this.addrOptions.forEach(ele => {
-                      addrArr.push('310000')
-                      ele.list.forEach(ele => {
-                        if(areaName.slice(3,6) == ele.caption){
-                          addrArr.push(ele.szm)
-                          ele.list.forEach(ele => {
-                            // console.log(ele)
-                            if(areaName.slice(6) == ele.caption){
-                              addrArr.push(ele.szm)                              
+                        addrArr.push('310000')
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    // console.log(ele)
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
                             }
-                          })
-                        }
-                      })
+                        })
                   })
+                }else if(areaName.slice(0,3) == '天津市'){
+                    addrArr.push('120000')
+                    this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
+                            }
+                        })
+                    })
+                }else if(areaName.slice(0,3) == '重庆市'){
+                    addrArr.push('500000')
+                    this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
+                            }
+                        })
+                    })
                 }
-                this.form.origin_name = originArr
+                this.form.origin_name = addrArr.slice(0,3)
             }
             let originArr = [];
             if(areaId){
@@ -683,40 +711,6 @@ export default {
             let arr = [],newArr = [];
             this.tableData.forEach((val,index) => {
                 arr.push(val[0])
-                // {
-                //     this.$message({
-                //         message: '不能选择同一商品',
-                //         type: 'warning',
-                //         offset: 200,
-                //     });
-                //     states = true
-                //     return
-                // }
-                    // if(val.shopIds && ele2 != (index+1)){
-                    //     console.log(index)
-                    //     console.log(ele2)
-                    //     if(ele == val[0]){
-                    //         console.log(1)
-                    //         this.$message({
-                    //             message: '不能选择同一商品',
-                    //             type: 'warning',
-                    //             offset: 200,
-                    //         });
-                    //         states = true
-                    //         return
-                    //     }
-                    // }
-                // // if(this.tableData[index].shopIds && this.tableData[index+1].shopIds){
-                //     if(this.tableData[index][0] == this.tableData[index+1][0]){
-                //         this.$message({
-                //             message: '不能选择同一商品',
-                //             type: 'warning',
-                //             offset: 200,
-                //         });
-                //         states = true
-                //         return
-                //     }
-                // }
             })
             arr.forEach(val => {
                 if(newArr.indexOf(val) == -1) {
@@ -958,10 +952,10 @@ export default {
                 this.$message.error('供应商不能为空');
                 return
             }
-            if(this.form.ghdw == ''){
-                this.$message.error('生产单位不能为空');
-                return
-            }
+            // if(this.form.ghdw == ''){
+            //     this.$message.error('生产单位不能为空');
+            //     return
+            // }
             // console.log(this.form2)
             let addrArr = [], originArr = [];
                 this.addrOptions.forEach(ele => {
@@ -1152,6 +1146,69 @@ export default {
                 }
                 //TzUpdate
             }else{
+                let addrArr = [];
+                if(this.$route.params.param.area_origin_name){
+                    let areaName = this.$route.params.param.area_origin_name    
+                    if(areaName.slice(0,3) == '北京市'){
+                        this.addrOptions.forEach(ele => {
+                            addrArr.push('110000')
+                            ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                        if(areaName.slice(6) == ele.caption){
+                                            addrArr.push(ele.szm)                              
+                                        }
+                                    })
+                                }
+                            })
+                        })
+                    }else if(areaName.slice(0,3) == '上海市'){
+                        addrArr.push('310000')
+                        this.addrOptions.forEach(ele => {
+                            ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                        // console.log(ele)
+                                        if(areaName.slice(6) == ele.caption){
+                                            addrArr.push(ele.szm)                              
+                                        }
+                                    })
+                                }
+                            })
+                    })
+                    }else if(areaName.slice(0,3) == '天津市'){
+                        addrArr.push('120000')
+                        this.addrOptions.forEach(ele => {
+                            ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                        if(areaName.slice(6) == ele.caption){
+                                            addrArr.push(ele.szm)                              
+                                        }
+                                    })
+                                }
+                            })
+                        })
+                    }else if(areaName.slice(0,3) == '重庆市'){
+                        addrArr.push('500000')
+                        this.addrOptions.forEach(ele => {
+                            ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                        if(areaName.slice(6) == ele.caption){
+                                            addrArr.push(ele.szm)                              
+                                        }
+                                    })
+                                }
+                            })
+                        })
+                    }
+                    this.form.origin_name = addrArr.slice(0,3)
+                }
                 this.add = true
                 this.saveBtn = '保存'
             }

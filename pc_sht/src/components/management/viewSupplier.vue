@@ -21,7 +21,7 @@
           <span>{{form.callphone}}</span>
         </el-form-item>
         <el-form-item label="地址：" prop="addr">
-            <span>{{form.infoAddr}} {{form.addr}}</span>
+            <span>{{form.addr}} {{form.infoAddr}}</span>
         </el-form-item>
         <el-form-item label="产地：" prop="origin_name">
           <span>{{form.origin_name}}</span>
@@ -59,7 +59,6 @@
         }
       },
       mounted(){
-        console.log(this.$route.params)
         if(JSON.stringify(this.$route.params.gysMsg)){
           this.form.type = this.$route.params.gysMsg.type;
           this.form.licenceNo = this.$route.params.gysMsg.licence_no;//营业执照

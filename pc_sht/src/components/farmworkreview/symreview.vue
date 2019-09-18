@@ -150,7 +150,7 @@
         // key:'',
         value: {},
         if_pass_list: [{name: "审核通过", value: "1"}, {name: "驳回", value: "0"}],
-        ifpassname: [],
+        ifpassname: '',
         // 分页参数
         currentPage: 0,
         totalPageSize: 0,
@@ -168,17 +168,17 @@
         var btn = document.getElementById('open_btn');
         var div = document.getElementById('background');
         var close = document.getElementById('close-button');
-        btn.onclick = function show() {
-          div.style.display = "block";
-        };
-        close.onclick = function close() {
-          div.style.display = "none";
-        }
-        window.onclick = function close(e) {
-          if (e.target == div) {
-            div.style.display = "none";
-          }
-        }
+        // btn.onclick = function show() {
+        //   div.style.display = "block";
+        // };
+        // close.onclick = function close() {
+        //   div.style.display = "none";
+        // }
+        // window.onclick = function close(e) {
+        //   if (e.target == div) {
+        //     div.style.display = "none";
+        //   }
+        // }
       },
       // 获取POST数据      获取审核信息
       getSymReviewList(page_local_par) {
@@ -326,7 +326,7 @@
       // 新增申请清空
       clearnum() {
         this.reviewflag = false;
-        this.ifpassname = [];
+        this.ifpassname = '';
       },
       // 获取地块list
       getListdk() {

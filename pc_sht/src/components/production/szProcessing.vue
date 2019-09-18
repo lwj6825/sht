@@ -24,7 +24,7 @@
                     <el-button type="primary" @click="newFun"> + 创建加工工艺</el-button>
                     <!--<el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
                     <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>-->
-                </div>
+                </div> 
             </div>
             <!--<div class="file-btns" v-if="isfile">
                 <div>
@@ -101,9 +101,9 @@
                         <div class="msg-item">   
                             <div class="img-list">
                                 <ul>
-                                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                                    <li v-if="img_url">
                                         <figure class="image">
-                                            <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                            <img :src="img_url">
                                         </figure>
                                     </li>
                                 </ul>
@@ -123,7 +123,7 @@
                     </el-form-item>
                     <el-form-item class="btn">
                         <el-button @click="cancelFun">取消</el-button>
-                        <el-button type="primary" @click="submitForm">确认</el-button>
+                        <el-button type="primary" @click="submitForm" :disabled="disabled">确认</el-button>
                     </el-form-item>
                 </el-form>
             
@@ -165,6 +165,9 @@ export default {
             ids: '',
             node_id: '',
             node_name: '',
+            img_url: '',
+            disabled: false,
+            editUrl: '',
         }
     },
     mounted() {
@@ -231,6 +234,7 @@ export default {
                 })
         },
         submitForm(){
+            this.disabled = true
             if(this.prompt == '创建'){
                 let obj = {
                     goods_id: this.form.goodName,
@@ -244,6 +248,7 @@ export default {
                 }
                 InsertProductionTech(obj)
                     .then(res =>{
+                        this.disabled = false
                         if(res.result == true){
                             this.$message.success(res.message);
                             this.page = 1
@@ -254,6 +259,7 @@ export default {
                         }
                     })
                     .catch(res =>{
+                        this.disabled = false
                         console.log(res)
                     })
             }else{
@@ -263,11 +269,12 @@ export default {
                     technology_cycle: this.form.cycle,
                     technology_describe: this.form.describe,
                     sort: this.form.sort,
-                    img_url: this.imgArr.length > 0 ? this.imgArr[0] : '',
+                    img_url: this.editUrl,
                     id: this.ids
                 }
                 UpdateProductionTech(obj)
                     .then(res =>{
+                        this.disabled = false
                         if(res.result == true){
                             this.$message.success(res.message);
                             this.page = 1
@@ -278,6 +285,7 @@ export default {
                         }
                     })
                     .catch(res =>{
+                        this.disabled = false
                         console.log(res)
                     })
             }
@@ -301,6 +309,8 @@ export default {
             this.ids = ''
             this.imgArr1 = []
             this.imgArr = []
+            this.img_url = ''
+            this.editUrl = ''
             this.isEdits = false
         },
         editFun(ele){
@@ -310,10 +320,10 @@ export default {
             this.form.cycle = ele.technology_cycle
             this.form.describe = ele.technology_describe
             this.form.sort = ele.sort
-            let obj = {
-                img_url: ele.img_url
+            if(ele.img_url){
+                this.img_url = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + ele.img_url
             }
-            this.imgArr1.push(obj)
+            this.editUrl = ele.img_url
             this.prompt = '编辑'
             this.isEdits = true
         },
@@ -342,6 +352,8 @@ export default {
             this.isBigImg = false
         }, 
         fileFun(event){
+            this.img_url = ''
+            this.imgArr = []
             var that = this;
             let file = event.target.files;
             let reg = /.(jpg|png|PNG|JPG)+$/;           
@@ -361,6 +373,7 @@ export default {
                 reader.readAsDataURL(file[0]); 
                 reader.onload = function(){                    
                     that.imgFun(reader.result,that.clarity,function(src){
+                        that.img_url = src
                         that.imgArr.push(src.slice(23))
                     })
                 }

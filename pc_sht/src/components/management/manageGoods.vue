@@ -79,6 +79,11 @@
                         </el-table-column>
                         <el-table-column prop="goods_Name" label="商品名称"> </el-table-column>
                         <el-table-column prop="goods_Unit" label="规格"> </el-table-column>
+                        <el-table-column prop="key_number" label="键位" width="160">
+                            <template slot-scope="scope">
+                                <el-input class="num-input" v-model="scope.row.key_number" placeholder="范围：1-70" clearable></el-input>
+                            </template>
+                        </el-table-column>
                     </el-table>   
                 </div>
                 <el-pagination background
@@ -87,8 +92,8 @@
                         layout="total, prev, pager, next"
                         :total='total'>
                     </el-pagination>
-                <div class="add-new" v-if="good == '1'" @click="addEntryFun">新增商品</div>
-                <div class="add-new" v-else @click="addSaleFun">新增商品</div>
+                <!--<div class="add-new" v-if="good == '1'" @click="addEntryFun">新增商品</div>
+                <div class="add-new" v-else @click="addSaleFun">新增商品</div>-->
                 <el-button class="msg-save-btn" type="primary" @click="addGoodsSave">保存</el-button>
             </div>
         </div>
@@ -131,7 +136,6 @@ export default {
     },
     methods: {
         handleCurrentChange2(val){
-            console.log(val)
             this.page2 = val
             this.getBindingGoodsList()
         },
@@ -248,10 +252,11 @@ export default {
                 shop_booth_id:this.$route.params.searchMsg.currShop_shop_booth_id,//当前商户的shop_booth_id
                 userId:this.$route.params.searchMsg.currShop_userId//当前商户的userId
             }
-            console.log(data)
             BindingGoods(data)
                 .then(res => {
-                    console.log(res)
+                    res.data.dataList.forEach(val => {
+                        val.key_number = ''
+                    })
                     this.dataList = res.data.dataList
                     this.total = res.data.condition.total
                 })
@@ -294,24 +299,57 @@ export default {
             });
         },
         addGoodsSave(){
-            let data = {
-                ids:this.selectGoodsList.join(','),
-                goods_type:this.addGoodsType,
-                shop_booth_id:this.$route.params.searchMsg.currShop_shop_booth_id
+            let numArr = [],state = true;
+            if(this.selectGoodsList.length > 0){
+                this.dataList.forEach(val => {
+                    this.selectGoodsList.forEach(ele => {
+                        if(ele == val.id){
+                            if(val.key_number == ''){
+                                this.$message.error('请输入键位！');
+                                state = false
+                                return
+                            }else{
+                                let num = Number(val.key_number)
+                                if(/^[0-9]{1,2}/.test(num) == false){
+                                    this.$message.error('请输入数字！');
+                                    state = false
+                                    return
+                                }else{
+                                    if( num > 0 && num < 71){
+                                        numArr.push(num)
+                                    }else{
+                                        this.$message.error('范围：1-70！');
+                                        state = false
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                    })
+                })
             }
-            SaveBindingGoods(data)
-                .then(res => {
-                    this.$message.success('恭喜，绑定成功！');
-                    this.searchGoodsName = ''
-                    this.getGoodsList(this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
-                    this.getBindingGoodsList() 
-                    this.addNew = false;
-                    this.page2 = 1
-                })
-                .catch(res => {
-                    this.$message.error('抱歉，绑定失败！');
-                    console.log(res)
-                })
+            if(state == true){
+                let data = {
+                    ids:this.selectGoodsList.join(','),
+                    goods_type:this.addGoodsType,
+                    shop_booth_id:this.$route.params.searchMsg.currShop_shop_booth_id,
+                    key_number: numArr.join(','),
+                }
+                console.log(data)
+                SaveBindingGoods(data)
+                    .then(res => {
+                        this.$message.success('恭喜，绑定成功！');
+                        this.searchGoodsName = ''
+                        this.getGoodsList(this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
+                        this.getBindingGoodsList() 
+                        this.addNew = false;
+                        this.page2 = 1
+                    })
+                    .catch(res => {
+                        this.$message.error('抱歉，绑定失败！');
+                        console.log(res)
+                    })
+            }
             
         },
     }
@@ -330,6 +368,10 @@ export default {
         .hide{
             display: none;
         } 
+        .num-input{
+            width: 120px;
+            height: 30px;
+        }
     }    
     .msg-box{
         position: fixed;
@@ -431,6 +473,13 @@ export default {
     .manageGoods{
         .el-table--enable-row-transition .el-table__body td{
             padding: 5px 0;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input[type="number"]{
+            -moz-appearance: textfield;
         }
     }
 </style>

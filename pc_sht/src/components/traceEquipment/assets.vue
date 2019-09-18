@@ -142,7 +142,7 @@ function timestampToTime(timestamp) {
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + '-';
     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate();
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
     // var h = date.getHours() + ':';
     // var m = date.getMinutes() + ':';
     // var s = date.getSeconds();
@@ -281,7 +281,7 @@ export default {
                         ajaxPost(url,formData,config)
                             .then(res => {
                                 console.log(res)
-                                let data = res.message.split('!,')
+                                let data = res.data[0].split('!,')
                                 let newDatas = [];
                                 const h = this.$createElement;
                                 for(let i in data){
@@ -334,7 +334,7 @@ export default {
                         let url = importAssetsUpdate + '?userid=' + this.userId
                         ajaxPost(url,formData,config)
                             .then(res => {
-                                let data = res.message.split('!,')
+                                let data = res.data[0].split('!,')
                                 let newDatas = [];
                                 const h = this.$createElement;
                                 for(let i in data){
@@ -359,7 +359,7 @@ export default {
                                     
                                 }
                                 loading.close();
-                                that.$refs.files.value = null
+                                // that.$refs.files.value = null
                                 this.file = null
                             })
                             .catch(res => {

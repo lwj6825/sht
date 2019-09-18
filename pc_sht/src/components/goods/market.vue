@@ -15,7 +15,6 @@
         </div>
         <div>
           <el-button type="primary" size="medium" class="import" style="margin-left: 10px;" @click="searchConditions">搜索</el-button>
-          <el-button type="primary" size="medium" class="file-btn">导出</el-button>
           <span class="span-clear" @click="clearConditions">清空筛选条件</span>
         </div>
       </div>
@@ -43,7 +42,7 @@
         </div>
       </div>
       <div class="booth-management-msg">
-        <el-table :data="dataList"  border :header-cell-style="rowClass">
+        <el-table :data="dataList" :header-cell-style="rowClass">
           <el-table-column prop="GOODS_CODE" label="商品编码"> </el-table-column>
           <el-table-column prop="GOODS_NAME" label="商品名称"> </el-table-column>
           <el-table-column prop="J_NAME" label="商品简称"> </el-table-column>
@@ -148,53 +147,51 @@
         this.getSales()
       },
       loadFun(){
-        window.location.href = baseUrl + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId + '&node_id=' + this.node_id
+        window.location.href = baseUrl2 + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId + '&node_id=' + this.node_id
       },
       fileFun(event){
         let param = this.$refs.file.files[0];
-            this.file = event.target.files[0];
-            let formData = new FormData();
-            formData.append('saleAndOrigin', this.file);  
-            formData.append('userId', this.userId);  
-            formData.append('node_id',this.loginId); 
-            formData.append('region',this.areaId); 
-            formData.append('node_name',this.loginName); 
-            let config = {
-              headers:{'Content-Type':'multipart/form-data'}
-            };
-            const ajaxPost = function (url, params,config) {
-              return new Promise((resolve, reject) => {
-                axios
-                  .post(url, params,{config})
-                  .then((res) => {
-                    resolve(res.data)
-                  })
-                  .catch(() => {
-                    reject('error')
-                  })
+        this.file = event.target.files[0];
+        let formData = new FormData();
+        formData.append('saleAndOrigin', this.file);  
+        formData.append('userId', this.userId);  
+        formData.append('node_id',this.loginId); 
+        formData.append('region',this.areaId); 
+        formData.append('node_name',this.loginName); 
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };
+        const ajaxPost = function (url, params,config) {
+          return new Promise((resolve, reject) => {
+            axios
+              .post(url, params,{config})
+              .then((res) => {
+                resolve(res.data)
               })
-            }  
-            let url = baseUrl + 'goods/importSaleAndOrigin'
-            ajaxPost(url,formData,config)
-              .then(res => {
-                this.boxShow = true;
-                if(res.message == ""){
-                  this.fileMsg = res.message
-                }else{
-                  if(res.result == true){
-                    this.fileMsg = "导入成功"
-                  }else{
-                    this.fileMsg = "导入失败"
-                  }
-                }
-                this.$refs.file.value = null
+              .catch(() => {
+                reject('error')
               })
-              .catch(res => {
-                console.log(res)
-                this.$message.error("出错了");
-              })
-          
-
+          })
+        }  
+        let url = baseUrl2 + 'goods/importSaleAndOrigin'
+        ajaxPost(url,formData,config)
+          .then(res => {
+            this.boxShow = true;
+            if(res.message == ""){
+              this.fileMsg = res.message
+            }else{
+              if(res.result == true){
+                this.fileMsg = "导入成功"
+              }else{
+                this.fileMsg = "导入失败"
+              }
+            }
+            this.$refs.file.value = null
+          })
+          .catch(res => {
+            console.log(res)
+            this.$message.error("出错了");
+          })
       },
       rowClass({ row, rowIndex}) {
         return {
@@ -213,50 +210,58 @@
         }
         let queryNameData = this.queryNameData;
         if(row.level_id.length == 2){
-          level_1_name = queryNameData[0].type_name;
+          if(queryNameData){
+            level_1_name = queryNameData[0].type_name;
+          }
           typeName = level_1_name;
         }
         if(row.level_id.length == 5){
-          level_1_name = queryNameData[0].type_name;
-          queryNameData[0].systemDefaultTypeList.forEach((ele)=>{
-            if(ele.level_id == row.level_id.slice(0-5)){
-              level_2_name = ele.type_name;
-              typeName = level_1_name +'/'+ level_2_name ;
-            }
-          })
+          if(queryNameData){
+            level_1_name = queryNameData[0].type_name;
+            queryNameData[0].systemDefaultTypeList.forEach((ele)=>{
+              if(ele.level_id == row.level_id.slice(0-5)){
+                level_2_name = ele.type_name;
+                typeName = level_1_name +'/'+ level_2_name ;
+              }
+            })
+          }
         }
         if(row.level_id.length == 8){
-          level_1_name = queryNameData[0].type_name;
-          queryNameData[0].systemDefaultTypeList.forEach((ele)=>{
-            if(ele.level_id == row.level_id.slice(0,5)){
-              level_2_name = ele.type_name;
-              ele.systemDefaultTypeList.forEach((ele)=>{
-                if(ele.level_id == row.level_id.slice(0,8)){
-                  level_3_name = ele.type_name;
-                  typeName = level_1_name +'/'+ level_2_name +'/'+ level_3_name;
-                }
-              })
-            }
-          })
+          if(queryNameData){
+            level_1_name = queryNameData[0].type_name;
+            queryNameData[0].systemDefaultTypeList.forEach((ele)=>{
+              if(ele.level_id == row.level_id.slice(0,5)){
+                level_2_name = ele.type_name;
+                ele.systemDefaultTypeList.forEach((ele)=>{
+                  if(ele.level_id == row.level_id.slice(0,8)){
+                    level_3_name = ele.type_name;
+                    typeName = level_1_name +'/'+ level_2_name +'/'+ level_3_name;
+                  }
+                })
+              }
+            })
+          }
         }
         if(row.level_id.length == 12){
-          level_1_name = queryNameData[0].type_name;
-          queryNameData[0].systemDefaultTypeList.forEach((ele)=>{
-            if(ele.level_id == row.level_id.slice(0,5)){
-              level_2_name = ele.type_name;
-              ele.systemDefaultTypeList.forEach((ele)=>{
-                if(ele.level_id == row.level_id.slice(0,8)){
-                  level_3_name = ele.type_name;
-                  ele.systemDefaultTypeList.forEach((ele)=>{
-                    if(ele.level_id == row.level_id.slice(0,12)){
-                      level_4_name = ele.type_name;
-                      typeName = level_1_name +'/'+ level_2_name +'/'+ level_3_name +'/'+ level_4_name;
-                    }
-                  })
-                }
-              })
-            }
-          })
+          if(queryNameData){
+            level_1_name = queryNameData[0].type_name;
+            queryNameData[0].systemDefaultTypeList.forEach((ele)=>{
+              if(ele.level_id == row.level_id.slice(0,5)){
+                level_2_name = ele.type_name;
+                ele.systemDefaultTypeList.forEach((ele)=>{
+                  if(ele.level_id == row.level_id.slice(0,8)){
+                    level_3_name = ele.type_name;
+                    ele.systemDefaultTypeList.forEach((ele)=>{
+                      if(ele.level_id == row.level_id.slice(0,12)){
+                        level_4_name = ele.type_name;
+                        typeName = level_1_name +'/'+ level_2_name +'/'+ level_3_name +'/'+ level_4_name;
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          }
         }
         return typeName;
       }, 
@@ -406,24 +411,23 @@
       },
       handleDelete(index, row) {//删除商品
         this.$confirm('是否要删除此条信息?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            deleteGood(row.ID)
-              .then(res => {
-                this.getSales()
-              })
-              .catch(res => {
-                console.log(res);
-              })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            });          
-          });
-        
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteGood(row.ID)
+            .then(res => {
+              this.getSales()
+            })
+            .catch(res => {
+              console.log(res);
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       },
     },
     components:{

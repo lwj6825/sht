@@ -35,9 +35,9 @@
             <el-table :data="tableData"  style="width:100%;margin-left:20px;" :header-cell-style="{background:'#f5f5f5'}" fit
                    v-loading="loading"  :row-style="{height:'40px'}"  >
                 <el-table-column prop="plu_name" label="商品名称" fit></el-table-column>
-                <el-table-column prop="price" sortable  label="商品总交易额(元)"></el-table-column>
-                <el-table-column prop="weight" sortable  label="总公交易量(公斤)" ></el-table-column>
-                <el-table-column prop="avg"  sortable label="均价(元)" ></el-table-column>
+                <el-table-column prop="price"  label="商品总交易额(元)"></el-table-column>
+                <el-table-column prop="weight"  label="总公交易量(公斤)" ></el-table-column>
+                <el-table-column prop="avg"  label="均价(元)" ></el-table-column>
                 <el-table-column label="操作" width="100">
                     <template slot-scope="scope">
                         <!-- <router-link to='/home/standingBook/saleTz'> -->

@@ -14,7 +14,7 @@
         <div class="lz-sycx-search-item-content">
           <div class="lz-sycx-search-item-content-inner">
             <div class="lz-sycx-search-item-content-inner-left">
-                  <div class="lz-sycx-left">品牌:</div><span class="lz-span">崔村红</span>
+                  <div class="lz-sycx-left">品牌:</div><span class="lz-span">{{loginName}}</span>
             </div>
             <div class="lz-sycx-search-item-content-inner-left">
               <div class="lz-sycx-left">品种:</div><span class="lz-span">{{product_breed}}</span>
@@ -115,7 +115,7 @@
 
 <script>
   import {
-    symQuery
+    symQuery,QueryTzSymApply
   } from "../../js/farmthings/farmworksym.js";
   export default {
     name: '',
@@ -133,7 +133,12 @@
         product_breed: '',
         // 生长记录
         growth_record_list: [],
+        loginName: '',
       }
+    },
+    mounted() {
+      this.loginName =  localStorage.getItem('loginName');
+      // this.localuserId = JSON.parse(localStorage.getItem('userId'));
     },
     methods: {
       //开始搜索
@@ -142,34 +147,53 @@
       },
       // 获取溯源码信息
       getSymInfo(a) {
-        let symInfoNum = {
-          trace_code: a,
-        };
-        symQuery(symInfoNum)
-          .then(res => {
-            // 基地信息
-            this.$refs.bodycontent.style.display = 'block'
-            this.plot_name = res.data.Dkxx[0].place_name;
-            this.plot_area = res.data.Dkxx[0].area;
-            this.plot_fzr = res.data.Dkxx[0].fzr;
-            this.plot_address = res.data.Dkxx[0].area_name+res.data.Dkxx[0].addr;
-            this.product_breed = res.data.Dkxx[0].pz;
-            // 生长记录
-            this.growth_record_list = res.data.dataList1;
-          })
-          .catch(() => {
-            this.$refs.bodycontent.style.display = 'none'
-            this.$message.error("溯源码输入有误!");
-          })
+        if(this.loginName == "獭兔"){
+          let symInfoNum = {
+            trace_code: a,
+          };
+          QueryTzSymApply(symInfoNum)
+            .then(res => {
+              // 基地信息
+              this.$refs.bodycontent.style.display = 'block'
+              this.plot_name = res.data.Dkxx[0].place_name;
+              this.plot_area = res.data.Dkxx[0].area;
+              this.plot_fzr = res.data.Dkxx[0].fzr;
+              this.plot_address = res.data.Dkxx[0].area_name+res.data.Dkxx[0].addr;
+              this.product_breed = res.data.Dkxx[0].pz;
+              // 生长记录
+              this.growth_record_list = res.data.dataList1;
+            })
+            .catch(() => {
+              this.$refs.bodycontent.style.display = 'none'
+              this.$message.error("溯源码输入有误!");
+            })
+        }else{
+          let symInfoNum = {
+            trace_code: a,
+          };
+          symQuery(symInfoNum)
+            .then(res => {
+              // 基地信息
+              this.$refs.bodycontent.style.display = 'block'
+              this.plot_name = res.data.Dkxx[0].place_name;
+              this.plot_area = res.data.Dkxx[0].area;
+              this.plot_fzr = res.data.Dkxx[0].fzr;
+              this.plot_address = res.data.Dkxx[0].area_name+res.data.Dkxx[0].addr;
+              this.product_breed = res.data.Dkxx[0].pz;
+              // 生长记录
+              this.growth_record_list = res.data.dataList1;
+            })
+            .catch(() => {
+              this.$refs.bodycontent.style.display = 'none'
+              this.$message.error("溯源码输入有误!");
+            })
+        }
       },
       // 显示内容区域.
       getContentDiv() {
         document.getElementsByClassName('sya-content')[0].style.display = block;
       }
     },
-    mounted() {
-      // this.localuserId = JSON.parse(localStorage.getItem('userId'));
-    }
   }
 </script>
 

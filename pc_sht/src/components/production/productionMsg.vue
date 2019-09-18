@@ -21,7 +21,6 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="searchFun" class="search-btn white-bth" style="margin-left: 10px;">搜索</el-button>
-                        <el-button class="file-btn no-btn">导出</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
@@ -38,7 +37,6 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn white-bth" @click="searchFun">搜索</el-button>
-                        <el-button class="file-btn no-btn">导出</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
@@ -50,12 +48,12 @@
                 <p class="tz-title">全部生产任务</p>
                 <div>
                     <el-button type="primary" class="blue-bth" @click="addProductionFun">添加生产任务</el-button>
-                    <el-button type="primary" class="import white-bth" @click="dowoloadAllFun">批量下载</el-button>
+                    <el-button type="primary" class="import white-bth" @click="dowoloadAllFun" v-if="isShows">批量下载</el-button>
                 </div>
             </div>
             <div class="tables" >
                 <el-table  :data="tableData" :header-cell-style="rowClass" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="55"> </el-table-column>
+                    <el-table-column type="selection" width="55" v-if="isShows"> </el-table-column>
                     <el-table-column prop="SC_DATE" label="生产日期"> </el-table-column>
                     <el-table-column prop="BATCH_ID" label="生产批次号"> </el-table-column>
                     <el-table-column prop="GOODS_NAME" label="销售商品"> </el-table-column>
@@ -68,9 +66,9 @@
                     </el-table-column>
                     <el-table-column label="操作" width='200'>
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="viewFun(scope.row)">查看&emsp;|</el-button>
-                            <el-button type="text" size="small" @click="deleteFun(scope.row)">删除&emsp;|</el-button>
-                            <el-button type="text" size="small" @click="dowoloadFun(scope.row)">下载文件</el-button>
+                            <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
+                            <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
+                            <el-button type="text" v-if="isShows" size="small" @click="dowoloadFun(scope.row)">下载文件</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -103,7 +101,7 @@ function timestampToTime(timestamp) {
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + '-';
     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate();
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
     // var h = date.getHours() + ':';
     // var m = date.getMinutes() + ':';
     // var s = date.getSeconds();
@@ -155,11 +153,15 @@ export default {
             num: 0,
             isShow: false,
             tableData2: [],
-            selectArr: []
+            selectArr: [],
+            isShows: true, // 兔子柿子隐藏false
         }
     },
     mounted() {
         this.node_id = localStorage.getItem('loginId')
+        if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+            this.isShows = false
+        }
         this.getTime()
         let arr = []
         arr.push(this.startTime)

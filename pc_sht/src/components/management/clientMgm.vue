@@ -31,8 +31,8 @@
         </div>
       </div>
       <div class="booth-management-msg">
-        <el-table :data="dataList"  border>
-          <el-table-column prop="concact_name" label="客户名称"> </el-table-column>
+        <el-table :data="dataList" :header-cell-style="rowClass">
+          <el-table-column prop="biz_name" label="客户名称"> </el-table-column>
           <el-table-column prop="concact_name" label="联系人"> </el-table-column>
           <el-table-column prop="cellphone" label="联系方式"> </el-table-column>
           <el-table-column label="地址"> 
@@ -68,7 +68,7 @@
   import {allGys,deleGys} from "../../js/management/management.js";
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area'
-  import {baseUrl2,importCustomer,downloadCustomer} from '../../js/address/url.js'
+  import {baseUrl,baseUrl2,importCustomer,downloadCustomer} from '../../js/address/url.js'
   import axios from 'axios';
   export default {
     name: "commodityMgm",
@@ -113,6 +113,12 @@
       }
     },
     methods: {
+      rowClass({ row, rowIndex}) {
+        return {
+          background: '#f2f2f2',
+          color: '#333'
+        }
+      },  
       downloadFun(){
         let areaId = ''
         if(this.isRegion == 'false'){
@@ -140,7 +146,7 @@
         formData.append('type', '2'); 
         formData.append('shop_booth_id',areaId); 
         let config = {
-            headers:{'Content-Type':'multipart/form-data'}
+          headers:{'Content-Type':'multipart/form-data'}
         };
         const ajaxPost = function (url, params,config) {
           return new Promise((resolve, reject) => {
@@ -234,21 +240,20 @@
         this.$router.push({name:'NewClient',params: {areaId: this.areaId}})
       },
       remove(index, row){//删除
-        // console.log(index,row)
         this.$confirm('确认删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-           let boothId = row.shop_concacts_id;
-            deleGys({shop_concacts_id:boothId})
-              .then((res)=>{
-                // console.log(res)
-                this.getAllGys()
-              })
-              .catch((res)=>{
-                console.log(res)
-              })
+        })
+        .then(() => {
+          let boothId = row.shop_concacts_id;
+          deleGys({shop_concacts_id:boothId})
+            .then((res)=>{
+              this.getAllGys()
+            })
+            .catch((res)=>{
+              console.log(res)
+            })
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -313,7 +318,6 @@
         }
         QueryArea(data)
           .then(res =>{
-            // console.log(res)
             res.data.dataList.forEach(ele => {
               if(ele.userId == id){
                 this.areaId = ele.bootList[0].shop_booth_id;
@@ -343,8 +347,6 @@
             console.log(res)
           })
       }
-      
-
     },
     components:{
       AreaSelect,
