@@ -113,7 +113,7 @@
                 <el-input v-model="form.callphone" clearable></el-input>
             </el-form-item>
             <el-form-item style="margin-left: 50px;">
-                <el-button type="primary" class="new-add" @click="saveFun" size="mini">保存</el-button>
+                <el-button type="primary" class="new-add" @click="saveFun" size="mini" :disabled="disabled">保存</el-button>
                 <el-button size="mini" @click="cancalFun">取消</el-button>
             </el-form-item>
         </el-form>
@@ -158,6 +158,7 @@ export default {
                 value:'szm',
                 children: 'list'
             },
+            disabled: false,
         }
     },
     mounted() {
@@ -191,6 +192,7 @@ export default {
                 })
         },
         saveFun(){
+            this.disabled = true
             let addrArr = [];
             this.addrOptions.forEach(ele => {
                 if(ele.szm == this.form.addr[0]){
@@ -224,19 +226,18 @@ export default {
                 addr:this.form.inforAddr,//地址详细信息
                 userId:this.userId,//用户id
             }
-            console.log(data)
             insBiz(data)
                 .then(res => {
+                    this.disabled = false
                     if(res.result){
                         this.$message.success(res.message)
                         this.$router.push({name:'SzEnterpriseList'})
                     }else{
-                        // console.log(res.message);
                         this.$message.error(res.message);
                     }
                 })
                 .catch(res => {
-                    // console.log(res.message)
+                    this.disabled = false
                 })
         },
         cancalFun(){

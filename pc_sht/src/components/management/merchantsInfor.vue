@@ -670,7 +670,6 @@ export default {
       this.selectAddShop = false;
       this.isEdit = false;
       this.shopList.forEach(ele => {
-        console.log(ele)
         if(ele.name == name){
           this.account = ele.userName;//账号
           this.password = ele.password;//密码
@@ -697,7 +696,6 @@ export default {
       this.disabled = false
       this.shopList.forEach(ele => {
         if(ele.name == name){
-          console.log(ele)
           let addrArr = [];
           if(ele.area_name){
               if(ele.area_name){
@@ -718,20 +716,50 @@ export default {
                   })
                   this.editForm.addr = addrArr.slice(0,3)
                 }else if(areaName.slice(0,3) == '上海市'){
+                  addrArr.push('310000')
                   this.addrOptions.forEach(ele => {
-                      addrArr.push('310000')
-                      ele.list.forEach(ele => {
-                        if(areaName.slice(3,6) == ele.caption){
-                          addrArr.push(ele.szm)
-                          ele.list.forEach(ele => {
-                            if(areaName.slice(6) == ele.caption){
-                              addrArr.push(ele.szm)                              
-                            }
-                          })
-                        }
-                      })
+                    ele.list.forEach(ele => {
+                      if(areaName.slice(3,6) == ele.caption){
+                        addrArr.push(ele.szm)
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(6) == ele.caption){
+                            addrArr.push(ele.szm)                              
+                          }
+                        })
+                      }
+                    })
                   })
                   this.editForm.addr = addrArr.slice(0,3)
+                }else if(areaName.slice(0,3) == '天津市'){
+                  addrArr.push('120000')
+                  this.addrOptions.forEach(ele => {
+                    ele.list.forEach(ele => {
+                      if(areaName.slice(3,6) == ele.caption){
+                        addrArr.push(ele.szm)
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(6) == ele.caption){
+                            addrArr.push(ele.szm)                              
+                          }
+                        })
+                      }
+                    })
+                  })
+                  this.form2.addr = addrArr.slice(0,3)
+                }else if(areaName.slice(0,3) == '重庆市'){
+                  addrArr.push('500000')
+                  this.addrOptions.forEach(ele => {
+                    ele.list.forEach(ele => {
+                      if(areaName.slice(3,6) == ele.caption){
+                        addrArr.push(ele.szm)
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(6) == ele.caption){
+                            addrArr.push(ele.szm)                              
+                          }
+                        })
+                      }
+                    })
+                  })
+                  this.form2.addr = addrArr.slice(0,3)
                 }else{
                   let arr = [];
                   if(ele.area_id.slice(4,6) != '00'){

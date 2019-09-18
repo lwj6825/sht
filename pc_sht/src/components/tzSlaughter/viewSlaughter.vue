@@ -40,7 +40,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$route.params)
         let data = this.$route.params
         this.in_date = data.tz_rq
         this.enterprise = data.biz_name

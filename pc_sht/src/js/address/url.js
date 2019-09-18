@@ -1,13 +1,13 @@
 // base url
-// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.1.45:8081/order_sht/';
+export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
 // export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
-// export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
+export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口
@@ -25,6 +25,8 @@ export const superGetAddr = baseUrl + 'comm/getAllSSQX';//获取地区
 export const getAllNode = baseUrl + 'login/getAllNode';//创建用户--所属节点
 export const insertNodeInfo = baseUrl + 'login/insertNodeInfo';//添加市场
 export const updateState = baseUrl + 'login/updateState';// 用户详情禁用启用
+export const updatePasswordByUserId = baseUrl + 'login/updatePasswordByUserId';// 修改密码
+
 // superadmin角色模块地址
 export const superRoleList = baseUrl + 'role/query'; //角色查询
 export const superAddRole = baseUrl + 'role/add'; //创建角色
@@ -49,7 +51,7 @@ export const superEdit = baseUrl + 'function/update'; //编辑功能
 //“管理”菜单
 // 商户
 export const queryMoneyLittleTime = baseUrl + 'redis/queryMoneyLittleTime'; //查询月总交易额
-export const getAllBiz = baseUrl2 + 'manage/getAllBiz';// 查询商户列表
+export const getAllBiz = baseUrl + 'manage/getAllBiz';// 查询商户列表
 export const insertBiz = baseUrl + 'manage/insertBiz';// 新增商户
 export const lookShop = baseUrl + 'manage/getBootListById';//新增商户-查看店铺
 export const getAllBizType = baseUrl + 'manage/getAllBizType';//新增商户-商户类型
@@ -58,18 +60,18 @@ export const UpdateBizBooth = baseUrl + 'manage/UpdateBizBooth';// 商户详情 
 // 供应商
 export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
 export const insertGys = baseUrl + 'manage/insertGys';// 新增供应商
-export const downloadGys = baseUrl2 + 'manage/downloadGys';// 下载供应商
-export const importGys = baseUrl2 + 'manage/importGys';// 导入供应商
+export const downloadGys = baseUrl + 'manage/downloadGys';// 下载供应商
+export const importGys = baseUrl + 'manage/importGys';// 导入供应商
+export const updateGys = baseUrl + 'manage/updateGys';// 编辑保存
 // 客户
 export const insertKh = baseUrl + 'manage/insertKh';// 新增客户
 export const deleteGys = baseUrl + 'manage/deleteGys';// 删除供应商/商户
-export const updateGys = baseUrl + 'manage/updateGys';// 编辑保存
 export const supplierList = baseUrl + 'manage/getAllGysForMoreBiz';// 管理供应商
 export const bindingSupplier = baseUrl + 'manage/getAllGysForBind';//管理供应商 - 绑定供应商列表
 export const saveBindinSupplier  = baseUrl + 'manage/insertGysForBind';//管理供应商 - 绑定供应商保存
 export const getCenterBussinessInfo  = baseUrl + 'manage/getCenterBussinessInfo';//// 营业执照号
 export const importCustomer  = baseUrl + 'manage/importCustomer';//// 导入
-export const downloadCustomer  = baseUrl2 + 'manage/downloadCustomer';//// 导出
+export const downloadCustomer  = baseUrl + 'manage/downloadCustomer';//// 导出
 //商品
 export const entryGgoodsList = baseUrl + 'goods/getAllPurchaseGoodsForMoreBiz';// 管理商品 - 进货
 export const sellGoodsList = baseUrl + 'goods/getAllSalesGoodsForMoreBiz';// 管理商品 - 销售
@@ -103,20 +105,20 @@ export const getDefaultProductType = baseUrl + 'comm/getDefaultProductType';// �
 export const goodsCode = baseUrl + 'goods/GoodsCode';// 商品编码
 export const updateGoodsImgForTrace = baseUrl + 'goods/updateGoodsImgForTrace';// 上传商品图片 + 上传追溯精选图片
 //销售商品
-export const querySales = baseUrl2 + 'goods/querySales';// 查询销售商品列表
-export const salesAdd = baseUrl2 + 'goods/salesAdd';// 新增销售商品
+export const querySales = baseUrl + 'goods/querySales';// 查询销售商品列表
+export const salesAdd = baseUrl + 'goods/salesAdd';// 新增销售商品
 export const getGoodsJdImg = baseUrl + 'goods/getGoodsJdImg';// 获取销售商品的 基地图片
-export const updateGoodsJdImg = baseUrl2 + 'goods/updateGoodsJdImg';// 新增或者修改基地图片
-export const deleteGoodsJdImg = baseUrl2 + 'goods/deleteGoodsJdImg';// 删除 基地图片
+export const updateGoodsJdImg = baseUrl + 'goods/updateGoodsJdImg';// 新增或者修改基地图片
+export const deleteGoodsJdImg = baseUrl + 'goods/deleteGoodsJdImg';// 删除 基地图片
 //单条商品
-export const lookGoods = baseUrl2 + 'goods/lookGoods';// 查看商品详情
-export const goodsUpdate = baseUrl2 + 'goods/goodsUpdate';// 编辑商品
-export const deleteGoods = baseUrl2 + 'goods/deleteGoods';// 删除商品
+export const lookGoods = baseUrl + 'goods/lookGoods';// 查看商品详情
+export const goodsUpdate = baseUrl + 'goods/goodsUpdate';// 编辑商品
+export const deleteGoods = baseUrl + 'goods/deleteGoods';// 删除商品
 // 原料
-export const geStkOrigin = baseUrl2 + 'goods/geStkOrigin';// 查看原料
-export const updateStkOr = baseUrl2 + 'goods/updateStkOr';// 编辑原料
-export const deleteStkOr = baseUrl2 + 'goods/deleteStkOr';// 删除原料
-export const insertStkOr = baseUrl2 + 'goods/insertStkOr';// 新增原料
+export const geStkOrigin = baseUrl + 'goods/geStkOrigin';// 查看原料
+export const updateStkOr = baseUrl + 'goods/updateStkOr';// 编辑原料
+export const deleteStkOr = baseUrl + 'goods/deleteStkOr';// 删除原料
+export const insertStkOr = baseUrl + 'goods/insertStkOr';// 新增原料
 
 
 
@@ -176,8 +178,10 @@ export const viewFarmUpdateNsjl = baseUrl + 'farming/updateNsjl';// 更新农事
 
 //溯源的相关的地址
 export const symQueryUrl = baseUrl + 'farming/querySymApply';// 溯源码查询
+export const getAllTzSymApply = baseUrl + 'farming/getAllTzSymApply';// 溯源码查询列表 ===> 兔子
 export const symGetAllUrl = baseUrl + 'farming/getAllSymApply';// 获取所有溯源码
 export const symInsertUrl = baseUrl + 'farming/insertSymApply';// 溯源码新增
+export const queryTzSymApply = baseUrl + 'farming/queryTzSymApply';// 溯源码查询 ===> 兔子
 
 //农事商品相关地址   
 export const nsGoodsQueryUrl = baseUrl + 'farming/queryGoodsBreed';// 农事商品查询
@@ -231,7 +235,8 @@ export const updatePc = baseUrl + 'setting/updatePc';// 点击编辑按钮默认
 export const queryInTzDetailByTzId = baseUrl + 'tz/queryInTzDetailByTzId';// 台账详情
 export const querySuppiler = baseUrl + 'tz/querySuppiler';// 供货单位
 export const deleteDoc = baseUrl + 'originalDoc/deleteOriginalDoc';//删除单据
-export const searchDoc =  baseUrl + 'originalDoc/getAllOriginalDoc';//查询单据originalDoc/insertOriginalDocFile
+export const searchDoc =  baseUrl + 'originalDoc/getAllOriginalDoc';//查询单据
+export const downloadInTzDetail =  baseUrl + 'tz/downloadInTzDetail';//导出
 // 销售台账
 export const queryXsTzDetailRegion = baseUrl + 'tz/queryXsTzDetailRegion' // 列表
 export const downloadXsTzDetail = baseUrl + 'tz/downloadXsTzDetail' // 导出

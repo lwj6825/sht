@@ -5,7 +5,7 @@
         <el-form-item label="商品名称：">{{goodsName}} </el-form-item>
         <el-form-item label="图片：">
           <div class="box-fileimg">
-            <figure class="image">
+            <figure class="image" v-if="imgUrl">
               <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + imgUrl">
             </figure>
           </div>
@@ -51,9 +51,7 @@
       }
     },
     mounted(){
-      console.log(this.$route.params)
       if(JSON.stringify(this.$route.params) != '{}'){
-     
         if(this.$route.params.goodsMsg.IMG_URL == null){
           this.imgUrl = '';
         }else{

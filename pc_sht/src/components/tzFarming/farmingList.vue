@@ -10,7 +10,7 @@
                         </el-select>-->
                         <el-input clearable v-model="form.farmingName"></el-input>
                     </el-form-item>
-                    <el-form-item label="创建时间" style="width: 390px;" >
+                    <el-form-item label="创建时间" style="width: 390px;">
                         <el-date-picker clearable style="width: 300px"
                             v-model="form.dataTime" value-format="yyyy-MM-dd"
                             type="daterange" @change="timeChange"
@@ -118,7 +118,6 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
                                     <figure class="image">
-                                        <!--<p class="icon-deletes" @click="removeFun(index,item)" v-if="item.id">-</p>-->
                                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
                                     </figure>
                                 </li>
@@ -259,6 +258,7 @@ export default {
                 end_time: this.endTime,
                 page: this.page,
                 cols: this.cols,
+                node_id: this.node_id
             }
             GetAllYzcxx(obj)
                 .then(res => {
@@ -317,7 +317,83 @@ export default {
                 this.imgArr1 = ele.img_list
                 this.img_id = ele.img_list[0].id
             }
-            this.form2.addr = originArr
+            if(ele.area_name){
+                let areaName = ele.area_name;
+                let addrArr = [];
+                if(areaName.slice(0,3) == '北京市'){
+                    this.addrOptions.forEach(ele => {
+                        addrArr.push('110000')
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
+                            }
+                        })
+                    })
+                    this.form2.addr = addrArr.slice(0,3)
+                }else if(areaName.slice(0,3) == '上海市'){
+                    addrArr.push('310000')
+                    this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
+                            }
+                        })
+                    })
+                    this.form2.addr = addrArr.slice(0,3)
+                }else if(areaName.slice(0,3) == '天津市'){
+                    addrArr.push('120000')
+                    this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
+                            }
+                        })
+                    })
+                    this.form2.addr = addrArr.slice(0,3)
+                }else if(areaName.slice(0,3) == '重庆市'){
+                    addrArr.push('500000')
+                    this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                            if(areaName.slice(3,6) == ele.caption){
+                                addrArr.push(ele.szm)
+                                ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                })
+                            }
+                        })
+                    })
+                    this.form2.addr = addrArr.slice(0,3)
+                }else{
+                    let arr = [];
+                    if(ele.area_id.slice(4,6) != '00'){
+                        arr.unshift(ele.area_id);
+                    }
+                    if(ele.area_id.slice(2,4) != '00'){
+                        arr.unshift(ele.area_id.slice(0,4)+'00');
+                    }
+                    if(ele.area_id.slice(0,2) != '00'){
+                        arr.unshift(ele.area_id.slice(0,2)+'0000');
+                    }
+                    this.form2.addr = arr;
+                }
+            }
             this.form2.enterprise = JSON.stringify(ele.userId)  
             this.form2.yzcNum = ele.yzc_code
             this.form2.yzcName = ele.yzc_name
@@ -564,7 +640,6 @@ export default {
                 })
                 .catch(res => {
                     console.log(res)
-                    this.$message.error("出错了");
                 })
 
         },

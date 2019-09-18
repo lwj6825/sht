@@ -27,7 +27,7 @@
           <div class="lz-filter-one-style">
             <div class="lz-filter-name-two" >所属企业</div>
             <el-select v-model="hzs_name_local" slot="append" placeholder="请选择" value-key="userId" class="select-width-me" size="small" 
-              clearable filterable style="width: 225px">
+             filterable style="width: 225px">
               <el-option v-for="item in plotHzsDataList" :key="item.userId" :label="item.booth_name" :value="item"></el-option>
             </el-select>
           </div>
@@ -36,7 +36,7 @@
             <el-input v-model="apply_num_local" placeholder="请输入内容" size="small" style="width: 225px"></el-input>
           </div>
           <div class="lz-filter-one-style-three">
-            <el-button type="primary" class="search-btn" size="mini" @click="getSymList()">搜索</el-button>
+            <el-button type="primary" class="search-btn" @click="getSymList()">搜索</el-button>
             <!--清空筛选条件-->
             <el-button size="mini" class="span-clear" type="text" @click="clearAllCondition()">清空筛选条件</el-button>
           </div>
@@ -71,7 +71,7 @@
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="生产批次号">
-                  <span>{{ props.row.apply_id }}</span>
+                  <span>{{ props.row.batch_id }}</span>
                 </el-form-item>
                 <el-form-item label="申请数量">
                   <span>{{ props.row.apply_num }}</span>
@@ -108,8 +108,7 @@
       <div class="pageBlock">
         <el-pagination
           @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
+          @current-change="handleCurrentChange" :current-page.sync="page_local" :page-size="cols"
           layout="total, prev, pager, next, jumper"
           :total="totalPageSize">
         </el-pagination>
@@ -120,10 +119,16 @@
         <!--内容-->
         <!--选择地块-->
         <div class="tjsf-div2-row">
-          <div class="left">选择地块:</div>
-          <div class="right">
+          <div class="left">选择{{roleId == '79' ? "养殖场" : "地块"}}:</div>
+          <div class="right" v-if="roleId == '79'">
             <el-select v-model="place_name_add" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
-              size="small" @change="changevalue()" filterable clearable>
+              size="small" @change="changevalue" filterable clearable>
+              <el-option v-for="item in yzcList" :key="item.id" :label="item.yzc_name" :value="item"></el-option>
+            </el-select>
+          </div>
+          <div class="right" v-else>
+            <el-select v-model="place_name_add" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
+              size="small" @change="changevalue" filterable clearable>
               <el-option v-for="item in place_name_list" :key="item.id" :label="item.place_name" :value="item"></el-option>
             </el-select>
           </div>
@@ -132,31 +137,35 @@
         <div class="tjsf-div2-row">
           <div class="left">所属企业:</div>
           <div class="right">
-            <el-input v-model="sq_sym_Hzs" size="small" disabled placeholder="选择地块后会自动填充"></el-input>
+            <el-input v-model="sq_sym_Hzs" size="small" disabled :placeholder="'选择' + (roleId == '79' ? '养殖场' : '地块') + '后会自动填充'"></el-input>
           </div>
         </div>
         <!--产品名称-->
         <div class="tjsf-div2-row">
           <div class="left">申请商品:</div>
           <div class="right">
-            <el-input v-model="pz_add_name" size="small" disabled placeholder="选择地块后会自动填充"></el-input>
-          </div>
-        </div>
-        <div class="tjsf-div2-row">
-          <div class="left">生产批次号:</div>
-          <div class="right">
-            <el-select v-model="place_name_add" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
-              size="small" @change="changevalue()" filterable clearable>
-              <el-option v-for="item in place_name_list" :key="item.id" :label="item.place_name" :value="item"></el-option>
+            <el-input v-if="isGood" v-model="pz_add_name" size="small" disabled :placeholder="'选择地块后会自动填充'"></el-input>
+            <el-select v-else v-model="pz_add_name" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
+              size="small" @change="selectFun" filterable>
+              <el-option v-for="(item,index) in dataList" :key="index" :label="item.GOODS_NAME" :value="item.GOODS_NAME"></el-option>
             </el-select>
           </div>
         </div>
+       <div class="tjsf-div2-row" v-if="isShowBatch">
+          <div class="left">生产批次号:</div>
+          <div class="right">
+            <el-select v-model="batch_id" slot="append" placeholder="请选择" value-key="id" class="select-width-me"
+              size="small" filterable clearable>
+              <el-option v-for="(item,index) in batchList" :key="index" :label="item.BATCH_ID" :value="item.BATCH_ID"></el-option>
+            </el-select>
+          </div>
+        </div> <!---->
         <!--溯源码数量-->
         <div class="tjsf-div2-row">
           <div class="left">溯源码数量:</div>
           <div class="right">
             <el-input v-model="apply_num_add" placeholder="请输入申请数量" size="small" maxlength="11" clearable
-              onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"></el-input>
+              onkeyup="(v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="v();"></el-input>
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -174,15 +183,17 @@
   } from "../../js/farmthings/farmworkget.js";
   import {
     symGetAllsymPost,
-    symInsert
+    symInsert,GetAllTzSymApply
   } from "../../js/farmthings/farmworksym.js";
 
+  import {GetAllYzcxx} from "../../js/tzFarming/tzFarming.js"
   import {plotList} from "../../js/farmthings/farmworkget.js";
   import {
     nsGoodsQueryPOST
   } from "../../js/farmthings/farmworkgoods.js";
   import {GetAllProduction} from '../../js/production/production.js';
 
+  import {purchase,sales} from "../../js/goods/goods.js";
   export default {
     name: '',
     components: {},
@@ -225,28 +236,93 @@
         // 分页参数
         currentPage: 0,
         totalPageSize: 0,
-        page_local: '1',
+        page_local: 1,
+        node_id: '',
+        batchList: [],
+        batch_id: '',
+        loginName: '',
+        yzcList: [],
+        goodsType: '进货',
+        dataList: [],
+        roleId: '',
+        isShowBatch: false, // 显示生产批次号
+        isGood: true, // 商品和地块是否绑定
+        cols: 15,
+      }
+    },
+    mounted() {
+      this.localuserId = JSON.parse(localStorage.getItem('userId'));
+      this.localnodeid = JSON.parse(localStorage.getItem('nodeidlocal'));
+      this.loginName =  localStorage.getItem('loginName');
+      this.node_id = localStorage.getItem('loginId')
+      this.roleId = localStorage.getItem('roleId')
+      this.getSymList(this.page_local);
+      this.getListdk();
+      this.getListNSsp();
+      this.getHzsList();
+      this.getProductionFun()
+      if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+        this.isShowBatch = true
+        this.getGoodsFun()
+      }else{
+        this.isShowBatch = false
+      }
+      if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+        this.isGood = false
+      }else{
+        this.isGood = true
       }
     },
     methods: {
-      getProductionFun(){
-        // let obj = {
-        //     node_id: this.node_id,
-        //     stk_batch_id: this.form.productionCode,
-        //     stk_goods_name: this.form.goodName,
-        //     start_time: this.startTime,
-        //     end_time: this.endTime,
-        //     page: this.page,
-        //     cols: this.cols
-        // }
-        // GetAllProduction(obj)
-        //     .then(res => {
-        //         this.tableData = res.data.dataList
-        //         this.num = res.data.condition.total
-        //     })
-        //     .catch(() => {
-        //         this.$message.error("出错啦!");
-        //     })
+      selectFun(ele){
+        this.batch_id = ''
+        this.dataList.forEach(val => {
+          if(val.GOODS_NAME == ele){
+            this.pz_add_id = val.ID
+          }
+        })
+        this.getProductionFun(ele)
+      },
+      getGoodsFun() {
+        let boothData = {
+          page: 1,
+          cols: 10000,
+          goodsName: '',
+          goodsCode: '',
+          suppliersName: '',
+          region: '',
+          userId: this.localuserId,
+          total: '',
+          j_name: ''
+        }
+        sales(boothData)
+          .then(res => {
+            this.dataList = res.data.salesList;
+          })
+          .catch(res => {
+            console.log(res)
+          })
+      },
+      goodsTypesFun(ele){
+        this.getGoodsFun(ele)
+      },
+      getProductionFun(ele){
+        let obj = {
+          node_id: this.node_id,
+          stk_batch_id: '',
+          stk_goods_name: ele,
+          start_time: '',
+          end_time: '',
+          page: 1,
+          cols: 10000
+        }
+        GetAllProduction(obj)
+          .then(res => {
+              this.batchList = res.data.dataList
+          })
+          .catch(() => {
+              this.$message.error("出错啦!");
+          })
       },
       addFun(){
         // this.$router.push({name: 'SlaughterList'})
@@ -286,21 +362,47 @@
             this.review_state_local_submit = ''
             break;
         }
-        let params = {
-          page: page_local_par,
-          cols: "10",
-          pz_name: this.pz_name_local,
-          // apply_start_time: this.start_date_local,
-          // apply_end_time: this.end_date_local,
-          review_state: this.review_state_local_submit,
-          apply_start_time: this.local_date_start_end.toString().substring(0,10),
-          apply_end_time: this.local_date_start_end.toString().substring(11,21),
-          apply_id: this.apply_num_local,
-          userId: this.hzs_name_local.userId,
-          // userId: this.localuserId,
-          node_id: this.localnodeid,
-        };
-        this.getsymPostList(params);
+        if(this.roleId == "79"){
+          let params = {
+            page: page_local_par,
+            cols: this.cols,
+            pz_name: this.pz_name_local,
+            // apply_start_time: this.start_date_local,
+            // apply_end_time: this.end_date_local,
+            review_state: this.review_state_local_submit,
+            apply_start_time: this.local_date_start_end.toString().substring(0,10),
+            apply_end_time: this.local_date_start_end.toString().substring(11,21),
+            apply_id: this.apply_num_local,
+            userId: this.hzs_name_local.userId,
+            // userId: this.localuserId,
+            node_id: this.localnodeid,
+            booth_name: ''
+          };
+          GetAllTzSymApply(params)
+            .then(res => {
+              this.tableSymSqList = res.data.sym_list;
+              this.totalPageSize = parseInt(res.data.condition.total);
+            })
+            .catch(() => {
+              this.$message.error("数据加载失败!");
+            })
+        }else{
+          let params = {
+            page: page_local_par,
+            cols: this.cols,
+            pz_name: this.pz_name_local,
+            // apply_start_time: this.start_date_local,
+            // apply_end_time: this.end_date_local,
+            review_state: this.review_state_local_submit,
+            apply_start_time: this.local_date_start_end.toString().substring(0,10),
+            apply_end_time: this.local_date_start_end.toString().substring(11,21),
+            apply_id: this.apply_num_local,
+            userId: this.hzs_name_local.userId,
+            // userId: this.localuserId,
+            node_id: this.localnodeid,
+          };
+          this.getsymPostList(params);
+        }
       },
       getsymPostList(params) {
         symGetAllsymPost(params)
@@ -316,6 +418,8 @@
       getHzsList(currentPageLocal) {
         let params = {
           userId: this.localuserId,
+          cols: 10000,
+          page: 1,
         }
         this.getPlotHzsList(params);
       },
@@ -324,8 +428,8 @@
           .then(res => {
             this.plotHzsDataList = res.data.dataList;
           })
-          .catch(() => {
-            this.$message.error(res.message);
+          .catch((res) => {
+            console.log(res)
           })
       },
       // 关闭申请弹窗
@@ -337,8 +441,12 @@
         this.symapplicationflag = false;
         this.apply_num_add = '';
         this.pz_add = '';
+        this.pz_add_id = '';
+        this.pz_add_name = '';
         this.place_name_add = '';
         this.sq_sym_Hzs = '';
+        this.batch_id = '';
+        this.goodsType = '进货';
       },
       // 清空条件
       clearAllCondition() {
@@ -363,6 +471,7 @@
           userId: this.localuserId,
           place_id: this.place_name_add_id,
           place_name: this.place_name_add_name,
+          batch_id: this.batch_id
         };
         symInsert(addparams)
           .then(res => {
@@ -383,21 +492,43 @@
       },
       // 获取地块list
       getListdk() {
-        let params = {
-          page: 1,
-          cols: 15000,
-          total: "",
-          userId: "",
-          place_name: "",
-          node_id:this.localnodeid,
-          cjsj: "",
+        if(this.roleId == "79"){
+          this.getDataFun()
+        }else{
+          let params = {
+            page: 1,
+            cols: 15000,
+            total: "",
+            userId: "",
+            place_name: "",
+            node_id:this.localnodeid,
+            cjsj: "",
+          }
+          this.getPlotList(params);
         }
-        this.getPlotList(params);
+      },
+      // 养殖场
+      getDataFun(){
+        let obj = { 
+          userId: '', // 所属企业
+          yzc_name: '', // 养殖场名称
+          start_time: '',
+          end_time: '',
+          page: 1,
+          cols: 10000,
+          node_id: this.node_id
+        }
+        GetAllYzcxx(obj)
+          .then(res => {
+            this.yzcList = res.data.dataList;
+          })
+          .catch((res) => {
+            console.log(res)
+          })
       },
       getPlotList(params) {
         plotList(params)
           .then(res => {
-            console.info(res)
             this.place_name_list = res.data.dataList;
           })
           .catch(() => {
@@ -424,18 +555,23 @@
       },
       // h获取地块id
       getdkId() {
-        this.place_name_add_name = this.place_name_add.place_name;
-        this.place_name_add_id = this.place_name_add.id;
-        // this.pz_add_name = this.pz_add.goods_Name;
-        // this.pz_add_id = this.pz_add.id;
-        this.pz_hzs_id = this.place_name_add.userId;
+        if(this.roleId == "79"){
+          this.place_name_add_name = this.place_name_add.yzc_name;
+          this.place_name_add_id = this.place_name_add.id;
+          this.pz_hzs_id = this.place_name_add.userId;
+        }else{
+          this.place_name_add_name = this.place_name_add.place_name;
+          this.place_name_add_id = this.place_name_add.id;
+          // this.pz_add_name = this.pz_add.goods_Name;
+          // this.pz_add_id = this.pz_add.id;
+          this.pz_hzs_id = this.place_name_add.userId;
+        }
       },
       // 设置表格第一行的颜色
       getRowClass({row, column, rowIndex, columnIndex}) {
-        if (rowIndex == 0) {
-          return 'background:#F5F5F5;height:40px; padding: 0px 0;'
-        } else {
-          return ''
+        return {
+          background: '#f2f2f2',
+          color: '#333'
         }
       },
       // 分页添加
@@ -449,22 +585,23 @@
         return 'height:40px; padding: 0px 0;'
       },
       // 地块变化相应的变化    合作社   合作社id   品种   品种id  地块
-      changevalue() {
-        console.log(this.place_name_add);
-        this.sq_sym_Hzs = this.place_name_add.booth_name;
-        // this.pz_add = this.place_name_add.pz;
-        this.pz_add_id = this.place_name_add.pzid;
-        this.pz_add_name = this.place_name_add.pz
+      changevalue(ele) {
+        if(ele){
+          if(this.roleId == "79" || this.roleId == "77"){
+            this.sq_sym_Hzs = this.place_name_add.booth_name;
+            // this.pz_add_id = this.place_name_add.yzc_pzid;
+            // this.pz_add_name = this.place_name_add.yzc_pz
+          }else{
+            this.sq_sym_Hzs = this.place_name_add.booth_name;
+            // this.pz_add = this.place_name_add.pz;
+            this.pz_add_id = this.place_name_add.pzid;
+            this.pz_add_name = this.place_name_add.pz
+          }
+        }else{
+          this.sq_sym_Hzs = ''
+        }
       }
     },
-    mounted() {
-      this.localuserId = JSON.parse(localStorage.getItem('userId'));
-      this.localnodeid = JSON.parse(localStorage.getItem('nodeidlocal'));
-      this.getSymList(this.page_local);
-      this.getListdk();
-      this.getListNSsp();
-      this.getHzsList();
-    }
   }
 </script>
 
@@ -540,7 +677,7 @@
           align-items: center;
         }
         .lz-filter-name-two{
-          width: @lz-filter-name-width + 12px ;
+          width: @lz-filter-name-width;
           display: flex;
           align-items: center;
         }
@@ -549,7 +686,7 @@
         flex: 1;
         display: flex;
         .lz-filter-name-two{
-          width: @lz-filter-name-width + 12px ;
+          width: @lz-filter-name-width;
           display: flex;
           align-items: center;
         }

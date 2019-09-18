@@ -38,7 +38,6 @@
                     </el-form-item>-->
                     <el-form-item>
                         <el-button type="primary" @click="searchFun" class="search-btn white-bth" style="margin-left: 10px;">搜索</el-button>
-                        <el-button class="file-btn no-btn">导出</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
@@ -62,7 +61,6 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn white-bth" @click="searchFun">搜索</el-button>
-                        <el-button class="file-btn no-btn">导出</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
@@ -74,7 +72,7 @@
                 <p class="tz-title">全部进货台账</p>
                 <div>
                     <el-button type="primary" @click="addEntryTzFun" class="blue-bth">新增进货台账</el-button>
-                    <!--<el-button type="primary" class="import white-bth">导入台账</el-button>-->
+                    <el-button type="primary" class="import white-bth" @click="downloadFun">导出</el-button><!---->
                 </div>
             </div>
             <div class="tables" >
@@ -148,6 +146,7 @@ import AreaSelect from '../common/area';
 import Bus from '../common/bus.js';
 import {QueryArea} from '../../js/area/area.js';
 import {GetEntryTz,GetAllBiz,DeleteDoc,SearchDoc,UpdatePc,DeleteTzByTzId} from '../../js/standingBook/standingBook.js'
+import {downloadInTzDetail} from '../../js/address/url.js'
 export default {
     name: "entryTz",
     data() {
@@ -236,6 +235,18 @@ export default {
         this.getFieldFun()
     },
     methods: {
+        downloadFun(){
+            let url = downloadInTzDetail;
+            let buyer_booth_id = '';
+            if(this.isRegion == 'false'){
+                buyer_booth_id = this.scShopId
+            }else{
+                buyer_booth_id = this.form.user
+            }
+            window.location.href = url + '?region=' + this.areaId + '&node_id=' + this.node_id + '&start_time=' 
+                + this.startTime + '&end_time=' + this.endTime + '&buyer_booth_name=' + this.buyerName + '&buyer_booth_id='
+                + buyer_booth_id
+        },
         deleteTzFun(ele){
             let str = 'tz_id=' + ele.tz_id
             DeleteTzByTzId(str)

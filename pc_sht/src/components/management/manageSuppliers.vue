@@ -34,7 +34,7 @@
                         <el-table-column prop="cellphone" label="联系方式"> </el-table-column>
                     </el-table>   
                 </div>
-                <div class="add-new" @click="addGysFun">新增供应商</div>
+                <!--<div class="add-new" @click="addGysFun">新增供应商</div>-->
                 <el-button class="msg-save-btn" type="primary" @click="addSupplierSave">保存</el-button>
             </div>
         </div>
@@ -118,7 +118,6 @@ export default {
         }
     },
     mounted(){
-        console.log(this.$route.params)
         this.areaId = this.$route.params.areaId
         this.getSupplierList(1,this.searchMsg,this.searchMsg.currShop_userId);
     },
@@ -156,33 +155,33 @@ export default {
                 this.searchMsg.parent_shop_booth_id,
                 this.searchMsg.currShop_shop_booth_id,
                 this.searchMsg.currShop_userId
-                )
+            )
         },
         getSupplierList(page,data,uId){//展示供应商列表
-                if(data.bindgys == '1'){
-                    this.visibleHide = true;
-                }else{
-                    this.visibleHide = false;
-                }
-                let msgData = {
-                    page:page,
-                    cols:"15",
-                    userId:uId,
-                    type:"1",
-                    concact_name:"",
-                    region:data.region,
-                    biz_name:"",
-                    shop_booth_id:data.shop_booth_id,
-                    bindgys:data.bindgys
-                }
-                SupplierList(msgData)
-                    .then(res => {
-                        this.dataTotal = res.data.condition.total;
-                        this.tableData = res.data.dataList;
-                    })
-                    .catch(res => {
-                        console.log(res)
-                    })
+            if(data.bindgys == '1'){
+                this.visibleHide = true;
+            }else{
+                this.visibleHide = false;
+            }
+            let msgData = {
+                page:page,
+                cols:"15",
+                userId:uId,
+                type:"1",
+                concact_name:"",
+                region:data.region,
+                biz_name:"",
+                shop_booth_id:data.shop_booth_id,
+                bindgys:data.bindgys
+            }
+            SupplierList(msgData)
+                .then(res => {
+                    this.dataTotal = res.data.condition.total;
+                    this.tableData = res.data.dataList;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         changeFun(item){//复选框勾选
             if(this.selectSupplier.includes(item.shop_concacts_id)){
@@ -203,7 +202,7 @@ export default {
                 this.searchMsg.parent_shop_booth_id,
                 this.searchMsg.currShop_shop_booth_id,
                 this.searchMsg.currShop_userId
-                )
+            )
         },
         //获取绑定列表数据
         getBindingSupplierList(searchName,parent_userId,parent_shop_booth_id,currShop_shop_booth_id,currShop_userId){
@@ -230,7 +229,6 @@ export default {
             this.addNew = false;
         },
         addSupplierSave(){//绑定供应商保存
-            // console.log(this.selectSupplier)
             let data = {
                 ids:this.selectSupplier.join(','),
                 shop_booth_id:this.searchMsg.currShop_shop_booth_id

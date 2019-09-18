@@ -68,7 +68,7 @@ export default {
         }
     },
     methods: {
-       saveFun(){
+        saveFun(){
             // let obj = {
             //     nodeName: this.form.name, 
             //     contact: this.form.contacts, 

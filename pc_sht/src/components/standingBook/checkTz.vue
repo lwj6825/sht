@@ -13,7 +13,6 @@
             type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
           </el-date-picker>
           <el-button type="primary" class="search-bth white-bth" style="margin-left: 10px;" @click="checkListSearch" >搜索</el-button>
-          <el-button class="file-btn no-btn">导出</el-button>
           <el-button class="lz-margin-left clear-content" @click="clearcondition" type="text">清空筛选条件</el-button>
           <div class="lz-three-item"></div>
         </div>
@@ -61,7 +60,6 @@
           </div>
           <div class="lz-three-item">
             <el-button type="primary" class="search-bth white-bth" style="margin-left: 10px;" @click="checkListSearch">搜索</el-button>
-            <el-button class="file-btn no-btn">导出</el-button>
             <el-button class="lz-margin-left clear-content" @click="clearcondition" type="text">清空筛选条件</el-button>
           </div>
           <div class="lz-three-item"></div>
@@ -108,7 +106,9 @@
     <!--显示图片-->
     <el-dialog :visible.sync="centerDialogVisible" :before-close="handleClose" :close-on-click-modal = "isclick">
       <div class="lz-dialog-content">
-        <img class="lz-checkimag" :src="BaseImgUrl+viewImgUrl"/>
+        <img class="lz-checkimag" :src="BaseImgUrl+viewImgUrl" v-if="isImg"/>
+        <iframe v-else :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + viewImgUrl" 
+            scrolling="auto" width="100%" height="600" frameborder="0" id="contentIframe"></iframe>
       </div>
     </el-dialog>
   </div>
@@ -213,6 +213,7 @@ function getLastYearYestdy(date){
         goodsType: '进货',
         startTime: '',
         endTime: '',
+        isImg: true,
       }
     },
     mounted() {
@@ -241,7 +242,6 @@ function getLastYearYestdy(date){
     methods: {
       getTime(){
         var start = new Date();
-        // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
         this.startTime = getLastYearYestdy(start)
         var currentTime = new Date()
         this.endTime = formatDate(currentTime)
@@ -364,6 +364,11 @@ function getLastYearYestdy(date){
       //显示表格中得图片
       viewImg(index, rows) {
         if(index.img_url != ''){
+          if(index.img_url.substring(index.img_url.length-4) == '.pdf'){
+            this.isImg = false
+          }else{
+            this.isImg = true
+          }
           this.centerDialogVisible = true;
           this.viewImgUrl = index.img_url;
         } else {
@@ -565,10 +570,6 @@ function getLastYearYestdy(date){
   }
 
   .lz-dialog-content {
-
-    width: 100%;
-    height: 100%;
-
     .lz-checkimag {
       width: 100%;
       height: 100%;
@@ -663,6 +664,11 @@ function getLastYearYestdy(date){
     .check-tz{
         .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
             line-height: 24px;
+        }
+        .el-dialog{
+          width: 700px;
+          height: 700px;
+          margin-top: 20px !important;
         }
     }
 </style>

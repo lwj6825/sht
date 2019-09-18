@@ -183,6 +183,7 @@
         isShowMerchant: true,
         goodsType: '进货',
         file: '',
+        check_goods_code: '',
       }
     },
     mounted() {
@@ -212,18 +213,21 @@
     },
     methods: {
       goodsTypesFun(ele){
-        console.log(ele)
         this.getGoodsFun(ele)
       },
       // 通过商品的值获取 对应的 商品名称
       getGoodsNameFirst(e) {
-
+        let codeArr = []
         this.submit_goods_name = '';
         for (let i = 0; i < e.length; i++) {
+          codeArr.push(e[i].GOODS_CODE)
           this.submit_goods_name += e[i].GOODS_NAME.toString() + ',';
         }
-
-
+        if(codeArr.length > 0){
+          this.check_goods_code = codeArr.join(',')
+        }else{
+          this.check_goods_code = ''
+        }
       },
 
       //获取摊位号码
@@ -301,6 +305,7 @@
         formData.append('check_res', this.check_res); //检测结果值 
         formData.append('check_person', this.check_person); // 检测人
         formData.append('check_mechanism', this.check_mechanism); //检测机
+        formData.append('check_goods_code', this.check_goods_code); //选择商品的goods_code
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'

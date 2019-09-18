@@ -16,7 +16,7 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="searchFun" class="search-btn white-bth" style="margin-left: 10px;">搜索</el-button>
-                        <el-button class="file-btn no-btn">导出</el-button>
+                        <el-button class="file-btn no-btn" @click="exportFun">导出</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>

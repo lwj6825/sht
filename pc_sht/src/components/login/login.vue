@@ -44,7 +44,8 @@ export default {
             userId:'',
             validation: '', // 验证码4位
             numCode: '',
-            codeBtn: '获取验证码'
+            codeBtn: '获取验证码',
+            code: '',
         }
     },
     created() {
@@ -61,22 +62,18 @@ export default {
     },
     methods:{
         getValidationFun(){
-            if(this.codeBtn == '获取验证码'){
-                var code = '';
-                var selectChar = new Array(1,2,3,4,5,6,7,8,9);
-                for(var i = 0;i < 4;i++){
-                    var charIndex = Math.floor(Math.random()*10);
-                    code += selectChar[charIndex];
-                }
-                if (code.length == 4) {
-                    this.numCode = code
-                    return
-                }
-            }else{
-                return
+            this.code = "";
+            var codeLength = 4;
+            //随机数
+            var random = new Array(0,1,2,3,4,5,6,7,8,9);
+            for(var i = 0; i < codeLength; i++) {
+                //取得随机数的索引（0~35）
+                var index = Math.floor(Math.random()*10);
+                //根据索引取得随机数加到code上
+                this.code += random[index];
             }
-
-
+            //把code值赋给验证码
+            this.numCode = this.code;
         },
         setCookie: function (cname, cvalue, exdays) {
             document.cookie = cname + "=" + cvalue + "; "
@@ -108,11 +105,13 @@ export default {
                     let name = res.data.booth_list[0].name,
                         node_id = res.data.booth_list[0].node_id,
                         isRegion = res.data.role_list[0].region,
-                        scShopId = res.data.booth_list[0].SHOP_BOOTH_ID;
+                        scShopId = res.data.booth_list[0].SHOP_BOOTH_ID,
+                        roleId = res.data.role_list[0].ROLEID;
                     localStorage.setItem('loginName',name);
                     localStorage.setItem('loginId',node_id);
                     localStorage.setItem('isRegion',isRegion);
                     localStorage.setItem('scShopId',scShopId);
+                    localStorage.setItem('roleId',roleId);
                     localStorage.setItem('password',this.password);
                     sessionStorage.setItem('userName',this.account)
                     this.setCookie('userName',this.account)

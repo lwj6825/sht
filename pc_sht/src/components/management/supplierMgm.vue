@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="booth-management-msg">
-        <el-table :data="dataList"  border >
+        <el-table :data="dataList" :header-cell-style="rowClass">
           <el-table-column prop="biz_name" label="供应商名称"> </el-table-column>
           <el-table-column prop="concact_name" label="联系人"> </el-table-column>
           <el-table-column prop="cellphone" label="联系方式"> </el-table-column>
@@ -116,6 +116,12 @@
       }
     },
     methods: {
+      rowClass({ row, rowIndex}) {
+        return {
+          background: '#f2f2f2',
+          color: '#333'
+        }
+      },  
       downloadFun(){
         let areaId = ''
         if(this.isRegion == 'false'){
@@ -150,7 +156,7 @@
         formData.append('type', '1');   
         formData.append('shop_booth_id', areaId);   
         let config = {
-            headers:{'Content-Type':'multipart/form-data'}
+          headers:{'Content-Type':'multipart/form-data'}
         };
         const ajaxPost = function (url, params,config) {
           return new Promise((resolve, reject) => {
@@ -252,25 +258,23 @@
         this.$router.push({name:'NewSupplier',params: {areaId: this.areaId}})
       },
       look(index, row){//查看
-        console.log(row)
         this.$router.push({name:'ViewSupplier',params:{gysMsg:row,areaId: this.areaId}})
       },
       remove(index, row){//删除
-        // console.log(index,row)
         this.$confirm('确认删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-           let boothId = row.shop_concacts_id;
-            deleGys({shop_concacts_id:boothId})
-              .then((res)=>{
-                // console.log(res)
-                this.getAllGys();
-              })
-              .catch((res)=>{
-                console.log(res)
-              })
+        })
+        .then(() => {
+          let boothId = row.shop_concacts_id;
+          deleGys({shop_concacts_id:boothId})
+            .then((res)=>{
+              this.getAllGys();
+            })
+            .catch((res)=>{
+              console.log(res)
+            })
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -327,7 +331,6 @@
             console.log(res)
           })
       }
-
     },
     components:{
       AreaSelect,

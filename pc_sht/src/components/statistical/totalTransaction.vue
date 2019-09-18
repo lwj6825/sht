@@ -10,7 +10,7 @@
                     <el-date-picker style="width:300px;float:left;margin-top:23px;margin-left:65px;"
                         v-model="time" value-format="yyyy-MM-dd" default-value="2019-07-25" 
                         type="daterange" 
-                        align="right" :picker-options="pickerOptions"
+                        align="left" :picker-options="pickerOptions"
                         unlink-panels
                         range-separator="至" clear-icon	
                         start-placeholder="开始日期"
@@ -31,7 +31,7 @@
               </p>
               <p style="margin-top:6px;font-size:15px;float:left;">】</p>
               <el-table :data="this.tableData"  style="width:100%;margin-left:20px;" :default-sort = "{prop: 'date', order: 'descending'}" fit :row-style="{height:'40px'}" :header-cell-style="{background:'#f5f5f5'}" >
-                <el-table-column v-for="(item,index) in headerList" :key='index' sortable :label="item" fit :prop='item'>
+                <el-table-column v-for="(item,index) in headerList" :key='index' :label="item" fit :prop='item'>
                  </el-table-column>  
              </el-table>
              <div class="block">

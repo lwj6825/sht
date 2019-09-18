@@ -50,9 +50,9 @@
               <el-input v-model="ruleForm.telephone_add" placeholder="请输入电话" size="small" maxlength="11" class="select-width-me" 
               clearable></el-input>
             </el-form-item>
-            <!--<el-form-item label="地块介绍:" class="lz-item-set">
+            <el-form-item label="地块介绍:" class="lz-item-set">
               <el-input v-model="ruleForm.dkjs" type="textarea" class="select-width-me"></el-input>
-            </el-form-item>-->
+            </el-form-item>
             <el-form-item label="上传图片:">
               <div class="msg-item">   
                 <div class="img-list">
@@ -77,7 +77,7 @@
           </el-form>
         </div>
         <div class="lz-addfoot">
-          <el-button type="primary" @click="submitForm('ruleForm')" size="small">保存</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')" size="small" :disabled="disabled">保存</el-button>
           <el-button @click="resetForm('ruleForm')" size="small">取消</el-button>
         </div>
       </el-dialog>
@@ -110,26 +110,23 @@
             <el-form-item label="预计采摘时间:"  class="lz-item-set">
               <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="pick_date_add" class="select-width-me" size="small"
                 :clearable="isclick"></el-date-picker>
-                
             </el-form-item>
             <!--预产量-->
             <el-form-item label="预产量(kg):" class="lz-item-set">
               <el-input v-model="ruleFormEdit.yield_add" placeholder="请输入预产量" size="small" class="select-width-me" clearable></el-input>
             </el-form-item>
-
             <!--地块负责人-->
             <el-form-item label="地块负责人:" class="lz-item-set">
               <el-input v-model="ruleFormEdit.fzr_add" placeholder="请输入地块负责人" size="small" class="select-width-me" clearable></el-input>
             </el-form-item>
-
             <!--联系方式-->
             <el-form-item label="联系方式:" class="lz-item-set">
               <el-input v-model="ruleFormEdit.telephone_add" placeholder="请输入电话" size="small" maxlength="11" 
                 class="select-width-me" clearable></el-input>
             </el-form-item>
-            <!--<el-form-item label="地块介绍:" class="lz-item-set">
-              <el-input v-model="ruleForm.dkjs" type="textarea" class="select-width-me"></el-input>
-            </el-form-item>-->
+            <el-form-item label="地块介绍:" class="lz-item-set">
+              <el-input v-model="ruleFormEdit.dkjs" type="textarea" class="select-width-me"></el-input>
+            </el-form-item>
             <el-form-item label="上传图片:">
               <div class="msg-item">   
                 <div class="img-list">
@@ -152,11 +149,10 @@
               </div>
             </el-form-item>
           </el-form>
-
         </div>
         <div class="lz-addfoot">
           <!--<el-button type="primary" @click="submitForm('ruleFormEdit')" size="small">保存</el-button>-->
-          <el-button type="primary" @click="submitFormEdit('ruleFormEdit')" size="small">保存</el-button>
+          <el-button type="primary" @click="submitFormEdit('ruleFormEdit')" :disabled="disabled" size="small">保存</el-button>
           <el-button @click="resetFormEdit('ruleFormEdit')" size="small">取消</el-button>
         </div>
       </el-dialog>
@@ -185,7 +181,7 @@
           </div>
         </div>
         <div class="lz-filter-two">
-          <el-button type="primary" class="search-btn" size="mini" @click="getList()">搜索</el-button>
+          <el-button type="primary" class="search-btn" @click="getList()">搜索</el-button>
           <el-button size="mini" class="span-clear" type="text" @click="cleanTj()">清空筛选条件</el-button>
         </div>
       </div>
@@ -224,8 +220,8 @@
         </el-table>
       </div>
       <div class="pageBlock">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="currentPage" layout="total, prev, pager, next, jumper" :total="totalPageSize">
+        <el-pagination background @current-change="handleCurrentChange"
+          :current-page.sync="page_local" layout="total, prev, pager, next, jumper" :page-size="cols" :total="totalPageSize">
         </el-pagination>
       </div>
     </div>
@@ -304,6 +300,7 @@
           pz_add_Edit: '',
           ns_hzs_Edit: '',
           editDate: '',
+          dkjs: '',
         },
         rules: {
           place_name_add: [
@@ -319,9 +316,15 @@
           fzr_add: [
             {required: true, message: '请输入负责人', trigger: 'blur'},
           ],
-
           telephone_add: [
-            {min: 11, max: 11, message: '请输入正确的电话', trigger: 'blur'}
+            {required: true, message: '请输入联系电话',trigger: 'blur'},
+            {validator:function(rule,value,callback){
+                if(/^1[35874]\d{9}$/.test(value) == false){
+                    callback(new Error("请输入正确的手机号"));
+                }else{
+                    callback();
+                }
+            }, trigger: 'blur'}
           ],
         },
         // 上面是验证
@@ -341,9 +344,9 @@
         // 查询列表的参数
         currentPage: 0,
         totalPageSize: 0,
-        page_local: '1',
+        page_local: 1,
         page: '',
-        cols: '',
+        cols: 15,
         total_local: 0,
         // userId: "28",
         userId: "",
@@ -374,7 +377,8 @@
         startTime: '',
         endTime: '',
         imgArr1: [],
-        imgArr: []
+        imgArr: [],
+        disabled: false,
       }
     },
     mounted() {
@@ -390,10 +394,6 @@
       this.getListNSsptype();
     },
     methods: {
-      removeFun(ele){
-        // this.imgArr1.splice(ele,1)
-        // this.imgArr1.length - 1
-      },
       timeChange(ele){
         if(this.form.dataTime){
           this.startTime = this.form.dataTime[0]
@@ -403,13 +403,15 @@
         }
       },
       getTime(){
-          var start = new Date();
-          var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-          this.startTime = timestampToTime(startTime)
-          var currentTime = new Date()
-          this.endTime = formatDate(currentTime)
+        var start = new Date();
+        var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+        this.startTime = timestampToTime(startTime)
+        var currentTime = new Date()
+        this.endTime = formatDate(currentTime)
       },
       fileFun(event){
+        this.img_url = ''
+        this.imgArr = []
         var that = this;
         let file = event.target.files;
         let reg = /.(jpg|png|PNG|JPG)+$/;           
@@ -434,39 +436,6 @@
             })
           }
         }
-        // let timer = setInterval(()=>{
-        //   if(that.imgArr.length == file.length){
-        //     let formData = new FormData()  
-        //     formData.append('img_url', that.imgArr[0]);   
-        //     formData.append('node_id', that.node_id);  
-        //     formData.append('id', that.form.goodsID); 
-        //     let config = {
-        //       headers:{'Content-Type':'multipart/form-data'}
-        //     };
-        //     const ajaxPost = function (url, params,config) {
-        //       return new Promise((resolve, reject) => {
-        //         axios
-        //           .post(url, params,{config})
-        //           .then((res) => {
-        //               resolve(res.data)
-        //           })
-        //           .catch(() => {
-        //               reject('error')
-        //           })
-        //       })
-        //     }  
-        //     let url = baseUrl + 'goods/updateGoodsImgForTrace'
-        //     ajaxPost(url,formData,config)
-        //       .then(res => {
-        //         that.imgArr = []
-        //         that.imgUrl = res.data.img_url
-        //       })
-        //       .catch(res => {
-        //         console.log(res)
-        //       })
-        //     clearInterval(timer);
-        //   }
-        // },1000)
       },
       imgFun(path,quality,callback){
         let img = new Image();
@@ -475,7 +444,6 @@
           let that = this;
           let w = that.width;
           let h = that.height;
-          // console.log(w,h)
           //生成canvas
           let canvas = document.createElement('canvas');
           let ctx = canvas.getContext('2d'); 
@@ -486,7 +454,7 @@
           anh.nodeValue = h;
           canvas.setAttributeNode(anw);
           canvas.setAttributeNode(anh); 
-            // 在canvas绘制前填充白色背景   
+          // 在canvas绘制前填充白色背景   
           ctx.fillStyle = "#fff";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(that, 0, 0, w, h);
@@ -506,6 +474,7 @@
         });
       },
       resetForm(formName) {
+        this.ruleForm.dkjs = ''
         this.$refs[formName].resetFields();
         this.centerDialogVisible = false;
       },
@@ -535,6 +504,7 @@
         };
         this.$refs[formNameEdit].validate((valid) => {
           if (valid) {
+            this.disabled = true
             this.updatePlot(this.$refs[formNameEdit]);
           } else {
             return false;
@@ -548,6 +518,7 @@
         this.imgArr = []
         this.imgArr1 = []
         this.img_url = ''
+        this.ruleForm.dkjs = ''
         this.$refs[formNameEdit].resetFields();
         this.centerEditDialogVisible = false;
       },
@@ -570,6 +541,7 @@
         deleteFarmPlotPost(deleteParams)
           .then(res => {
             this.$message.success(res.message);
+            this.page_local = 1
             this.getList(this.page_local);
           })
           .catch(() => {
@@ -583,6 +555,7 @@
         this.imgArr = []
         this.imgArr1 = []
         this.img_url = ''
+        this.ruleForm.dkjs = ''
         this.$refs['ruleForm'].resetFields();
       },
       // 关闭按钮
@@ -614,6 +587,7 @@
         this.ruleFormEdit.telephone_add = row.telphone;
         this.ruleFormEdit.plot_id = row.id;
         this.ruleFormEdit.hzs_name_local_id = row.userId;
+        this.ruleFormEdit.dkjs = row.remark
         if(row.img_url){
           this.img_url = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + row.img_url
         }
@@ -632,13 +606,14 @@
       },
       // 新增地块
       addNewPlot(getDataObject) {
+        this.disabled = true
         this.centerDialogVisible = false;
         if (this.isPoneAvailable(getDataObject.model.telephone_add) != undefined) {
           let addparams = {
             place_name: getDataObject.model.place_name_add,
             area: getDataObject.model.area_add,
-            pz: getDataObject.model.goods_name_search.goods_Name,//准备添加字段品种id
-            pzid:getDataObject.model.goods_name_search.id,
+            pz: getDataObject.model.goods_name_search ? getDataObject.model.goods_name_search.goods_Name : '',//准备添加字段品种id
+            pzid:getDataObject.model.goods_name_search ? getDataObject.model.goods_name_search.id : '',
             pick_date: getDataObject.model.pick_date_add,
             yield: getDataObject.model.yield_add,
             telphone: this.isPoneAvailable(getDataObject.model.telephone_add),
@@ -646,6 +621,7 @@
             img_url: this.imgArr.length > 0 ? this.imgArr[0] : '',
             biz_id: getDataObject.model.hzs_name_local.userId,
             userId: this.localuserId,
+            remark: this.ruleForm.dkjs
           };
           addFarmPlotPost(addparams)
             .then(res => {
@@ -654,9 +630,14 @@
               this.getList(this.page_local);
               this.closeWindowEdit();
               getDataObject.resetFields();
+              this.imgArr = []
+              this.img_url = ''
+              this.ruleForm.dkjs = ''
+              this.disabled = false
             })
             .catch(() => {
               this.$message.error(res.message);
+              this.disabled = false
             })
         } else {
           this.$message.error('请检查电话号码输入是否正确');
@@ -665,6 +646,7 @@
       },
       // 加验证的编辑地块
       updatePlot(getDataObject) {
+        this.disabled = true
         this.centerEditDialogVisible = false;
         if (this.isPoneAvailable(getDataObject.model.telephone_add) != undefined) {
           let addparams = {
@@ -684,15 +666,20 @@
             // biz_id: this.hzs_name_local_id_final,
             biz_id: this.hzs_name_local_bianji,
             userId: this.localuserId,
+            remark: this.ruleFormEdit.dkjs
           };
           updateFarmPlotPost(addparams)
             .then(res => {
               this.$message.success(res.message);
               this.hzs_name_local = '';
               this.getList(1);
+              this.imgArr = []
+              this.img_url = ''
               getDataObject.resetFields();
+              this.disabled = false
             })
             .catch(() => {
+              this.disabled = false
               this.$message.error(res.message);
             })
         } else {
@@ -720,7 +707,7 @@
       getList(currentPageLocal) {
         let params = {
           page: currentPageLocal,
-          cols: "15",
+          cols:  this.cols,
           total: this.total_local.toString(),
           userId: this.hzs_name_local.userId,
           place_name: this.place_name,
@@ -741,7 +728,7 @@
         plotList(params)
           .then(res => {
             this.currentPage = parseInt(res.data.condition.page);
-            this.totalPageSize =parseInt(res.data.condition.total) ;
+            this.totalPageSize = res.data.condition.total
             this.plotDataList = [];
             for (var item of res.data.dataList) {
               let plot = new PlotBean();
@@ -762,6 +749,7 @@
               plot.pick_date = item.pick_date;
               plot.place_name = item.place_name;
               plot.img_url = item.img_url;
+              plot.remark = item.remark;
               this.plotDataList.push(plot)
             }
           })
@@ -773,6 +761,8 @@
       getHzsList(currentPageLocal) {
         let params = {
           userId: this.localuserId,
+          cols: 10000,
+          page: 1,
         }
         this.getPlotHzsList(params);
       },
@@ -813,7 +803,7 @@
           dataTime: '',
         }
         this.getTime()
-        this.page = 1
+        this.page_local = 1
         this.getList(this.page_local);
       },
       getRowClass({row, column, rowIndex, columnIndex}) {

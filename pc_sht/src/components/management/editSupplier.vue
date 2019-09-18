@@ -34,7 +34,7 @@
                 clearable :props="props" change-on-select ></el-cascader>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" class="new-add" @click="submitForm('form')" >保存</el-button>
+              <el-button type="primary" class="new-add" @click="submitForm('form')" :disabled="disabled">保存</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -101,6 +101,8 @@
               },
               scShopId: '',
               areaId: '',
+              disabled: false,
+              isRegion: '',
             }
         },
         created() {
@@ -109,7 +111,7 @@
           this.areaId = this.$route.params.areaId
         },
         mounted(){
-          console.log(this.$route.params)
+          this.isRegion = localStorage.getItem('isRegion')
           this.getAddrList()//获取地区列表     
           this.getGhdwFun()     
           if(JSON.stringify(this.$route.params.gysMsg)){
@@ -136,7 +138,7 @@
               }
             }
             this.form.addr = arr;
-            this.form.infoAddr = this.$route.params.gysMsg.area_name;//详细地址
+            this.form.infoAddr = this.$route.params.gysMsg.addr;//详细地址
             this.form.shop_concacts_id = this.$route.params.gysMsg.shop_concacts_id;
             let originArr = [];
             if(this.$route.params.gysMsg.area_origin_id){
@@ -182,7 +184,6 @@
           },
           // 选择供货单位
           selectGhdw(val){
-            console.log(val)
             this.dwArr.forEach((ele)=>{ 
               if(ele.SUPPLIER_NAME == val){
                 this.form.ghdw_id = ele.SUPPLIER_ID;
@@ -196,41 +197,131 @@
                 this.addrOptions = res.data.dataList;
                 let addrArr = [];
                 if(this.$route.params.gysMsg){
-                  if(this.$route.params.gysMsg.addr){
-                    let areaName = this.$route.params.gysMsg.addr
+                  if(this.$route.params.gysMsg.area_name){
+                    let areaName = this.$route.params.gysMsg.area_name
                     if(areaName.slice(0,3) == '北京市'){
                       this.addrOptions.forEach(ele => {
-                          addrArr.push('110000')
-                          ele.list.forEach(ele => {
-                            if(areaName.slice(3,6) == ele.caption){
-                              addrArr.push(ele.szm)
-                              ele.list.forEach(ele => {
-                                if(areaName.slice(6) == ele.caption){
-                                  addrArr.push(ele.szm)                              
-                                }
-                              })
-                            }
-                          })
+                        addrArr.push('110000')
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            addrArr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                addrArr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
                       })
                     }else if(areaName.slice(0,3) == '上海市'){
+                      addrArr.push('310000')
                       this.addrOptions.forEach(ele => {
-                          addrArr.push('310000')
-                          ele.list.forEach(ele => {
-                            if(areaName.slice(3,6) == ele.caption){
-                              addrArr.push(ele.szm)
-                              ele.list.forEach(ele => {
-                                // console.log(ele)
-                                if(areaName.slice(6) == ele.caption){
-                                  addrArr.push(ele.szm)                              
-                                }
-                              })
-                            }
-                          })
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            addrArr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                addrArr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
+                      })
+                    }else if(areaName.slice(0,3) == '天津市'){
+                      addrArr.push('120000')
+                      this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            addrArr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                addrArr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
+                      })
+                    }else if(areaName.slice(0,3) == '重庆市'){
+                      addrArr.push('500000')
+                      this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            addrArr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                addrArr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
                       })
                     }else{
                       return
                     }
                     this.form.addr = addrArr.slice(0,3)
+                  }
+                  if(this.$route.params.gysMsg.area_origin_name){
+                    let areaName = this.$route.params.gysMsg.area_origin_name, arr = [];
+                    if(areaName.slice(0,3) == '北京市'){
+                      this.addrOptions.forEach(ele => {
+                        arr.push('110000')
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            arr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                arr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
+                      })
+                    }else if(areaName.slice(0,3) == '上海市'){
+                      arr.push('310000')
+                      this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            arr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                arr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
+                      })
+                    }else if(areaName.slice(0,3) == '天津市'){
+                      arr.push('120000')
+                      this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            arr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                arr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
+                      })
+                    }else if(areaName.slice(0,3) == '重庆市'){
+                      arr.push('500000')
+                      this.addrOptions.forEach(ele => {
+                        ele.list.forEach(ele => {
+                          if(areaName.slice(3,6) == ele.caption){
+                            arr.push(ele.szm)
+                            ele.list.forEach(ele => {
+                              if(areaName.slice(6) == ele.caption){
+                                arr.push(ele.szm)                              
+                              }
+                            })
+                          }
+                        })
+                      })
+                    }else{
+                      return
+                    }
+                    this.form.origin_name = arr.slice(0,3)
                   }
                 }
               })
@@ -241,6 +332,7 @@
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {
               if (valid) {
+                this.disabled = true
                 this.editFun()
               } else {
                 console.log('error submit!!');
@@ -264,7 +356,10 @@
                     })
                   }
                 })
-              }else if(ele.szm == this.form.origin_name[0]){
+              }
+            })
+            this.addrOptions.forEach(ele => {
+              if(ele.szm == this.form.origin_name[0]){
                 originArr.push(ele.caption)
                 ele.list.forEach(ele => {
                   if(ele.szm == this.form.origin_name[1]){
@@ -296,9 +391,9 @@
               ws_supplier: this.form.ghdw, // 供货单位
               ws_supplier_id: this.form.ghdw_id,
             };
-            // return
             UpdateGys(params)
               .then(res => {
+                this.disabled = false
                 if (res.result) {
                   this.$message.success(res.message);
                   this.$router.push({path:'supplierMgm'})
@@ -308,7 +403,7 @@
                 }
               })
               .catch(() => {
-                this.$message.error("出错啦!");
+                this.disabled = false
               })
           }
         }

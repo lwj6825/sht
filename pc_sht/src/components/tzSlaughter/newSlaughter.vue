@@ -10,7 +10,7 @@
         <div class="data">
             <p>屠宰企业</p>
             <div>
-                <el-select v-model="enterprise" filterable clearable placeholder="请选择">
+                <el-select v-model="enterprise" filterable clearable placeholder="请选择" @change="selectTzqyFun">
                     <el-option v-for="(item,index) in enterpriseList" :key="index"  :label="item.biz_name" :value="item.shop_concacts_id">
                     </el-option>
                 </el-select>
@@ -62,7 +62,7 @@
                 <el-table-column prop="buyer_booth_name" label="养殖场">
                     <template slot-scope="scope">
                         <div class="material">
-                            <el-select v-model="scope.row.yzcName" filterable>
+                            <el-select v-model="scope.row.yzcName" filterable @change="selectYzcFun(scope.row.yzcName)">
                                 <el-option v-for="(item3,index3) in scope.row.yzcArr" :key="index3" :label="item3.yzc_name" :value="item3.id">
                                 </el-option>
                             </el-select>
@@ -148,6 +148,19 @@ export default {
         this.getDataFun()
     },
     methods: {
+        selectTzqyFun(ele){
+            let suppliersName = ''
+            this.enterpriseList.forEach(val => {
+                if(ele == val.shop_concacts_id){
+                    suppliersName = val.biz_name
+                }
+            })
+            this.getNsGoodsQueryPOSTType(suppliersName)
+        },
+        selectYzcFun(ele){
+            this.ids = ele
+            this.getDapcFun(ele)
+        },
         // 养殖场
         getDataFun(){
             let obj = { 
@@ -157,6 +170,7 @@ export default {
                 end_time: '',
                 page: 1,
                 cols: 10000,
+                node_id: this.node_id
             }
             GetAllYzcxx(obj)
                 .then(res => {
@@ -169,7 +183,7 @@ export default {
                 })
         },
         // 档案批次
-        getDapcFun(){
+        getDapcFun(ele){
             let obj = { 
                 page: this.page,
                 cols: '10000',
@@ -178,6 +192,18 @@ export default {
             GetAllYzcda(obj)
                 .then(res => {
                     this.batchList = res.data.dataList;
+                    if(ele){
+                        this.tableData.forEach(val => {
+                            if(val.yzcName == ele){
+                                val.batchList = this.batchList
+                                if(val.batchList.length > 0){
+                                    val.batchId = val.batchList[0].yzc_dapc
+                                }else{
+                                    val.batchId = ''
+                                }
+                            }
+                        })
+                    }
                 })
                 .catch((res) => {
                     console.log(res)
@@ -185,13 +211,13 @@ export default {
 
         },
         // 商品
-        getNsGoodsQueryPOSTType() {
+        getNsGoodsQueryPOSTType(ele) {
             let boothData = {
                 page: 1,
                 cols: 10000,
                 goodsName: '',
                 goodsCode: '',
-                suppliersName: '',
+                suppliersName: ele,
                 region: '',
                 userId: this.userId,
                 total: '',
@@ -199,7 +225,12 @@ export default {
             }
             sales(boothData)
                 .then(res => {
-                    this.goodArr = res.data.salesList;
+                    if(this.tableData.length > 0){
+                        this.tableData[0].goodArr = res.data.salesList;
+                    }else{
+
+                        this.goodArr = res.data.salesList;
+                    }
                 })
                 .catch(res => {
                     console.log(res)
@@ -252,6 +283,7 @@ export default {
                 or_goods_name: this.tableData[0].ylName, //原料商品名称
                 or_num: this.tableData[0].ylNum, //原料数量
                 da_batch_id: this.tableData[0].batchId, //关联活兔 的饲养记录的档案 批次
+                yzc_id: this.tableData[0].yzcName,
             }
             console.log(obj)
             InsertYzctzjg(obj)
@@ -325,7 +357,13 @@ export default {
                 .then(res => {
                     this.tableData.forEach(val => {
                         if(val.goodVal == ele){
-                            val.jhBatchArr = res.data.dataList[0].batch
+                            if(res.data.dataList.length > 0){
+                                val.jhBatchArr = res.data.dataList[0].batch
+                                val.jhBatchId = res.data.dataList[0].batch[0].BATCH_ID
+                            }else{
+                                val.jhBatchArr = []
+                                val.jhBatchId = ''
+                            }
                             
                         }
                     })

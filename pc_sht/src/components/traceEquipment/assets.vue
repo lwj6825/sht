@@ -281,7 +281,7 @@ export default {
                         ajaxPost(url,formData,config)
                             .then(res => {
                                 console.log(res)
-                                let data = res.message.split('!,')
+                                let data = res.data[0].split('!,')
                                 let newDatas = [];
                                 const h = this.$createElement;
                                 for(let i in data){
@@ -334,7 +334,7 @@ export default {
                         let url = importAssetsUpdate + '?userid=' + this.userId
                         ajaxPost(url,formData,config)
                             .then(res => {
-                                let data = res.message.split('!,')
+                                let data = res.data[0].split('!,')
                                 let newDatas = [];
                                 const h = this.$createElement;
                                 for(let i in data){
@@ -359,7 +359,7 @@ export default {
                                     
                                 }
                                 loading.close();
-                                that.$refs.files.value = null
+                                // that.$refs.files.value = null
                                 this.file = null
                             })
                             .catch(res => {

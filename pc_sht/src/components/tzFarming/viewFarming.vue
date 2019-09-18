@@ -37,7 +37,10 @@
                 </div>
                 <div class="data">
                     <div class="title">养殖场介绍</div>
-                    <div class="msg">{{form.introduce}}</div>
+                    <div class="msg">
+                        {{form.introduce.length > 40 ? (form.introduce.substring(0,40) + '...') : form.introduce }} 
+                        <span class="more" v-if="form.introduce.length > 40" @click="moreFun">更多</span>
+                    </div>
                 </div><!---->
                 <div class="data">
                     <div class="title">养殖场信息</div>
@@ -45,7 +48,7 @@
                         <div class="msg-item">   
                             <div class="img-list">
                                 <ul>
-                                    <li v-for="(item,index) in imgArrs" :key="index" @click="bigImgFun(item)" v-if="item.img_url">
+                                    <li v-for="(item,index) in imgArrs" :key="index" v-if="item.img_url">
                                         <figure class="image">
                                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
                                         </figure>
@@ -280,13 +283,12 @@
                             placeholder="选择日期"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="饲养类型">
-                         <el-select v-model="form3.syTypes" filterable clearable placeholder="请选择">
-                            <!--<el-option v-for="(item,index) in typesList" :key="index" :label="item.GOODS_NAME"
-                            :value="item.ID"></el-option>-->
+                        <!--<el-select v-model="form3.syTypes" filterable clearable placeholder="请选择">
                             <el-option value="出栏">出栏</el-option>
                             <el-option value="送宰">送宰</el-option>
                             <el-option value="其他">其他</el-option>
-                        </el-select>
+                        </el-select>-->
+                        <el-input clearable v-model="form3.syTypes" type="text"></el-input>
                     </el-form-item>
                     <el-form-item label="饲养记录">
                         <el-input clearable v-model="form3.describe" type="textarea"></el-input>
@@ -319,6 +321,12 @@
                 </el-form>
             </div>
         </div>
+        <el-dialog top="100px" title="养殖场介绍" :visible.sync="isMoreMsg" width="600" :before-close="closeMoreFun">
+            <div class="more-msg">{{form.introduce}}</div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="closeMoreFun">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -404,7 +412,9 @@ export default {
             yzda_id: '',
             fyfz_id: '',
             syjl_id: '',
-            count: 0.
+            count: 0,
+            isMore: false,
+            isMoreMsg: false,
         }
     },
     mounted() {
@@ -431,6 +441,12 @@ export default {
         this.getSyjlFun()
     },
     methods: {
+        moreFun(){
+            this.isMoreMsg = true
+        },
+        closeMoreFun(){
+            this.isMoreMsg = false
+        },
         // 档案批次
         getDapcFun(){
             let obj = { 
@@ -968,6 +984,9 @@ export default {
     @import '../../assets/css/common.css';
     .content{
         height: 100%;
+        .more-msg{
+            text-indent: 30px;
+        }
         .table_img{
             width: 50px;
             height: 50px;
@@ -992,6 +1011,11 @@ export default {
                 }
                 .msg{
                     color: #999;
+                    .more{
+                        padding: 0 10px;
+                        color: #409EFF;
+                        cursor: pointer;
+                    }
                 }
             }
         }

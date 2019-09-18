@@ -460,7 +460,6 @@
       }
     },
     mounted() {
-      console.log(this.$route.params.goodsMsg)
       this.node_id = localStorage.getItem('loginId')
       this.node_name = localStorage.getItem('loginName')
       this.isRegion = localStorage.getItem('isRegion')
@@ -791,7 +790,6 @@
         }
         UpdateStkOr(obj)
           .then(res => {
-            console.log(res)
             if (res.result == true) {
               this.$message.success(res.message);
             }else{
@@ -827,7 +825,7 @@
         let obj = {
           node_id: this.node_id,
           goodsName: this.$route.params.goodsMsg.GOODS_NAME,
-          geStkOrigin:  this.form.goodsCode,
+          goodsCode:  this.form.goodsCode,
         }
         GeStkOrigin(obj)
           .then(res => {
@@ -962,7 +960,6 @@
           let that = this;
           let w = that.width;
           let h = that.height;
-          // console.log(w,h)
           //生成canvas
           let canvas = document.createElement('canvas');
           let ctx = canvas.getContext('2d'); 
@@ -1361,7 +1358,6 @@
                     + '","or_gb_code":"' + ele.GB_CODE + '","or_gb_name":"' + ele.GB_NAME
                     + '","or_unit":"' + ele.GOODS_UNIT + '"},'
                 }
-                // "[{'or_goods_code':'892799','or_goods_name':'苹果','or_number':'1','or_unit':'斤'}
               })
               str += "]"
               let stk = '';
@@ -1371,7 +1367,6 @@
               }else{
                 this.selectStr = ''
               }
-              console.log(stk)
               this.selectStr = stk
               // 新增商品
               let params = {
@@ -1399,7 +1394,6 @@
                 brand: this.form.brand,
                 disgrant: this.disgrant == "未下发" ? 0 : 1
               };
-              console.log(params)
               saleAdd(params)
                 .then(res => {
                   if (res.result == true) {
