@@ -193,7 +193,7 @@
         })
       },
       closeFun(){
-        this.boxShow = false;
+        this.boxShow = false;  
         this.getPurchase()
       },
       fileShowFun(){
