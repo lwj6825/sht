@@ -124,7 +124,8 @@
                         @click="handleBtnQuery()" 
                 >查询</el-button>
             </div>
-            <el-tabs v-model="activeName" @tab-click="handleClick" >
+            <div class="no_more" v-if="more">暂无数据</div>
+            <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="商品交易额" name="first">
                     <div class="box">
                         <div class="list-title1">
@@ -141,7 +142,8 @@
                                             <p class="name"  @click='getshopList(item.plu_name)'>{{item.plu_name}}</p>
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
-                                        <p class="lookMore" @click='More1()'>查看更多>></p>
+                                        <p v-if="more" class="no_more1" >暂无数据</p>
+                                        <p class="lookMore" v-if="more1" @click='More1()'>查看更多>></p>
                                     </ul>
                                 </div>
                             </div>
@@ -165,7 +167,8 @@
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
                                     </ul>
-                                    <p class="lookMore" @click='More2()'>查看更多>></p>
+                                    <p v-if="more" class="no_more1" >暂无数据</p>
+                                    <p class="lookMore" v-if="more1" @click='More2()'>查看更多>></p>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +213,7 @@
                     <div class="whz">
                         <div class="fzsj">{{list_3_num1 + '%'}}</div>
                         <div class="wbhz"></div>
-                        <div class="d1" :style="degObj"></span></div>
+                        <div class="d1" :style="degObj"></div>
                     </div>
                 </div>
                 <div class="table">
@@ -300,7 +303,9 @@ export default {
             start_time:'',
             end_time:'',
             time:'',
-            gooduserId:''
+            gooduserId:'',
+            more:false,
+            more1:false
             // userId:''
             // screenWidth: document.body.clientWidth,
         }
@@ -395,7 +400,7 @@ export default {
                         gooduserId:this.gooduserId
                         } 
                 })
-                console.log(this.gooduserId)
+                // console.log(this.gooduserId)
                 
         },
         More2(){ //商户跳转到商户交易额页面
@@ -494,8 +499,8 @@ export default {
             this.currId = 0
         },
         focusFun(item){
-            console.log(item)
-            console.log(this.currld)
+            // console.log(item)
+            // console.log(this.currld)
             if(this.currId){
                 if(this.currId !== item){
                     this.currId = item
@@ -1058,6 +1063,15 @@ export default {
                     let str = 'node_id='+this.loginId+'&region='+this.titArr[0].bootList[0].shop_booth_id+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page=1&cols=10&name=';
                      QueryMoneyAndWeightForGoods(str)
                     .then(res => {
+                        console.log(res.data.list)
+                        if(res.data.list == ''){
+                            // alert()
+                            this.more = true;
+                        }
+                        if(res.data.list == []){
+                            alert()
+                            this.more1 = true;
+                        }
                         let arr = res.data,
                             numArr = [],
                             title = [],
@@ -1139,7 +1153,12 @@ export default {
             let str = 'node_id=' + this.loginId + '&page=' + this.page2 + '&cols=' + this.cols2 + '&order=' + this.order2
             GetBizOnlineTime(str)
                 .then(res => {
-                    this.tableData2 = res.data.list
+                    // console.log(res)
+                    this.tableData2 = res.data.list 
+                    this.count = res.data.allBizNum  //电子秤总数
+                    this.nums = res.data.total; //当前在线数
+                    this.list_3_num1 = (this.nums/(this.count + this.nums))*100;
+                    this.list_3_num1 = this.list_3_num1.toFixed(0);
                     this.num2 = res.data.total
                 })
                 .catch(res => {
@@ -1182,6 +1201,7 @@ export default {
             let str = 'node_id=' + this.loginId
             ComputNode(str)
                 .then(res => {
+                    // console.log(res)
                     if(res.data.总交易额){
                         this.list_1_num1 = res.data.总交易额.toFixed(2)
                     }
@@ -1203,11 +1223,11 @@ export default {
                     if(res.data.支付笔数日同比){
                         this.list_2_num3 = res.data.支付笔数日同比.toFixed(2)
                     }
-                    if(res.data.商户活跃度){
-                        this.list_3_num1 = res.data.商户活跃度
-                    }
-                    let list_3_num1 = res.data.活跃商户数
-                    this.nums = list_3_num1
+                    // if(res.data.商户活跃度){
+                    //     this.list_3_num1 = res.data.商户活跃度
+                    // }
+                    // let list_3_num1 = res.data.活跃商户数
+                    // this.nums = list_3_num1
                     if(res.data.活跃商户周环比){
                         this.list_3_num2 = res.data.活跃商户周环比.toFixed(2)
                     }
@@ -1223,9 +1243,9 @@ export default {
                     if(res.data.交易商品日同比){
                         this.list_4_num3 = res.data.交易商品日同比.toFixed(2)
                     }
-                    if(res.data.总活跃商户数){
-                        this.count = res.data.总活跃商户数
-                    }
+                    // if(res.data.总活跃商户数){
+                    //     this.count = res.data.总活跃商户数
+                    // }
                     let arr = []
                     this.arrPer = arr.push(this.nums)
                     this.getChartFun2(arr)
@@ -1510,6 +1530,18 @@ export default {
             background: #fff;
             // border: 1px solid #ccc;
             position: relative;
+            .no_more{
+                position: absolute;
+                top: 180px;
+                left: 460px;
+                font-size: 16px;
+                color: #ccc;
+            }
+            .no_more1{
+                font-size: 14px;
+                color: #ccc;
+                text-align: center;
+            }
             .conditions{
                  position: absolute;
                  right: 25px;  //
@@ -1531,17 +1563,17 @@ export default {
                     left: 20px;
                     .list-tit{
                         border-radius: 5px;
-                        margin-left: 20px;
+                        margin-left: 10px;
                         color: black;
                         background:#fff;
-                        padding: 0 2px;
+                        padding: 0 10px;
                         height: 30px;
                         line-height: 30px;
                         text-align: center;
                         font-size: 12px;
                         border: 1px solid #ccc;
                         box-sizing: border-box;
-                        width:85px;
+                        // width:85px;
                         cursor: pointer;
                         float:left;
                     }

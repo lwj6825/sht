@@ -173,7 +173,7 @@ export default {
                         this.title.total.regionList.forEach(val=>{
                             
                             this.count_price.push(val);
-                            console.log(this.count_price)
+                            // console.log(this.count_price)
                         })
                          this.tableData = res.data.list ; // 存储表格数据  
                          this.cols = res.data.cols;   // 每页10条
