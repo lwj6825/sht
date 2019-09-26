@@ -54,7 +54,7 @@
           <el-table-column prop="SUPPLIERS_NAME" label="供应商"> </el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="check(scope.$index, scope.row)">{{viewGoods}}</el-button>
+              <!--<el-button type="text" size="small" @click="check(scope.$index, scope.row)">{{viewGoods}}</el-button>-->
               <el-button size="mini" type="text" style="margin-left: 20px" @click="edit(scope.$index, scope.row)">{{editGoods}}</el-button>
               <el-button size="mini" type="text" style="margin-left: 20px" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
@@ -65,7 +65,7 @@
         <el-pagination background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
+          :current-page.sync="page"
           :page-size="cols"
           layout="total, prev, pager, next, jumper"
           :total='dataTotal'>
@@ -403,6 +403,7 @@
         this.getPurchase()
       },
       selectId(id){//选择区域展示商品列表
+        this.page = 1
         if(this.isRegion == 'false'){
           this.isShow = false
           this.getPurchase()

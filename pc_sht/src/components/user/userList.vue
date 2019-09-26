@@ -42,7 +42,7 @@
                     <el-button>导入</el-button>
                 </div>
             </div>
-            <el-table :data="tableData"  border style="margin-top:10px;">
+            <el-table :data="tableData"  border style="margin-top:10px;" v-loading="loading">
                 <el-table-column prop="userName" label="账号" align="center" fixed> </el-table-column>
                 <el-table-column prop="roleName" label="节点名称" align="center">
                     <template slot-scope="scope">
@@ -104,13 +104,14 @@ export default {
             dataTotal:0,
             nodeList: [],
             nodeId: '',
+            loading:true,
         }
     },
     mounted(){
         // 获取系统角色
         let pageData = {
             page:'1',
-            cols:'15',
+            cols:'1500',
             roleName:'',
         }
         getRoleList(pageData)
@@ -142,9 +143,11 @@ export default {
                         ele.scbj = '禁用'
                     }
                 });
+                this.loading = false
             })
             .catch(res => {
                 console.log(res)
+                this.loading = false
             })
         this.getNodeFun()
     },
@@ -167,6 +170,7 @@ export default {
         handleCurrentChange(val) { //currentPage 改变时会触发
             //获取用户列表
             if(this.time){
+                this.loading = true
                 let userDate = { 
                     page:val,
                     cols:'15',
@@ -187,11 +191,14 @@ export default {
                                 ele.scbj = '禁用'
                             }
                         });
+                        this.loading = false
                     })
                     .catch(res => {
                         console.log(res)
+                        this.loading = false
                     })
             }else{
+                this.loading = true
                 let userDate = { 
                     page:val,
                     cols:'15',
@@ -212,9 +219,11 @@ export default {
                                 ele.scbj = '禁用'
                             }
                         });
+                        this.loading = false
                     })
                     .catch(res => {
                         console.log(res)
+                        this.loading = false
                     })
             }
         },
@@ -240,12 +249,14 @@ export default {
                     deleteUser(row.userId)
                         .then(res => {
                             //获取用户列表
+                            this.loading = true
                             let userDate = {page: 1,cols: 15, startDate:'',  endDate:'',  userName:'',  roleId:'', boothName:'',  state:'', nodeId: ''}
                             getUserList(userDate)
                                 .then(res => {
                                     this.tableData = res.data.dataList
                                     this.dataTotal = Number(res.data.condition.total);
                                     this.currentPage = this.page
+                                    this.loading = false
                                 })
                                 .catch(res => {
                                     console.log(res)
@@ -257,6 +268,7 @@ export default {
                         })
                         .catch(res => {
                             console.log(res)
+                            this.loading = false
                         })
 
                 }).catch(() => {
@@ -271,6 +283,7 @@ export default {
         },
         search(){
             if(this.time){
+                this.loading = true
                 let userDate = {
                     startDate:this.time[0],
                     endDate:this.time[1],
@@ -285,11 +298,14 @@ export default {
                     .then(res => {
                         this.tableData = res.data.dataList
                         this.dataTotal = res.data.condition.total;
+                        this.loading = false
                     })
                     .catch(res => {
                         console.log(res)
+                        this.loading = false
                     })
             }else{
+                this.loading = true
                 let userDate = {
                     startDate:'',
                     endDate:'',
@@ -304,9 +320,11 @@ export default {
                     .then(res => {
                         this.tableData = res.data.dataList
                         this.dataTotal = res.data.condition.total;
+                        this.loading = false
                     })
                     .catch(res => {
                         console.log(res)
+                        this.loading = false
                     })
             }
 
@@ -319,14 +337,17 @@ export default {
             this.enterpriseStatus='';
             this.nodeId = ''
             //获取用户列表
+            this.loading = true
             let userDate = {page: 1,cols: 15, startDate:'',  endDate:'',  userName:'',  roleId:'', boothName:'',  state:'',nodeId: ''}
             getUserList(userDate)
                 .then(res => {
                     this.tableData = res.data.dataList
                     this.dataTotal = Number(res.data.condition.total);
+                    this.loading = false
                 })
                 .catch(res => {
                     console.log(res)
+                    this.loading = false
                 })
         }
     },
