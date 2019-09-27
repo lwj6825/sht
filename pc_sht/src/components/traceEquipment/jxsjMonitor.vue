@@ -1,17 +1,11 @@
 <template>
-    <div class="content assets" @click="closeFun($event)">
+    <div class="content jxsjMonitor">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <!--展开-->
                 <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}">
                     <el-form-item label="资产信息">
                         <el-input class="placeholder" v-model="form.msg" clearable placeholder="资产名称、ID、条码号、序列号"></el-input>
-                    </el-form-item>
-                    <el-form-item label="资产类型">
-                        <el-cascader style="width: 200px" clearable
-                        :options="options" filterable @change="zcTypeFun" @focus="selectFun"
-                        change-on-select placeholder="请选择"
-                        ></el-cascader>
                     </el-form-item>
                     <el-form-item label="所属期">
                         <el-select v-model="form.ssq" filterable clearable placeholder="请选择">
@@ -57,12 +51,6 @@
                     <el-form-item label="资产信息">
                         <el-input class="placeholder" v-model="form.msg" clearable placeholder="资产名称、ID、条码号、序列号"></el-input>
                     </el-form-item>
-                    <el-form-item label="资产类型">
-                        <el-cascader style="width: 200px" clearable
-                        :options="options" filterable @change="zcTypeFun" @focus="selectFun"
-                        change-on-select placeholder="请选择"
-                        ></el-cascader>
-                    </el-form-item>
                     <el-form-item label="所属期">
                         <el-select v-model="form.ssq" filterable clearable placeholder="请选择">
                             <el-option v-for="item in ssqArr" :key="item.a_conf_id" :label="item.a_conf_item"
@@ -83,14 +71,14 @@
         </div>
         <div class="table">
             <div class="title">
-                <p class="tz-title">任务列表</p>
-                <div>
+                <p class="tz-title">解析数据监控</p>
+                <!--<div>
                     <el-button type="primary" @click="newFun">新增</el-button>
                     <el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
                     <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>
-                </div>
+                </div>-->
             </div>
-            <div class="file-btns" v-if="isfile">
+            <!--<div class="file-btns" v-if="isfile">
                 <div>
                     <span class="submit">
                         批量新增
@@ -107,9 +95,7 @@
                         </form>
                     </span>
                 </div>
-                <!--<el-button type="primary" plain @click="fileAddFun(1)">批量新增</el-button>
-                <el-button type="primary" plain @click="fileAddFun(2)">批量修改</el-button>-->
-            </div>
+            </div>-->
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="assets_id" label="资产ID"> </el-table-column>
@@ -176,12 +162,11 @@ function getNowFormatDate() {//获取当前时间
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase,QueryBusiness,QueryAssetsBase,DownloadAssetsBase,
-    AssetsAdd,AssetsUpdate,ImportAssets,ImportAssetsUpdate,exportExcel} from '../../js/traceEquipment/traceEquipment.js'
+import {} from '../../js/traceEquipment/traceEquipment.js'
 import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
-    name:"assets",
+    name:"jxsjMonitor",
     data() {
         return {
             buyerName: '',
@@ -220,218 +205,11 @@ export default {
         }
     },
     mounted() {
-        this.getQueryNodeBase()
-        this.getQueryAssetsType()
-        this.getQueryAssetsConf()
-        this.getQueryAssetsBase()
         this.userId = localStorage.getItem('userId')
     },
     methods: {
-        zcTypeFun(ele){
-            this.form.types = ele[ele.length - 1]
-        },
-        selectFun(){
-            if(!this.options.length > 0){
-                this.getQueryAssetsType()
-            }
-        },
-        fileAddFun(ele){
-            this.isFile = true
-            this.types = ele
-        },
-        isShowFun(e){
-            if(e.target.innerHTML == '批量导入' || e.target.id == 'btn-file' ){
-                if(this.isfile == true){
-                    this.isfile = false
-                }else{
-                   this.isfile = true
-                }
-            }
-        },
-        fileFun(event,ele){
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            let that = this
-            // if(param.type == 'application/vnd.ms-excel'){
-                    if(ele == 1){
-                        this.file = event.target.files[0];
-                        let formData = new FormData();
-                        formData.append('importAssets', this.file);   
-                        let config = {
-                            headers:{'Content-Type':'multipart/form-data'}
-                        };
-                        const ajaxPost = function (url, params,config) {
-                            return new Promise((resolve, reject) => {
-                                axios
-                                    .post(url, params,{config})
-                                    .then((res) => {
-
-                                        resolve(res.data)
-                                    })
-                                    .catch(() => {
-                                        reject('error')
-                                    })
-                            })
-                        }  
-                        let url = importAssets + '?userid=' + this.userId
-                        ajaxPost(url,formData,config)
-                            .then(res => {
-                                console.log(res)
-                                let data = res.data[0].split('!,')
-                                let newDatas = [];
-                                const h = this.$createElement;
-                                for(let i in data){
-                                    newDatas.push(h('p',null,data[i]));
-                                };
-                                if (res.result == true) {
-                                    loading.close();
-                                    this.$message({
-                                        message: h('div',null, newDatas),
-                                        type: 'success',
-                                        duration: 5000,
-                                    });
-                                    this.isfile = false
-                                    this.getQueryAssetsBase()
-                                }else{
-                                    this.$message({
-                                        message: h('div',null, newDatas),
-                                        type: 'error',
-                                        duration: 5000,
-                                    });
-                                }
-                                // that.$refs.file.value = null
-                                this.file = null
-                                loading.close();
-                            })
-                            .catch(res => {
-                                console.log(res)
-                                this.$message.error("出错了");
-                            })
-                    }else if(ele == 2){
-                        this.file = event.target.files[0];
-                        let formData = new FormData();
-                        formData.append('importAssets', this.file);  
-                        let config = {
-                            headers:{'Content-Type':'multipart/form-data'}
-                        };
-                        const ajaxPost = function (url, params,config) {
-                            return new Promise((resolve, reject) => {
-                                axios
-                                    .post(url, params,{config})
-                                    .then((res) => {
-
-                                        resolve(res.data)
-                                    })
-                                    .catch(() => {
-                                        reject('error')
-                                    })
-                            })
-                        }  
-                        let url = importAssetsUpdate + '?userid=' + this.userId
-                        ajaxPost(url,formData,config)
-                            .then(res => {
-                                let data = res.data[0].split('!,')
-                                let newDatas = [];
-                                const h = this.$createElement;
-                                for(let i in data){
-                                    newDatas.push(h('p',null,data[i]));
-                                };
-                                if (res.result == true) {
-                                    this.$message({
-                                        message: h('div',null, newDatas),
-                                        type: 'success',
-                                        duration: 5000,
-                                        customClass: 'success-class',
-                                    });
-                                    this.isfile = false
-                                    this.getQueryAssetsBase()
-                                }else{
-                                    this.$message({
-                                        message: h('div',null, newDatas),
-                                        type: 'error',
-                                        duration: 5000,
-                                        customClass: 'error-class',
-                                    });
-                                    
-                                }
-                                loading.close();
-                                // that.$refs.files.value = null
-                                this.file = null
-                            })
-                            .catch(res => {
-                                console.log(res)
-                                this.$message.error("出错了");
-                            })
-                    }
-                    // that.$refs.file.value = null
-                    // that.$refs.files.value = null
-            // }else{
-            //     this.$message.error('请选择正确的文件格式，文件格式为xls');
-            // }
-
-        },
-        // 查询 所有资产用户信息（需要确定用户类型类型）
-        getQueryAssetsUser(){
-            QueryAssetsUser('')
-                .then(res => {
-                    // console.log(res)
-                    // this.userId = res.data.assets_user[0].USERID
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-        },
-        // 查询 资产状态、所属期 等查询条件下拉框
-        getQueryAssetsConf(){
-            QueryAssetsConf('')
-                .then(res => {
-                    // console.log(res)
-                    this.zcState = res.data[1]
-                    this.ssqArr = res.data[3]
-            // 1:状态，2:维修更换部件,3:所属期)
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-        },
-        // 查询 资产类型树
-        getQueryAssetsType(){
-            QueryAssetsType('')
-                .then(res => {
-                    res.data.assetsType.forEach(val => {
-                        val.value = val.assets_type_id
-                        val.label = val.assets_type
-                        if(val.child_list.length > 0){
-                            val.children = val.child_list
-                            val.child_list.forEach(val =>{
-                                val.value = val.assets_type_id
-                                val.label = val.assets_type
-                            })
-                        }
-                    })
-                    this.options = res.data.assetsType
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-        },
-        // 查询 所有节点
-        getQueryNodeBase(){
-            QueryNodeBase('')
-                .then(res => {
-                    // console.log(res)
-                    this.nodeArr = res.data.nodeBase
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-        },
-        // 查询资产信息
-        getQueryAssetsBase(){
+        
+        getDataFun(){
             const loading = this.$loading({
                 lock: true,
                 text: 'Loading',
@@ -439,103 +217,40 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
             });
             let params = {
-                assets_base: this.form.msg.trim(),
-                node_code: this.form.node, // 关联节点信息 --
-                start_time: this.startTime ? (this.startTime + ' 00:00:00') : '',
-                end_time: this.endTime ? (this.endTime + ' 23:59:59') : '',
-                assets_type_id: this.form.types, // 资产类型 -- 
-                sub_period_id: this.form.ssq, // 所属期 -- 
-                a_conf_id: this.form.state, // 资产状态 -- 
-                merchant_id: '', // 关联商户信息
-                merchant_name: this.form.user.trim(),
+                start_time: this.startTime,
+                end_time: this.endTime,
+                mon_log_base: this.form.msg,
+                parse_type: this.form.rwhj,
+                file_name: this.form.name,
+                state: this.form.state,
                 cols: this.cols,
                 page: this.page,
             }
-            QueryAssetsBase(params)
+            QueryFtpMonLog(params)
                 .then(res => {
-                    this.tableData = res.data.assets_base_list
-                    this.num = res.data.assets_base.total
+                    this.tableData = res.data.mon_log_list
+                    this.num = res.data.mon_log.total
                     loading.close();
                 })
                 .catch((res) => {
-                    this.$message.error("出错啦!");
                     console.log(res)
                     loading.close();
                 })
         },
-        // 导出资产信息
-        getDownloadAssetsBase(){
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            let params = {
-                assets_base: this.form.msg.trim(),
-                node_code: this.form.node, // 关联节点信息 --
-                start_time: this.startTime ? (this.startTime + ' 00:00:00') : '',
-                end_time: this.endTime ? (this.endTime + ' 23:59:59') : '',
-                assets_type_id: this.form.types, // 资产类型 -- 
-                sub_period_id: this.form.ssq, // 所属期 -- 
-                a_conf_id: this.form.state, // 资产状态 -- 
-                merchant_id: '', // 关联商户信息
-                merchant_name: this.form.user.trim(),
-            }
-            exportExcel( params, {})
-                .then((res) => {
-                    let time = getNowFormatDate()
-            //         let blob = new Blob([res.data], {type: "application/vnd.ms-excel"}); 
-            // 　      let objectUrl = URL.createObjectURL(blob); 
-            //         window.location.href = objectUrl;
-                    loading.close();
-                    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
-                    let url = window.URL.createObjectURL(blob);
-                    let aLink = document.createElement("a");
-                    aLink.style.display = "none";
-                    aLink.href = url;
-                    aLink.setAttribute("download", `资产` + time);
-                    document.body.appendChild(aLink);
-                    aLink.click();
-                    document.body.removeChild(aLink); 
-                    window.URL.revokeObjectURL(url); 
-                    // let blob = new Blob([res.data])
-                    // let downloadElement = document.createElement('a')
-                    // let href = window.URL.createObjectURL(blob); //创建下载的链接
-                    // downloadElement.href = href;
-                    // downloadElement.download = `资产` + time; //下载后文件名
-                    // document.body.appendChild(downloadElement);
-                    // downloadElement.click(); //点击下载
-                    // document.body.removeChild(downloadElement); //下载完成移除元素
-                    // window.URL.revokeObjectURL(href); //释放blob对象 
-                })
-                .catch(function (res) {});
-        },
-        sureFun(){
-            this.isFile = false
-        },
-        cancelFun(){
-            this.isFile = false
-        },
-        closeFun(e){
-            if(e.target.innerHTML != '批量导入' && e.target.id != 'btn-file' ){
-                this.isfile = false
-            }
-        },
         viewFun(ele){
-            this.$router.push({name: 'ViewAssets',params: {param: ele}})
+            // this.$router.push({name: 'ViewAssets',params: {param: ele}})
         },
         newFun(){
-            this.$router.push({name: 'NewAssets'})
+            // this.$router.push({name: 'NewAssets'})
         },
         searchFun(){
             this.page = 1
             this.timeChange()
-            this.getQueryAssetsBase()
+            this.getDataFun()
         },
         handleCurrentChange(val) {
             this.page = val
-            this.getQueryAssetsBase()
+            this.getDataFun()
         },
         unfoldFun(){
             if(this.show == false){
@@ -562,7 +277,7 @@ export default {
             this.endTime = ''
             this.form.types = ''
             this.options = []
-            this.getQueryAssetsBase()
+            this.getDataFun()
         },
         timeChange(ele){
             if(this.form.dataTime){
@@ -772,23 +487,5 @@ export default {
             }
         }
         
-    }
-</style>
-<style lang="less">
-    .assets{
-        .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
-            line-height: 24px;
-        }
-        .el-input--suffix .el-input__inner{
-            padding-right: 10px !important;
-        }
-    }
-    .el-message--error{
-        color: #f56c6c !important;
-        font-size: 14px !important;
-    }
-    .el-message--success{
-        color: #67c23a !important;
-        font-size: 14px !important;
     }
 </style>

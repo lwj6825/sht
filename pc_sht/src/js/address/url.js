@@ -1,8 +1,8 @@
 // base url
 export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
 export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
-export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
+export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+// export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 // export const baseUrl = 'http://shop.zhdtech.com/';//外网
@@ -352,6 +352,11 @@ export const updateAssetsConf = baseUrl3 + 'assetsSet/updateAssetsConf' // 配�
 export const queryAssetsSpecifications = baseUrl3 + 'assets/queryAssetsSpecifications' // 查询所有资产规格
 export const queryAssetsNames = baseUrl3 + 'assets/queryAssetsNames' // 查询所有资产名称
 export const queryAssetsManufacturers = baseUrl3 + 'assets/queryAssetsManufacturers' // 查询所有资产生产厂家
+export const parseMonLog = baseUrl3 + 'MonLog/parseMonLog' //解析运行日志
+export const queryTableName = baseUrl3 + 'MonLog/queryTableName' //表名下拉菜单
+export const queryFtpMonLog = baseUrl3 + 'MonLog/queryFtpMonLog' //ftp文件日志
+export const getParseType = baseUrl3 + 'MonLog/getParseType' //任务环节下拉
+export const getFileState = baseUrl3 + 'MonLog/getFileState' //状态
 
 // 养殖场
 export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询

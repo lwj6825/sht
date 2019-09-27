@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="check(scope.$index, scope.row)">{{viewSellGoods}}</el-button>
+              <!--<el-button type="text" size="small" @click="check(scope.$index, scope.row)">{{viewSellGoods}}</el-button>-->
               <el-button size="mini" type="text" style="margin-left: 20px" @click="edit(scope.$index, scope.row)">{{editSellGoods}}</el-button>
               <el-button size="mini" type="text" style="margin-left: 20px" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
@@ -68,8 +68,8 @@
         <el-pagination background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="15"
+          :current-page.sync="page"
+          :page-size="cols"
           layout="total, prev, pager, next, jumper"
           :total='dataTotal'>
         </el-pagination>
@@ -147,7 +147,7 @@
         this.getSales()
       },
       loadFun(){
-        window.location.href = baseUrl2 + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId + '&node_id=' + this.node_id
+        window.location.href = baseUrl + "goods/downloadSaleGoods?userId=" + this.userId + '&region=' + this.areaId + '&node_id=' + this.node_id
       },
       fileFun(event){
         let param = this.$refs.file.files[0];
@@ -173,7 +173,7 @@
               })
           })
         }  
-        let url = baseUrl2 + 'goods/importSaleAndOrigin'
+        let url = baseUrl + 'goods/importSaleAndOrigin'
         ajaxPost(url,formData,config)
           .then(res => {
             this.boxShow = true;
@@ -370,7 +370,9 @@
         this.getSales()
       },
       selectId(id){//切换地区查询商品列表
-         let data = {
+        this.page = 1
+        this.currentPage = 1
+        let data = {
           page: '1',
           cols: '100',
           total: this.total,

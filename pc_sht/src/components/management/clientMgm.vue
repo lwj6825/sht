@@ -160,7 +160,7 @@
               })
           })
         }  
-        let url = baseUrl2 + 'manage/importCustomer'
+        let url = baseUrl + 'manage/importCustomer'
         ajaxPost(url,formData,config)
           .then(res => {
             if(res.result == true){

@@ -9,6 +9,11 @@ import traceEquipment from '../components/traceEquipment/traceEquipment.vue';
 import viewAssets from '../components/traceEquipment/viewAssets.vue';
 import viewInspection from '../components/traceEquipment/viewInspection.vue';
 import viewMaintenance from '../components/traceEquipment/viewMaintenance.vue';
+import ftpFile from '../components/traceEquipment/ftpFile.vue';
+import jxsjMonitor from '../components/traceEquipment/jxsjMonitor.vue';
+import journal from '../components/traceEquipment/journal.vue';
+import viewJournal from '../components/traceEquipment/viewJournal.vue';
+
 
 export default [
     {
@@ -119,6 +124,46 @@ export default [
             id:'288',
             node:'traceEquipment',
             url:'viewMaintenance',
+        }
+    },
+    {
+        path: 'traceEquipment/ftpFile',
+        component:  resolve => require(['@/components/traceEquipment/ftpFile'],resolve),
+        name:'FtpFile',
+        meta:{
+            id:'372',
+            node:'traceEquipment',
+            url:'ftpFile',
+        }
+    },
+    {
+        path: 'traceEquipment/jxsjMonitor',
+        component:  resolve => require(['@/components/traceEquipment/jxsjMonitor'],resolve),
+        name:'JxsjMonitor',
+        meta:{
+            id:'374',
+            node:'traceEquipment',
+            url:'jxsjMonitor',
+        }
+    },
+    {
+        path: 'traceEquipment/journal',
+        component:  resolve => require(['@/components/traceEquipment/journal'],resolve),
+        name:'Journal',
+        meta:{
+            id:'369',
+            node:'traceEquipment',
+            url:'journal',
+        }
+    },
+    {
+        path: 'traceEquipment/viewJournal',
+        component:  resolve => require(['@/components/traceEquipment/viewJournal'],resolve),
+        name:'ViewJournal',
+        meta:{
+            id:'370',
+            node:'traceEquipment',
+            url:'viewJournal',
         }
     },
 ]

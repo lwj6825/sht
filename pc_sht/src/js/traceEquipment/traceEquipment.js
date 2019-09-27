@@ -5,7 +5,8 @@ import {baseUrl,queryAssetsUser,queryAssetsConf,queryAssetsType,queryNodeBase,qu
     queryMaintaininfoListByAssetsId,updateMoreAssetsStatus,inspectMoreAssets,addinspect,addAssetsType,setAssetsConf,deleteAssetsConf,
     queryInspect,queryInspectId,downloadInspect,deleteInspect,queryMaintain,bar_code,maintainAdd,downloadMaintain,queryMaintainId,
     deleteMaintain,queryInspectionRecord,importMaintain,queryMaintainName,updateAssetsType,deleteAssetsType,updateAssetsConf,
-    queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2
+    queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2,parseMonLog,queryTableName,getFileState,
+    queryFtpMonLog,getParseType
     } from "../address/url";
     
 // 查询 所有资产用户信息（需要确定用户类型类型）
@@ -203,4 +204,24 @@ export const QueryAssetsNames = function(params) {
 // 查询所有资产生产厂家
 export const QueryAssetsManufacturers = function(params) {
     return ajaxGet(queryAssetsManufacturers +'?'+ params)
+}
+//解析运行日志
+export const ParseMonLog = function(params) {
+    return ajaxPost(parseMonLog,params)
+}
+// 表名下拉菜单
+export const QueryTableName = function(params) {
+    return ajaxGet(queryTableName +'?'+ params)
+}
+//ftp文件日志
+export const QueryFtpMonLog = function(params) {
+    return ajaxPost(queryFtpMonLog,params)
+}
+// 任务环节下拉getFileState
+export const GetParseType = function(params) {
+    return ajaxGet(getParseType +'?'+ params)
+}
+// 状态
+export const GetFileState = function(params) {
+    return ajaxGet(getFileState +'?'+ params)
 }

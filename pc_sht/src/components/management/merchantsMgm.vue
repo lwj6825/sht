@@ -179,7 +179,7 @@ export default {
           })
       },
       loadFun(){
-        window.location.href = baseUrl2 + 'manage/downloadBiz?userId=' + this.userId + '&region=' + this.areaId + '&boothName=' 
+        window.location.href = baseUrl + 'manage/downloadBiz?userId=' + this.userId + '&region=' + this.areaId + '&boothName=' 
           + this.boothName + '&name=' + this.name + '&stall_no=' + this.stall_no
       },
       handleSizeChange(val) { //pageSize 改变时会触发
