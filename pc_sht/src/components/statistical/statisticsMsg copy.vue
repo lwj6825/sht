@@ -144,7 +144,7 @@
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
                                         <p v-if="more" class="no_more1" >暂无数据</p>
-                                        <p class="lookMore"  @click='More1()'>查看更多>></p>
+                                        <p class="lookMore" v-if="more1" @click='More1()'>查看更多>></p>
                                     </ul>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                                         </li>
                                     </ul>
                                     <p v-if="more" class="no_more1" >暂无数据</p>
-                                    <p class="lookMore"  @click='More2()'>查看更多>></p>
+                                    <p class="lookMore" v-if="more1" @click='More2()'>查看更多>></p>
                                 </div>
                             </div>
                         </div>
@@ -181,16 +181,13 @@
             <div class="left">
                 <p class="title">台账录入情况</p>
                 <div id="my-chart5" style="width: 500px;height:180px;margin-left:78px;"></div>
-                <p style="border-bottom:1px solid #ccc; padding-bottom:15px;font-size:14px;">未录入台账商户数</p>
+                <p style="border-bottom:1px solid #ccc; padding-bottom:15px;">未录入台账商户数</p>
                 <!-- <el-tabs v-model="activeName2"> -->
                         <!-- <el-tab-pane label="未录入台账商户数" name="second"> -->
                                     
                                     <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;">
                                         <el-table-column prop="booth_name" label="商户"></el-table-column>
-                                        <el-table-column  prop="days" label="未录入天数" >
-                                            <template slot-scope="scope">{{scope.row.days ? scope.row.days : '无数据'}}
-                                        </template>
-                                        </el-table-column>
+                                        <el-table-column prop="days" label="未录入天数" ></el-table-column>
                                     </el-table>
                                     <el-pagination background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
                                     @current-change="handleCurrentChange4"></el-pagination>
@@ -225,7 +222,7 @@
                     <div class="whz">
                         <div class="fzsj">{{list_3_num1 + '%'}}</div>
                         <div class="wbhz"></div>
-                        <div class="d1" :style="degObj" style="transform: rotate(-115.2deg);" ></div>
+                        <div class="d1" :style="degObj"></div>
                     </div>
                 </div>
                 <div class="table">
