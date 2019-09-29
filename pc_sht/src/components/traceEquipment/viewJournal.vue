@@ -56,7 +56,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$route.params)
         let param = this.$route.params.param
         this.id = param.id
         this.parse_type = param.parse_type

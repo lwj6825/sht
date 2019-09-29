@@ -49,10 +49,13 @@
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="record_time" label="创建日期"> </el-table-column>
-                    <el-table-column prop="yzc_code" label="编号"> </el-table-column>
-                    <el-table-column prop="yzc_name" label="养殖场名称"> </el-table-column>
-                    <el-table-column prop="yzc_gm" label="养殖规模"> </el-table-column>
+                    <el-table-column prop="yzc_code" label="养殖场编号"> </el-table-column>
+                    <el-table-column prop="yzc_name" label="养殖场名称" width="200"> </el-table-column>
                     <el-table-column prop="yzc_pz" label="养殖品种"> </el-table-column>
+                    <el-table-column prop="yzc_gm" label="养殖规模"> </el-table-column>
+                    <el-table-column prop="yzc_gm" label="地址" width="200">
+                        <template slot-scope="scope">{{scope.row.area_name + scope.row.addr}}</template>
+                    </el-table-column>
                     <el-table-column prop="yzc_fzr" label="负责人"> </el-table-column>
                     <el-table-column prop="booth_name" label="所属企业"> </el-table-column>
                     <el-table-column label="操作" width='220'>
@@ -74,36 +77,36 @@
                     <p class="tit">{{prompt}}养殖场</p>
                     <p class="iconfont icon-close close" @click="closeFun"></p>
                 </div>
-                <el-form class="form" ref="form2" :model="form2" label-width="120px">
-                    <el-form-item label="所属企业">
+                <el-form class="form" ref="form2" :model="form2" :rules="rules" label-width="120px">
+                    <el-form-item label="所属企业" prop="enterprise">
                         <el-select v-model="form2.enterprise" filterable clearable placeholder="请选择">
                             <el-option v-for="item in enterpriseList" :key="item.a_conf_id"  :label="item.booth_name" :value="item.userId">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="养殖场编号">
+                    <el-form-item label="养殖场编号" prop="yzcNum">
                         <el-input clearable v-model="form2.yzcNum"></el-input>
                     </el-form-item>
-                    <el-form-item label="养殖场名称">
+                    <el-form-item label="养殖场名称" prop="yzcName">
                         <el-input clearable v-model="form2.yzcName"></el-input>
                     </el-form-item>
-                    <el-form-item label="养殖规模">
-                        <el-input clearable v-model="form2.yzcSize"></el-input>
-                    </el-form-item>
-                    <el-form-item label="养殖品种">
+                    <el-form-item label="养殖品种" prop="varieties">
                         <el-select v-model="form2.varieties" filterable clearable placeholder="请选择" @change="pzChange">
                             <el-option v-for="(item,index) in varietiesArr" :key="index" :label="item.goods_Name" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="地址">
+                    <el-form-item label="养殖规模" prop="yzcSize">
+                        <el-input clearable v-model="form2.yzcSize"></el-input>
+                    </el-form-item>
+                    <el-form-item label="所在地区" prop="addr">
                         <el-cascader :options="addrOptions" v-model="form2.addr" placeholder="省/市/县" class="address" clearable 
                             :props="propes" change-on-select></el-cascader>
                     </el-form-item>
-                    <el-form-item label="详细地址">
+                    <el-form-item label="详细地址" prop="addrName">
                         <el-input clearable v-model="form2.addrName"></el-input>
                     </el-form-item>
-                    <el-form-item label="负责人">
+                    <el-form-item label="负责人" prop="people">
                         <el-input clearable v-model="form2.people"></el-input>
                     </el-form-item>
                     <el-form-item label="联系方式">
@@ -135,7 +138,7 @@
                     </el-form-item>
                     <el-form-item class="btn">
                         <el-button @click="cancelFun">取消</el-button>
-                        <el-button type="primary" @click="submitForm">确认</el-button>
+                        <el-button type="primary" @click="submitForm('form2')">确认</el-button>
                     </el-form-item>
                 </el-form>
             
@@ -226,6 +229,32 @@ export default {
             editImgArr: [],
             img_id: '',
             count: 0,
+            rules: {
+                enterprise: [
+                    { required: true, message: '请选择所属企业', trigger: 'change' }
+                ],
+                yzcNum: [
+                    { required: true, message: '请输入养殖场编号', trigger: 'blur' },
+                ],
+                yzcName: [
+                    { required: true, message: '请输入养殖场名称', trigger: 'blur' },
+                ],
+                varieties: [
+                    { required: true, message: '请选择养殖品种', trigger: 'change' }
+                ],
+                yzcSize: [
+                    { required: true, message: '请输入养殖规模', trigger: 'blur' },
+                ],
+                addrName: [
+                    { required: true, message: '请输入详细地址', trigger: 'blur' },
+                ],
+                people: [
+                    { required: true, message: '请输入负责人', trigger: 'blur' },
+                ],
+                addr: [
+                    { required: true, message: '请选择所在地区', trigger: 'change' }
+                ],
+            }
         }
     },
     mounted() {
@@ -233,11 +262,11 @@ export default {
         this.node_id = localStorage.getItem('loginId')
         this.node_name = localStorage.getItem('loginName')
         this.getAddrList()
-        this.getTime()
-        let arr = []
-        arr.push(this.startTime)
-        arr.push(this.endTime)
-        this.form.dataTime = arr
+        // this.getTime()
+        // let arr = []
+        // arr.push(this.startTime)
+        // arr.push(this.endTime)
+        // this.form.dataTime = arr
         this.getPlotHzsList()
         this.getNsGoodsQueryPOSTType()
         this.getDataFun()
@@ -418,7 +447,16 @@ export default {
                     console.log(res)
                 })
         },
-        submitForm(){
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.submitFormFun()
+                } else {
+                    return false;
+                }
+            });
+        },
+        submitFormFun(){
             let addrArr = [];
             this.addrOptions.forEach(ele => {
                 if(ele.szm == this.form2.addr[0]){
@@ -653,12 +691,14 @@ export default {
                 farmingName: '',
                 enterprise: '',
             }
-            this.getTime()
+            this.startTime = ''
+            this.endTime = ''
+            // this.getTime()
             this.page = 1
-            let arr = []
-            arr.push(this.startTime)
-            arr.push(this.endTime)
-            this.form.dataTime = arr
+            // let arr = []
+            // arr.push(this.startTime)
+            // arr.push(this.endTime)
+            // this.form.dataTime = arr
             this.getDataFun()
         },
         getAddrList(){//获取地区列表

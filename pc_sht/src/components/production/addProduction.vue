@@ -23,12 +23,12 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="goods_unit" width="100" label="单位/规格"> </el-table-column>
                 <el-table-column prop="buyer_booth_name" label="数量">
                     <template slot-scope="scope">
                         <el-input class="input" v-model="scope.row.goodNum" size="mini" ></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column prop="goods_unit" width="100" label=""> </el-table-column>
                 <el-table-column prop="buyer_booth_name" label="原料名称">
                     <template slot-scope="scope">
                         <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">

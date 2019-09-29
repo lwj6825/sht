@@ -98,11 +98,11 @@ export default {
     },
     mounted() {
         this.node_id = localStorage.getItem('loginId')
-        this.getTime()
-        let arr = []
-        arr.push(this.startTime)
-        arr.push(this.endTime)
-        this.form.dataTime = arr
+        // this.getTime()
+        // let arr = []
+        // arr.push(this.startTime)
+        // arr.push(this.endTime)
+        // this.form.dataTime = arr
         this.getDataFun()
     },
     methods: {
@@ -155,11 +155,13 @@ export default {
                 batch: '',
                 dataTime: ''
             }
-            this.getTime()
-            let arr = []
-            arr.push(this.startTime)
-            arr.push(this.endTime)
-            this.form.dataTime = arr
+            this.startTime = ''
+            this.endTime = ''
+            // this.getTime()
+            // let arr = []
+            // arr.push(this.startTime)
+            // arr.push(this.endTime)
+            // this.form.dataTime = arr
             this.page = 1
             this.getDataFun()
         },

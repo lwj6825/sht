@@ -12,12 +12,12 @@
                     <div class="msg">{{form.yzcNum}}</div>
                 </div>
                 <div class="data">
-                    <div class="title">养殖规模</div>
-                    <div class="msg">{{form.yzcSize}}</div>
-                </div>
-                <div class="data">
                     <div class="title">养殖品种</div>
                     <div class="msg">{{form.varieties}}</div>
+                </div>
+                <div class="data">
+                    <div class="title">养殖规模</div>
+                    <div class="msg">{{form.yzcSize}}</div>
                 </div>
                 <div class="data">
                     <div class="title">地址</div>
@@ -43,12 +43,12 @@
                     </div>
                 </div><!---->
                 <div class="data">
-                    <div class="title">养殖场信息</div>
+                    <div class="title">养殖场图片</div>
                     <div class="msg">
                         <div class="msg-item">   
                             <div class="img-list">
                                 <ul>
-                                    <li v-for="(item,index) in imgArrs" :key="index" v-if="item.img_url">
+                                    <li v-for="(item,index) in imgArrs" :key="index" v-if="item.img_url" @click="bigImgFun(item)">
                                         <figure class="image">
                                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
                                         </figure>
@@ -71,11 +71,15 @@
                         <el-table-column prop="yzc_rjsl" label="入圈数量(只)"></el-table-column>
                         <el-table-column prop="yzc_rjsj" label="入圈时间"></el-table-column>
                         <el-table-column prop="yzc_clsj" label="预计出栏时间"></el-table-column>
-                        <el-table-column prop="yzc_fzr" label="负责人(联系方式)"></el-table-column>
+                        <el-table-column prop="yzc_fzr" label="负责人(联系方式)">
+                            <template slot-scope="scope">
+                                {{scope.row.yzc_fzr + (scope.row.yzc_tel ? '(' + scope.row.yzc_tel + ')' : '')}}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="remark" label="描述"></el-table-column>
                         <el-table-column prop="city" label="图片">
                             <template slot-scope="scope" v-if="scope.row.img_list.length > 0">
-                                <img class="table_img" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + scope.row.img_list[0].img_url">
+                                <img class="table_img" @click="bigImgFun(scope.row.img_list[0])" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + scope.row.img_list[0].img_url">
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="100">
@@ -101,7 +105,7 @@
                         <el-table-column prop="remark" label="摘要说明"></el-table-column>
                         <el-table-column prop="city" label="图片">
                             <template slot-scope="scope" v-if="scope.row.img_list.length > 0">
-                                <img class="table_img" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + scope.row.img_list[0].img_url">
+                                <img class="table_img" @click="bigImgFun(scope.row.img_list[0])" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + scope.row.img_list[0].img_url">
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="100">
@@ -121,9 +125,9 @@
                         <el-table-column prop="yzc_sysc" label="日期"></el-table-column>
                         <el-table-column prop="yzc_sylx" label="饲养类型"></el-table-column>
                         <el-table-column prop="yzc_syjl" label="饲养记录"></el-table-column>
-                        <el-table-column prop="address" label="附件">
+                        <el-table-column prop="address" label="图片">
                             <template slot-scope="scope" v-if="scope.row.img_list.length > 0">
-                                <img class="table_img" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + scope.row.img_list[0].img_url">
+                                <img class="table_img" @click="bigImgFun(scope.row.img_list[0])" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + scope.row.img_list[0].img_url">
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="100">
@@ -145,25 +149,25 @@
                     <p class="tit">{{prompt}}养殖档案</p>
                     <p class="iconfont icon-close close" @click="closeFun"></p>
                 </div>
-                <el-form class="form" ref="form1" :model="form1" label-width="120px">
-                    <el-form-item label="档案批次">
+                <el-form class="form" ref="form1" :model="form1" :rules="rules" label-width="120px">
+                    <el-form-item label="档案批次" prop="batch">
                         <el-input clearable v-model="form1.batch"></el-input>
                     </el-form-item>
-                    <el-form-item label="档案编号">
+                    <el-form-item label="档案编号" prop="daNum">
                         <el-input clearable v-model="form1.daNum"></el-input>
                     </el-form-item>
-                    <el-form-item label="入圈数量">
+                    <el-form-item label="入圈数量" prop="rjNum">
                         <el-input clearable v-model="form1.rjNum"></el-input>
                     </el-form-item>
-                    <el-form-item label="入圈时间">
+                    <el-form-item label="入圈时间" prop="rjTime">
                         <el-date-picker v-model="form1.rjTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                             placeholder="选择日期"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="预计出栏时间">
+                    <el-form-item label="预计出栏时间" prop="yjclTime">
                         <el-date-picker v-model="form1.yjclTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                             placeholder="选择日期"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="负责人">
+                    <el-form-item label="负责人" prop="people">
                         <el-input clearable v-model="form1.people"></el-input>
                     </el-form-item>
                     <el-form-item label="联系方式">
@@ -195,7 +199,7 @@
                     </el-form-item>
                     <el-form-item class="btn">
                         <el-button @click="cancelFun">取消</el-button>
-                        <el-button type="primary" @click="submitForm">确认</el-button>
+                        <el-button type="primary" @click="submitForm('form1')">确认</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -207,30 +211,30 @@
                     <p class="tit">{{prompt2}}防疫防治记录</p>
                     <p class="iconfont icon-close close" @click="closeFun"></p>
                 </div>
-                <el-form class="form" ref="form2" :model="form2" label-width="120px">
-                    <el-form-item label="档案批次">
+                <el-form class="form" ref="form2" :model="form2" :rules="rules2" label-width="120px">
+                    <el-form-item label="档案批次" prop="batch">
                         <el-select v-model="form2.batch" filterable clearable placeholder="请选择">
                             <el-option v-for="(item,index) in batchList" :key="index" :label="item.yzc_dapc"
                             :value="item.yzc_dapc"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="防疫内容">
+                    <el-form-item label="防疫内容" prop="content">
                         <el-input clearable v-model="form2.content"></el-input>
                     </el-form-item>
-                    <el-form-item label="防疫时间">
+                    <el-form-item label="防疫时间" prop="fyTime">
                         <el-date-picker v-model="form2.fyTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                             placeholder="选择日期"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="操作人">
+                    <el-form-item label="操作人" prop="people">
                         <el-input clearable v-model="form2.people"></el-input>
                     </el-form-item>
-                    <el-form-item label="用药名称">
+                    <el-form-item label="用药名称" prop="drugName">
                         <el-input clearable v-model="form2.drugName"></el-input>
                     </el-form-item>
-                    <el-form-item label="剂量">
+                    <el-form-item label="剂量" prop="dose">
                         <el-input clearable v-model="form2.dose"></el-input>
                     </el-form-item>
-                    <el-form-item label="药品生产单位">
+                    <el-form-item label="药品生产单位" prop="production">
                         <el-input clearable v-model="form2.production"></el-input>
                     </el-form-item>
                     <el-form-item label="摘要说明">
@@ -259,7 +263,7 @@
                     </el-form-item>
                     <el-form-item class="btn">
                         <el-button @click="cancelFun">取消</el-button>
-                        <el-button type="primary" @click="submitForm2">确认</el-button>
+                        <el-button type="primary" @click="submitForm2('form2')">确认</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -271,26 +275,26 @@
                     <p class="tit">{{prompt3}}饲养记录</p>
                     <p class="iconfont icon-close close" @click="closeFun"></p>
                 </div>
-                <el-form class="form" ref="form3" :model="form3" label-width="120px">
-                    <el-form-item label="档案批次">
+                <el-form class="form" ref="form3" :model="form3" :rules="rules3" label-width="120px">
+                    <el-form-item label="档案批次" prop="batch">
                         <el-select v-model="form3.batch" filterable clearable placeholder="请选择">
                             <el-option v-for="(item,index) in batchList" :key="index" :label="item.yzc_dapc"
                             :value="item.yzc_dapc"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="时间">
+                    <el-form-item label="时间" prop="time">
                         <el-date-picker v-model="form3.time" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                             placeholder="选择日期"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="饲养类型">
-                        <!--<el-select v-model="form3.syTypes" filterable clearable placeholder="请选择">
+                    <el-form-item label="饲养类型" prop="syTypes" style="margin-bottom: 16px;">
+                        <el-select v-model="form3.syTypes" filterable clearable placeholder="请选择">
+                            <el-option value="仔兔">仔兔</el-option>
+                            <el-option value="青年">青年</el-option>
                             <el-option value="出栏">出栏</el-option>
-                            <el-option value="送宰">送宰</el-option>
-                            <el-option value="其他">其他</el-option>
-                        </el-select>-->
-                        <el-input clearable v-model="form3.syTypes" type="text"></el-input>
+                        </el-select>
+                        <!--<el-input clearable v-model="form3.syTypes" type="text"></el-input>-->
                     </el-form-item>
-                    <el-form-item label="饲养记录">
+                    <el-form-item label="饲养记录" prop="describe">
                         <el-input clearable v-model="form3.describe" type="textarea"></el-input>
                     </el-form-item>
                     <el-form-item label="上传图片">
@@ -316,7 +320,7 @@
                     </el-form-item>
                     <el-form-item class="btn">
                         <el-button @click="cancelFun">取消</el-button>
-                        <el-button type="primary" @click="submitForm3">确认</el-button>
+                        <el-button type="primary" @click="submitForm3('form3')">确认</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -327,6 +331,14 @@
                 <el-button @click="closeMoreFun">取 消</el-button>
             </span>
         </el-dialog>
+        <div class="box-bigimg" v-show="isBigImg" ref="boxsize">
+            <p class="close" @click="closeBigImgFun">X</p>
+            <div class="imgBox">
+                <figure class="images" v-if="bigImgUrl">
+                    <img :style="sizeObj" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + bigImgUrl">
+                </figure>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -415,6 +427,67 @@ export default {
             count: 0,
             isMore: false,
             isMoreMsg: false,
+            isBigImg: false,
+            sizeObj: {},
+            imgHeight: '',
+            bigImgUrl: '',
+            rules: {
+                batch: [
+                    { required: true, message: '请输入档案批次', trigger: 'blur' },
+                ],
+                daNum: [
+                    { required: true, message: '请输入档案编号', trigger: 'blur' },
+                ],
+                rjNum: [
+                    { required: true, message: '请输入入圈数量', trigger: 'blur' },
+                ],
+                rjTime: [
+                    { required: true, message: '请选择入圈时间', trigger: 'change' }
+                ],
+                yjclTime: [
+                    { required: true, message: '请选择预计出栏时间', trigger: 'change' }
+                ],
+                people: [
+                    { required: true, message: '请输入负责人', trigger: 'blur' },
+                ],
+            },
+            rules2: {
+                batch: [
+                    { required: true, message: '请选择档案批次', trigger: 'change' }
+                ],
+                content: [
+                    { required: true, message: '请输入防疫内容', trigger: 'blur' },
+                ],
+                fyTime: [
+                    { required: true, message: '请选择防疫时间', trigger: 'change' }
+                ],
+                people: [
+                    { required: true, message: '请输入操作人', trigger: 'blur' },
+                ],
+                drugName: [
+                    { required: true, message: '请输入用药名称', trigger: 'blur' },
+                ],
+                dose: [
+                    { required: true, message: '请输入剂量', trigger: 'blur' },
+                ],
+                production: [
+                    { required: true, message: '请输入药品生产单位', trigger: 'blur' },
+                ],
+            },
+            rules3: {
+                batch: [
+                    { required: true, message: '请选择档案批次', trigger: 'change' }
+                ],
+                time: [
+                    { required: true, message: '请选择时间', trigger: 'change' }
+                ],
+                syTypes: [
+                    { required: true, message: '请选择饲养类型', trigger: 'change' }
+                ],
+                describe: [
+                    { required: true, message: '请输入饲养记录', trigger: 'blur' },
+                ],
+            }
         }
     },
     mounted() {
@@ -441,6 +514,23 @@ export default {
         this.getSyjlFun()
     },
     methods: {
+        bigImgFun(item){
+            this.isBigImg = true
+            this.bigImgUrl = item.img_url
+            this.$nextTick(()=>{            
+                this.imgHeight = this.$refs.boxsize.offsetHeight - 60
+                let sizeObj = {
+                    'max-height': this.$refs.boxsize.offsetHeight - 60 + 'px',
+                    'max-width': this.$refs.boxsize.offsetWidth - 60 + 'px',
+                    'margin-bottom': 10 + 'px'
+                }
+                this.sizeObj = sizeObj
+            })
+        },
+        closeBigImgFun(){
+            this.bigImgUrl = ''
+            this.isBigImg = false
+        },
         moreFun(){
             this.isMoreMsg = true
         },
@@ -480,8 +570,17 @@ export default {
                 })
 
         },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.submitFormFun()
+                } else {
+                    return false;
+                }
+            });
+        },
         // 新增养殖档案
-        submitForm(){
+        submitFormFun(){
             if(this.yzda_id == ''){
                 // 新增
                 let arr = []
@@ -588,7 +687,16 @@ export default {
                     console.log(res)
                 })
         },
-        submitForm2(){
+        submitForm2(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.submitFormFun2()
+                } else {
+                    return false;
+                }
+            });
+        },
+        submitFormFun2(){
             if(this.fyfz_id == ''){
                 // 新增
                 let arr = []
@@ -695,7 +803,16 @@ export default {
                     console.log(res)
                 })
         },
-        submitForm3(){
+        submitForm3(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.submitFormFun3()
+                } else {
+                    return false;
+                }
+            });
+        },
+        submitFormFun3(){
             if(this.syjl_id == ''){
                 // 新增
                 let arr = []
@@ -984,6 +1101,36 @@ export default {
     @import '../../assets/css/common.css';
     .content{
         height: 100%;
+        .box-bigimg{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 666;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            .close{
+                position: fixed;
+                top: 0;
+                right: 0;
+                z-index: 666;
+                width: 50px;
+                height: 50px;
+                text-align: center;
+                line-height: 50px;
+                color: #fff;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            .images{
+                text-align: center;
+            }
+            .imgBox{
+                margin-top: 50px;
+            }
+        }
         .more-msg{
             text-indent: 30px;
         }

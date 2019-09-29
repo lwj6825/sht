@@ -140,7 +140,7 @@
                         <el-table-column prop="biz_name" label="供应商名称"></el-table-column>
                         <el-table-column prop="concact_name" label="联系人"></el-table-column>
                     </el-table>
-                    <el-pagination background class="pages" @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+                    <el-pagination background class="pages" v-if="num != 0" @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
                         layout="total, prev, pager, next, jumper" :total="num">
                     </el-pagination>
                 </div>

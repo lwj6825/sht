@@ -1157,7 +1157,7 @@ export default {
                     this.tableData2 = res.data.list 
                     this.count = res.data.allBizNum  //电子秤总数
                     this.nums = res.data.total; //当前在线数
-                    this.list_3_num1 = (this.nums/(this.count + this.nums))*100;
+                    this.list_3_num1 = (this.nums/this.count) *100;
                     this.list_3_num1 = this.list_3_num1.toFixed(0);
                     this.num2 = res.data.total
                 })

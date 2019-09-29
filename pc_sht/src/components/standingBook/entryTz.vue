@@ -72,7 +72,7 @@
                 <p class="tz-title">全部进货台账</p>
                 <div>
                     <el-button type="primary" @click="addEntryTzFun" class="blue-bth">新增进货台账</el-button>
-                    <el-button type="primary" class="import white-bth" @click="downloadFun">导出</el-button><!---->
+                    <el-button type="primary" class="import white-bth" @click="downloadFun">导出</el-button>
                 </div>
             </div>
             <div class="tables" >
@@ -85,11 +85,11 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="seller_booth_name" label="供应商"> </el-table-column>
-                    <el-table-column prop="suppiler_name" label="生产单位"> </el-table-column>
-                    <el-table-column prop="extra2" label="总数量/重量"> </el-table-column>
+                    <!--<el-table-column prop="suppiler_name" label="生产单位"> </el-table-column>-->
+                    <el-table-column prop="extra2" label="数量"> </el-table-column>
                     <el-table-column prop="actual_money" label="金额(元)" width="80"> </el-table-column>
-                    <el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
-                    <!--<el-table-column prop="address" label="数据来源">
+                    <!--<el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
+                    <el-table-column prop="address" label="数据来源">
                         <template slot-scope="scope">
                             <p>{{scope.row.tz_origin == '1' ? '订单' : '手动录入'}}</p>
                         </template>
@@ -340,7 +340,9 @@ export default {
                 upload: '',
             }
             this.buyerName = ''
-            this.getTime()
+            // this.getTime()
+            this.startTime = ''
+            this.endTime = ''
             this.page = 1
             this.getEntryTzFun()
         },
