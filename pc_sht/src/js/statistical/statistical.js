@@ -1,8 +1,8 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryGoodsRankCurrentYear,queryGoodsRankCurrentMonth,queryGoodsRankCurrentWeek,queryGoodsRankCurrentDay,
-    queryBizRankCurrentWeek,queryBizRankCurrentDay,queryBizRankCurrentMonth,queryBizRankCurrentYear,
+    queryBizRankCurrentWeek,queryBizRankCurrentDay,queryBizRankCurrentMonth,queryBizRankCurrentYear,queryHasNoTzBizByNodeId,
     getTzInfoUploadDays,getTzInfoUploadBizNum,getBizOnlineTime,getGoodsWeightRankAndAvgPrice,queryMoneyAndWeightForBiz,
-    computNode,computNodeNumWeek,computPluNumWeek,queryMoneyLittleTime,queryMoneyAndWeightForGoods,
+    computNode,computNodeNumWeek,computPluNumWeek,queryMoneyLittleTime,queryMoneyAndWeightForGoods,getBizNotOnlineTime,
     queryMoneyCurrentWeek,queryMoneyCurrentMonth,queryMoneyCurrentDayHour,queryMoneyCurrentYear,queryMoneyAndWeightForMarket
 } from '../address/url.js';
 
@@ -51,6 +51,10 @@ export const GetTzInfoUploadBizNum = function(params) {
 export const GetBizOnlineTime = function(params) {
     return ajaxGet(getBizOnlineTime +'?'+ params)
 }
+// 该市场电子秤不在线天数
+export const GetBizNotOnlineTime = function(params){
+    return ajaxGet(getBizNotOnlineTime + '?' + params)
+}
 // 商品交易量及价格走势(前10)
 export const GetGoodsWeightRankAndAvgPrice = function(params) {
     return ajaxGet(getGoodsWeightRankAndAvgPrice +'?'+ params)
@@ -98,4 +102,8 @@ export const QueryMoneyAndWeightForBiz = function(params) {
 //查询商户交易额明细总额
 export const QueryMoneyAndWeightForMarket = function(params){
     return ajaxGet(queryMoneyAndWeightForMarket + '?' + params)
+}
+//查询未录入商户台账数
+export const QueryHasNoTzBizByNodeId = function(params){
+    return ajaxGet(queryHasNoTzBizByNodeId + '?' + params)
 }
