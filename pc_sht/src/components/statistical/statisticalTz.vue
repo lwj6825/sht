@@ -1,5 +1,5 @@
 <template>
-    <div class="content saleTz" ref="content" v-loading="loading">
+    <div class="content saleTz" ref="content"   >
         <div class="back" @click="back">返回</div>
         <div class="areaBox" ref="areaBox" v-if="isShow">
             <AreaSelect @selectId='selectId' :gooduserId="gooduserId"></AreaSelect>
@@ -57,7 +57,7 @@
                             :value="item.GOODS_NAME">
                             </el-option>
                         </el-select> -->
-                        <el-input v-model="form.GoodList" clearable style="width:175px;" placeholder="请输入商品名称"></el-input>
+                        <el-input v-model="form.GoodList" clearable style="width:160px;" placeholder="请输入商品名称"></el-input>
                     </el-form-item>
                     
                     <el-form-item>
@@ -69,7 +69,7 @@
                 <p class="unfold" @click="unfoldFun">{{unfold}}筛选条件</p>
             </div>
         </div>
-        <div class="table">
+        <div class="table" v-loading.body="fullscreenLoading1" style="height:100%"  v-loading="loading">
             <div class="title">
                 <p class="tz-title">全部销售台账</p>
                 <div>
@@ -82,8 +82,8 @@
                     </span>
                 </div>
             </div>
-            <div class="tables">
-                <el-table :data="tableData" :header-cell-style="rowClass" @expand-change="detailTzFun"
+            <div class="tables" >
+                <el-table :data="tableData" :header-cell-style="rowClass" @expand-change="detailTzFun" style="height:560px;"
                 :row-key='getRowKeys'>
                     <el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
                     
@@ -177,6 +177,7 @@ export default {
     name: "saleTz",    
     data() {
         return {
+            fullscreenLoading1:false,   
             loading:true,
             // options:['电子秤','11','11','11'],
             page: 1,
@@ -221,20 +222,57 @@ export default {
             },
             start_time:'',
             end_time:'',
-            gooduserId:''
+            gooduserId:'',
+            dataMore:''
         }
     },
     created(){
             this.gooduserId = this.$route.query.gooduserId;
      },
     mounted() {
+        this.getTime()
         setTimeout(() => {
                 this.loading = false
-        }, 2000);
+        }, 4000);
         // 接受值
         this.gooduserId = this.$route.query.gooduserId;
         this.start_time  = this.$route.query.startTime;
         this.end_time  = this.$route.query.endTime;
+        var date1 = new Date(),
+        time1 =date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
+        var now = new Date(); //当前日期
+        var nowDayOfWeek = now.getDay(); //今天本周的第几天
+        var nowDay = now.getDate(); //当前日
+        var nowMonth = now.getMonth(); //当前月
+        var nowYear = now.getYear(); //当前年
+        nowYear += (nowYear < 2000) ? 1900 : 0; //
+        function formatDate(date) {
+            var myyear = date.getFullYear();
+            var mymonth = date.getMonth()+1;
+            var myweekday = date.getDate();
+            if(mymonth < 10){
+                mymonth = "0" + mymonth;
+            }
+            if(myweekday < 10){
+                myweekday = "0" + myweekday;
+            }
+            return (myyear+"-"+mymonth + "-" + myweekday);
+        }
+        var weekStartDate =  new Date(nowYear,nowMonth , nowDay - nowDayOfWeek + 1);
+        var weekStartDate =  formatDate(weekStartDate);
+        if(this.start_time == time1 || this.start_time == weekStartDate){
+                this.start_time  = this.$route.query.startTime;
+                this.end_time  = this.$route.query.endTime;
+        }else{
+                var date1 = new Date(),
+                time1=date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
+                var date2 = new Date(date1);
+                date2.setDate(date1.getDate()-6);
+                var time2 = date2.getFullYear()+"-"+(date2.getMonth()+1)+"-"+date2.getDate();
+                this.start_time = time2;
+                this.end_time = time1;
+                this.$message.warning('数据量过大，最多只能查询7天的数据');
+        }
         this.form.value1 = [this.start_time,this.end_time]
         this.startTime = this.form.value1[0];
         this.endTime = this.form.value1[1];
@@ -244,6 +282,10 @@ export default {
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
         this.local_node_id_id = localStorage.getItem('nodeidlocal');
+        // var Time = localStorage.getItem("Time");
+        // localStorage.setItem(Time,Time);
+        var dataMore = [this.time,this.input,this.gooduserId]
+        
         // console.log(this.gooduserId)
         // console.log(this.$route.params)
         // this.getTime()
@@ -261,9 +303,19 @@ export default {
         
     },
     methods: {
+        disabledDate (value) {
+            // if (Date.now() <= value) {
+            //         return true
+            // }
+            // return false
+            if(this.startTime + 7 > this.endTime){
+                    return false
+            }
+            return false
+        },
         back(){
             window.history.go(-1);
-            let Time = localStorage.getItem("Time");
+            // localStorage.setItem("Time",dataMore);
         },
         getGoodsFun() {
             // alert(this)
@@ -344,7 +396,10 @@ export default {
             }
         },
         searchFun(){
-    
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             this.page = 1
             this.getSaleTzFun()
         },
@@ -461,60 +516,64 @@ export default {
                 })
         },
         getSaleTzFun(){
-            // let loading = this.$loading({
-            //     lock: true,
-            //     text: 'Loading',
-            //     spinner: 'el-icon-loading',
-            //     background: 'rgba(0, 0, 0, 0.7)'
-            // });
-            if(this.isRegion == 'false'){
-                let obj = {
-                    region:  this.areaId,
-                    tz_origin:this.form.source,
-                    details:this.form.GoodList,
-                    seller_booth_id: this.scShopId,
-                    seller_booth_name: this.form.user,
-                    start_time: this.startTime,
-                    end_time: this.endTime,
-                    page: this.page,
-                    cols: this.cols
-                }
+            let end = new Date(this.endTime).getTime()
+            let scope = end - 3600 * 1000 * 24 * 7
+            let states = true;
+             if(new Date(this.startTime) < scope){
+                this.$message.warning('数据量过大，最多只能查询7天的数据');
+                states = false
+                this.startTime = scope;
+                return
+            }else{
+                states = true
+                this.loading = true
+            }
+            if(states){
+                if(this.isRegion == 'false'){
+                    let obj = {
+                        region:  this.areaId,
+                        tz_origin:this.form.source,
+                        details:this.form.GoodList,
+                        seller_booth_id: this.scShopId,
+                        seller_booth_name: '',
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                        page: this.page,
+                        cols: this.cols
+                    }
 
-                GetSaleTz(obj)
-                    .then(res => {
-                        // alert(res,"商品名字")
-                        // this.loading = false
-                        this.tableData = res.data.tzList
-                        this.num = res.data.tzBean.total
-                        // loading.close();
-                    })
-                    .catch(res => {
-                        console.log(res)
-                        // loading.close();
-                    })
-            }else{
-                let obj = {
-                    region: this.areaId,
-                    tz_origin:this.form.source,
-                    details:this.form.GoodList,
-                    seller_booth_name: this.form.user,
-                    start_time: this.startTime,
-                    end_time: this.endTime,
-                    page: this.page,
-                    cols: this.cols,
+                    GetSaleTz(obj)
+                        .then(res => {
+                            // alert(res,"商品名字")
+                            this.tableData = res.data.tzList
+                            this.num = res.data.tzBean.total
+                        })
+                        .catch(res => {
+                            console.log(res)
+                        })
+                }else{
+                    let obj = {
+                        region: this.areaId,
+                        tz_origin:this.form.source,
+                        details:this.form.GoodList,
+                        seller_booth_name: this.form.user,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                        page: this.page,
+                        cols: this.cols,
+                    }
+                    // console.log(this.form.GoodList,"goodlist")
+                    GetSaleTz(obj)
+                        .then(res => {
+                            this.tableData = res.data.tzList
+                            this.num = res.data.tzBean.total
+                        })
+                        .catch(res => {
+                            console.log(res)
+                        })
                 }
-                // console.log(this.form.GoodList,"goodlist")
-                GetSaleTz(obj)
-                    .then(res => {
-                        this.tableData = res.data.tzList
-                        this.num = res.data.tzBean.total
-                        // loading.close();
-                    })
-                    .catch(res => {
-                        console.log(res)
-                        // loading.close();
-                    })
             }
+            
         },
         search(ele){
             console.log(ele)
@@ -523,7 +582,12 @@ export default {
             console.log(ele)
         },
         selectId(id){//选择区域
+           this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             this.getTime()
+            this.form.GoodList=''
             // console.log(id)
             let data = {
                 page: '1',

@@ -2,12 +2,14 @@
 export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
 export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
 export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 // export const baseUrl = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口
@@ -267,6 +269,7 @@ export const queryBizRankCurrentDay = baseUrl + 'redis/queryBizRankCurrentDay' /
 export const queryBizRankCurrentMonth = baseUrl + 'redis/queryBizRankCurrentMonth' // 查询当月商户交易额排行
 export const queryBizRankCurrentYear = baseUrl + 'redis/queryBizRankCurrentYear' // 查询当年商户交易额排行
 export const getTzInfoUploadDays = baseUrl + 'redis/getTzInfoUploadDays' // 该市场当月上传进货台账的商户信息（录入天数）
+export const queryHasTzBizByNodeId = baseUrl4 + 'redis/queryHasTzBizByNodeId' // 该市场当月上传进货台账的商户信息（录入笔数）
 export const getTzInfoUploadBizNum = baseUrl + 'redis/getTzInfoUploadBizNum' //  该市场当月上传进货台账的商户信息（商户数）
 export const getBizOnlineTime = baseUrl + 'redis/getBizOnlineTime' // 该市场当日电子秤最早在线时间
 export const getBizNotOnlineTime = baseUrl + 'redis/getBizNotOnlineTime' //该市场电子秤不在线天数

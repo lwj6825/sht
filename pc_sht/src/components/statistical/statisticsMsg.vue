@@ -61,7 +61,7 @@
                 <ul class="list list_3">
                     <li class="list-title">
                         <p>商户活跃度</p>
-                        <el-tooltip class="item" effect="dark" content="商户活跃度为当前在线的商户与全部商户的百分比，图表显示当前在线商户数量。    " placement="top">
+                        <el-tooltip class="item" effect="dark" content="商户活跃度为当前在线的商户与全部商户的百分比" placement="top">
                             <img src="../../assets/images/u4155.png">
                         </el-tooltip>
                     </li> 
@@ -125,15 +125,15 @@
                         @click="handleBtnQuery()" 
                 >查询</el-button>
             </div>
-            <div class="no_more" v-if="more">暂无数据</div>
+            <div class="no_more" v-if="goodArr.length==0">暂无数据</div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="商品交易额" name="first">
                     <div class="box">
                         <div class="list-title1">
-                                    <button class="list-tit" style="outline:none" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)" >{{item.name}}</button>
+                                    <button class="list-tit" style="outline:none" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</button>
                         </div>
-                        <div class="text">
-                            <div id="my-chart4" style="width:1000px;height:400px;margin-top:25px;"></div>
+                        <div class="text" v-loading.body="fullscreenLoading1" style="margin-top:45px;">
+                            <div id="my-chart4" style="width:1000px;height:400px;"></div>
                             <div class="list">
                                 <div class="list-item">
                                     <p class="item-title">商品销售排行</p>
@@ -143,8 +143,9 @@
                                             <p class="name"  @click='getshopList(item.plu_name)'>{{item.plu_name}}</p>
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
-                                        <p v-if="more" class="no_more1" >暂无数据</p>
-                                        <p class="lookMore"  @click='More1()'>查看更多>></p>
+                                        <p v-if="goodArr.length==0" class="no_more1" >暂无数据</p>
+                                        <p v-else class="no_more1" ></p>
+                                        <p class="lookMore" v-if="goodArr.length!=0" @click='More1()'>查看全部>></p>
                                     </ul>
                                 </div>
                             </div>
@@ -156,7 +157,7 @@
                         <ul class="list-title1" style="z-index:99">
                                 <li class="list-tit" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</li>
                         </ul>
-                        <div class="text">
+                        <div class="text" v-loading.body="fullscreenLoading1" style="margin-top:45px;">
                             <div id="my-chart7" style="width: 1000px;height:400px;"></div>
                             <div class="list">
                                 <div class="list-item">
@@ -168,8 +169,9 @@
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
                                     </ul>
-                                    <p v-if="more" class="no_more1" >暂无数据</p>
-                                    <p class="lookMore"  @click='More2()'>查看更多>></p>
+                                    <p v-if="goodArr.length==0" class="no_more1" >暂无数据</p>
+                                    <p v-else></p>
+                                    <p class="lookMore" v-if="goodArr.length!=0"  @click='More2()'>查看全部>></p>
                                 </div>
                             </div>
                         </div>
@@ -181,31 +183,28 @@
             <div class="left">
                 <p class="title">台账录入情况</p>
                 <div id="my-chart5" style="width: 500px;height:180px;margin-left:78px;"></div>
-                <p style="border-bottom:1px solid #ccc; padding-bottom:15px;font-size:14px;">未录入台账商户数</p>
-                <!-- <el-tabs v-model="activeName2"> -->
-                        <!-- <el-tab-pane label="未录入台账商户数" name="second"> -->
-                                    
+                <!-- <p style="border-bottom:1px solid #ccc; padding-bottom:15px;font-size:14px;">未录入台账商户数</p> -->
+                <el-tabs v-model="activeName2" style="margin-top:-24px">
+                        <el-tab-pane label="未录入台账商户" name="second">
                                     <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;">
                                         <el-table-column prop="booth_name" label="商户"></el-table-column>
-                                        <el-table-column  prop="days" label="未录入天数" >
+                                        <el-table-column  prop="days" label="近30天连续未录入天数" >
                                             <template slot-scope="scope">{{scope.row.days ? scope.row.days : '无数据'}}
                                         </template>
                                         </el-table-column>
                                     </el-table>
                                     <el-pagination background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
                                     @current-change="handleCurrentChange4"></el-pagination>
-                        <!-- </el-tab-pane> -->
-                        <!-- <el-tab-pane label="当日已录入商户" name="first">
+                        </el-tab-pane>
+                        <el-tab-pane label="当日已录入台账商户" name="first">
                             <el-table :data="tableData" @sort-change="sortChange" style="width: 100%;">
-                            <el-table-column prop="BUYER_BOOTH_NAME" label="商户"></el-table-column>
-                            <el-table-column prop="DAYS" label="录入天数" ></el-table-column>
+                            <el-table-column prop="booth_name" label="商户"></el-table-column>
+                            <el-table-column prop="NUM" label="录入笔数" ></el-table-column>
                         </el-table>
                         <el-pagination background layout="prev, pager, next" :current-page.sync="page" :page-size="cols" :total="num"
-                        @current-change="handleCurrentChange"></el-pagination>  -->
-
-                        <!-- </el-tab-pane> -->
-                        
-                 <!-- </el-tabs>  -->
+                        @current-change="handleCurrentChange"></el-pagination> 
+                        </el-tab-pane>
+                 </el-tabs> 
             </div>
             <div class="right">
                 <p class="title">电子秤在线率</p>
@@ -222,11 +221,12 @@
                             <p>{{nums}}</p>
                         </li>
                     </ul>
-                    <div class="whz">
+                    <!-- <div class="whz">
                         <div class="fzsj">{{list_3_num1 + '%'}}</div>
                         <div class="wbhz"></div>
                         <div class="d1" :style="degObj" style="transform: rotate(-115.2deg);" ></div>
-                    </div>
+                    </div> -->
+                    <el-progress type="circle" :percentage="progress"  :width="100" style="margin-top:10px;" ></el-progress>
                 </div>
                 <div class="table">
                     <el-tabs v-model="activeName1">
@@ -241,9 +241,9 @@
                         <el-tab-pane label="不在线商户" name="second">
                                 <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3">
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
-                                    <el-table-column prop="days" label="商户不在线天数" ></el-table-column>
+                                    <el-table-column prop="days" label="近30天连续不在线天数" ></el-table-column>
                                 </el-table>
-                                <el-pagination background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num2"
+                                <el-pagination background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num3"
                                 @current-change="handleCurrentChange3"></el-pagination>
                             </el-tab-pane>
                     </el-tabs> 
@@ -259,7 +259,7 @@ import {QueryArea} from '../../js/area/area.js';
 import {QueryGoodsRankCurrentYear,QueryGoodsRankCurrentMonth,QueryGoodsRankCurrentWeek,QueryGoodsRankCurrentDay,
     QueryBizRankCurrentWeek,QueryBizRankCurrentDay,QueryBizRankCurrentMonth,QueryBizRankCurrentYear,QueryHasNoTzBizByNodeId,
     GetTzInfoUploadDays,GetTzInfoUploadBizNum,GetBizOnlineTime,GetGoodsWeightRankAndAvgPrice,GetBizNotOnlineTime,
-    ComputNode,ComputNodeNumWeek,ComputPluNumWeek,QueryMoneyAndWeightForGoods,QueryMoneyAndWeightForBiz,
+    ComputNode,ComputNodeNumWeek,ComputPluNumWeek,QueryMoneyAndWeightForGoods,QueryMoneyAndWeightForBiz,QueryHasTzBizByNodeId,
     QueryMoneyCurrentWeek,QueryMoneyCurrentMonth,QueryMoneyCurrentDayHour,QueryMoneyCurrentYear
 } from '../../js/statistical/statistical.js'
 export default {
@@ -283,7 +283,7 @@ export default {
                 {name: '当日'},
                 {name: '本周'},
                 {name: '本月'},
-                {name: '全年'},
+                {name: '三个月'},
                 // {name: '自定义时间'}
             ],
             currId: '',
@@ -306,6 +306,7 @@ export default {
             cols3: 5,
             cols4: 5,
             num2: 0,
+            num3: 0,
             contacts: '',
             nodeName: '',
             userId: '',
@@ -336,10 +337,12 @@ export default {
             end_time:'',
             time:'',
             gooduserId:'',
-            more:false,
-            more1:false,
+            more:true,
+            more1:true,
             num4:0,
-            progress: 0
+            progress: 0,
+            fullscreenLoading:false,
+            fullscreenLoading1:false
             // userId:''
             // screenWidth: document.body.clientWidth,
         }
@@ -353,7 +356,8 @@ export default {
         this.getTzInfoUploadBizNumFun()
         this.getAreaFun()
         this.getBizOnlineTimeFun()
-        this.getTzInfoUploadDaysFun()
+        // this.getTzInfoUploadDaysFun()
+        this.QueryHasTzBizByNodeId()
         this.getBizNotOnlineTimeFun()
         this.queryHasNoTzBizByNodeIdFun()
         // 标准时间转日期格式
@@ -369,10 +373,17 @@ export default {
         this.time = [this.start_time,this.end_time]
         setTimeout(() => {
                 this.loading = false
-        }, 3000);
+        }, 4000);
+        if(this.goodArr != ''){
+            this.more = true;
+        }
     },
     methods: {
         handleBtnQuery(){
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             this.currId = null;
             this.currId2 = this.titArr[0].userId;
             var startTime = this.time[0];
@@ -450,10 +461,12 @@ export default {
         sortChange(){
             if(this.order == 'desc'){
                 this.order = 'asc'
-                this.getTzInfoUploadDaysFun()
+                // this.getTzInfoUploadDaysFun()
+                this.QueryHasTzBizByNodeId()
             }else if(this.order == 'asc'){
                 this.order = 'desc'
-                this.getTzInfoUploadDaysFun()
+                // this.getTzInfoUploadDaysFun()
+                this.QueryHasTzBizByNodeId()
             }
         },
         sortChange4(){
@@ -489,6 +502,10 @@ export default {
             this.$router.push({path:'lzproduce/producetable'});
         },
         handleClick(){
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             this.start_time = this.time[0];
             this.end_time = this.time[1];
             function formatTen(num) { 
@@ -518,8 +535,7 @@ export default {
                             })
                             this.getGoodsWeightRankAndAvgPriceFun(val)
                             this.getChartFun4(title,numArr,priceArr)
-                            this.goodArr = res.data.list.slice(0,10);
-                            
+                             this.goodArr = res.data.list.slice(0,10);
                         })
                         .catch(res => {
                             console.log(res);
@@ -552,6 +568,10 @@ export default {
             this.currId = 0
         },
         focusFun(item){
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             // console.log(item)
             // console.log(this.currld)
             if(this.currId){
@@ -677,26 +697,23 @@ export default {
                 })
                 
             }else if(item == 3){
-                var now = new Date(); //当前日期
-                var nowYear = now.getYear(); //当前年
-                nowYear += (nowYear < 2000) ? 1900 : 0; //
-                function formatDate(date) {
-                    var myyear = date.getFullYear();
-                    var mymonth = date.getMonth()+1;
-                    var myweekday = date.getDate();
-            
-                    if(mymonth < 10){
-                        mymonth = "0" + mymonth;
-                    }
-                    if(myweekday < 10){
-                        myweekday = "0" + myweekday;
-                    }
-                    return (myyear+"-"+mymonth + "-" + myweekday);
-                }
-                var yearStartDate = new Date(nowYear, 0, 1); 
-                var yearEndDate = new Date(nowYear, 11, 31);
-                this.start_time = formatDate(yearStartDate)
-                this.end_time = formatDate(yearEndDate);
+                // 当前月份
+                var date=new Date;
+                var year=date.getFullYear();
+                var month=date.getMonth()+1;
+                var nowDay = date.getDate(); 
+                month =(month<10 ? '0'+month:month);
+                var eDate = (year.toString()+'-'+month.toString()+'-'+nowDay.toString());
+                this.end_time = eDate;
+                //前3个月
+                var date1 = new Date();
+                date1.setMonth(date1.getMonth()-3);
+                var year1=date1.getFullYear();
+                var month1=date1.getMonth()+1;
+                var nowDay1 = date1.getDate(); 
+                month1 =(month1<10 ? '0'+month1:month1);
+                var sDate = (year1.toString()+'-'+month1.toString()+'-'+nowDay1.toString());
+                this.start_time = sDate;
                 this.time = [this.start_time,this.end_time]
                 this.titArr.forEach(val => {
                     if(this.currId2){
@@ -715,7 +732,10 @@ export default {
             }
         },
         focusFun2(item,index){
-            // console.log(item.userId)
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             this.gooduserId = item.userId
             if(this.currId2){
                 if(this.currId2 !== item.userId){
@@ -931,7 +951,7 @@ export default {
                             }
                         },
                         {
-                            name : '均价(元)',
+                            name : '均价(元/公斤)',
                             // min:0,
                             // max:30,
                             // interval:6,
@@ -1013,15 +1033,13 @@ export default {
                     data : title,
                    
                 },
-                yAxis: {
-                    type : 'value',
-                    // show:false,
+               yAxis: {
+                    type: 'value',
+                    show:true,
                     splitLine:{
-                　　　　show:false
-                　　},
-                    min:0,
-                    // max:30,
-                    splitNumber:3,
+                        show:false
+                    },
+                    minInterval: 10
                 },
                 series: [
                     {
@@ -1116,15 +1134,6 @@ export default {
                     let str = 'node_id='+this.loginId+'&region='+this.titArr[0].bootList[0].shop_booth_id+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page=1&cols=10&name=';
                      QueryMoneyAndWeightForGoods(str)
                     .then(res => {
-                        console.log(res.data.list)
-                        if(res.data.list == ''){
-                            // alert()
-                            this.more = true;
-                        }
-                        if(res.data.list == []){
-                            alert()
-                            this.more1 = true;
-                        }
                         let arr = res.data,
                             numArr = [],
                             title = [],
@@ -1169,11 +1178,30 @@ export default {
 
         },
         // 该市场当月上传进货台账的商户信息（录入天数）
-        getTzInfoUploadDaysFun(){
-            let str = 'node_id=' + this.loginId + '&page=' + this.page + '&cols=' + this.cols + '&order=' + this.order
-            GetTzInfoUploadDays(str)
+        // getTzInfoUploadDaysFun(){
+        //     let str = 'node_id=' + this.loginId + '&page=' + this.page + '&cols=' + this.cols + '&order=' + this.order
+        //     GetTzInfoUploadDays(str)
+        //         .then(res => {
+        //             this.tableData = res.data.list
+        //             // if(res.data.list.IS_OC_UPLOAD == 0){
+        //             //       IS_OC_UPLOAD
+        //             // }
+        //             this.num = res.data.total
+        //         })
+        //         .catch(res => {
+        //             console.log(res);
+        //         })
+        // },
+        // 该市场当月上传进货台账的商户信息（录入笔数）
+        QueryHasTzBizByNodeId(){
+            let str = 'node_id=' + this.loginId + '&page=' + this.page + '&cols=' + this.cols + '&order=' + this.order + '&name=&type=7'
+            // https://mobile.zhdtech.com/order_sht/redis/queryHasTzBizByNodeId?page=1&cols=15&node_id=110039049&order=desc&name=&type=7
+            // https://mobile.zhdtech.com/order_sht/redis/queryHasTzBizByNodeId?page=1&cols= 5&node_id=110039049&order=desc&name=type=7 
+            QueryHasTzBizByNodeId(str)
                 .then(res => {
+                    // console.log(res,'录入笔数')
                     this.tableData = res.data.list
+                    // console.log(this.tableData,'录入笔数')
                     // if(res.data.list.IS_OC_UPLOAD == 0){
                     //       IS_OC_UPLOAD
                     // }
@@ -1186,10 +1214,8 @@ export default {
         // 该市场当月上传进货台账的商户信息（未录入天数）
         queryHasNoTzBizByNodeIdFun(){
             let str = 'page='+this.page4+'&cols='+this.cols4+'&node_id='+this.loginId+'&order='+this.order4+'&name=&type=1'
-            console.log(str)
             QueryHasNoTzBizByNodeId(str)
             .then((res) => {
-                console.log(res,'未录入')
                 this.tableData4 = res.data.list
                 this.num4 = res.data.total
             })
@@ -1227,7 +1253,6 @@ export default {
                     this.list_3_num1 = (this.nums/this.count) *100;
                     this.list_3_num1 = this.list_3_num1.toFixed(0);
                     this.progress = Number(this.list_3_num1);
-                    console.log(this.progress)
                     this.num2 = res.data.total
                 })
                 .catch(res => {
@@ -1236,7 +1261,7 @@ export default {
         },
         // 该市场当日电子秤不在线商户
         getBizNotOnlineTimeFun(){
-            let str = 'node_id=' + this.loginId + '&page=' + this.page3 + '&cols=' + this.cols3 + '&order=' + this.order2 + '&name=&type=1'
+            let str = 'node_id=' + this.loginId + '&page=' + this.page3 + '&cols=' + this.cols3 + '&order=' + this.order2 + '&name=&type=30'
             GetBizNotOnlineTime(str)
                 .then((res)=>{
                     //  console.log(res,'不在线商户')
@@ -1263,6 +1288,7 @@ export default {
                         })
                         this.getChartFun4(title,numArr,priceArr)
                         this.goodArr = res.data.list.slice(0,10);
+                        
                         // this.getChartFun6(title,numArr,priceArr)
                     })
                     .catch(res => {
@@ -1272,7 +1298,8 @@ export default {
         },
         handleCurrentChange(val){
             this.page = val
-            this.getTzInfoUploadDaysFun()
+            // this.getTzInfoUploadDaysFun()
+            this.QueryHasTzBizByNodeId()
         },
         handleCurrentChange4(val){
             this.page4 = val
@@ -1527,8 +1554,9 @@ export default {
                 display: flex;
                 .echart{
                     margin: 0 auto;
-                    width: 240px;
+                    width: 300px;
                     height:60px;
+                    margin: 0 auto;
                 }
             }
             .list{
@@ -1536,7 +1564,7 @@ export default {
                 padding: 10px;
                 margin: 10px;
                 width: 23%;
-                height: 160px;
+                height: 170px;
                 background: #fff;
                 overflow: hidden;
                 // border: 1px solid #ccc;
@@ -1592,6 +1620,7 @@ export default {
                 }
                 .proportion_1{
                     padding-bottom: 2px;
+                    padding-top:10px;
                     border-bottom: 1px solid #ccc;
                 }
             }
@@ -1619,7 +1648,7 @@ export default {
             .no_more{
                 position: absolute;
                 top: 180px;
-                left: 460px;
+                left: 570px;
                 font-size: 16px;
                 color: #ccc;
             }
@@ -1649,7 +1678,7 @@ export default {
                     left: 20px;
                     .list-tit{
                         border-radius: 5px;
-                        margin-left: 10px;
+                        margin-left: 17px;
                         color: black;
                         background:#fff;
                         padding: 0 10px;
@@ -1861,7 +1890,7 @@ export default {
             background: #13c2c2;
         }
         .lookMore{
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
             margin-top: 3px; 
             margin-top: 15px;
@@ -1901,6 +1930,12 @@ export default {
         }
         .el-tab-pane{
             margin-top:-13px;
+        }
+        .el-table__body-wrapper{
+            height: 121px;
+        }
+        .el-progress__text{
+            padding-top: 35px;
         }
     }
 </style>
