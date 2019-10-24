@@ -385,3 +385,4 @@ export const deleteYzcsy = baseUrl + 'farming/deleteYzcsy' // 删除养殖场饲
 export const getAllYzctzjg = baseUrl + 'farming/getAllYzctzjg' // 查询屠宰加工
 export const insertYzctzjg = baseUrl + 'farming/insertYzctzjg' // 新增屠宰加工
 export const deleteYzctzjg = baseUrl + 'farming/deleteYzctzjg' // 删除屠宰加工
+export const queryTzGoods = baseUrl + 'production/queryTzGoods' // 删除屠宰加工

@@ -56,9 +56,13 @@
                     <el-table-column type="selection" width="55" v-if="isShows"> </el-table-column>
                     <el-table-column prop="SC_DATE" label="生产日期"> </el-table-column>
                     <el-table-column prop="BATCH_ID" label="生产批次号"> </el-table-column>
-                    <el-table-column prop="GOODS_NAME" label="销售商品"> </el-table-column>
-                    <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
-                    <el-table-column prop="NUMBER" label="销售数量"> </el-table-column>
+                    <el-table-column prop="GOODS_NAME" label="商品名称"> </el-table-column>
+                    <!--<el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>-->
+                    <el-table-column prop="NUMBER" label="数量">
+                        <template slot-scope="scope">
+                            {{scope.row.NUMBER + scope.row.GOODS_UNIT}}
+                        </template>
+                    </el-table-column>
                     <el-table-column width='140' label="进货商品信息">
                         <template slot-scope="scope">
                             <p class="btn" @click="viewFun2(scope.row)">查看进货商品信息</p>
@@ -162,11 +166,11 @@ export default {
         if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
             this.isShows = false
         }
-        this.getTime()
-        let arr = []
-        arr.push(this.startTime)
-        arr.push(this.endTime)
-        this.form.dataTime = arr
+        // this.getTime()
+        // let arr = []
+        // arr.push(this.startTime)
+        // arr.push(this.endTime)
+        // this.form.dataTime = arr
         this.getDataFun()
     },
     methods: {
@@ -296,7 +300,9 @@ export default {
                 productionCode: '',
                 dataTime: ''
             }
-            this.getTime()
+            this.startTime = ''
+            this.endTime = ''
+            // this.getTime()
             this.page = 1
             this.getDataFun()
         },

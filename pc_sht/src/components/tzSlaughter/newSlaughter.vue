@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import {InsertYzctzjg} from '../../js/tzSlaughter/tzSlaughter.js'
+import {InsertYzctzjg,QueryTzGoods} from '../../js/tzSlaughter/tzSlaughter.js'
 import {allGys} from "../../js/management/management.js";
 import {sales} from "../../js/goods/goods.js";
 import {GetAllYzcda,GetAllYzcxx} from '../../js/tzFarming/tzFarming.js'
@@ -353,7 +353,7 @@ export default {
                 node_id: this.node_id,
                 stk_goods_code: this.stk_goods_code,
             }
-            QueryPurchaseGoods(params)
+            QueryTzGoods(params)
                 .then(res => {
                     this.tableData.forEach(val => {
                         if(val.goodVal == ele){
