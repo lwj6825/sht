@@ -42,7 +42,7 @@
                         <el-checkbox v-for="(item,index) in checkArr" :key="index" :label="item.ID">{{item.GOODS_NAME}}</el-checkbox>
                     </el-checkbox-group>
                 </div>
-                <el-pagination background layout="prev, pager, next" :current-page.sync="page" :page-size="cols" :total="num"
+                <el-pagination v-if="num" background layout="prev, pager, next" :current-page.sync="page" :page-size="cols" :total="num"
                 @current-change="handleCurrentChange"></el-pagination><!---->
                 <div class="btn">
                     <!--<p class="sure-btn">确定</p>-->

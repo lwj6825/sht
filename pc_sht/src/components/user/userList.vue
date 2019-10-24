@@ -42,7 +42,7 @@
                     <el-button>导入</el-button>
                 </div>
             </div>
-            <el-table :data="tableData"  border style="margin-top:10px;" v-loading="loading">
+            <el-table :data="tableData" :header-cell-style="rowClass" v-loading="loading">
                 <el-table-column prop="userName" label="账号" align="center" fixed> </el-table-column>
                 <el-table-column prop="roleName" label="节点名称" align="center">
                     <template slot-scope="scope">
@@ -62,13 +62,8 @@
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="15"
-                    layout="total, prev, pager, next, jumper"
-                    :total='dataTotal'>
+                <el-pagination v-if="dataTotal" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage" :page-size="15" layout="total, prev, pager, next, jumper" :total='dataTotal'>
                 </el-pagination>
             </div>
         </div>
@@ -349,7 +344,13 @@ export default {
                     console.log(res)
                     this.loading = false
                 })
-        }
+        },
+        rowClass({ row, rowIndex}) {
+            return {
+                background: '#f2f2f2',
+                color: '#333'
+            }
+        },
     },
 
 }
@@ -366,6 +367,7 @@ export default {
         display: block;
     }
     .title{
+        margin-bottom: 10px;
         display: flex;
         .tz-title{
             flex: 1;
@@ -427,16 +429,9 @@ export default {
 </style>
 <style lang="less">
 .uesr-list{
-
-    .el-table td, .el-table th{
-        padding: 4px 0;
-    }
-    .el-table th.is-leaf{
-        background: #f5f5f5;
-    }
     .pagination{
-    padding-top: 10px;
-    text-align: center;
+        padding-top: 10px;
+        text-align: center;
     }
 }
 </style>

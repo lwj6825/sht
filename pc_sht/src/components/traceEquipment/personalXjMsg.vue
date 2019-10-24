@@ -7,7 +7,7 @@
                 <el-table-column prop="assets_count" label="设备数量"> </el-table-column>
                 <el-table-column prop="node_count" label="节点数量"> </el-table-column>
             </el-table>
-            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+            <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
         </div>
     </div>

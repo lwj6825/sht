@@ -77,12 +77,8 @@
                     </el-table-column>
                 </el-table>
                 <div class="pagination">
-                    <el-pagination background
-                        @current-change="handleCurrentChange"
-                        :current-page.sync="page"
-                        :page-size="cols"
-                        layout="total, prev, pager, next, jumper"
-                        :total='dataTotal'>
+                    <el-pagination v-if="dataTotal" background @current-change="handleCurrentChange" :current-page.sync="page"
+                        :page-size="cols" layout="total, prev, pager, next, jumper" :total='dataTotal'>
                     </el-pagination>
                 </div>
             </div>

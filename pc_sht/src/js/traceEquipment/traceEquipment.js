@@ -6,7 +6,8 @@ import {baseUrl,queryAssetsUser,queryAssetsConf,queryAssetsType,queryNodeBase,qu
     queryInspect,queryInspectId,downloadInspect,deleteInspect,queryMaintain,bar_code,maintainAdd,downloadMaintain,queryMaintainId,
     deleteMaintain,queryInspectionRecord,importMaintain,queryMaintainName,updateAssetsType,deleteAssetsType,updateAssetsConf,
     queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2,parseMonLog,queryTableName,getFileState,
-    queryFtpMonLog,getParseType
+    queryFtpMonLog,getParseType,analysisDataMon,setByFtpId,queryErrorData,downloadErrorData,deleteErrorLogData,queryErrorLogType,
+    queryUploadFilesByFtpId,parseMonLogForRecently,downloadErrorLog,
     } from "../address/url";
     
 // 查询 所有资产用户信息（需要确定用户类型类型）
@@ -224,4 +225,49 @@ export const GetParseType = function(params) {
 // 状态
 export const GetFileState = function(params) {
     return ajaxGet(getFileState +'?'+ params)
+}
+// 解析数据监控
+export const AnalysisDataMon = function(params) {
+    return ajaxPost(analysisDataMon, params)
+}
+//设置
+export const SetByFtpId = function(params) {
+    return ajaxPost(setByFtpId,params)
+}
+//对照管理
+export const QueryErrorData = function(params) {
+    return ajaxPost(queryErrorData,params)
+}
+//导出缺对照数据
+export const DownloadErrorData = function(form) {
+    return axios({ // 用axios发送post请求
+        method: 'post',
+        url: downloadErrorData, // 请求地址
+        data: form, // 参数
+        // responseType: 'blob', // 表明返回服务器返回的数据类型
+        responseType: 'arraybuffer',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+//操作缺对照数据
+export const DeleteErrorLogData = function(params) {
+    return ajaxPost(deleteErrorLogData,params)
+}
+//缺对照日志类型条件下拉
+export const QueryErrorLogType = function(params) {
+    return ajaxGet(queryErrorLogType +'?'+ params)
+}
+//最近文件上传情况
+export const QueryUploadFilesByFtpId = function(params) {
+    return ajaxPost(queryUploadFilesByFtpId,params)
+}
+//最近15条解析情况
+export const ParseMonLogForRecently = function(params) {
+    return ajaxPost(parseMonLogForRecently,params)
+}
+// 下载
+export const  DownloadErrorLog  = function(params) {
+    return ajaxPost(downloadErrorLog,params)
 }

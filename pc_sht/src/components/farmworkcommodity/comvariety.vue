@@ -35,7 +35,7 @@
     </div>
     <!--分页-->
     <div class="pageBlock">
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+      <el-pagination v-if="totalPageSize" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
         layout="total, prev, pager, next, jumper" :total="totalPageSize">
       </el-pagination>
     </div>

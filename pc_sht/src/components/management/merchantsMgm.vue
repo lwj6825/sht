@@ -75,15 +75,15 @@
           </el-table-column>
           <el-table-column label="操作" width='200' center>
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="manageSuppliersHandle(scope.$index, scope.row)">{{manageMerchants}}</el-button>
-              <el-button type="text" size="small" @click="manageGoodsHandle(scope.$index, scope.row)">{{manageGoods}}</el-button>
-              <el-button type="text" size="small" @click="inforHandle(scope.$index, scope.row)">{{infor}}</el-button>
+              <el-button type="text" size="small" @click="manageSuppliersHandle(scope.$index, scope.row)">管理供应商</el-button>
+              <el-button type="text" size="small" @click="manageGoodsHandle(scope.$index, scope.row)">管理商品</el-button>
+              <el-button type="text" size="small" @click="inforHandle(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="pagination">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        <el-pagination v-if="dataTotal" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
           :current-page.sync="currentPage" :page-size="15" layout="total, prev, pager, next, jumper" :total='dataTotal'>
         </el-pagination>
       </div>
@@ -106,8 +106,8 @@ export default {
     data() {
       return{
         addMerchants:'新增商户',
-        manageMerchants:'管理供应商',
-        manageGoods:'管理商品',
+        manageMerchants:'',
+        manageGoods:'',
         infor:'详情',
         dataList:[],
         total: "",
@@ -240,12 +240,12 @@ export default {
       },
       manageSuppliersHandle(index,row){//管理供应商
         let data = {
-          page: this.page,
-          cols: this.cols,
+          page: 1,
+          cols: 1000,
           total: this.total,
           userId: this.userId,
-          name: this.name,
-          boothName: this.boothName,
+          name: '',
+          boothName: '',
         }
         QueryArea(data)
           .then(res => {
@@ -283,12 +283,12 @@ export default {
       },
       manageGoodsHandle(index,row){//管理商品
         let data = {
-          page: this.page,
-          cols: this.cols,
+          page: 1,
+          cols: 1000,
           total: this.total,
           userId: this.userId,
-          name: this.name,
-          boothName: this.boothName,
+          name: '',
+          boothName: '',
         }
         QueryArea(data)
           .then(res => {
@@ -371,12 +371,12 @@ export default {
       selectId(id){//选择区域展示商户列表
         this.page = 1
         let data = {
-          page: this.page,
-          cols: this.cols,
+          page: 1,
+          cols: 1000,
           total: this.total,
           userId: this.userId,
-          name: this.name,
-          boothName: this.boothName,
+          name: '',
+          boothName: '',
         }
         QueryArea(data)
           .then(res =>{

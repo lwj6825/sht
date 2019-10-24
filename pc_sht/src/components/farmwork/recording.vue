@@ -220,7 +220,7 @@
         </el-table>
       </div>
       <div class="pageBlock">
-        <el-pagination background @current-change="handleCurrentChange"
+        <el-pagination v-if="totalPageSize" background @current-change="handleCurrentChange"
           :current-page.sync="page_local" layout="total, prev, pager, next, jumper" :page-size="cols" :total="totalPageSize">
         </el-pagination>
       </div>

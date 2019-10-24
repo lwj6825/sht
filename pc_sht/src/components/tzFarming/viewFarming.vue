@@ -71,13 +71,13 @@
                         <el-table-column prop="yzc_rjsl" label="入圈数量(只)"></el-table-column>
                         <el-table-column prop="yzc_rjsj" label="入圈时间"></el-table-column>
                         <el-table-column prop="yzc_clsj" label="预计出栏时间"></el-table-column>
-                        <el-table-column prop="yzc_fzr" label="负责人(联系方式)">
+                        <el-table-column prop="yzc_fzr" label="负责人(联系方式)" width="200">
                             <template slot-scope="scope">
                                 {{scope.row.yzc_fzr + (scope.row.yzc_tel ? '(' + scope.row.yzc_tel + ')' : '')}}
                             </template>
                         </el-table-column>
                         <el-table-column prop="remark" label="描述"></el-table-column>
-                        <el-table-column prop="city" label="图片">
+                        <el-table-column prop="city" label="图片"width="80">
                             <template slot-scope="scope" v-if="scope.row.img_list.length > 0">
                                 <img class="table_img" @click="bigImgFun(scope.row.img_list[0])" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + scope.row.img_list[0].img_url">
                             </template>
@@ -89,7 +89,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+                    <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
                         layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
                 </el-tab-pane>
                 <el-tab-pane label="防疫防治" name="second">
@@ -115,7 +115,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination background @current-change="handleCurrentChange2" :current-page.sync="page2" :page-size="cols2"
+                    <el-pagination v-if="num2" background @current-change="handleCurrentChange2" :current-page.sync="page2" :page-size="cols2"
                         layout="total, prev, pager, next, jumper" :total="num2"></el-pagination>
                 </el-tab-pane>
                 <el-tab-pane label="饲养记录" name="third">
@@ -137,7 +137,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination background @current-change="handleCurrentChange3" :current-page.sync="page3" :page-size="cols3"
+                    <el-pagination v-if="num3" background @current-change="handleCurrentChange3" :current-page.sync="page3" :page-size="cols3"
                         layout="total, prev, pager, next, jumper" :total="num3"></el-pagination>
                 </el-tab-pane>
             </el-tabs>
@@ -1066,6 +1066,7 @@ export default {
                     }else{
                         this.$message.error(res.message);
                     }
+                    event.target.value = null;
                     that.$refs.file.value = null
                     this.file = null
                 })

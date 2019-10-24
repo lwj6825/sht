@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="table-box">
-                <el-table :data="tableData"  border :header-cell-style="rowClass">
+                <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="roleName" label="角色名称" align="center" fixed> </el-table-column>
                     <el-table-column prop="description" label="描述" align="center"> </el-table-column>
                     <el-table-column prop="iN_DATE" label="创建时间" align="center"> </el-table-column>
@@ -28,13 +28,8 @@
                 </el-table>
             </div>
             <div class="pagination">
-                <el-pagination background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="15"
-                    layout="total, prev, pager, next, jumper"
-                    :total='dataTotal'>
+                <el-pagination v-if="dataTotal" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage" :page-size="15" layout="total, prev, pager, next, jumper" :total='dataTotal'>
                 </el-pagination>
             </div>
         </div>

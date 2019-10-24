@@ -32,7 +32,7 @@
                             </el-table-column>
                         </el-table>
                     </div>
-                    <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+                    <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
                     layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
                 </el-tab-pane>
                 <el-tab-pane label="销售台账" name="second">
@@ -50,7 +50,7 @@
                             </el-table-column>
                         </el-table>
                     </div>
-                    <el-pagination background @current-change="handleCurrentChange2" :current-page.sync="page2" :page-size="cols2"
+                    <el-pagination v-if="num2" background @current-change="handleCurrentChange2" :current-page.sync="page2" :page-size="cols2"
                     layout="total, prev, pager, next, jumper" :total="num2"></el-pagination>
                 </el-tab-pane>
             </el-tabs>

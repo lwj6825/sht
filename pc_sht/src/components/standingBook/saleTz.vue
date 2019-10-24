@@ -1,5 +1,5 @@
 <template>
-    <div class="content saleTz" ref="content" v-loading="loading">
+    <div class="content saleTz" ref="content">
         <div class="areaBox" ref="areaBox" v-if="isShow">
             <AreaSelect @selectId='selectId'></AreaSelect>
         </div>
@@ -55,7 +55,7 @@
                             :value="item.GOODS_NAME">
                             </el-option>
                         </el-select> -->
-                         <el-input v-model="form.GoodList" clearable style="width:175px;" placeholder="请输入商品名称"></el-input>
+                        <el-input v-model="form.GoodList" clearable placeholder="请输入商品名称"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn white-bth" @click="searchFun">搜索</el-button>
@@ -70,7 +70,7 @@
             <div class="title">
                 <p class="tz-title">全部销售台账</p>
                 <div>
-                    <el-button type="primary" class="addBtn blue-bth">新增销售台账</el-button>
+                    <!--<el-button type="primary" class="addBtn blue-bth">新增销售台账</el-button>-->
                     <span class="submit">
                         导入台账
                         <form id="upload" enctype="multipart/form-data" method="post"> 
@@ -81,9 +81,8 @@
             </div>
             <div class="tables">
                 <el-table :data="tableData" :header-cell-style="rowClass" @expand-change="detailTzFun"
-                :row-key='getRowKeys'>
-                    <el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
-                    <el-table-column prop="buyer_booth_name" label="客户"> </el-table-column>
+                :row-key='getRowKeys' v-loading="loading">
+                    <el-table-column prop="stall_no" label="摊位号"> </el-table-column>
                     <el-table-column prop="in_date" label="销售日期"  width="180"> </el-table-column>
                     <el-table-column label="商品信息">
                         <template slot-scope="scope">
@@ -99,6 +98,7 @@
                             <p v-if="scope.row.tz_origin == '4'">解析数据</p>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="buyer_booth_name" label="客户"> </el-table-column>
                     <el-table-column prop="seller_booth_name" label="商户名称"> </el-table-column>
                     <!--<el-table-column label="操作">
                         <template slot-scope="scope">
@@ -115,8 +115,8 @@
                                 </ul>
                                 <ul class="item" v-for="(item,index) in scope.row.tz_detail_list" :key="index">
                                     <li>{{item.goods_name}}</li>
-                                    <li>{{item.price}}元/公斤</li>
-                                    <li>{{item.number}}公斤</li>
+                                    <li>{{item.price}}元/{{item.goods_unit}}</li>
+                                    <li>{{item.number + item.goods_unit}}</li>
                                 </ul>
                                 <!--<ul class="item" v-for="(item,index) in scope.row.tz_detail_list" :key="index">
                                     <li>{{item.goods_name}}</li>
@@ -129,7 +129,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+            <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
         </div>
     </div>
@@ -171,7 +171,6 @@ export default {
     name: "saleTz",    
     data() {
         return {
-            loading:true,
             // options:['电子秤','11','11','11'],
             page: 1,
             cols: 15,
@@ -214,14 +213,12 @@ export default {
                 return row.id
             },
             start_time:'',
-            end_time:''
+            end_time:'',
+            loading:true,
 
         }
     },
     mounted() {
-        setTimeout(() => {
-                this.loading = false
-        }, 2000);
         // 接受值
         this.start_time  = this.$route.query.startTime;
         this.end_time  = this.$route.query.endTime;
@@ -437,54 +434,64 @@ export default {
                 })
         },
         getSaleTzFun(){
-            // let loading = this.$loading({
-            //     lock: true,
-            //     text: 'Loading',
-            //     spinner: 'el-icon-loading',
-            //     background: 'rgba(0, 0, 0, 0.7)'
-            // });
-            if(this.isRegion == 'false'){
-                let obj = {
-                    region:  this.areaId,
-                    tz_origin:this.form.source,
-                    details:this.form.GoodList,
-                    seller_booth_id: this.scShopId,
-                    seller_booth_name: this.form.user,
-                    start_time: this.startTime,
-                    end_time: this.endTime,
-                    page: this.page,
-                    cols: this.cols
-                }
-
-                GetSaleTz(obj)
-                    .then(res => {
-                        // alert(res,"商品名字")
-                        this.loading = false
-                        this.tableData = res.data.tzList
-                        this.num = res.data.tzBean.total
-                    })
-                    .catch(res => {
-                        console.log(res)
-                    })
+            let end = new Date(this.endTime).getTime()
+            let scope = end - 3600 * 1000 * 24 * 7
+            let states = true;
+            if(new Date(this.startTime) < scope){
+                this.$message.warning('数据量过大，最多只能查询7天的数据');
+                states = false
+                return
             }else{
-                let obj = {
-                    region: this.areaId,
-                    tz_origin:this.form.source,
-                    details:this.form.GoodList,
-                    seller_booth_name: this.form.user,
-                    start_time: this.startTime,
-                    end_time: this.endTime,
-                    page: this.page,
-                    cols: this.cols,
+                states = true
+                this.loading = true
+            }
+            if(states){
+                if(this.isRegion == 'false'){
+                    let obj = {
+                        region:  this.areaId,
+                        tz_origin:this.form.source,
+                        details:this.form.GoodList,
+                        seller_booth_id: this.scShopId,
+                        seller_booth_name: this.form.user,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                        page: this.page,
+                        cols: this.cols
+                    }
+
+                    GetSaleTz(obj)
+                        .then(res => {
+                            // alert(res,"商品名字")
+                            this.loading = false
+                            this.tableData = res.data.tzList
+                            this.num = res.data.tzBean.total
+                        })
+                        .catch(res => {
+                            console.log(res)
+                            this.loading = false
+                        })
+                }else{
+                    let obj = {
+                        region: this.areaId,
+                        tz_origin:this.form.source,
+                        details:this.form.GoodList,
+                        seller_booth_name: this.form.user,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                        page: this.page,
+                        cols: this.cols,
+                    }
+                    GetSaleTz(obj)
+                        .then(res => {
+                            this.tableData = res.data.tzList
+                            this.num = res.data.tzBean.total
+                            this.loading = false
+                        })
+                        .catch(res => {
+                            console.log(res)
+                            this.loading = false
+                        })
                 }
-                GetSaleTz(obj)
-                    .then(res => {
-                        this.tableData = res.data.tzList
-                        this.num = res.data.tzBean.total
-                    })
-                    .catch(res => {
-                        console.log(res)
-                    })
             }
         },
         search(ele){
@@ -710,9 +717,12 @@ export default {
         .el-range-editor.el-input__inner{
             padding: 0 10px;
         }
-        .el-date-editor .el-range__icon,.el-date-editor .el-range-separator{
+        .el-date-editor .el-range-separator{
             line-height: 30px;
         }
+       .el-date-editor .el-range__icon{
+           line-height: 20px;
+       }
         .el-table__body-wrapper{
             font-size: 13px;
         }

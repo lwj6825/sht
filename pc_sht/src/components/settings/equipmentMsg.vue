@@ -77,7 +77,7 @@
                     </template>
                 </el-table-column>
             </el-table> 
-            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+            <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"> </el-pagination>
         </div>
         <div class="alert-box" v-if="boxShow">

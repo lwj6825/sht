@@ -353,10 +353,19 @@ export const queryAssetsSpecifications = baseUrl3 + 'assets/queryAssetsSpecifica
 export const queryAssetsNames = baseUrl3 + 'assets/queryAssetsNames' // 查询所有资产名称
 export const queryAssetsManufacturers = baseUrl3 + 'assets/queryAssetsManufacturers' // 查询所有资产生产厂家
 export const parseMonLog = baseUrl3 + 'MonLog/parseMonLog' //解析运行日志
-export const queryTableName = baseUrl3 + 'MonLog/queryTableName' //表名下拉菜单
+export const queryTableName = baseUrl3 + 'MonLog/queryTableName' //表名下拉菜单 存入表明下拉
 export const queryFtpMonLog = baseUrl3 + 'MonLog/queryFtpMonLog' //ftp文件日志
 export const getParseType = baseUrl3 + 'MonLog/getParseType' //任务环节下拉
-export const getFileState = baseUrl3 + 'MonLog/getFileState' //状态
+export const getFileState = baseUrl3 + 'MonLog/getFileState' //状态  文件状态下拉
+export const analysisDataMon = baseUrl3 + 'MonLog/analysisDataMon' //解析数据监控
+export const setByFtpId = baseUrl3 + 'MonLog/setByFtpId' //设置
+export const queryErrorData = baseUrl3 + 'MonLog/queryErrorData' // 对照管理
+export const downloadErrorData = baseUrl3 + 'MonLog/downloadErrorData' // 导出缺对照数据
+export const deleteErrorLogData = baseUrl3 + 'MonLog/deleteErrorLogData' // 操作缺对照数据
+export const queryErrorLogType = baseUrl3 + 'MonLog/queryErrorLogType' // 缺对照日志类型条件下拉
+export const queryUploadFilesByFtpId = baseUrl3 + 'MonLog/queryUploadFilesByFtpId' // 最近文件上传情况
+export const parseMonLogForRecently = baseUrl3 + 'MonLog/parseMonLogForRecently' // 最近15条解析情况
+export const downloadErrorLog = baseUrl3 + 'MonLog/downloadErrorLog' // 解析异常信息 下载导出
 
 // 养殖场
 export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询

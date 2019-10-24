@@ -164,7 +164,7 @@
                                 <el-table-column prop="goods_Name" label="商品名称"></el-table-column>
                                 <el-table-column prop="specifications" label="规格"></el-table-column>
                             </el-table>
-                            <el-pagination background @current-change="handleCurrentChange4" :current-page.sync="page2" :page-size="cols2"
+                            <el-pagination v-if="num2" background @current-change="handleCurrentChange4" :current-page.sync="page2" :page-size="cols2"
                             layout="total, prev, pager, next" :total="num2"></el-pagination>
                             <p style="margin: 10px 0;">
                                 <el-button size="mini" @click="addEntryFun">新增商品</el-button>
@@ -190,7 +190,7 @@
                                 <el-table-column prop="goods_Name" label="商品名称"></el-table-column>
                                 <el-table-column prop="specifications" label="规格"></el-table-column>
                             </el-table>
-                            <el-pagination background @current-change="handleCurrentChange6" :current-page.sync="page4" :page-size="cols4"
+                            <el-pagination v-if="num4" background @current-change="handleCurrentChange6" :current-page.sync="page4" :page-size="cols4"
                                 layout="total, prev, pager, next" :total="num4"></el-pagination>
                             <p style="margin: 10px 0;">
                                 <el-button size="mini" @click="addSellFun">新增商品</el-button>
@@ -211,7 +211,7 @@
                                 </el-table-column>
                                 <el-table-column prop="SUPPLIERS_NAME" label="供应商"></el-table-column>
                             </el-table>
-                            <el-pagination background class="pages" @current-change="handleCurrentChange2" :current-page.sync="page"
+                            <el-pagination v-if="num" background class="pages" @current-change="handleCurrentChange2" :current-page.sync="page"
                             :page-size="cols" layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
                         </el-tab-pane>
                         <el-tab-pane label="销售商品" name="sell">
@@ -223,7 +223,7 @@
                                 <el-table-column prop="SPECIFICATIONS" label="规格"></el-table-column>
                                 <el-table-column prop="SUPPLIERS_NAME" label="供应商"></el-table-column>
                             </el-table>
-                            <el-pagination background class="pages" @current-change="handleCurrentChange5" :current-page.sync="page3"
+                            <el-pagination v-if="num" background class="pages" @current-change="handleCurrentChange5" :current-page.sync="page3"
                             :page-size="cols3" layout="total, prev, pager, next, jumper" :total="num"> </el-pagination>
                         </el-tab-pane>
                     </el-tabs>

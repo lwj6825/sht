@@ -106,11 +106,9 @@
       </div>
       <!--分页-->
       <div class="pageBlock">
-        <el-pagination
-          @size-change="handleSizeChange"
+        <el-pagination v-if="totalPageSize" @size-change="handleSizeChange"
           @current-change="handleCurrentChange" :current-page.sync="page_local" :page-size="cols"
-          layout="total, prev, pager, next, jumper"
-          :total="totalPageSize">
+          layout="total, prev, pager, next, jumper" :total="totalPageSize">
         </el-pagination>
       </div>
       <!--新的申请溯源码-->

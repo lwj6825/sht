@@ -2,6 +2,9 @@
     <div class="header">
         <div class="section-content">
           <el-form :model="form" :rules="rules" ref="form"  label-width="120px">
+            <el-form-item label="供应商名称：" prop="bizName">
+              <el-input v-model="form.bizName" clearable></el-input>
+            </el-form-item>
             <el-form-item label="营业执照：">
                 <el-input v-model="form.licenceNo" clearable></el-input>
                 <el-select v-model="value4" clearable placeholder="请选择" v-if="show" @change="selectFun">
@@ -27,9 +30,6 @@
                 <el-option  v-for="val in dwArr" :key="val.ID" :label="val.SUPPLIER_NAME" :value="val.SUPPLIER_NAME" >
                 </el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="供应商名称：" prop="bizName">
-              <el-input v-model="form.bizName" clearable></el-input>
             </el-form-item>
             <el-form-item label="联系人：" prop="name">
               <el-input v-model="form.name" clearable></el-input>

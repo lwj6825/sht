@@ -21,13 +21,9 @@
                     </el-table>
                 </div>
                 <div class="pagination">
-                    <el-pagination background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page.sync="page"
-                        :page-size="15"
-                        layout="total, prev, pager, next, jumper"
-                        :total='firstDataTotal'>
+                    <el-pagination v-if="firstDataTotal" background @size-change="handleSizeChange" 
+                        @current-change="handleCurrentChange" :current-page.sync="page" :page-size="15"
+                        layout="total, prev, pager, next, jumper" :total='firstDataTotal'>
                     </el-pagination>
                 </div>
             </el-tab-pane>
@@ -51,13 +47,9 @@
                     </el-table>
                 </div>
                 <div class="pagination">
-                    <el-pagination background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page.sync="page"
-                        :page-size="15"
-                        layout="total, prev, pager, next, jumper"
-                        :total='secondDataTotal'>
+                    <el-pagination v-if="secondDataTotal" background @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange" :current-page.sync="page" :page-size="15"
+                        layout="total, prev, pager, next, jumper" :total='secondDataTotal'>
                     </el-pagination>
                 </div>
             </el-tab-pane>
@@ -71,12 +63,13 @@
                     <el-button class="search-button" type="primary" v-else @click="seaechXsFun">搜索</el-button>
                 </div>
                 <div class="msg-table">
-                    <el-table :data="dataList" border style="width: 100%" height='360'>
-                        <el-table-column prop="id" label="" width='50'>
+                    <el-table :data="dataList" border style="width: 100%" height='360'@selection-change="changeFun">
+                        <!--<el-table-column prop="id" label="" width='50'>
                             <template slot-scope="scope">
                                 <el-checkbox @change="changeFun(scope.row)"/>
                             </template>
-                        </el-table-column>
+                        </el-table-column>-->
+                        <el-table-column type="selection" width="55"></el-table-column>
                         <el-table-column prop="goods_Name" label="商品名称"> </el-table-column>
                         <el-table-column prop="goods_Unit" label="规格"> </el-table-column>
                         <el-table-column prop="key_number" label="键位" width="160">
@@ -86,12 +79,9 @@
                         </el-table-column>
                     </el-table>   
                 </div>
-                <el-pagination background
-                        :page-size="15" @current-change="handleCurrentChange2"
-                        :current-page.sync="page2"
-                        layout="total, prev, pager, next"
-                        :total='total'>
-                    </el-pagination>
+                <el-pagination v-if="total" background :page-size="15" @current-change="handleCurrentChange2"
+                    :current-page.sync="page2" layout="total, prev, pager, next" :total='total'>
+                </el-pagination>
                 <!--<div class="add-new" v-if="good == '1'" @click="addEntryFun">新增商品</div>
                 <div class="add-new" v-else @click="addSaleFun">新增商品</div>-->
                 <el-button class="msg-save-btn" type="primary" @click="addGoodsSave">保存</el-button>
@@ -270,15 +260,12 @@ export default {
             this.page2 = 1
         },
         changeFun(item){//复选框勾选
-            if(this.selectGoodsList.includes(item.id)){
-                this.selectGoodsList.forEach((ele,index) => {
-                    if(ele == item.id){
-                        this.selectGoodsList.splice(index,1);
-                    }
-                })
-            }else{
-                this.selectGoodsList.push(item.id);
-            }
+            this.selectGoodsList = []
+            item.forEach((ele,index) => {
+                if(ele.id){
+                    this.selectGoodsList.push(ele.id);
+                }
+            })
         },
         deleteClick(row){//删除列表信息
             this.$confirm('是否要删除此条信息?', '提示', {
@@ -303,24 +290,26 @@ export default {
             if(this.selectGoodsList.length > 0){
                 this.dataList.forEach(val => {
                     this.selectGoodsList.forEach(ele => {
-                        if(ele == val.id){
-                            if(val.key_number == ''){
-                                this.$message.error('请输入键位！');
-                                state = false
-                                return
-                            }else{
-                                let num = Number(val.key_number)
-                                if(/^[0-9]{1,2}/.test(num) == false){
-                                    this.$message.error('请输入数字！');
+                        if(state){
+                            if(ele == val.id){
+                                if(val.key_number == ''){
+                                    this.$message.error('请输入键位！');
                                     state = false
                                     return
                                 }else{
-                                    if( num > 0 && num < 71){
-                                        numArr.push(num)
-                                    }else{
-                                        this.$message.error('范围：1-70！');
+                                    let num = Number(val.key_number)
+                                    if(/^[0-9]{1,2}/.test(num) == false){
+                                        this.$message.error('请输入数字！');
                                         state = false
                                         return
+                                    }else{
+                                        if( num > 0 && num < 71){
+                                            numArr.push(num)
+                                        }else{
+                                            this.$message.error('范围：1-70！');
+                                            state = false
+                                            return
+                                        }
                                     }
                                 }
                             }

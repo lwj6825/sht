@@ -2,14 +2,14 @@
   <div class="header">
     <div class="section-content">
       <el-form :model="form" ref="form"  label-width="120px">
+        <el-form-item label="供应商名称："  prop="bizName">
+          <span>{{form.bizName}}</span>
+        </el-form-item>
         <el-form-item label="营业执照："  prop="licenceNo">
           <span>{{form.licenceNo}}</span>
         </el-form-item>
         <el-form-item label="身份证号：" prop="regId">
           <span>{{form.regId}}</span>
-        </el-form-item>
-        <el-form-item label="供应商名称："  prop="bizName">
-          <span>{{form.bizName}}</span>
         </el-form-item>
         <el-form-item label="供货单位："  >
           <span>{{form.ghdw}}</span>

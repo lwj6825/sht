@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <div class="data">
-            <p>生产日期</p>
+            <p><span class="must">*</span>生产日期</p>
             <el-date-picker
                 v-model="in_date"
                 type="date"
@@ -10,9 +10,9 @@
                 placeholder="选择日期">
             </el-date-picker>
         </div>
-        <div class="data">
+        <!--<div class="data">
             <p>销售商品</p>
-        </div>
+        </div>-->
         <div class="table">
             <el-table  :data="tableData" :header-cell-style="rowClass">
                 <el-table-column prop="in_date" label="商品名称">
@@ -41,8 +41,8 @@
                         <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
                             <p style="padding-left: 20px;" calss="material-name">{{item2.or_goods_name}}</p>
                         </div>
-                    </template>-->
-                </el-table-column>
+                    </template>
+                </el-table-column>-->
                 <el-table-column prop="buyer_booth_name" label="批次信息">
                     <template slot-scope="scope">
                         <div class="material" v-if="scope.row.goodVal" v-for="(item2,index2) in scope.row.gooaMsgArr" :key="index2">
@@ -112,8 +112,43 @@ export default {
             this.tableData.length - 1
         },
         saveFun(){
-            let str = '', userdefine = '';
+            if(this.in_date == '' || this.in_date == null){
+                this.$message.error('请选择生产日期');
+                return
+            }
+            let str = '', userdefine = '',state = true;
             if(this.tableData.length > 0){
+                if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+                    this.tableData.forEach(val => {
+                        if(val.goodVal == ''){
+                            this.$message.error('请选择商品名称');
+                            state = false
+                            return
+                        }
+                        if(val.goodNum == ''){
+                            this.$message.error('请输入数量');
+                            state = false
+                            return
+                        }
+                        val.gooaMsgArr.forEach((valChild) => {
+                            if(valChild.or_goods_name == ''){
+                                this.$message.error('请添加原料');
+                                state = false
+                                return
+                            }
+                            if(valChild.batchId == ''){
+                                this.$message.error('请选择批次信息');
+                                state = false
+                                return
+                            }
+                            if(valChild.materialNum == ''){
+                                this.$message.error('请输入数量');
+                                state = false
+                                return
+                            }
+                        })
+                    })
+                }
                 this.tableData.forEach(val => {
                     val.goodArr.forEach(val2 => {
                         if(val.goodVal == val2.goods_code){
@@ -135,18 +170,25 @@ export default {
                 let params = {
                     data: userdefine ? ('[' + userdefine + ']') : ''
                 }
-                InsertProduction(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.$router.push({name: 'productionMsg'})
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch(() => {
-                        this.$message.error("出错啦!");
-                    })
+                if(state == true){
+                    InsertProduction(params)
+                        .then(res => {
+                            if (res.result == true) {
+                                this.$message.success(res.message);
+                                this.$router.push({name: 'productionMsg'})
+                            }else{
+                                this.$message.error(res.message);
+                            }
+                        })
+                        .catch(() => {
+                            this.$message.error("出错啦!");
+                        })
+                }else{
+                    return
+                }
+            }else{
+                this.$message.error('请添加销售商品');
+                return
             }
         },
         // 进货商品信息
@@ -278,6 +320,9 @@ export default {
     .content{
         padding: 10px;
         background: #fff;
+        .must{
+            color: #F56C6C;
+        }
         .data{
             margin-left: 20px; 
             margin-bottom: 10px;

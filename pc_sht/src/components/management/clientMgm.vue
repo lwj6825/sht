@@ -50,13 +50,8 @@
         </el-table>
       </div>
       <div class="pagination">
-        <el-pagination background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="15"
-          layout="total, prev, pager, next, jumper"
-          :total='dataTotal'>
+        <el-pagination v-if="dataTotal" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page.sync="currentPage" :page-size="15" layout="total, prev, pager, next, jumper" :total='dataTotal'>
         </el-pagination>
       </div>
     </div>

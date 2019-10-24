@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="table-box">
-                <el-table :data="tableData"  border>
+                <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="functionName" label="功能名称" align="center" fixed> </el-table-column>
                     <el-table-column prop="describe" label="别名" align="center"> </el-table-column>
                     <el-table-column prop="functionUrl" label="功能地址" align="center"> </el-table-column>
@@ -31,12 +31,8 @@
                 </el-table>
             </div>
             <div class="pagination">
-                <el-pagination background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="15"
-                    layout="total, prev, pager, next, jumper"
+                <el-pagination v-if="dataTotal" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage" :page-size="15" layout="total, prev, pager, next, jumper"
                     :total='dataTotal'>
                 </el-pagination>
             </div>
@@ -72,6 +68,12 @@ export default {
        
     },
     methods: {
+        rowClass({ row, rowIndex}) {
+            return {
+                background: '#f2f2f2',
+                color: '#333'
+            }
+        },
         clearFun(){
             this.searchInput = ''
             let pageData = {

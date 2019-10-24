@@ -1,27 +1,20 @@
 <template>
     <div class="content">
-        <div class="data">
-            <p>屠宰日期</p>
-            <div>
-                <el-date-picker v-model="in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期">
+        <el-form class="form" ref="form" :model="form" :rules="rules" label-width="150px">
+            <el-form-item label="屠宰日期" prop="in_date">
+                <el-date-picker v-model="form.in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期">
                 </el-date-picker>
-            </div>
-        </div>
-        <div class="data">
-            <p>屠宰企业</p>
-            <div>
-                <el-select v-model="enterprise" filterable clearable placeholder="请选择" @change="selectTzqyFun">
+            </el-form-item>
+            <el-form-item label="屠宰企业" prop="enterprise" style="margin-bottom: 15px;">
+                <el-select v-model="form.enterprise" filterable clearable placeholder="请选择" @change="selectTzqyFun">
                     <el-option v-for="(item,index) in enterpriseList" :key="index"  :label="item.biz_name" :value="item.shop_concacts_id">
                     </el-option>
                 </el-select>
-            </div>
-        </div>
-        <div class="data">
-            <p>屠宰加工工艺描述</p>
-            <div>
-                <el-input clearable v-model="describe" type="textarea"></el-input>
-            </div>
-        </div>
+            </el-form-item>
+            <el-form-item label="屠宰加工工艺描述">
+                <el-input clearable v-model="form.describe" type="textarea"></el-input>
+            </el-form-item>
+        </el-form>
         <div class="data">
             <p>屠宰信息</p>
         </div>
@@ -35,13 +28,6 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="goods_unit" width="100" label="规格"> </el-table-column>
-                <el-table-column prop="buyer_booth_name" label="数量">
-                    <template slot-scope="scope">
-                        <el-input class="input" v-model="scope.row.goodNum" size="mini" ></el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="ylName" label="原料信息"></el-table-column>
                 <el-table-column prop="buyer_booth_name" label="进货批次">
                     <template slot-scope="scope">
                         <div class="material">
@@ -52,6 +38,13 @@
                         </div>
                     </template>
                 </el-table-column>
+                <el-table-column prop="buyer_booth_name" label="数量">
+                    <template slot-scope="scope">
+                        <el-input class="input" v-model="scope.row.goodNum" size="mini" ></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="goods_unit" width="100" label=""> </el-table-column>
+                <el-table-column prop="ylName" label="原料名称"></el-table-column>
                 <el-table-column prop="buyer_booth_name" label="原料数量">
                     <template slot-scope="scope">
                         <div class="material">
@@ -90,7 +83,7 @@
             <el-button class="add-btn" v-if="tableData.length == 0" size="medium" @click="addGoodFun">添加商品</el-button>
             <div class="save-btn">
                 <el-button size="small" @click="cancalFun">取消</el-button>
-                <el-button type="primary" size="small" @click="saveFun">保存</el-button>
+                <el-button type="primary" size="small" @click="submitForm('form')">保存</el-button>
             </div>
         </div>
     </div>
@@ -119,9 +112,6 @@ export default {
     name:"newSlaughter",
     data() {
         return {
-            in_date: '',
-            enterprise: '',
-            describe: '',
             tableData: [],
             node_id: '',
             node_name: '',
@@ -134,6 +124,19 @@ export default {
             yzcArr: [],
             stk_goods_code: '',
             stk_goods_name: '',
+            form: {
+                in_date: '',
+                enterprise: '',
+                describe: '',
+            },
+            rules: {
+                in_date: [
+                    { required: true, message: '请选择屠宰日期', trigger: 'change' }
+                ],
+                enterprise: [
+                    { required: true, message: '请选择屠宰企业', trigger: 'change' }
+                ],
+            }
         }
     },
     mounted() {
@@ -143,11 +146,20 @@ export default {
         this.node_name = localStorage.getItem('loginName')
         this.getPlotHzsList()
         var currentTime = new Date()
-        this.in_date = formatDate(currentTime)
+        this.form.in_date = formatDate(currentTime)
         this.getNsGoodsQueryPOSTType()
         this.getDataFun()
     },
     methods: {
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.saveFun()
+                } else {
+                    return false;
+                }
+            });
+        },
         selectTzqyFun(ele){
             let suppliersName = ''
             this.enterpriseList.forEach(val => {
@@ -268,12 +280,32 @@ export default {
                 this.$message.error('请填写屠宰信息！');
                 return;
             }
+            if(this.tableData[0].goodVal == ''){
+                this.$message.error('请选择商品名称！');
+                return;
+            }
+            if(this.tableData[0].jhBatchId == ''){
+                this.$message.error('请选择进货批次！');
+                return;
+            }
+            if(this.tableData[0].goodNum == ''){
+                this.$message.error('请输入数量！');
+                return;
+            }
+            if(this.tableData[0].ylName == ''){
+                this.$message.error('该商品没有原料，请添加原料！');
+                return;
+            }
+            if(this.tableData[0].ylNum == ''){
+                this.$message.error('请输入原料数量！');
+                return;
+            }
             let obj = {
                 node_id: this.node_id, // 节点编码
                 node_name: this.node_name, // 节点名称
-                tz_rq: this.in_date, // 屠宰日期
-                tz_qy: this.enterprise, // 屠宰企业 对应的是 供应商 shop_contact 的id
-                tz_remark: this.describe, // 屠宰描述
+                tz_rq: this.form.in_date, // 屠宰日期
+                tz_qy: this.form.enterprise, // 屠宰企业 对应的是 供应商 shop_contact 的id
+                tz_remark: this.form.describe, // 屠宰描述
                 stk_batch_id: this.tableData[0].goodVal, //成品 信息批次 id 一般为兔白条 的 关联兔子白条 的进货台账
                 stk_goods_code: this.stk_goods_code, //养殖场 成品的 商品码
                 stk_goods_name: this.stk_goods_name, // 成品的商品名称 兔白条
@@ -413,6 +445,8 @@ export default {
                 text-align: right;
                 font-size: 14px;
             }
+        }
+        .form{
             .el-textarea, .el-select, .el-date-picker, .el-input{
                 width: 300px;
             }

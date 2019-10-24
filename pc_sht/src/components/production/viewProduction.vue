@@ -42,7 +42,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination background @current-change="handleCurrentChange" :page-size="cols"
+        <el-pagination v-if="total" background @current-change="handleCurrentChange" :page-size="cols"
           layout="total, prev, pager, next, jumper" :total='total'>
         </el-pagination>
         <div class="big-img" v-show="isBigImg" ref="boxsize">

@@ -2,11 +2,11 @@
   <div class="content">
     <div class="big-box">
       <div class="section-content">
-        <el-form  label-width="130px"  :model="form" ref="form" >
-          <el-form-item label="商品编码：">
+        <el-form label-width="130px" :model="form" ref="form" :rules="rules">
+          <el-form-item label="商品编码：" prop="goodsCode">
             <el-input v-model="form.goodsCode"></el-input>
           </el-form-item>
-          <el-form-item label="商品名称：">
+          <el-form-item label="商品名称：" prop="goodsName">
             <el-input v-model="form.goodsName" clearable></el-input>
           </el-form-item>
           <el-form-item label="商品简称：">
@@ -25,15 +25,15 @@
               </span>  
             </div>
           </el-form-item>
-          <el-form-item label="品种：">
+          <el-form-item label="品种：" prop="selectVarieties">
             <el-cascader style="width: 100%" :options="systemDefaultType" filterable @change="handleChange" placeholder="可搜索"
               :props="props" change-on-select v-model="form.selectVarieties" clearable></el-cascader>
           </el-form-item>
-          <el-form-item label="价格：">
+          <el-form-item label="价格：" prop="price">
             <el-input style="width: 200px;" v-model="form.price"></el-input>
             <span >&nbsp;&nbsp;元</span>
           </el-form-item>
-          <el-form-item label="单位：" >
+          <el-form-item label="单位：" prop="specifications">
             <el-select v-model="form.specifications"  placeholder="未选择"  @change="selectChange">
               <el-option  v-for="item in specificationList" :key="item.TYPE_NAME" :label="item.TYPE_NAME"  :value="item.TYPE_NAME" >
               </el-option>
@@ -112,7 +112,7 @@
           <el-form-item label="条形码：">
             <el-input v-model="form.userdefine_code_one"></el-input>
           </el-form-item>
-          <el-form-item label="物品码：">
+          <el-form-item label="物品码：" prop="userdefine_code_two">
             <el-input v-model="form.userdefine_code_two"></el-input>
           </el-form-item>
           <el-form-item label="产品标准：">
@@ -226,7 +226,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+        <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
         layout="total, prev, pager, next, jumper" :total="num"> </el-pagination>
         <!--<p style="margin: 10px 20px;">
           <el-button size="mini" @click="addMaterialFun">新增原料</el-button>
@@ -351,9 +351,31 @@
         imgList: [],
         goodImgArr: [],
         sort: 1,
+        rules: {
+          goodsCode: [
+            { required: true, message: '请输入商品编码', trigger: 'blur' }
+          ],
+          goodsName: [
+            { required: true, message: '请输入商品名称', trigger: 'blur' }
+          ],
+          price: [
+            { required: true, message: '请输入价格', trigger: 'blur' }
+          ],
+          selectVarieties: [
+            { required: true, message: '请选择品种', trigger: 'blur' }
+          ],
+          specifications: [
+            { required: true, message: '请选择单位', trigger: 'blur' }
+          ],
+        }
       }
     },
     created() {
+      if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+        this.rules.userdefine_code_two = [
+          { required: true, message: '请输入物品码', trigger: 'blur' }
+        ]
+      }
       this.form.userId = localStorage.getItem('userId')
       this.region = this.$route.params.areaId
       this.bigAreaId = this.$route.params.bigAreaId

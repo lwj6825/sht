@@ -36,7 +36,7 @@
                 <div class="right-haddle">
                     <div class="icon-group">
                         <i class="icon icon-1"></i>
-                        <i class="icon icon-2"></i>
+                        <i class="icon icon-2" @click="jumpFun"></i>
                     </div>
                     <div class='user' @click="userClick()">
                         <i class="icon icon-3"></i>
@@ -97,18 +97,22 @@ export default {
         // console.log(localStorage.getItem('menuList'));
     },
     mounted(){
-        this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
-        // console.log(this.mainList)
-        this.levelOneCurrId = this.mainList[0].id;//选择第一项
-        this.changeMenu(this.levelOneCurrId);
-        // 查询品种列表
-        getDefaultProductTypes()
-            .then(res => {
-               localStorage.setItem('queryNameData',JSON.stringify(res))
-            })
-            .catch(res => {
-                this.$message.error("出错啦!");
-            })
+        if(localStorage.getItem('menuList')){
+            this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
+            // console.log(this.mainList)
+            this.levelOneCurrId = this.mainList[0].id;//选择第一项
+            this.changeMenu(this.levelOneCurrId);
+            // 查询品种列表
+            getDefaultProductTypes()
+                .then(res => {
+                localStorage.setItem('queryNameData',JSON.stringify(res))
+                })
+                .catch(res => {
+                    this.$message.error("出错啦!");
+                })
+        }else{
+            this.$router.push("/")
+        }
     },
     watch:{
         $route(to,from){
@@ -280,6 +284,9 @@ export default {
         }
     },
     methods:{
+        jumpFun(){
+            window.open('http://shop.zhdtech.com/login/operation'); 
+        },
         changeMenu(tabTd){//菜单切换
             if(tabTd == '344'){//是统计页
                 this.isShowLevelTwo = false;

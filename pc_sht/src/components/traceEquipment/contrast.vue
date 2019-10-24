@@ -1,74 +1,38 @@
 <template>
-    <div class="content journal">
+    <div class="content contrast">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <!--展开-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}">
-                    <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
+                <el-form ref="form" :inline="true" :model="form" label-width="80px">
+                    <el-form-item label="对照信息">
+                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="ID、节点编码、节点名称"></el-input>
                     </el-form-item>
-                    <el-form-item label="节点信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="主键ID、节点ID、节点名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="存入表名">
-                        <el-select v-model="form.crbm" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in crbmArr" :key="index" :label="item.TABLE_NAME_CH"
-                            :value="item.TABLE_NAME">
+                    <el-form-item label="日志类型">
+                        <el-select v-model="form.types" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in typesArr" :key="index" :label="item.LOG_TYPE"
+                            :value="item.LOG_TYPE">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="执行结果">
-                        <el-select v-model="form.zxjg" filterable clearable placeholder="请选择">
-                            <el-option value="1" label="成功">成功</el-option>
-                            <el-option value="2" label="失败">失败</el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="文件名称">
-                        <el-input v-model="form.name" clearable placeholder="请输入"></el-input>
-                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
+                        <!-- <el-button @click="clearFun">重置</el-button>-->
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
                 <!--收起-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'none'} : {display: 'block'}" v-if="isShow">
-                    <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="节点信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="主键ID、节点ID、节点名称"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
-                        <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                    </el-form-item>
-                </el-form>
-                <p class="unfold" v-if="isShow" @click="unfoldFun">{{unfold}}筛选条件</p>
             </div>
         </div>
         <div class="table">
             <div class="title">
-                <p class="tz-title">解析运行日志</p>
-                <!--<div>
-                    <el-button type="primary" @click="newFun">新增</el-button>
-                    <el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
-                    <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>
-                </div>--><!--
+                <p class="tz-title">对照管理</p>
+                <div>
+                    <el-button type="primary" @click="allSignFun">批量标记</el-button>
+                    <el-button type="primary" @click="allDeleteFun">批量删除</el-button><!---->
+                    <el-button type="primary" plain @click="downloadFun">导出</el-button>
+                </div>
             </div>
-            <div class="file-btns" v-if="isfile">
+            <!--<div class="file-btns" v-if="isfile">
                 <div>
                     <span class="submit">
                         批量新增
@@ -84,35 +48,46 @@
                             <input type="file" class="file" ref="files" @change="fileFun($event,2)">
                         </form>
                     </span>
-                </div>-->
-            </div>
+                </div>
+            </div>-->
             <div class="tables" >
-                <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="node_id" label="节点ID"> </el-table-column>
+                <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
+                    <el-table-column type="selection" width="50"></el-table-column>
+                    <el-table-column prop="id" label="ID"> </el-table-column>
+                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
                     <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="table_name" label="存入表名"> </el-table-column>
-                    <el-table-column prop="start_time" label="执行时间"> </el-table-column>
-                    <el-table-column prop="execute_time" label="执行用时"> </el-table-column>
-                    <el-table-column prop="data_date" label="数据时间"> </el-table-column>
-                    <el-table-column prop="execute_num" label="表存入数"> </el-table-column>
-                    <el-table-column prop="save_total_num" label="总存入数"> </el-table-column>
-                    <el-table-column prop="file_total_num" label="文件总数"> </el-table-column>
-                    <el-table-column prop="execute_result" label="文件名称"> </el-table-column>
-                    <el-table-column prop="result" label="执行消息"> </el-table-column>
-                    <el-table-column prop="job_result" label="执行信息"> </el-table-column>
-                    <!--<el-table-column prop="merchant_name" label="所属商户" >
-                        <template slot-scope="scope">{{scope.row.merchant_name ? scope.row.merchant_name : '- - -'}}</template>
-                    </el-table-column>-->
-                    <el-table-column label="操作" width="100">
+                    <el-table-column prop="log_type" label="日志类型"> </el-table-column>
+                    <el-table-column prop="error_code" label="缺对照编码"> </el-table-column>
+                    <el-table-column prop="error_name" label="取对照名称"> </el-table-column>
+                    <el-table-column prop="error_data" label="备用信息" > </el-table-column>
+                    <el-table-column prop="message" label="数据说明" > </el-table-column>
+                    <el-table-column prop="record_date" label="最后时间" > </el-table-column>
+                    <!--<el-table-column prop="SCBJ" label="删除标记" > </el-table-column>-->
+                    <el-table-column label="操作" width="160">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
-                            <el-button type="text" :style="(scope.row.id && scope.row.job_exception) ? {display: 'inline-block'} : {display: 'none'}" size="small" @click="dowoloadFun(scope.row)">下载</el-button>
+                            <el-button type="text" size="small" @click="signFun(scope.row)">标记不需要做对照的数据</el-button>
+                            <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
+            <div class="passwrd" v-if="isEdits">
+                <div class="text">
+                    <div class="box-title">
+                        <p class="tit">设置阈值</p>
+                        <p class="iconfont icon-close close" @click="closeFun"></p>
+                    </div>
+                    <div class="form">
+                        <el-input type="text" clearable v-model="threshold"></el-input>
+                        <div class="btn">
+                            <el-button @click="closeFun">取消</el-button>
+                            <el-button type="primary" @click="submitForm">确认</el-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -157,79 +132,179 @@ function getNowFormatDate() {//获取当前时间
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {ParseMonLog,QueryTableName,DownloadErrorLog} from '../../js/traceEquipment/traceEquipment.js'
+import {QueryErrorData,QueryErrorLogType,DownloadErrorData,DeleteErrorLogData} from '../../js/traceEquipment/traceEquipment.js'
+import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
+import axios from 'axios';
 export default {
-    name:"journal",
+    name:"contrast",
     data() {
         return {
-            startTime: '',
-            endTime: '',
-            isShow: true,
             form: {
-                dataTime: '',
                 msg: '',
-                crbm: '',
-                zxjg: '',
-                name: '',
+                types: '',
             },
             unfold: '收起',
             show: true,
             inline: true,
-            crbmArr: [],
+            typesArr: [],
             page: 1,
             cols: 15,
             num: 0,
+            userId: '',
             total: '',
             tableData: [],
-            userId: '',
+            isEdits: false,
+            threshold: '',
+            ids: [],
         }
     },
     mounted() {
-        this.getTime()
-        let arr = []
-        arr.push(this.startTime)
-        arr.push(this.endTime)
-        this.form.dataTime = arr
         this.userId = localStorage.getItem('userId')
+        if(this.$route.params.node_id){
+            this.form.msg = this.$route.params.node_id
+        }else if(this.$route.params.node_name){
+            this.form.msg = this.$route.params.node_name
+        }
         this.getDataFun()
-        this.getQueryTableName()
+        this.getTypesFun()
     },
     methods: {
-        // 下载
-        dowoloadFun(ele){
+        // 批量标记
+        allSignFun(){
             let params = {
-                id: ele.id
+                ids: this.ids.join(','),
+                set_type: 2,
             }
-            DownloadErrorLog(params)
+            DeleteErrorLogData(params)
                 .then(res => {
-                    this.downFile(res)
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
                 })
-                .catch(() => {
-                    this.$message.error("出错啦!");
+                .catch((res) => {
+                    console.log(res)
                 })
         },
-        downFile (data) {
-            let time = getNowFormatDate()
-            console.log(time)
-            if (!data) { return }
-            let url = window.URL.createObjectURL(new Blob([data]))
-            let link = document.createElement('a')
-            link.style.display = 'none';
-            link.href = url
-            link.setAttribute('download', 'errorLog' + time + '.txt')
-            
-            document.body.appendChild(link)
-            link.click()
-        },
-        getQueryTableName(){
-            QueryTableName('')
+        // 标记不需要做对照的数据
+        signFun(ele){
+            let params = {
+                ids: ele.id,
+                set_type: 2,
+            }
+            DeleteErrorLogData(params)
                 .then(res => {
-                    this.crbmArr = res.data.table_name
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        // 批量删除
+        allDeleteFun(){
+            let params = {
+                ids: this.ids.join(','),
+                set_type: 1,
+            }
+            DeleteErrorLogData(params)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        deleteFun(ele){
+            let params = {
+                ids: ele.id,
+                set_type: 1,
+            }
+            DeleteErrorLogData(params)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        downloadFun(){
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+            let params = {
+                cols: this.cols,
+                page: this.page,
+                mon_log_base: this.form.msg,
+                log_type: this.form.types
+            }
+            DownloadErrorData( params, {})
+                .then((res) => {
+                    loading.close();
+                    let time = getNowFormatDate()
+                    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
+                    let url = window.URL.createObjectURL(blob);
+                    let aLink = document.createElement("a");
+                    aLink.style.display = "none";
+                    aLink.href = url;
+                    aLink.setAttribute("download", `对照信息` + time);
+                    document.body.appendChild(aLink);
+                    aLink.click();
+                    document.body.removeChild(aLink); 
+                    window.URL.revokeObjectURL(url); 
+                })
+                .catch(function (res) {});
+        },
+        getTypesFun(){
+            QueryErrorLogType('')
+                .then(res => {
+                    this.typesArr = res.data.log_type_list
                 })
                 .catch(res => {
                     console.log(res);
                 })
+            
+        },
+        changeFun(item){
+            this.ids = []
+            console.log(item)
+            item.forEach(ele => {
+                this.ids.push(ele.id)
+            })
+        },
+        cancalMonitor(ele){
 
+        },
+        submitForm(){
+
+        },
+        editFun(ele){
+            this.isEdits = true
+        },
+        closeFun(){
+            this.form = {
+                zcState: ''
+            }
+            this.isEdits = false
         },
         getDataFun(){
             const loading = this.$loading({
@@ -239,19 +314,15 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
             });
             let params = {
-                start_time: this.startTime,
-                end_time: this.endTime,
-                mon_log_base: this.form.msg,
-                execute_result: this.form.name,
-                table_name: this.form.crbm,
-                result: this.form.zxjg,
                 cols: this.cols,
                 page: this.page,
+                mon_log_base: this.form.msg,
+                log_type: this.form.types
             }
-            ParseMonLog(params)
+            QueryErrorData(params)
                 .then(res => {
-                    this.tableData = res.data.mon_log_list
-                    this.num = res.data.mon_log.total
+                    this.tableData = res.data.error_data_list
+                    this.num = res.data.error_bean.total
                     loading.close();
                 })
                 .catch((res) => {
@@ -259,12 +330,8 @@ export default {
                     loading.close();
                 })
         },
-        viewFun(ele){
-            this.$router.push({name: 'ViewJournal',params: {param: ele}})
-        },
         searchFun(){
             this.page = 1
-            this.timeChange()
             this.getDataFun()
         },
         handleCurrentChange(val) {
@@ -282,18 +349,10 @@ export default {
         },
         clearFun(){
             this.form = {
-                dataTime: '',
                 msg: '',
-                crbm: '',
-                zxjg: '',
-                name: '',
+                types: '',
             }
             this.page = 1
-            this.getTime()
-            let arr = []
-            arr.push(this.startTime)
-            arr.push(this.endTime)
-            this.form.dataTime = arr
             this.getDataFun()
         },
         timeChange(ele){
@@ -307,9 +366,8 @@ export default {
         },
         getTime(){
             var start = new Date();
-            // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            // this.startTime = timestampToTime(startTime)
-            this.startTime = formatDate(start)
+            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
         },
@@ -324,6 +382,7 @@ export default {
 </script>
 
 <style scoped lang='less'>
+    @import '../../assets/css/common.css';
     .content{
         width: 100%;
         height: 100%;
@@ -451,69 +510,43 @@ export default {
                 margin-top: -150px;
                 margin-left: -200px;
                 width: 400px;
-                height: 230px;
+                height: 170px;
                 background: #fff;
-                .download{
-                    margin-top: 20px;
-                    font-size: 14px;
-                    text-align: center;
-                }
-                .submit{
-                    margin: 30px auto;
-                    position: relative;
-                    left: 40%;
-                    display: inline-block;
-                    width: 90px;
-                    height: 30px;
-                    line-height: 30px;
-                    color: #409EFF;
-                    background: #fff;
-                    text-align: center;
-                    overflow: hidden;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    box-sizing: border-box;
-                    border: 1px solid #409EFF;
-                    .file{
-                        position: absolute;
-                        left: 0px;
-                        top: 0px;
-                        width: 90px;
-                        height: 36px;
-                        opacity: 0;
-                        background: rgba(0,0,0,0);
+                .box-title{
+                    margin: 0 10px;
+                    height: 40px;
+                    border-bottom: 1px solid #ccc;
+                    .tit{
+                        float: left;
+                        margin-left: 10px;
+                        width: 330px;
+                        line-height: 40px;
+                        font-size: 14px;
                     }
                 }
-                .submit:hover{
-                    background: #409EFF;
-                    color: #fff;
-                }
                 .close{
-                    margin: 0 10px;
-                    padding-left: 340px;
+                    float: right;
                     width: 40px;
                     height: 40px;
                     text-align: center;
                     line-height: 40px;
                     font-size: 16px;
-                    border-bottom: 1px solid #ccc;
                     cursor: pointer;
                 }
-                .btn{
-                    margin-left: 270px;
+                .form{
+                    clear: both;
+                    margin-top: 20px;
+                    margin-left: 50px;
+                    .el-input{
+                        width: 200px;
+                    }
+                    .btn{
+                        margin-top: 20px;
+                        margin-left: 140px;
+                    }
                 }
             }
         }
         
-    }
-</style>
-<style lang="less">
-    .journal{
-        .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
-            line-height: 24px;
-        }
-        .el-input--suffix .el-input__inner{
-            padding-right: 10px !important;
-        }
     }
 </style>

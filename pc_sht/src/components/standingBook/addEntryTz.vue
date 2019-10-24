@@ -944,6 +944,12 @@ export default {
         // 保存商品
         saveFieldFun(){
             console.log(this.ghdwId)
+            if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+                if(this.form.in_date == ''){
+                    this.$message.error('进货日期不能为空');
+                    return
+                }
+            }
             // if(this.form.value == ''){
             //     this.$message.error('商户信息不能为空');
             //     return

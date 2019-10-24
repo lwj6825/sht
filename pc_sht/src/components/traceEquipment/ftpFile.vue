@@ -74,11 +74,10 @@
                     <el-table-column prop="update_time" label="状态更新时间"> </el-table-column>
                     <el-table-column prop="state" label="状态"> </el-table-column>
                     <el-table-column prop="folder" label="文件路径" > </el-table-column>
-                    <el-table-column prop="duplicate_check" label="是否进行重复校验" > </el-table-column>
                     </el-table-column>
                 </el-table>
             </div>
-            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+            <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
         </div>
     </div>
@@ -203,7 +202,6 @@ export default {
             }
             QueryFtpMonLog(params)
                 .then(res => {
-                    console.log(res)
                     this.tableData = res.data.mon_log_list
                     this.num = res.data.mon_log.total
                     loading.close();

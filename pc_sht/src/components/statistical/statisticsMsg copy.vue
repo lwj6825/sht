@@ -189,7 +189,7 @@
                                         <el-table-column prop="booth_name" label="商户"></el-table-column>
                                         <el-table-column prop="days" label="未录入天数" ></el-table-column>
                                     </el-table>
-                                    <el-pagination background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
+                                    <el-pagination v-if="num4" background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
                                     @current-change="handleCurrentChange4"></el-pagination>
                         <!-- </el-tab-pane> -->
                         <!-- <el-tab-pane label="当日已录入商户" name="first">
@@ -232,7 +232,7 @@
                                 <el-table-column prop="seller_booth_name" label="商户名称"></el-table-column>
                                 <el-table-column prop="in_date" label="电子秤最早在线时间" ></el-table-column>
                             </el-table>
-                            <el-pagination background layout="prev, pager, next" :current-page.sync="page2" :page-size="cols2" :total="num2"
+                            <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page2" :page-size="cols2" :total="num2"
                             @current-change="handleCurrentChange2"></el-pagination>
                         </el-tab-pane>
                         <el-tab-pane label="不在线商户" name="second">
@@ -240,7 +240,7 @@
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
                                     <el-table-column prop="days" label="商户不在线天数" ></el-table-column>
                                 </el-table>
-                                <el-pagination background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num2"
+                                <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num2"
                                 @current-change="handleCurrentChange3"></el-pagination>
                             </el-tab-pane>
                     </el-tabs> 

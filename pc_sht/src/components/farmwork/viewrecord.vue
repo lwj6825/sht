@@ -64,7 +64,7 @@
               </div>
               <!--分页-->
               <div class="pageBlock">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                <el-pagination v-if="totalPageSize" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
                   layout="total, prev, pager, next, jumper" :total="totalPageSize"> </el-pagination>
               </div>
             </el-tab-pane>
@@ -96,7 +96,7 @@
               </div>
               <!--分页-->
               <div class="pageBlock">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChangeBchfz"
+                <el-pagination v-if="totalPageSize_Bchfz" background @size-change="handleSizeChange" @current-change="handleCurrentChangeBchfz"
                   :current-page="currentPage" layout="total, prev, pager, next, jumper" :total="totalPageSize_Bchfz">
                 </el-pagination>
               </div>
@@ -124,7 +124,7 @@
               </div>
               <!--分页-->
               <div class="pageBlock">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChangeNsjl"
+                <el-pagination v-if="totalPageSize_Nsjl" background @size-change="handleSizeChange" @current-change="handleCurrentChangeNsjl"
                   :current-page="currentPage" layout="total, prev, pager, next, jumper" :total="totalPageSize_Nsjl">
                 </el-pagination>
               </div>
@@ -652,7 +652,7 @@
       fileFun(event,ele){
         this.img_url = ''
         this.imgArr = []
-        var that = this;
+        let that = this;
         let file = event.target.files;
         let reg = /.(jpg|png|PNG|JPG)+$/;           
         if(file[0].size){
@@ -679,6 +679,7 @@
                 that.imgUrl3 = src
               }
               that.imgArr.push(src.slice(23))
+              event.target.value = null;
             })
           }
         }

@@ -1,69 +1,35 @@
 <template>
     <div class="content szAddEnterprise">
-        <div class="box">
-            <div class="list-title">基本资料</div>
-            <div class="list">
-                <div class="data">
-                    <div class="title">账号</div>
-                    <div class="msg">
-                        <el-input v-model="form.account" clearable></el-input>
+        <el-form :model="form" class="form" ref="form" :rules="rules" label-width="120px" size="small">
+            <div class="box">
+                <div class="list-title">基本资料</div>
+                <el-form-item label="账号" prop="account">
+                    <el-input v-model="form.account" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                <el-input v-model="form.password" clearable></el-input>
+                </el-form-item>
+                       
+                    <!--
+                    <div class="data">
+                        <div class="title">联系人</div>
+                        <div class="msg">
+                            <el-input v-model="form.name" clearable></el-input>
+                        </div>
                     </div>
-                </div>
-                <div class="data">
-                    <div class="title">密码</div>
-                    <div class="msg">
-                        <el-input v-model="form.password" clearable></el-input>
-                    </div>
-                </div>
-                <!--<div class="data">
-                    <div class="title">角色</div>
-                    <div class="msg">
-                        <el-select v-model="form.role" clearable placeholder="请选择">
-                            <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>-->
-                <div class="data">
-                    <div class="title">联系人</div>
-                    <div class="msg">
-                        <el-input v-model="form.name" clearable></el-input>
-                    </div>
-                </div>
-                <div class="data">
-                    <div class="title">联系方式</div>
-                    <div class="msg">
-                        <el-input v-model="form.callphone" clearable></el-input>
-                    </div>
-                </div>
-                <!--<div class="data">
-                    <div class="title">企业编码</div>
-                    <div class="msg">
-                        <el-input v-model="form.qyCoding" clearable></el-input>
-                    </div>
-                </div>
-                <div class="data">
-                    <div class="title">企业名称</div>
-                    <div class="msg">
-                        <el-input v-model="form.qyName" clearable></el-input>
-                    </div>
-                </div>
-                <div class="data">
-                    <div class="title">状态</div>
-                    <div class="msg">
-                        <el-switch :width="widthNum" style="width: 150px;" v-model="form.states" active-text="启用" 
-                            inactive-text="停用" active-value="启用" inactive-value="停用" @change="changeFun">
-                        </el-switch>
-                    </div>
-                </div>-->
+                    <div class="data">
+                        <div class="title">联系方式</div>
+                        <div class="msg">
+                            <el-input v-model="form.callphone" clearable></el-input>
+                        </div>
+                    </div>-->
+                
             </div>
-        </div>
-        <el-form :model="form" class="form" ref="form"  label-width="120px" size="small">
             <div class="list-title">企业信息</div>
-            <el-form-item label="企业名称">
+            <el-form-item label="企业名称" prop="enterprise">
                 <el-input v-model="form.enterprise" clearable></el-input>
             </el-form-item>
-            <el-form-item label="营业执照号">
+            <el-form-item label="营业执照号" prop="licenceNo">
                 <el-input v-model="form.licenceNo" clearable></el-input>
             </el-form-item>
             <!--<el-form-item label="营业执照附件">
@@ -91,11 +57,11 @@
             <!--<el-form-item label="法人代表">
                 <el-input v-model="form.behalf" clearable></el-input>
             </el-form-item>-->
-            <el-form-item label="联系地址">
+            <el-form-item label="所在地区" prop="addr">
                 <el-cascader :options="addrOptions" v-model="form.addr" placeholder="省/市/县" 
                     clearable :props="props" change-on-select></el-cascader>
             </el-form-item>
-            <el-form-item label="详细地址">
+            <el-form-item label="详细地址" prop="inforAddr">
                 <el-input v-model="form.inforAddr" placeholder="请输入详细地址" clearable class="add-infor-input"></el-input>
             </el-form-item>
             <!--<el-form-item label="经营范围">
@@ -113,7 +79,7 @@
                 <el-input v-model="form.callphone" clearable></el-input>
             </el-form-item>
             <el-form-item style="margin-left: 50px;">
-                <el-button type="primary" class="new-add" @click="saveFun" size="mini" :disabled="disabled">保存</el-button>
+                <el-button type="primary" class="new-add" @click="submitForm('form')" size="mini" :disabled="disabled">保存</el-button>
                 <el-button size="mini" @click="cancalFun">取消</el-button>
             </el-form-item>
         </el-form>
@@ -159,6 +125,26 @@ export default {
                 children: 'list'
             },
             disabled: false,
+            rules: {
+                account: [
+                    { required: true, message: '请输入账号', trigger: 'blur' },
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                ],
+                enterprise: [
+                    { required: true, message: '请输入企业名称', trigger: 'blur' },
+                ],
+                licenceNo: [
+                    { required: true, message: '请输入营业执照号', trigger: 'blur' },
+                ],
+                addr: [
+                    { required: true, message: '请选择所在地区', trigger: 'change' }
+                ],
+                inforAddr: [
+                    { required: true, message: '请输入详细地址', trigger: 'blur' },
+                ],
+            }
         }
     },
     mounted() {
@@ -167,6 +153,15 @@ export default {
         this.getRoleType()
     },
     methods: {
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.saveFun()
+                } else {
+                    return false;
+                }
+            });
+        },
         getAddrList(){//获取地区列表
             getAddr()
             .then(res => {
@@ -348,7 +343,7 @@ export default {
             line-height: 40px;
         }
         .box{
-            padding: 10px 20px;
+            padding: 10px 0;
             background: #fff;
             .list{
                 display: flex;

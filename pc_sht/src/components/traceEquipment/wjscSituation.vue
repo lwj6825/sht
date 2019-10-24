@@ -1,31 +1,12 @@
 <template>
-    <div class="content jxsjMonitor">
-        <div class="searchs" ref="searchs">
-            <div class="search">
-                <!--展开-->
-                <el-form ref="form" :inline="true" :model="form" label-width="100px">
-                    <el-form-item label="节点信息">
-                        <el-input v-model="form.msg" clearable placeholder="节点编码、节点名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="无数据天数">
-                        <el-input class="placeholder" v-model="form.minNum" clearable></el-input>
-                         - <el-input class="placeholder" v-model="form.maxNum" clearable></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
-                        <!-- <el-button @click="clearFun">重置</el-button>-->
-                        <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </div>
+    <div class="content wjscSituation">
         <div class="table">
             <div class="title">
-                <p class="tz-title">解析数据监控</p>
+                <p class="tz-title">最近文件上传情况</p>
                 <!--<div>
-                    <el-button type="primary" @click="newFun">新增</el-button>
-                    <el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
-                    <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>
+                    <el-button type="primary" @click="allSignFun">批量标记</el-button>
+                    <el-button type="primary" @click="allDeleteFun">批量删除</el-button>
+                    <el-button type="primary" plain @click="downloadFun">导出</el-button>
                 </div>-->
             </div>
             <!--<div class="file-btns" v-if="isfile">
@@ -48,22 +29,11 @@
             </div>-->
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
-                    <el-table-column prop="parse_type_num" label="任务环节"></el-table-column>
-                    <el-table-column prop="table_name_ch" label="存入表"></el-table-column>
-                    <el-table-column prop="last_time" label="最后有效上传时间"></el-table-column>
-                    <el-table-column prop="datenums" label="无数据天数" ></el-table-column>
-                    <el-table-column label="设置" width="260">
-                        <template slot-scope="scope">
-                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="cancalMonitor(scope.row)">取消监控</el-button>
-                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="checkFun(scope.row)">取消数据重复校验</el-button>
-                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="editFun(scope.row)">设置阈值</el-button>
-                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="contrastFun(scope.row)">对照管理</el-button>
-                            <el-button type="text" size="small" :style="scope.row.ftp_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ftp_id ? false : true" @click="uploadFun(scope.row)">最近文件上传情况</el-button>
-                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="analysisFun(scope.row)">最近15条解析情况</el-button>
-                        </template>
-                    </el-table-column>
+                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
+                    <el-table-column prop="file_name" label="文件名"> </el-table-column>
+                    <el-table-column prop="down_path" label="上传路径"> </el-table-column>
+                    <el-table-column prop="upload_time" label="上传时间" > </el-table-column>
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
@@ -127,13 +97,21 @@ function getNowFormatDate() {//获取当前时间
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {AnalysisDataMon,SetByFtpId} from '../../js/traceEquipment/traceEquipment.js'
+import {QueryUploadFilesByFtpId} from '../../js/traceEquipment/traceEquipment.js'
 import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
-    name:"jxsjMonitor",
+    name:"wjscSituation",
     data() {
         return {
+            form: {
+                msg: '',
+                types: '',
+            },
+            unfold: '收起',
+            show: true,
+            inline: true,
+            typesArr: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -142,121 +120,16 @@ export default {
             tableData: [],
             isEdits: false,
             threshold: '',
+            ids: [],
             ftp_id: '',
-            form: {
-                msg: '',
-                minNum: '',
-                maxNum: '',
-            }
         }
     },
     mounted() {
         this.userId = localStorage.getItem('userId')
+        this.ftp_id = this.$route.params.ftp_id
         this.getDataFun()
     },
     methods: {
-        // 最近15天解析情况
-        analysisFun(ele){
-            this.$router.push({name: 'ZjjxSituation',params: ele})
-        },
-        // 文件上传情况
-        uploadFun(ele){
-            this.$router.push({name: 'WjscSituation',params: ele})
-        },
-        // 取消数据重复校验
-        checkFun(ele){
-            this.$confirm('你确定要取消数据重复校验吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                let params = {
-                    ftp_id: ele.ftp_id,
-                    set_type: 2,
-                }
-                SetByFtpId(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        console.log(res)
-                    })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
-        },
-        // 对照管理
-        contrastFun(ele){
-            this.$router.push({name: 'Contrast',params: ele})
-        },
-        // 取消监控
-        cancalMonitor(ele){
-            this.$confirm('你确定要取消监控吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {    
-                let params = {
-                    ftp_id: ele.ftp_id,
-                    set_type: 1,
-                }
-                SetByFtpId(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        console.log(res)
-                    })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
-        },
-        submitForm(){
-            let params = {
-                ftp_id: this.ftp_id,
-                set_type: 3,
-                threshold: this.threshold
-            }
-            SetByFtpId(params)
-                .then(res => {
-                    if (res.result == true) {
-                        this.$message.success(res.message);
-                        this.getDataFun()
-                    }else{
-                        this.$message.error(res.message);
-                    }
-                    this.isEdits = false
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
-        },
-        // 设置阈值
-        editFun(ele){
-            this.ftp_id = ele.ftp_id
-            this.isEdits = true
-        },
-        closeFun(){
-            this.threshold = ''
-            this.ftp_id = ''
-            this.isEdits = false
-        },
         getDataFun(){
             const loading = this.$loading({
                 lock: true,
@@ -265,16 +138,12 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
             });
             let params = {
-                cols: this.cols,
-                page: this.page,
-                mon_log_base: this.form.msg.trim(),
-                sdatenums: this.form.minNum.trim(),
-                edatenums: this.form.maxNum.trim()
+                ftp_id: this.ftp_id
             }
-            AnalysisDataMon(params)
+            QueryUploadFilesByFtpId(params)
                 .then(res => {
                     this.tableData = res.data.mon_list
-                    this.num = res.data.mon.total
+                    // this.num = res.data.error_bean.total
                     loading.close();
                 })
                 .catch((res) => {
@@ -282,15 +151,8 @@ export default {
                     loading.close();
                 })
         },
-        viewFun(ele){
-            // this.$router.push({name: 'ViewAssets',params: {param: ele}})
-        },
-        newFun(){
-            // this.$router.push({name: 'NewAssets'})
-        },
         searchFun(){
             this.page = 1
-            this.timeChange()
             this.getDataFun()
         },
         handleCurrentChange(val) {
@@ -309,8 +171,7 @@ export default {
         clearFun(){
             this.form = {
                 msg: '',
-                minNum: '',
-                maxNum: '',
+                types: '',
             }
             this.page = 1
             this.getDataFun()
@@ -346,12 +207,6 @@ export default {
     .content{
         width: 100%;
         height: 100%;
-        .table-btn{
-            margin: 0 5px;
-            float: left;
-            cursor: pointer;
-            font-size: 14px;
-        }
         .searchs{
             padding: 10px 0;
             background: #fff;
@@ -513,8 +368,6 @@ export default {
                 }
             }
         }
-        .placeholder{
-            width: 100px !important;
-        }
+        
     }
 </style>

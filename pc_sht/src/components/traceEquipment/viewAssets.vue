@@ -283,7 +283,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+                    <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
                     layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
                 </el-tab-pane>
                 <el-tab-pane label="巡检记录" name="second">
@@ -297,7 +297,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination background @current-change="handleCurrentChange2" :current-page.sync="page" :page-size="cols"
+                    <el-pagination v-if="num" background @current-change="handleCurrentChange2" :current-page.sync="page" :page-size="cols"
                     layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
                 </el-tab-pane>
                 <el-tab-pane label="维修记录" name="third">
@@ -326,7 +326,7 @@
                         </el-table-column>
                         <el-table-column prop="remark" label="备注"> </el-table-column>
                     </el-table>
-                    <el-pagination background @current-change="handleCurrentChange3" :current-page.sync="page" :page-size="cols"
+                    <el-pagination v-if="num" background @current-change="handleCurrentChange3" :current-page.sync="page" :page-size="cols"
                     layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
                 </el-tab-pane>
             </el-tabs>

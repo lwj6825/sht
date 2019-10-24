@@ -35,7 +35,7 @@
                  </el-table-column>  
              </el-table>
              <div class="block">
-                <el-pagination
+                <el-pagination v-if="totalCount"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"

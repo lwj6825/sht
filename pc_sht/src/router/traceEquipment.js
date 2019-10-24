@@ -13,6 +13,10 @@ import ftpFile from '../components/traceEquipment/ftpFile.vue';
 import jxsjMonitor from '../components/traceEquipment/jxsjMonitor.vue';
 import journal from '../components/traceEquipment/journal.vue';
 import viewJournal from '../components/traceEquipment/viewJournal.vue';
+import contrast from '../components/traceEquipment/contrast.vue';
+import wjscSituation from '../components/traceEquipment/wjscSituation.vue';
+import zjjxSituation from '../components/traceEquipment/zjjxSituation.vue';
+import glContrast from '../components/traceEquipment/glContrast.vue';
 
 
 export default [
@@ -164,6 +168,46 @@ export default [
             id:'370',
             node:'traceEquipment',
             url:'viewJournal',
+        }
+    },
+    {
+        path: 'traceEquipment/contrast',
+        component:  resolve => require(['@/components/traceEquipment/contrast'],resolve),
+        name:'Contrast',
+        meta:{
+            id:'380',
+            node:'traceEquipment',
+            url:'contrast',
+        }
+    },
+    {
+        path: 'traceEquipment/wjscSituation',
+        component:  resolve => require(['@/components/traceEquipment/wjscSituation'],resolve),
+        name:'WjscSituation',
+        meta:{
+            id:'378',
+            node:'traceEquipment',
+            url:'wjscSituation',
+        }
+    },
+    {
+        path: 'traceEquipment/zjjxSituation',
+        component:  resolve => require(['@/components/traceEquipment/zjjxSituation'],resolve),
+        name:'ZjjxSituation',
+        meta:{
+            id:'379',
+            node:'traceEquipment',
+            url:'zjjxSituation',
+        }
+    },
+    {
+        path: 'traceEquipment/glContrast',
+        component:  resolve => require(['@/components/traceEquipment/glContrast'],resolve),
+        name:'GlContrast',
+        meta:{
+            id:'376',
+            node:'traceEquipment',
+            url:'glContrast',
         }
     },
 ]

@@ -85,11 +85,11 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="seller_booth_name" label="供应商"> </el-table-column>
-                    <!--<el-table-column prop="suppiler_name" label="生产单位"> </el-table-column>-->
-                    <el-table-column prop="extra2" label="数量"> </el-table-column>
-                    <el-table-column prop="actual_money" label="金额(元)" width="80"> </el-table-column>
-                    <!--<el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
-                    <el-table-column prop="address" label="数据来源">
+                    <el-table-column prop="suppiler_name" label="生产单位" v-if="isMarket"> </el-table-column><!---->
+                    <el-table-column prop="extra2" label="数量" width="120"> </el-table-column>
+                    <el-table-column prop="actual_money" label="金额(元)" width="120"> </el-table-column>
+                    <el-table-column prop="stall_no" label="摊位号" v-if="isMarket" width="80"> </el-table-column>
+                    <!--<el-table-column prop="address" label="数据来源">
                         <template slot-scope="scope">
                             <p>{{scope.row.tz_origin == '1' ? '订单' : '手动录入'}}</p>
                         </template>
@@ -110,7 +110,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+            <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
         </div>
     </div>
@@ -208,9 +208,13 @@ export default {
             fileShow7: true,
             fileShow8: true,
             fileBtn: true,
+            isMarket: true,
         }
     },
     created() {
+        if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+            this.isMarket = false
+        }
     },
     mounted() {
         this.userId = localStorage.getItem('userId');

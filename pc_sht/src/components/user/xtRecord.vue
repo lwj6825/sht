@@ -27,7 +27,7 @@
                 <el-table-column prop="upPath" label="上传目录"> </el-table-column>
             </el-table>
             
-            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+            <el-pagination v-if="total" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
         </div>
     </div>

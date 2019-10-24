@@ -62,7 +62,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
+            <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
         </div>
         <!--附件-->
@@ -81,20 +81,20 @@
                     <p class="tit">{{prompt}}加工工艺</p>
                     <p class="iconfont icon-close close" @click="closeFun"></p>
                 </div>
-                <el-form class="form" ref="form" :model="form" label-width="120px">
-                    <el-form-item label="所属商品">
+                <el-form class="form" ref="form" :rules="rules" :model="form" label-width="120px">
+                    <el-form-item label="所属商品" prop="goodName">
                         <el-select v-model="form.goodName" filterable clearable placeholder="请选择">
                             <el-option v-for="(item,index) in goodList" :key="index" :label="item.GOODS_NAME"
                             :value="item.ID"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="工艺名称">
+                    <el-form-item label="工艺名称" prop="name">
                         <el-input clearable v-model="form.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="周期">
+                    <el-form-item label="周期" prop="cycle" style="margin-bottom: 16px;">
                         <el-input clearable v-model="form.cycle" placeholder="如：3-5天"></el-input>
                     </el-form-item>
-                    <el-form-item label="工艺描述">
+                    <el-form-item label="工艺描述" prop="describe">
                         <el-input clearable v-model="form.describe" type="textarea"></el-input>
                     </el-form-item>
                     <el-form-item label="上传图片">
@@ -118,12 +118,12 @@
                             </div>
                         </div>
                     </el-form-item><!---->
-                    <el-form-item label="排序">
+                    <el-form-item label="排序" prop="sort">
                         <el-input clearable v-model="form.sort" placeholder="同一商品数字越大 排序越靠后"></el-input>
                     </el-form-item>
                     <el-form-item class="btn">
                         <el-button @click="cancelFun">取消</el-button>
-                        <el-button type="primary" @click="submitForm" :disabled="disabled">确认</el-button>
+                        <el-button type="primary" @click="submitForm('form')" :disabled="disabled">确认</el-button>
                     </el-form-item>
                 </el-form>
             
@@ -168,6 +168,23 @@ export default {
             img_url: '',
             disabled: false,
             editUrl: '',
+            rules: {
+                goodName: [
+                    { required: true, message: '请选择所属商品', trigger: 'change' }
+                ],
+                name: [
+                    { required: true, message: '请输入工艺名称', trigger: 'blur' },
+                ],
+                cycle: [
+                    { required: true, message: '请输入周期', trigger: 'blur' },
+                ],
+                describe: [
+                    { required: true, message: '请输入工艺描述', trigger: 'blur' },
+                ],
+                sort: [
+                    { required: true, message: '请输入排序', trigger: 'blur' },
+                ],
+            }
         }
     },
     mounted() {
@@ -233,7 +250,16 @@ export default {
                     console.log(res)
                 })
         },
-        submitForm(){
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.submitFormFun()
+                } else {
+                    return false;
+                }
+            });
+        },
+        submitFormFun(){
             this.disabled = true
             if(this.prompt == '创建'){
                 let obj = {

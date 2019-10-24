@@ -47,7 +47,7 @@
                 </el-table-column>
             </el-table>
             <div class="block">
-                <el-pagination
+                <el-pagination v-if="totalCount"
                 background
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
