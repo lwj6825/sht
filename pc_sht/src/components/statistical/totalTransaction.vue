@@ -24,12 +24,12 @@
                     </div>
                  </div>
          </div>
-         <div class="totol" v-loading="loading">
-              <div class="title">交易额明细&nbsp;&nbsp;【总交易额:&nbsp;{{title_count}}元；</div>
-              <p style="margin-top:6px;font-size:15px;float:left;" v-for="(item,index) in count_price" :key="index" >
+         <div class="totol"  v-loading.body="fullscreenLoading1">
+              <div class="title"><p style="float:left;font-size:15px;padding:9px 0;margin-left:12px;">交易额明细</p><p style="font-size:13px;float:left;padding:9px 0;">【总交易额:&nbsp;{{title_count}}元；</p></div>
+              <p style="margin-top:6px;font-size:13px;float:left;padding:9px 0;" v-for="(item,index) in count_price" :key="index" >
                  &nbsp;&nbsp;{{item.name}}交易额：{{item.交易额}}元(占{{item.百分比}})；
               </p>
-              <p style="margin-top:6px;font-size:15px;float:left;">】</p>
+              <p style="margin-top:14px;font-size:13px;float:left;">】</p>
               <el-table :data="this.tableData"  style="width:100%;margin-left:20px;" :default-sort = "{prop: 'date', order: 'descending'}" fit :row-style="{height:'40px'}" :header-cell-style="{background:'#f5f5f5'}" >
                 <el-table-column v-for="(item,index) in headerList" :key='index' :label="item" fit :prop='item'>
                  </el-table-column>  
@@ -91,7 +91,8 @@ export default {
             total_price:'',
             total_pricePer:'',
             loading:true,
-            count_price:[]
+            count_price:[],
+            fullscreenLoading1:false
         }
     },
     mounted(){
@@ -139,6 +140,10 @@ export default {
         },
         // 搜索
         handleBtnQuery() {
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 2000);
             var start_time = this.time[0];
             var end_time = this.time[1];
             this.start_time = start_time;
@@ -171,8 +176,10 @@ export default {
                         this.title_count = this.title.total.总额.toFixed(2);  //总额
                         this.count_price = [];
                         this.title.total.regionList.forEach(val=>{
-                            
-                            this.count_price.push(val);
+                            console.log(val)
+                            if(val.百分比 != '0.0%'){
+                                this.count_price.push(val);
+                            }
                             // console.log(this.count_price)
                         })
                          this.tableData = res.data.list ; // 存储表格数据  
@@ -297,6 +304,8 @@ export default {
         .el-date-editor .el-range__close-icon{
             line-height:22px;
         }
-        
+        .el-table__header-wrapper{
+            margin-top:10px;
+        }
     }
 </style>

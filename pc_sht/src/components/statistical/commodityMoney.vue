@@ -1,10 +1,5 @@
 <template>
    <div class="content" ref="content">
-        <!-- <div class="header">
-              <p @click="skipStatistical">返回</p>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;<div>商品交易额明细</div>
-              
-         </div> -->
-         <!-- <div class="back" @click="back">返回</div> -->
          <div class="areaBox" ref="areaBox">
               <AreaSelect @selectId='selectId' :gooduserId="gooduserId"></AreaSelect>
         </div>
@@ -13,7 +8,7 @@
                          <el-date-picker style="width:300px;float:left;margin-top:20px;margin-right:25px;margin-left:60px;"
                             v-model="time" value-format="yyyy-MM-dd" default-value="2019-01-25"
                             type="daterange" 
-                            align="right"
+                            align="left"
                             unlink-panels :picker-options="pickerOptions"
                             range-separator="至" clear-icon	
                             start-placeholder="开始日期"
@@ -26,14 +21,14 @@
                             @click="handleBtnQuery()" 
                             >搜索</el-button>
                             <!-- <el-button plain >导出Excel</el-button> -->
-                        </div>
+                         </div>
         </div>
-        <div class="table_cell">
+        <div class="table_cell"  v-loading="loading"  v-loading.body="fullscreenLoading1"> 
             <div class="table_cell_title"  style="margin-left:20px;">
-                    商品交易额明细&nbsp;&nbsp;&nbsp;[总交易额:{{this.totol_price}}元， 总交易量:{{this.weight}}公斤]
+                    商品交易额明细&nbsp;&nbsp;&nbsp;【总交易额:{{this.totol_price}}元， 总交易量:{{this.weight}}公斤】
             </div>
-            <el-table :data="tableData"  style="width:100%;margin-left:20px;" :header-cell-style="{background:'#f5f5f5'}" fit
-                   v-loading="loading"  :row-style="{height:'40px'}"  >
+            <el-table :data="tableData"  style="width:100%;margin-left:20px;height:448px;" :header-cell-style="{background:'#f5f5f5'}" fit
+                   :row-style="{height:'40px'}"  >
                 <el-table-column prop="plu_name" label="商品名称" fit></el-table-column>
                 <el-table-column prop="price"  label="商品总交易额(元)"></el-table-column>
                 <el-table-column prop="weight"  label="总公交易量(公斤)" ></el-table-column>
@@ -105,21 +100,23 @@ export default {
             currentTotal:'', 
             totalCount:0, //所有数据
             TodayTime:'',
-            loading: true,
-            dataMore:'',
-            gooduserId: ''
+            // dataMore:'',
+            gooduserId: '',
+            fullscreenLoading1:false
         }
      },
      created(){
-            this.gooduserId = this.$route.params.gooduserId;
+           this.gooduserId = this.$route.params.gooduserId;
      },
      mounted(){
+          window.scrollTo(0,0)
           this.userId = localStorage.getItem('userId');
-          this.loginId = localStorage.getItem('loginId')
+          this.loginId = localStorage.getItem('loginId');
           this.defaultTzFun();
           this.getTime();
           this.gooduserId = this.$route.params.gooduserId;
-            if(localStorage.getItem("Time")){
+        //   console.log(localStorage.getItem("Time"))
+          if(localStorage.getItem("Time")){
               var arr = localStorage.getItem("Time").split(",")
               this.start_time = arr[0];
               this.end_time = arr[1];
@@ -128,15 +125,12 @@ export default {
               this.gooduserId = arr[3]
               localStorage.removeItem('Time')
           }else{
-             localStorage.removeItem('Time')
+              localStorage.removeItem('Time')
           }
+         
      },
      methods:{
-         back(){
-            //   this.$router.push({path:'statisticalMsg'})
-            window.history.go(-1);
-         },
-         getTime(){
+        getTime(){
             function formatTen(num) { 
                     return num > 9 ? (num + "") : ("0" + num); 
             }
@@ -156,20 +150,19 @@ export default {
             }else{
                 this.input = this.$route.params.shopname;
             }
-            this.getqueryMoneyAndWeightForGoodsFun();  
-            this.getQueryMoneyAndWeightForMarketFun();
-         },
+        },
         handleBtnQuery() {
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             var start_time = this.time[0];
             var end_time = this.time[1];
             this.start_time = start_time;
             this.end_time = end_time;
-            setTimeout(() => {
-                 this.loading = false
-            }, 2000);
             if(this.input == ''){
                 this.currentPage = 1;
-                 this.getqueryMoneyAndWeightForGoodsFun();
+                this.getqueryMoneyAndWeightForGoodsFun();
             }
             this.getQueryMoneyAndWeightForMarketFun();
             this.getqueryMoneyAndWeightForGoodsFun();
@@ -190,10 +183,10 @@ export default {
                            query:{shopname:this.input, 
                            startTime:this.start_time,  
                            endTime:this.end_time,
-                           gooduserId:this.gooduserId
+                        //    gooduserId:this.gooduserId
+                            gooduserId:this.bigAreaId
                            }
             })
-            console.log(this.gooduserId)
         },
         skipStatistical(){  // 返回统计页面
             this.$router.push({path:'statistical'})
@@ -211,16 +204,13 @@ export default {
                 .then(res =>{
                     // console.log(data,"更多post数据")
                     if(this.$route.params.gooduserId){
-                            
                         res.data.dataList.forEach(ele => {
                             if(ele.userId == this.$route.params.gooduserId){
                                 this.bigAreaId = ele.userId;
                                 this.areaId = ele.bootList[0].shop_booth_id;
                             }
-                            
                         });
                     }else{
-
                         this.bigAreaId = res.data.dataList[0].userId;
                         this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
                     }
@@ -232,7 +222,7 @@ export default {
         },
         selectId(id){//选择区域展示商户列表
             this.page = 1
-            // this.input=''
+            this.input = ''
             let data = {
                 page: this.page,
                 cols: this.cols,
@@ -241,34 +231,34 @@ export default {
                 name: this.name,
                 boothName: this.boothName,
             }
+            this.fullscreenLoading1 = true;
+            setTimeout(()=>{
+                this.fullscreenLoading1 = false;
+            },4000)
             GetMarkets(data)
                 .then(res =>{
-                    // console.log(res,"post请求")
                     this.titArr = res.data.dataList
-                    
                     res.data.dataList.forEach(ele => {
                         if(ele.userId == id){
                             this.bigAreaId = id;
                             this.areaId = ele.bootList[0].shop_booth_id;
+                            this.getqueryMoneyAndWeightForGoodsFun()
                         }
-                        
                     });
-                    this.getqueryMoneyAndWeightForGoodsFun()
-                    // this.input=''
                 })
                 .catch(res =>{
                     console.log(res)
                 })
-            },
+        },
        getQueryMoneyAndWeightForMarketFun(){   //商品总额
              let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time;
              QueryMoneyAndWeightForMarket(str)
                   .then(res=>{
-                        // console.log(res,'商品总额')
+                    //   console.log(res,'商品总额')
                       var totol_price = res.data.price;
-                      this.totol_price = totol_price.toFixed(2) ;
+                      this.totol_price = Number(totol_price.toFixed(2));
                       var weight = res.data.weight;
-                      this.weight = weight.toFixed(2);
+                      this.weight = Number(weight.toFixed(2));
                   })
                   .catch(res=>{
                         console.log(res)
@@ -276,8 +266,7 @@ export default {
              
         },
         getqueryMoneyAndWeightForGoodsFun(){  //商品交易量
-            
-        let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page='+this.currentPage+'&cols='+this.pageSize+'&name='+this.input;
+             let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page='+this.currentPage+'&cols='+this.pageSize+'&name='+this.input;
              QueryMoneyAndWeightForGoods(str)
                   .then(res=>{
                         // console.log(res , "商品交易量")

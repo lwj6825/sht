@@ -280,7 +280,7 @@ export default {
                 {name: '当日'},
                 {name: '本周'},
                 {name: '本月'},
-                {name: '全年'},
+                {name: '三个月'},
                 // {name: '自定义时间'}
             ],
             currId: '',

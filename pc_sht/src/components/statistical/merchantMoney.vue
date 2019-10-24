@@ -13,7 +13,7 @@
                     <el-date-picker style="width:300px;float:left;margin-top:20px;margin-right:25px;margin-left:60px;"
                                         v-model="time" value-format="yyyy-MM-dd" default-value="2019-01-25" 
                                         type="daterange" 
-                                        align="right"
+                                        align="left"
                                         unlink-panels :picker-options="pickerOptions"
                                         range-separator="至" clear-icon	
                                         start-placeholder="开始日期"
@@ -31,11 +31,11 @@
                     <!-- </el-form-item> -->
                 </div>
         </div>
-        <div class="table_cell">
+        <div class="table_cell" v-loading.body="fullscreenLoading1">
             <div class="table_cell_title" style="margin-left:20px;">
                     商户交易额明细&nbsp;&nbsp;&nbsp;[总交易额:{{this.totol_price}}元， 总交易量:{{this.weight}}公斤]
             </div>
-            <el-table :data="tableData"   style="width: 100%;margin-left:20px;" :header-cell-style="{background:'#f5f5f5'}" fit
+            <el-table :data="tableData"   style="width: 100%;margin-left:20px;height:448px;" :header-cell-style="{background:'#f5f5f5'}" fit
             v-loading="loading" :row-style="{height:'40px'}"  >
                 <el-table-column prop="stall_no" label="摊位号" fit></el-table-column>
                 <el-table-column prop="biz_name"  label="商户名称" fit></el-table-column>
@@ -100,22 +100,23 @@ export default {
             pageSize:10,
             totalCount: 0,// 所有数据
             loading:true,
-            gooduserId:''
+            gooduserId:'',
+            fullscreenLoading1:false
          }
      },
      created(){
             this.gooduserId = this.$route.params.gooduserId;
      },
      mounted(){
+          window.scrollTo(0,0)
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId');
           this.getTime();
           this.defaultTzFun();
           this.gooduserId = this.$route.params.gooduserId;
-          console.log(this.gooduserId)
           setTimeout(() => {
                 this.loading = false
-          }, 2000);
+          }, 4000);
           if(localStorage.getItem("Time")){
               var arr = localStorage.getItem("Time").split(",")
               this.start_time = arr[0];
@@ -129,10 +130,10 @@ export default {
           }
      },
      methods:{
-         back(){
+        //  back(){
             //   this.$router.push({path:'statisticalMsg'})
-            window.history.go(-1);
-         },
+        //     window.history.go(-1);
+        //  },
           //初始化数据
          getTime(){
                 function formatTen(num) { 
@@ -155,21 +156,24 @@ export default {
                 }
                 this.getQueryMoneyAndWeightForBizFun();  
                 this.getQueryMoneyAndWeightForMarketFun();
-
          },
          //点击搜索
          handleBtnQuery() {
+             this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             var start_time = this.time[0];
             var end_time = this.time[1];
             this.start_time = start_time;
             this.end_time = end_time;
-            this.getQueryMoneyAndWeightForBizFun();
-            this.getQueryMoneyAndWeightForMarketFun();
             this.currentPage = 1;
             if(this.input ==''){
                 this.currentPage = 1;
-                this.getqueryMoneyAndWeightForGoodsFun();
+                this.getQueryMoneyAndWeightForBizFun();
             }
+            this.getQueryMoneyAndWeightForBizFun();
+            this.getQueryMoneyAndWeightForMarketFun();
          },
         //跳转首页
         skipStatistical(){
@@ -193,9 +197,7 @@ export default {
                              endTime:this.end_time,
                              gooduserId:this.gooduserId
                              }
-            },
-                             
-            )
+            })
         },
         skipStatistical(){  // 返回统计页面
                 this.$router.push({path:'statistical'})
@@ -212,7 +214,6 @@ export default {
             GetMarkets(data)
                 .then(res =>{
                     if(this.$route.params.gooduserId){
-                            
                         res.data.dataList.forEach(ele => {
                             if(ele.userId == this.$route.params.gooduserId){
                                 this.bigAreaId = ele.userId;
@@ -221,21 +222,22 @@ export default {
                             
                         });
                     }else{
-
                         this.bigAreaId = res.data.dataList[0].userId;
                         this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
                     }
                     this.handleBtnQuery();
-                    // this.bigAreaId = res.data.dataList[0].userId;
-                    // this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
-                    // this.handleBtnQuery()
                 })
                 .catch(res =>{
                     console.log(res)
                 })
         },
         selectId(id){//选择区域展示商户列表
+            this.fullscreenLoading1 = true;
+            setTimeout(() => {
+                this.fullscreenLoading1 = false;
+            }, 4000);
             this.page = 1
+            this.input = ''
             let data = {
                 page: this.page,
                 cols: this.cols,
@@ -248,13 +250,12 @@ export default {
                 .then(res =>{
                     this.titArr = res.data.dataList
                     res.data.dataList.forEach(ele => {
-                    if(ele.userId == id){
-                        this.bigAreaId = id;
-                        this.areaId = ele.bootList[0].shop_booth_id;
-                    }
+                        if(ele.userId == id){
+                            this.bigAreaId = id;
+                            this.areaId = ele.bootList[0].shop_booth_id;
+                            this.getQueryMoneyAndWeightForBizFun()
+                        }
                     });
-                    this.getQueryMoneyAndWeightForBizFun()
-                    // this.input=''
                 })
                 .catch(res =>{
                     console.log(res)

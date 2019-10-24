@@ -2,7 +2,7 @@ import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryGoodsRankCurrentYear,queryGoodsRankCurrentMonth,queryGoodsRankCurrentWeek,queryGoodsRankCurrentDay,
     queryBizRankCurrentWeek,queryBizRankCurrentDay,queryBizRankCurrentMonth,queryBizRankCurrentYear,queryHasNoTzBizByNodeId,
     getTzInfoUploadDays,getTzInfoUploadBizNum,getBizOnlineTime,getGoodsWeightRankAndAvgPrice,queryMoneyAndWeightForBiz,
-    computNode,computNodeNumWeek,computPluNumWeek,queryMoneyLittleTime,queryMoneyAndWeightForGoods,getBizNotOnlineTime,
+    computNode,computNodeNumWeek,computPluNumWeek,queryMoneyLittleTime,queryMoneyAndWeightForGoods,getBizNotOnlineTime,queryHasTzBizByNodeId,
     queryMoneyCurrentWeek,queryMoneyCurrentMonth,queryMoneyCurrentDayHour,queryMoneyCurrentYear,queryMoneyAndWeightForMarket
 } from '../address/url.js';
 
@@ -42,6 +42,10 @@ export const QueryBizRankCurrentDay = function(params) {
 // 该市场当月上传进货台账的商户信息（录入天数）
 export const GetTzInfoUploadDays = function(params) {
     return ajaxGet(getTzInfoUploadDays +'?'+ params)
+}
+// 该市场当月上传进货台账的商户信息（录入笔数）
+export const QueryHasTzBizByNodeId = function(params) {
+    return ajaxGet(queryHasTzBizByNodeId +'?'+ params)
 }
 // 该市场当月上传进货台账的商户信息（商户数）
 export const GetTzInfoUploadBizNum = function(params) {
