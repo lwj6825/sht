@@ -1,5 +1,5 @@
 <template>
-    <div class="content" ref="content">
+    <div class="content TotalTransaction" ref="content">
          <!-- <div class="header">
               <p @click="skipStatistical">返回</p>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;<div>交易额明细</div>
          </div> -->
@@ -294,7 +294,7 @@ export default {
     } 
 </style>
 <style lang="less">
-    .content {
+    .TotalTransaction {
         .el-date-editor .el-range-separator{
             line-height: 23px;
         }

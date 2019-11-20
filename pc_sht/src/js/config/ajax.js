@@ -3,7 +3,7 @@ import axios from 'axios';
 export const ajaxPost = function (url, params) {
     return new Promise((resolve, reject) => {
         axios
-            .post(url, params,{ headers: {'X-Requested-With': 'XMLHttpRequest'},withCredentials: false})
+            .post(url, params,{ headers: {'X-Requested-With': 'XMLHttpRequest','Content-Type':'application/json'},withCredentials: false})
             .then((res) => {
                 resolve(res.data)
             })

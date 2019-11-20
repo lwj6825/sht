@@ -137,7 +137,12 @@ export default {
                 }
                 editItem(editData)
                     .then(res => {
-                        this.$router.push({path:'funManagement'})
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.$router.push({path:'funManagement'})
+                        }else{
+                            this.$message.error(res.message);
+                        }
                     })
                     .catch(res => {
                         this.$message.error('出错了.');

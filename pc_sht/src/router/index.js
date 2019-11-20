@@ -28,6 +28,7 @@ import fun from './fun.js'
 import analyze from './analyze.js'
 import differentSz from './differentSz'
 import assets from './assets'
+import retail from './retail'
 
 
 Vue.use(Router)
@@ -66,7 +67,8 @@ export default new Router({
         ...traceEquipment,
         ...szDetection,
         ...tzFarming,
-        ...tzSlaughter
+        ...tzSlaughter,
+        ...retail
       ]
     },
   ]

@@ -1,38 +1,50 @@
 <template>
-    <div class="container" @keyup.enter="loginClick()">
-        <div class="header">北京E追溯商户通</div>
-        <div class="login-area">
-            <header class="title">系统登录</header>
-            <div class="content">
-                <label class="account">账号<input type="text" v-model="account"></label>
-                <label class="password">密码<input type="password" v-model="password"></label>
-                <div class="code"> 
-                    <div class="validation">
-                        <p>验证码</p>
-                        <input type="text" v-model="validation">
+    <div class="container" ref="container" @keyup.enter="loginClick()">
+        <img class="strip" src="../../../static/strip.png" alt="">
+        <img class="image" src="../../../static/logoStrip.png" alt="">
+        <div class="message">
+            <div class="header">北京E追溯商户通</div>
+            <div class="login-area">
+                <header class="title">系统登录</header>
+                <div class="content">
+                        <!--<el-input class="fill-input" prefix-icon="el-icon-user" v-model="account">
+                        </el-input>-->
+                    <div class="account" :class="current == 1 ? 'active' : ''">
+                        <span class="iconfont icon-zhangh"></span>
+                        <input type="text" @focus="focusFun(1)" v-model="account" placeholder="输入账号">
                     </div>
-                    <p class="btn" @click="getValidationFun">{{codeBtn}}</p>
-                    <p class="num" v-if="numCode">{{numCode}}</p>
+                    <div class="password" :class="current == 2 ? 'active' : ''">
+                        <span class="iconfont icon-mim"></span>
+                        <input type="password" @focus="focusFun(2)" v-model="password" placeholder="输入密码">
+                    </div>
+                    <div class="code"> 
+                        <div class="validation" :class="current == 3 ? 'active' : ''">
+                            <span class="iconfont icon-yanzm"></span>
+                            <input type="text" @focus="focusFun(3)" v-model="validation" placeholder="验证码">
+                        </div>
+                        <p class="num" v-if="numCode">{{numCode}}</p>
+                        <p class="btn" @click="getValidationFun">{{codeBtn}}</p>
+                    </div>
+                    <div class="other">
+                        <label for="remberPassword">
+                            <el-checkbox v-model="check" @change="checkFun">记住密码</el-checkbox>
+                        </label>
+                        <!--<span class="code-login">验证码登录</span>
+                        <span class="forget-password">忘记密码？</span> -->                   
+                    </div>
                 </div>
-                <div class="other">
-                    <label for="remberPassword">
-                        <el-checkbox v-model="check">记住密码</el-checkbox>
-                    </label>
-                    <span class="code-login">验证码登录</span>
-                    <span class="forget-password">忘记密码？</span>                    
-                </div>
+                <footer class="login-btn" @click="loginClick()">
+                    <input type="button" value="登录">
+                </footer>
             </div>
-            <footer class="login-btn" @click="loginClick()">
-                <input type="button" value="登录">
-            </footer>
         </div>
-        <canvas id="canvas"></canvas>
+        <!--<canvas id="canvas"></canvas>-->
         <div class="footer">版权所有©北京志恒达科技有限公司-京ICP备05030152号</div>
     </div>
 </template>
 <script>
-import {login,login2} from "../../js/login/ajax.js";
-import PointLine from '../../assets/js/canvas.js';
+import {login,login2,GetShtUserInfo} from "../../js/login/ajax.js";
+// import PointLine from '../../assets/js/canvas.js';
 import {loginUrl} from '../../js/address/url.js'
 export default {
     name:'login',
@@ -46,21 +58,98 @@ export default {
             numCode: '',
             codeBtn: '获取验证码',
             code: '',
+            current: 0,
         }
     },
     created() {
+        this.$nextTick(function(){
+            this.$refs.container.style.width = window.innerWidth + 'px';
+            this.$refs.container.style.height = window.innerHeight + 'px';
+        })
         this.getValidationFun()
     },
     mounted(){
-        this.getValidationFun()
-        const pointLine = new PointLine();
-        if(localStorage.getItem('checked')){        
-            this.account = localStorage.getItem('accoutn');
-            this.userId = localStorage.getItem('userId');
-            this.$router.push({path:'home'})
+        console.log(this.$route.query)
+        if(this.$route.query.account){
+            let str = 'username=' + this.$route.query.account + '&password=' + this.$route.query.password
+            GetShtUserInfo(str)
+                .then(res => {
+                    if(res.result == true){
+                        this.account = res.data.username
+                        this.password = res.data.password
+                        let data = {
+                            username : this.account,
+                            password : this.password,
+                        }
+                        login(data).then((res)=>{
+                            if(res.data.booth_list.length != 0){
+                                let name = res.data.booth_list[0].name,
+                                    node_id = res.data.booth_list[0].node_id,
+                                    isRegion = res.data.role_list[0].region,
+                                    scShopId = res.data.booth_list[0].SHOP_BOOTH_ID,
+                                    roleId = res.data.role_list[0].ROLEID;
+                                localStorage.setItem('loginName',name);
+                                localStorage.setItem('loginId',node_id);
+                                localStorage.setItem('isRegion',isRegion);
+                                localStorage.setItem('scShopId',scShopId);
+                                localStorage.setItem('roleId',roleId);
+                                localStorage.setItem('account',this.account);
+                                localStorage.setItem('password',this.password);
+                                sessionStorage.setItem('userName',this.account)
+                                this.setCookie('userName',this.account)
+                            }
+                            if(res.result){
+                                if(this.check){
+                                    localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                                    localStorage.setItem('username',JSON.stringify(this.account));
+                                    localStorage.setItem('checked',JSON.stringify(true));
+                                    localStorage.setItem('userId',res.data.userId);
+                                    localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
+                                    this.userId = res.data.userId;
+                                }else{
+                                    localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                                    localStorage.setItem('username',JSON.stringify(this.account));
+                                    localStorage.setItem('userId',res.data.userId);
+                                    localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
+                                    this.userId = res.data.userId;
+                                }
+                                this.$router.push({name:'home'})
+                            }else{
+                                clocalStorage.clear();                    
+                            }                
+                        }).catch((res)=>{
+                            this.$message.error('账号或密码输入不正确!')
+                        })
+                    }
+                })
+                .catch(res => {
+                    console.log(res);
+                })
+        }
+        // this.getValidationFun()
+        // const pointLine = new PointLine();
+        // if(localStorage.getItem('checked')){        
+        //     this.account = localStorage.getItem('accoutn');
+        //     this.userId = localStorage.getItem('userId');
+        //     this.$router.push({path:'home'})
+        // }
+        if(localStorage.getItem('remember')){        
+            this.account = localStorage.getItem('account');
+            this.password = localStorage.getItem('password');
+            if(localStorage.getItem('remember') == 'true'){
+                this.check = true
+            }else{
+                this.check = false
+            }
         }
     },
     methods:{
+        focusFun(ele){
+            this.current = ele
+        },
+        checkFun(ele){
+            localStorage.setItem('remember',ele);
+        },
         getValidationFun(){
             this.code = "";
             var codeLength = 4;
@@ -112,6 +201,7 @@ export default {
                     localStorage.setItem('isRegion',isRegion);
                     localStorage.setItem('scShopId',scShopId);
                     localStorage.setItem('roleId',roleId);
+                    localStorage.setItem('account',this.account);
                     localStorage.setItem('password',this.password);
                     sessionStorage.setItem('userName',this.account)
                     this.setCookie('userName',this.account)
@@ -122,7 +212,7 @@ export default {
                         localStorage.setItem('username',JSON.stringify(this.account));
                         localStorage.setItem('checked',JSON.stringify(true));
                         localStorage.setItem('userId',res.data.userId);
-                      localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
+                        localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;
                     }else{
                         localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
@@ -131,7 +221,7 @@ export default {
                         localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;
                     }
-                    this.$router.push({path:'home'})
+                    this.$router.push({name:'home'})
                 }else{
                     clocalStorage.clear();                    
                 }                
@@ -144,50 +234,73 @@ export default {
 }
 </script>
 <style scoped lang="less">
+    @import '../../assets/css/common.css';
     .container{
-        position: relative;
+        display: flex;
         background: #fff;
+        min-width: 1200px;
         height: 100%;
-        .header{
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 0 30px;
-            width: 100%;
-            height: 50px;
-            line-height: 50px;
-            font-size: 20px;
-            color: #409eff;
+        .strip{
+            width: 150px;
+            height: 100%;
+        }
+        .image{
+            // width: 600px;
+            height: 100%;
+        }
+        .message{
+            position: relative;
+            top: 50%;
+            right: 0;
+            margin: -260px auto 0;
+            width: 400px;
+            height: 520px;
             box-sizing: border-box;
         }
-        .login-area{
-            position: absolute;
-            top: 50%;
-            left: 50%;
+        .header{
+            margin-bottom: 40px;
+            width: 400px;
+            height: 50px;
+            line-height: 50px;
+            font-size: 32px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+        }
+        .login-area{           
             margin: 0 auto;
             width: 400px;
-            height:364px;
-            transform: translateY(-182px) translateX(-200px);
-            border: 1px solid #ddd;
+            height:420px;
+            // transform: translateY(-182px) translateX(-200px);
+            border: 1px solid #ededed;
             border-radius: 3px;
             background: #fff;
-            box-shadow: 0 0 6px #ddd;
+            box-shadow: 2px 2px 10px 5px #ededed;
             .title{
-                margin-top: 50px;
-                margin-bottom: 40px;
-                font-size: 24px;
-                color: #333;
-                font-weight: 900;
+                margin: 30px 0;
+                font-size: 28px;
+                font-weight: bold;
+                color: #2ea7e0;
                 text-align: center;
             }
             .content{
                 .account,.password{
                     display: block;
                     margin: 0 auto;
-                    padding: 8px;
+                    margin-bottom: 25px;
                     width: 80%;
+                    height: 44px;
+                    line-height: 40px;
                     box-sizing: border-box;
-                    border-bottom: 1px solid #ddd;
+                    border: 1px solid #ccc;
+                    border-radius: 2px;
+                    span{
+                        width: 44px;
+                        height: 42px;
+                        text-align: center;
+                        background: #f2f2f2;
+                        display: inline-block;
+                    }
                     input{
                         display: inline-block;
                         margin-left: 10px;
@@ -198,50 +311,63 @@ export default {
                 }
                 .code{
                     display: flex;
-                    margin: 10px auto 10px;
-                    width: 80%; 
-                    font-size: 14px;  
+                    margin: 0 auto;
+                    width: 80%;  
                     .validation{
-                        display: flex;
-                        font-size: 16px; 
+                        display: block;
+                        margin-bottom: 10px;
+                        width: 150px;
+                        height: 44px;
+                        line-height: 40px;
                         box-sizing: border-box;
-                        border-bottom: 1px solid #ddd;
-                        p{
-                            padding-bottom: 10px;
-                            margin-left: 8px;
-                            width: 58px;
-                            height: 30px;
-                            line-height: 30px;
+                        border: 1px solid #ccc;
+                        border-radius: 2px;
+                        span{
+                            width: 44px;
+                            height: 42px;
+                            text-align: center;
+                            background: #f2f2f2;
+                            display: inline-block;
                         }
                         input{
-                            padding-bottom: 10px;
-                            width: 110px;
+                            display: inline-block;
+                            margin-left: 10px;
+                            height: 26px;
+                            line-height: 26px;
+                            width: 58%;
                         }
                     }
                     .num{
-                        margin-top: 10px;
+                        margin-left: 10px;
                         width: 50px;
-                        height: 30px;
+                        height: 44px;
+                        line-height: 40px;
+                        color: #999;
                         text-align: center;
-                        background: #ccc;
-                        color: #fff;
-                        line-height: 30px;
+                        box-sizing: border-box;
+                        border: 1px solid #ccc;
+                        border-radius: 2px;
                     }
                     .btn{
-                        margin-top: 10px;
-                        width: 90px;
-                        height: 30px;
+                        margin-left: 10px;
+                        width: 100px;
+                        height: 44px;
+                        line-height: 40px;
+                        color: #fff;
+                        background: #2ea7e0;
                         text-align: center;
-                        color: #666;
-                        line-height: 30px;
+                        box-sizing: border-box;
+                        border: 1px solid #2ea7e0;
+                        border-radius: 2px;
                         cursor: pointer;
                         
                     }
                 }
                 .other{
-                    margin: 0 auto 30px;
+                    margin: 0 auto 25px;
                     width: 80%; 
-                    font-size: 14px;   
+                    font-size: 14px;  
+                    color: #606266; 
                     label{
                         cursor: pointer;
                     }                
@@ -256,13 +382,13 @@ export default {
                 input{
                     display: block;
                     margin: 0 auto;
-                    height: 30px;
-                    line-height: 30px;
+                    height: 44px;
+                    line-height: 44px;
                     width: 80%;
                     color: #fff;
                     border: none;
                     border-radius: 3px;
-                    background: #199ed8;
+                    background: #2ea7e0;
                     cursor: pointer;
                 }
             }
@@ -278,6 +404,10 @@ export default {
             font-size: 12px;
             text-align: center;
             box-sizing: border-box;
+            color: #989898;
+        }
+        .active{
+            border-color: #2ea7e0 !important;
         }
     }
 </style>

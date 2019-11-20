@@ -39,26 +39,26 @@
                 <div>
                     <el-button type="primary" @click="addUser()">{{addNew}}</el-button>
                     <el-button type="primary" @click="addMarketFun">添加市场</el-button>
-                    <el-button>导入</el-button>
+                    <!--<el-button>导入</el-button>-->
                 </div>
             </div>
             <el-table :data="tableData" :header-cell-style="rowClass" v-loading="loading">
-                <el-table-column prop="userName" label="账号" align="center" fixed> </el-table-column>
-                <el-table-column prop="roleName" label="节点名称" align="center">
+                <el-table-column prop="userName" label="账号" align="center"> </el-table-column>
+                <el-table-column prop="roleName" label="节点名称">
                     <template slot-scope="scope">
                         <p>{{scope.row.bootList[0].node_name}}</p>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" :formatter='nameFormat' label="企业名称" align="center"> </el-table-column>
-                <el-table-column prop="contacts" label="联系人" :formatter='contactPeopleFormat'  align="center"> </el-table-column>
+                <el-table-column prop="name" :formatter='nameFormat' label="企业名称"> </el-table-column>
+                <el-table-column prop="contacts" label="联系人" :formatter='contactPeopleFormat'> </el-table-column>
                 <el-table-column prop="roleName" label="系统角色" align="center"> </el-table-column>
                 <el-table-column prop="scbj" label="状态" align="center"> </el-table-column>
-                <el-table-column prop="record_date" label="开通日期" align="center"> </el-table-column>
-                <el-table-column label="操作" fixed="right" align="center">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="lookInfo(scope.row)">查看</el-button>
-                    <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
-                </template>
+                <el-table-column prop="record_date" label="开通日期"> </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" @click="lookInfo(scope.row)">查看</el-button>
+                        <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
+                    </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -390,8 +390,8 @@ export default {
       border-color: #eaeaea;
     }
     .search-btn{
-      color: #409EFF;
-      background: #fff;
+        color: #409EFF;
+        background: #fff;
     }
     .margin-rt{
         margin-right: 10px;

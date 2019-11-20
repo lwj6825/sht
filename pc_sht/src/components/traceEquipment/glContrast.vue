@@ -171,78 +171,122 @@ export default {
     methods: {
         // 批量标记
         allSignFun(){
-            let params = {
-                ids: this.ids.join(','),
-                set_type: 2,
-            }
-            DeleteErrorLogData(params)
-                .then(res => {
-                    if (res.result == true) {
-                        this.$message.success(res.message);
-                        this.getDataFun()
-                    }else{
-                        this.$message.error(res.message);
-                    }
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            this.$confirm('你确定要批量标记不需要做对照的数据吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {                
+                let params = {
+                    ids: this.ids.join(','),
+                    set_type: 2,
+                }
+                DeleteErrorLogData(params)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
         },
         // 标记不需要做对照的数据
         signFun(ele){
-            let params = {
-                ids: ele.id,
-                set_type: 2,
-            }
-            DeleteErrorLogData(params)
-                .then(res => {
-                    if (res.result == true) {
-                        this.$message.success(res.message);
-                        this.getDataFun()
-                    }else{
-                        this.$message.error(res.message);
-                    }
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            this.$confirm('你确定要标记不需要做对照的数据吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {            
+                let params = {
+                    ids: ele.id,
+                    set_type: 2,
+                }
+                DeleteErrorLogData(params)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
         },
         // 批量删除
         allDeleteFun(){
-            let params = {
-                ids: this.ids.join(','),
-                set_type: 1,
-            }
-            DeleteErrorLogData(params)
-                .then(res => {
-                    if (res.result == true) {
-                        this.$message.success(res.message);
-                        this.getDataFun()
-                    }else{
-                        this.$message.error(res.message);
-                    }
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            this.$confirm('你确定要删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {        
+                let params = {
+                    ids: this.ids.join(','),
+                    set_type: 1,
+                }
+                DeleteErrorLogData(params)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
         },
         deleteFun(ele){
-            let params = {
-                ids: ele.id,
-                set_type: 1,
-            }
-            DeleteErrorLogData(params)
-                .then(res => {
-                    if (res.result == true) {
-                        this.$message.success(res.message);
-                        this.getDataFun()
-                    }else{
-                        this.$message.error(res.message);
-                    }
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            this.$confirm('你确定要删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {    
+                let params = {
+                    ids: ele.id,
+                    set_type: 1,
+                }
+                DeleteErrorLogData(params)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
         },
         downloadFun(){
             const loading = this.$loading({

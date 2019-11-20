@@ -293,9 +293,9 @@ export default {
                         if(state){
                             if(ele == val.id){
                                 if(val.key_number == ''){
-                                    this.$message.error('请输入键位！');
-                                    state = false
-                                    return
+                                    // this.$message.error('请输入键位！');
+                                    // state = false
+                                    // return
                                 }else{
                                     let num = Number(val.key_number)
                                     if(/^[0-9]{1,2}/.test(num) == false){

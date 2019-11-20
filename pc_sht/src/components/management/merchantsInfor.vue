@@ -36,6 +36,11 @@
           <!-- 展示商铺信息 -->
           <div class="infor-msg" v-show="!isEdit">
             <div v-for="item in shopList" :key="item.id">
+            
+                <div class="section">
+                  <span class="item-name">所属区域：</span>
+                  <span class="item-msg">{{districtName}}</span>
+                </div>
                 <div class="section">
                   <span class="item-name">商户编码：</span>
                   <span class="item-msg">{{item.biz_id}}</span>
@@ -76,21 +81,23 @@
                 <div class="section">
                   <span class="item-name">营业执照：</span>
                   <span class="item-msg">
-                    <div class="box-fileimg">
-                      <figure class="image" v-if="item.img_url">
+                    <div class="box-fileimg" v-if="item.img_url">
+                      <figure class="image">
                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
-                      </figure> 
+                      </figure>
                     </div>
+                    <p v-else>无</p>
                   </span>
                 </div>
                 <div class="section">
                   <span class="item-name">个人照：</span>
                   <span class="item-msg">
-                    <div class="box-fileimg">
-                      <figure class="image" v-if="item.logo">
+                    <div class="box-fileimg" v-if="item.logo">
+                      <figure class="image">
                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.logo">
                       </figure> 
                     </div>
+                    <p v-else>无</p>
                   </span>
                 </div>
                 <div class="section">
@@ -101,6 +108,12 @@
           </div>
           <!-- 编辑查看 -->
           <el-form :model="editForm" class="form" label-width="120px" v-show="isEdit">
+            <el-form-item label="所属区域：" >
+              <el-select style="width: 340px;" v-model="editForm.district" filterable size="mini" @change="selectFun">
+                <el-option  v-for="(item,index) in districtArr" :key="index" :label="item.name" :value="item.bootList[0].shop_booth_id" >
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="商户编码：" >
               <el-input v-model="editForm.biz_id" readonly></el-input>
             </el-form-item>
@@ -130,8 +143,7 @@
               <el-input v-model="editForm.addrInfo" placeholder="请输入详细地址"></el-input>
             </el-form-item>
             <el-form-item label="摊位号：">
-              <el-input style="width: 70%" v-model="editForm.stallNo" ></el-input>
-              <span>&nbsp;&nbsp;例：1厅10排</span>
+              <el-input v-model="editForm.stallNo" ></el-input>
             </el-form-item>
             <el-form-item label="营业执照：">
               <div class="box-fileimg">
@@ -193,8 +205,7 @@
               <el-input v-model="form.addrInfo" placeholder="请输入详细地址" clearable></el-input>
             </el-form-item>
             <el-form-item label="摊位号：" prop="stallNo">
-              <el-input style="width: 70%" v-model="form.stallNo" clearable></el-input>
-              <span>&nbsp;&nbsp;例：1厅8排</span>
+              <el-input v-model="form.stallNo" clearable></el-input>
             </el-form-item>
             <el-form-item >
               <el-button type="primary" @click="submitForm()">保存</el-button>
@@ -230,6 +241,7 @@ import {insBiz,allBizs,updateBizUser,updateBizBooth} from '../../js/management/m
 import {baseUrl} from '../../js/address/url.js'
 import axios from 'axios';
 import {UpdatePassword} from '../../js/settings/settings.js'
+import { GetMarkets} from '../../js/district/district.js';
 export default {
   name:"",
   data(){
@@ -270,6 +282,7 @@ export default {
         addr:[],
         addrInfo: '',//地址
         stallNo: '',//摊位号
+        district: '', // 所属区域
       },
       addrOptions:[],
       props:{
@@ -292,6 +305,9 @@ export default {
       imgFile: '',
       logoArr: [],
       imgArr: [],
+      districtArr: [],
+      districtUserId: '',
+      districtName: '',
     }
   },
   computed:{
@@ -299,12 +315,44 @@ export default {
   },
   mounted(){    
     this.getAddrList();//获取地区列表
+    this.getMarketFun()
     this.getShopMsg();//查询商铺信息
   },  
   created() {
     this.userId = localStorage.getItem('userId')
   },
   methods:{
+    selectFun(ele){
+      this.districtArr.forEach(val => {
+        if(ele == val.bootList[0].shop_booth_id){
+          this.districtUserId = val.bootList[0].userId
+        }
+      })
+    },
+    // 区域
+    getMarketFun(){            
+      let obj = {
+        page: 1,
+        cols: 1000,
+        total:"",
+        userId: this.userId,
+        contacts: '',
+        nodeName: ''
+      }
+      GetMarkets(obj)
+        .then(res => {
+          this.districtArr = res.data.dataList
+          this.districtArr.forEach(val => {
+            if(this.$route.params.inforMsg.bootList[0].region == val.bootList[0].shop_booth_id){
+              this.districtUserId = val.bootList[0].userId
+              this.districtName = val.bootList[0].booth_name
+            }
+          })
+        })
+        .catch(() => {
+          this.$message.error("出错啦!");
+        })
+    },
     sureNumFun(){
       let str = 'userName=' + this.account + '&password=' + this.formNum.newNum
       if(this.formNum.oldNum != this.password){
@@ -505,7 +553,9 @@ export default {
       let obj = {
         contact: this.people,
         telphone: this.phoneNumber,
-        userId: this.shopUserId
+        userId: this.shopUserId,
+        paternt: this.districtUserId, // 区域userid      
+        region: this.editForm.district// 区域shop_booth_id
       }
       updateBizUser(obj)
         .then(res =>{
@@ -521,6 +571,22 @@ export default {
     },
     // 修改商铺信息
     updateBizBooth(){
+      let addrArr = [];
+      this.addrOptions.forEach(ele => {
+        if(ele.szm == this.editForm.addr[0]){
+          addrArr.push(ele.caption)
+          ele.list.forEach(ele => {
+            if(ele.szm == this.editForm.addr[1]){
+              addrArr.push(ele.caption)
+              ele.list.forEach(ele => {
+                if(ele.szm == this.editForm.addr[2]){
+                  addrArr.push(ele.caption)                              
+                }
+              })
+            }
+          })
+        }
+      })
       let obj = {
         shop_booth_id: this.shop_booth_id,
         callphone: this.editForm.callphone,//联系电话
@@ -528,12 +594,14 @@ export default {
         nodeName: this.editForm.nodeName,//商铺名称
         regId: this.editForm.regId,//身份证
         name: this.editForm.name,//联系人
-        areaId: this.editForm.addr[2],//地址序列号
-        areaName:this.editForm.area_name,//地址名称
+        areaId: this.editForm.addr[this.editForm.addr.length - 1],//地址序列号
+        areaName: addrArr.join(""),//地址名称
         addr: this.editForm.addrInfo,//地址详细信息
         stallNo: this.editForm.stallNo,//摊位号
         biz_id: this.biz_id,
-        corporate_name: this.editForm.corporate_name
+        corporate_name: this.editForm.corporate_name,
+        paternt: this.districtUserId, // 区域userid      
+        region: this.editForm.district// 区域shop_booth_id
       }
       updateBizBooth(obj)
         .then(res =>{
@@ -561,6 +629,8 @@ export default {
             if(len > 0){
               this.isEdit = false;
               this.shopList = res.data.dataList[0].bootList;
+              this.lookThis(res.data.dataList[0].bootList[0].booth_name)
+              this.lookShopName = res.data.dataList[0].bootList[0].booth_name;
             }
         })
         .catch(res =>{
@@ -688,6 +758,11 @@ export default {
           this.lookMsg.stallNo = ele.stallNo;//摊位号
           this.lookMsg.region = ele.region;//大区id
           this.lookMsg.corporate_name = ele.corporate_name
+          this.districtArr.forEach(val => {
+            if(ele.region == val.bootList[0].shop_booth_id){
+              this.districtName = val.bootList[0].booth_name
+            }
+          })
         }
       })
     },
@@ -698,83 +773,81 @@ export default {
         if(ele.name == name){
           let addrArr = [];
           if(ele.area_name){
-              if(ele.area_name){
-                let areaName = ele.area_name
-                if(areaName.slice(0,3) == '北京市'){
-                  this.addrOptions.forEach(ele => {
-                      addrArr.push('110000')
+            let areaName = ele.area_name
+            if(areaName.slice(0,3) == '北京市'){
+              this.addrOptions.forEach(ele => {
+                  addrArr.push('110000')
+                  ele.list.forEach(ele => {
+                    if(areaName.slice(3,6) == ele.caption){
+                      addrArr.push(ele.szm)
                       ele.list.forEach(ele => {
-                        if(areaName.slice(3,6) == ele.caption){
-                          addrArr.push(ele.szm)
-                          ele.list.forEach(ele => {
-                            if(areaName.slice(6) == ele.caption){
-                              addrArr.push(ele.szm)                              
-                            }
-                          })
+                        if(areaName.slice(6) == ele.caption){
+                          addrArr.push(ele.szm)                              
                         }
                       })
+                    }
                   })
-                  this.editForm.addr = addrArr.slice(0,3)
-                }else if(areaName.slice(0,3) == '上海市'){
-                  addrArr.push('310000')
-                  this.addrOptions.forEach(ele => {
+              })
+              this.editForm.addr = addrArr.slice(0,3)
+            }else if(areaName.slice(0,3) == '上海市'){
+              addrArr.push('310000')
+              this.addrOptions.forEach(ele => {
+                ele.list.forEach(ele => {
+                  if(areaName.slice(3,6) == ele.caption){
+                    addrArr.push(ele.szm)
                     ele.list.forEach(ele => {
-                      if(areaName.slice(3,6) == ele.caption){
-                        addrArr.push(ele.szm)
-                        ele.list.forEach(ele => {
-                          if(areaName.slice(6) == ele.caption){
-                            addrArr.push(ele.szm)                              
-                          }
-                        })
+                      if(areaName.slice(6) == ele.caption){
+                        addrArr.push(ele.szm)                              
                       }
                     })
-                  })
-                  this.editForm.addr = addrArr.slice(0,3)
-                }else if(areaName.slice(0,3) == '天津市'){
-                  addrArr.push('120000')
-                  this.addrOptions.forEach(ele => {
+                  }
+                })
+              })
+              this.editForm.addr = addrArr.slice(0,3)
+            }else if(areaName.slice(0,3) == '天津市'){
+              addrArr.push('120000')
+              this.addrOptions.forEach(ele => {
+                ele.list.forEach(ele => {
+                  if(areaName.slice(3,6) == ele.caption){
+                    addrArr.push(ele.szm)
                     ele.list.forEach(ele => {
-                      if(areaName.slice(3,6) == ele.caption){
-                        addrArr.push(ele.szm)
-                        ele.list.forEach(ele => {
-                          if(areaName.slice(6) == ele.caption){
-                            addrArr.push(ele.szm)                              
-                          }
-                        })
+                      if(areaName.slice(6) == ele.caption){
+                        addrArr.push(ele.szm)                              
                       }
                     })
-                  })
-                  this.form2.addr = addrArr.slice(0,3)
-                }else if(areaName.slice(0,3) == '重庆市'){
-                  addrArr.push('500000')
-                  this.addrOptions.forEach(ele => {
+                  }
+                })
+              })
+              this.editForm.addr = addrArr.slice(0,3)
+            }else if(areaName.slice(0,3) == '重庆市'){
+              addrArr.push('500000')
+              this.addrOptions.forEach(ele => {
+                ele.list.forEach(ele => {
+                  if(areaName.slice(3,6) == ele.caption){
+                    addrArr.push(ele.szm)
                     ele.list.forEach(ele => {
-                      if(areaName.slice(3,6) == ele.caption){
-                        addrArr.push(ele.szm)
-                        ele.list.forEach(ele => {
-                          if(areaName.slice(6) == ele.caption){
-                            addrArr.push(ele.szm)                              
-                          }
-                        })
+                      if(areaName.slice(6) == ele.caption){
+                        addrArr.push(ele.szm)                              
                       }
                     })
-                  })
-                  this.form2.addr = addrArr.slice(0,3)
-                }else{
-                  let arr = [];
-                  if(ele.area_id.slice(4,6) != '00'){
-                    arr.unshift(ele.area_id);
                   }
-                  if(ele.area_id.slice(2,4) != '00'){
-                    arr.unshift(ele.area_id.slice(0,4)+'00');
-                  }
-                  if(ele.area_id.slice(0,2) != '00'){
-                    arr.unshift(ele.area_id.slice(0,2)+'0000');
-                  }
-                  this.editForm.addr = arr;
-                }
+                })
+              })
+              this.editForm.addr = addrArr.slice(0,3)
+            }else{
+              let arr = [];
+              if(ele.area_id.slice(4,6) != '00'){
+                arr.unshift(ele.area_id);
               }
+              if(ele.area_id.slice(2,4) != '00'){
+                arr.unshift(ele.area_id.slice(0,4)+'00');
+              }
+              if(ele.area_id.slice(0,2) != '00'){
+                arr.unshift(ele.area_id.slice(0,2)+'0000');
+              }
+              this.editForm.addr = arr;
             }
+          }
           // this.account = ele.userName;//账号
           // this.password = ele.password;//密码
           // this.people = '';//联系人
@@ -789,10 +862,15 @@ export default {
           // this.editForm.addr = ele.areaIdArr;//地址名称
           this.editForm.addrInfo = ele.addr;//地址详细信息
           this.editForm.stallNo = ele.stall_no;//摊位号
-          this.editForm.region = ele.region;//大区id
-          this.editForm.area_name = ele.area_name
+          // this.editForm.region = ele.region;//大区id
+          // this.editForm.area_name = ele.area_name
           this.editForm.biz_id = ele.biz_id
-          
+          this.districtArr.forEach(val => {
+            if(ele.region == val.bootList[0].shop_booth_id){
+              this.districtUserId = val.bootList[0].userId
+            }
+          })
+          this.editForm.district = Number(ele.region) // 区域shop_booth_id
           this.imgUrl = ele.img_url
           this.logoUrl = ele.logo
         }
@@ -880,7 +958,7 @@ export default {
         .form{
           margin-top: 20px;
           margin-left: 30px;
-          .el-input{
+          .el-input,{
             width: 200px;
           }
         }

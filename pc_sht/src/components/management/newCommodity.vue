@@ -3,53 +3,53 @@
       <div class="msg-title first-title" ref="title">账号信息</div>      
       <el-form :model="form" :rules="rules" ref="form" label-width="120px" >
         <div class="account-msg" ref="accoutnMsg">
-            <div class="account-cont">
-                <el-row class="demo-autocomplete">
-                    <el-col :span="6" style="margin-left: 0;">
-                        <el-form-item label="账号：" prop="account">
-                            <el-input v-model="form.account"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="密码：" prop="password">
-                            <el-input v-model="form.password"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <!--<el-form-item label="角色" prop="role">
-                            <el-select v-model="form.role" placeholder="请选择" :disabled="isDisabled">
-                              <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"> </el-option>
-                            </el-select>
-                        </el-form-item>-->
-                    </el-col>
-                </el-row>
-                <el-row class="demo-autocomplete">
-                    <el-col :span="6" style="margin-left: 0;">
-                        <el-form-item label="联系人：" prop="people">
-                            <el-input v-model="form.people"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                      <div class="msg">
-                        <el-form-item label="联系方式：" prop="telphone">
-                          <el-input v-model="form.telphone"></el-input>
-                        </el-form-item>
-                        <el-form-item>
-                          <el-checkbox-group  v-model="form.value">
-                            <el-checkbox label="1" name="type" value="1">是否向商户发送短信告知账号信息</el-checkbox>
-                          </el-checkbox-group>
-                        </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="1">
-                        <!--<el-form-item>
-                            <el-checkbox-group  v-model="form.value">
-                                <el-checkbox label="1" name="type" value="1">是否向商户发送短信告知账号信息</el-checkbox>
-                            </el-checkbox-group>
-                        </el-form-item>-->
-                    </el-col>
-                </el-row>
-            </div>
+          <div class="account-cont">
+            <el-row class="demo-autocomplete">
+              <el-col :span="6" style="margin-left: 0;">
+                <el-form-item label="账号：" prop="account">
+                  <el-input v-model="form.account"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="密码：" prop="password">
+                  <el-input v-model="form.password"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <!--<el-form-item label="角色" prop="role">
+                  <el-select v-model="form.role" placeholder="请选择" :disabled="isDisabled">
+                    <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"> </el-option>
+                  </el-select>
+                </el-form-item>-->
+              </el-col>
+            </el-row>
+            <el-row class="demo-autocomplete">
+              <el-col :span="6" style="margin-left: 0;">
+                <el-form-item label="联系人：" prop="people">
+                  <el-input v-model="form.people"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <div class="msg">
+                  <el-form-item label="联系方式：" prop="telphone">
+                    <el-input v-model="form.telphone"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-checkbox-group  v-model="form.value">
+                      <el-checkbox label="1" name="type" value="1">是否向商户发送短信告知账号信息</el-checkbox>
+                    </el-checkbox-group>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="1">
+                <!--<el-form-item>
+                  <el-checkbox-group  v-model="form.value">
+                    <el-checkbox label="1" name="type" value="1">是否向商户发送短信告知账号信息</el-checkbox>
+                  </el-checkbox-group>
+                </el-form-item>-->
+              </el-col>
+            </el-row>
+          </div>
         </div>
         <div class="msg-title first-title">商铺信息</div>
         <div class="shop-msg">
@@ -138,52 +138,52 @@
           </div>
           <!-- 新增商户 -->
           <div class="form-content" v-show="selectAddShop">
-              <el-form-item label="节点编码：" prop="node">
-                <el-input v-model="form.node" clearable></el-input>
+            <el-form-item label="节点编码：" prop="node">
+              <el-input v-model="form.node" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="商户编码：" prop="shangh">
+              <el-input v-model="form.shangh" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="营业执照号：">
+              <el-input v-model="form.licenceNo" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="身份证号：">
+              <el-input v-model="form.regId" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="商户名称：" prop="nodeName" >
+              <el-input v-model="form.nodeName" clearable></el-input>
+            </el-form-item>
+            <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
+              <el-form-item label="企业名称：" prop="corporate_name" >
+                <el-input v-model="form.corporate_name" clearable></el-input>
               </el-form-item>
-              <el-form-item label="商户编码：" prop="shangh">
-                <el-input v-model="form.shangh" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="营业执照号：">
-                <el-input v-model="form.licenceNo" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="身份证号：">
-                <el-input v-model="form.regId" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="商户名称：" prop="nodeName" >
-                <el-input v-model="form.nodeName" clearable></el-input>
-              </el-form-item>
-              <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
-                <el-form-item label="企业名称：" prop="corporate_name" >
-                  <el-input v-model="form.corporate_name" clearable></el-input>
-                </el-form-item>
-              </el-tooltip>
-              <br/>
-              <el-form-item label="商户类型：" prop="node_type" >
-                <el-select v-model="form.node_type" placeholder="请选择" clearable>
-                  <el-option v-for="(item,index) in types" :key="index" :value="item.value" :label="item.key"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="联系人：" prop="name">
-                <el-input v-model="form.name" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="联系电话：" prop="callphone">
-                <el-input v-model="form.callphone" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="地址：" prop="addr">
-                <el-cascader class="address" :options="addrOptions" v-model="form.addr" placeholder="省/市/县"
-                  clearable :props="props" change-on-select></el-cascader>
-              </el-form-item>
-              <el-form-item>
-                <el-input v-model="form.addrInfo" placeholder="请输入详细地址" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="摊位号：">
-                <el-input style="width: 300px" v-model="form.stallNo" clearable></el-input>
-                <span>&nbsp;&nbsp;例：1厅8排</span>
-              </el-form-item>
-              <el-form-item >
-                <el-button type="primary" @click="submitForm('form')">保存</el-button>
-              </el-form-item>
+            </el-tooltip>
+            <br/>
+            <el-form-item label="商户类型：" prop="node_type" >
+              <el-select v-model="form.node_type" placeholder="请选择" clearable>
+                <el-option v-for="(item,index) in types" :key="index" :value="item.value" :label="item.key"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="联系人：" prop="name">
+              <el-input v-model="form.name" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="联系电话：" prop="callphone">
+              <el-input v-model="form.callphone" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="地址：" prop="addr">
+              <el-cascader class="address" :options="addrOptions" v-model="form.addr" placeholder="省/市/县"
+                clearable :props="props" change-on-select></el-cascader>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="form.addrInfo" placeholder="请输入详细地址" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="摊位号：">
+              <el-input style="width: 300px" v-model="form.stallNo" clearable></el-input>
+              <span>&nbsp;&nbsp;例：1厅8排</span>
+            </el-form-item>
+            <el-form-item >
+              <el-button type="primary" @click="submitForm('form')">保存</el-button>
+            </el-form-item>
           </div>
         </div>
       </el-form>

@@ -17,6 +17,8 @@ import contrast from '../components/traceEquipment/contrast.vue';
 import wjscSituation from '../components/traceEquipment/wjscSituation.vue';
 import zjjxSituation from '../components/traceEquipment/zjjxSituation.vue';
 import glContrast from '../components/traceEquipment/glContrast.vue';
+import changeGl from '../components/traceEquipment/changeGl.vue';
+import viewChangeGl from '../components/traceEquipment/viewChangeGl.vue';
 
 
 export default [
@@ -210,5 +212,24 @@ export default [
             url:'glContrast',
         }
     },
+    {
+        path: 'traceEquipment/changeGl',
+        component:  resolve => require(['@/components/traceEquipment/changeGl'],resolve),
+        name:'ChangeGl',
+        meta:{
+            id:'386',
+            node:'traceEquipment',
+            url:'changeGl',
+        }
+    },
+    {
+        path: 'traceEquipment/viewChangeGl',
+        component:  resolve => require(['@/components/traceEquipment/viewChangeGl'],resolve),
+        name:'ViewChangeGl',
+        meta:{
+            id:'387',
+            node:'traceEquipment',
+            url:'viewChangeGl',
+        }
+    },
 ]
-

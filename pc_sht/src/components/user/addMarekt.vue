@@ -26,7 +26,14 @@ export default {
             },
             rules: {
                 node_id: [
-                    { required: true, message: '请输入节点编码', trigger: 'blur' },
+                    { required: true, message: '请输入节点编码', trigger: 'blur'},
+                    {validator:function(rule,value,callback){
+                        if(value.length != 9){
+                            callback(new Error("请输入9位节点编码"));
+                        }else{
+                            callback();
+                        }
+                    }, trigger: 'blur'}
                 ],
                 node_name: [
                     { required: true, message: '请输入节点名称', trigger: 'blur' }

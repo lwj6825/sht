@@ -7,9 +7,9 @@ import {baseUrl,queryAssetsUser,queryAssetsConf,queryAssetsType,queryNodeBase,qu
     deleteMaintain,queryInspectionRecord,importMaintain,queryMaintainName,updateAssetsType,deleteAssetsType,updateAssetsConf,
     queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2,parseMonLog,queryTableName,getFileState,
     queryFtpMonLog,getParseType,analysisDataMon,setByFtpId,queryErrorData,downloadErrorData,deleteErrorLogData,queryErrorLogType,
-    queryUploadFilesByFtpId,parseMonLogForRecently,downloadErrorLog,
+    queryUploadFilesByFtpId,parseMonLogForRecently,downloadErrorLog,queryChangeLogList,downloadChangeLog,queryChangeItem,
+    deleteParseMonLogById
     } from "../address/url";
-    
 // 查询 所有资产用户信息（需要确定用户类型类型）
 export const QueryAssetsUser = function(params) {
     return ajaxGet(queryAssetsUser +'?'+ params)
@@ -270,4 +270,29 @@ export const ParseMonLogForRecently = function(params) {
 // 下载
 export const  DownloadErrorLog  = function(params) {
     return ajaxPost(downloadErrorLog,params)
+}
+//变更管理列表
+export const QueryChangeLogList = function(params) {
+    return ajaxPost(queryChangeLogList,params)
+}
+//  变更管理 下载导出
+export const DownloadChangeLog = function(form) {
+    return axios({ // 用axios发送post请求
+        method: 'post',
+        url: downloadChangeLog, // 请求地址
+        data: form, // 参数
+        // responseType: 'blob', // 表明返回服务器返回的数据类型
+        responseType: 'arraybuffer',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+//变更内容
+export const QueryChangeItem = function(params) {
+    return ajaxGet(queryChangeItem +'?'+ params)
+}
+//解析运行日志  失败导出
+export const DeleteParseMonLogById = function(params) {
+    return ajaxPost(deleteParseMonLogById,params)
 }
