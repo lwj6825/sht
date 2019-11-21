@@ -241,7 +241,7 @@
                         <el-tab-pane label="不在线商户" name="second">
                                 <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3">
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
-                                    <el-table-column prop="days" label="近30天连续不在线天数" ></el-table-column>
+                                    <!-- <el-table-column prop="days" label="近30天连续不在线天数" ></el-table-column> -->
                                 </el-table>
                                 <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num2"
                                 @current-change="handleCurrentChange3"></el-pagination>

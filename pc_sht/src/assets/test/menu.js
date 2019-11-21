@@ -139,6 +139,38 @@ const menu = [
 //       }
 //   },
   {
+    id:'20',
+    name:'报修',
+    url:'repair',
+    node:'repair',
+    icon:'icon-tongji',
+    level:1,
+    children:{
+        nodeList:[
+              {
+                id:'2000',
+                parentId:'20',
+                name:'报修管理',
+                url:'repairMsg',
+                node:'repair',
+                level:2,
+                children:{
+                   nodeList:[
+                      {
+                        id:'02000101',
+                        parentId:'2000',
+                        name:'查看报修任务',
+                        url:'repairTask',
+                        node:'repair',
+                        level:3,
+                      }
+                   ]
+                }
+              },
+        ],
+    }
+  },
+  {
     id:'01',
     name:'统计',
     url:'statistical',
