@@ -1,6 +1,5 @@
 <template>
-    <div class="content">
-        <div class="content retailList">
+    <div class="content retailList">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
@@ -172,7 +171,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tips">先选区域，再选商户，商品分类根据区域选择改变</div>
+                    <div class="tips">
+                        <el-radio-group v-model="company" @change="changeFun">
+                            <el-radio :label="0">按公斤报价</el-radio>
+                            <el-radio :label="1">按斤报价</el-radio>
+                        </el-radio-group>
+                    </div>
                     <div v-if="region == ''">
                         <el-tabs v-model="activeName" @tab-click="handleClick" v-if="istableAdd">
                             <el-tab-pane label="全部" name="first"></el-tab-pane>
@@ -187,8 +191,12 @@
                             
                     </div>
                     <div class="search">
-                        <el-input clearable v-model="name" type="text" placeholder="搜索商品"></el-input>
-                        <el-button @click="searchGoodFun" type="primary" class="ss-btn">搜索</el-button>
+                        <div>
+                            <div v-if="allGood.length == 0">
+                                <el-input clearable v-model="name" type="text" placeholder="搜索商品"></el-input>
+                                <el-button @click="searchGoodFun" type="primary" class="ss-btn">搜索</el-button>
+                            </div>
+                        </div>
                         <el-button @click="znlrFun" plain class="znlr-btn">智能录入</el-button>
                     </div>
                     <div class="table">
@@ -204,31 +212,26 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="num" label="销售价（元/公斤）">
+                            <el-table-column prop="num" :label="'销售价（元/' + unitName + '）'">
                                 <template slot-scope="scope">
                                     <div class="num">
                                         <div>
-                                            <p><el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input></p>
+                                            <p>
+                                                <el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input>
+                                            </p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
                                             <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
                                         </div>
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作" width="60" v-if="allGood.length == 0">
-                                <template slot-scope="scope">
-                                    <el-button type="text" size="small" @click="submitForm(scope.row)">提交</el-button>
-                                </template>
-                            </el-table-column>
                         </el-table>
-                        <el-pagination v-if="num2" background @current-change="handleCurrentChange2" :current-page.sync="page2" :page-size="cols2"
-                            layout="total, prev, pager, next, jumper" :total="num2"></el-pagination>
                     </div>
                     <div class="btn">
                         <span>共{{tableData2.length}}种商品</span>
                         <el-button @click="closeFun" style="margin-left: 330px;">取消</el-button>
                         <el-button type="primary" @click="allAddFun" v-if="allGood.length > 0">确认上报</el-button>
-                        <el-button type="primary" @click="closeFun" v-else>确认上报</el-button>
+                        <el-button type="primary" @click="submitForm" v-else>确认上报</el-button>
                     </div>
                 </div>
             </div>
@@ -267,14 +270,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tips">
+                        <el-radio-group v-model="company" @change="changeFun">
+                            <el-radio :label="0">按公斤报价</el-radio>
+                            <el-radio :label="1">按斤报价</el-radio>
+                        </el-radio-group>
+                    </div>
                     <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="全部" name="first"></el-tab-pane>
                         <el-tab-pane v-for="(item,index) in regionArr" :key="index" :label="item.BOOTH_NAME"
                             :name="item.BOOTH_NAME"></el-tab-pane>
                     </el-tabs>
                     <div class="search">
-                        <el-input style="width: 300px;" clearable v-model="name" type="text" placeholder="搜索商品"></el-input>
-                        <el-button @click="searchGoodFun" type="primary" class="ss-btn">搜索</el-button>
+                        <p>
+                            <el-input style="width: 300px;" clearable v-model="name" type="text" placeholder="搜索商品"></el-input>
+                            <el-button @click="searchGoodFun" type="primary" class="ss-btn">搜索</el-button>
+                        </p>
                     </div>
                     <div class="table">
                         <el-table :data="tableData2" :header-cell-style="rowClass" height="290">
@@ -289,35 +300,29 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="" label="销售价（元/公斤）">
+                            <el-table-column prop="" :label="'销售价（元/' + unitName + '）'">
                                 <template slot-scope="scope">
                                     <div class="num">
                                         <div>
-                                            <p><el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input></p>
+                                            <p>
+                                                <el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input>
+                                            </p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
                                             <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
                                         </div>
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作" width="60">
-                                <template slot-scope="scope">
-                                    <el-button type="text" size="small" @click="editFun(scope.row)">提交</el-button>
-                                </template>
-                            </el-table-column>
                         </el-table>
-                        <el-pagination v-if="num2" background @current-change="handleCurrentChange2" :current-page.sync="page2" :page-size="cols2"
-                            layout="total, prev, pager, next, jumper" :total="num2"></el-pagination>
                     </div>
                     <div class="btn">
                         <span>共{{tableData2.length}}种商品</span>
                         <el-button @click="closeFun4" style="margin-left: 330px;">取消</el-button>
-                        <el-button type="primary" @click="closeFun4">确认</el-button>
+                        <el-button type="primary" @click="editFun">确认</el-button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -358,7 +363,7 @@ function getNowFormatDate() {//获取当前时间
             + seperator2 + date.getSeconds();
     return currentdate
 }
-import {QueryNodeInfoIndex,QueryIndex,QueryGoodsForBiz,Insert,QueryRegion,AutoIdentity,InsertList} from '../../js/retail/retail.js'
+import {QueryNodeInfoIndex,QueryIndex,QueryGoodsForBiz,Insert,QueryRegion,AutoIdentity,InsertList,QueryGoodsForNode} from '../../js/retail/retail.js'
 import {allBizs} from "../../js/management/management.js";
 import {GetAllNode} from '../../js/user/user.js'
 import { GetMarkets} from '../../js/district/district.js';
@@ -413,6 +418,11 @@ export default {
             viewNodeId: '',
             istableAdd: false, // 点击列表操作添加报表
             allGood: [],
+            selectGood: [], 
+            company: 0,
+            isSearch: false, // 是否搜索报价商品
+            unitName: '公斤',
+            node_id: '',
         }
     },
     mounted() {
@@ -427,39 +437,80 @@ export default {
     methods: {
         // 修改提交
         editFun(ele){
-            if(!ele.price){
-                this.$message.error('请输入销售价');
-                return
-            }else{
-                let obj = {
-                    node_id: ele.node_id,
-                    node_name: ele.node_name,
-                    shop_booth_id: ele.shop_booth_id,
-                    biz_id: ele.biz_id,
-                    biz_name: ele.biz_name,
-                    in_date: ele.in_date,
-                    goods_id: ele.goods_id,
-                    goods_code: ele.goods_code,
-                    goods_name: ele.goods_name,
-                    price: ele.price,
-                    yesterday_price: ele.yesterday_price,
-                    history_price: ele.history_price,
-                    area_id: "",
-                    area_name: "",
-                    weight: "",
-                    real_weight: "",
-                    id: ele.id
+            let arr = [],goodobj = {};
+            if(this.isSearch == true){
+                this.selectGood.forEach(val => {
+                    this.tableData2.forEach(val2 => {
+                        if(val.goods_id == val2.goods_id){
+                            val.price = val2.price
+                        }
+                    })
+                })
+                this.selectGood.forEach(val => {
+                    // if(val.price){
+                        goodobj = {
+                            node_id: val.node_id,
+                            node_name: val.node_name,
+                            shop_booth_id: this.merchant,
+                            biz_id: this.biz_id,
+                            biz_name: this.biz_name,
+                            in_date: this.in_date,
+                            goods_id: val.goods_id,
+                            goods_code: val.goods_code,
+                            goods_name: val.goods_name,
+                            price: val.price,
+                            yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+                            history_price: val.history_price ? val.history_price : '',
+                            area_id: val.area_id ? val.area_id : '',
+                            area_name: val.area_name ? val.area_name : '',
+                            weight: val.weight ? val.weight : '',
+                            real_weight: val.real_weight ? val.real_weight : '',
+                        }
+                        arr.push(goodobj)
+                    // }
+                })
+            }else{    
+                this.tableData2.forEach(val => {
+                    // if(val.price){
+                        goodobj = {
+                            node_id: val.node_id,
+                            node_name: val.node_name,
+                            shop_booth_id: this.merchant,
+                            biz_id: this.biz_id,
+                            biz_name: this.biz_name,
+                            in_date: this.in_date,
+                            goods_id: val.goods_id,
+                            goods_code: val.goods_code,
+                            goods_name: val.goods_name,
+                            price: val.price,
+                            yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+                            history_price: val.history_price ? val.history_price : '',
+                            area_id: val.area_id ? val.area_id : '',
+                            area_name: val.area_name ? val.area_name : '',
+                            weight: val.weight ? val.weight : '',
+                            real_weight: val.real_weight ? val.real_weight : '',
+                        }
+                        arr.push(goodobj)
+                    // }
+                })
+            }
+            if(arr.length > 0){
+                if(this.company == 1){
+                    arr.forEach(val => {
+                        if(val.price){
+                            val.price = val.price*2
+                        }
+                    })
                 }
-                console.log(obj)
-                Insert(obj)
+                console.log(arr)
+                let obj =  JSON.stringify(arr)
+                InsertList(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success(res.message);
-                            this.page2 = 1
-                            this.name = ''
-                            this.tabRegion = ''
-                            this.activeName = 'first'
-                            this.getViewFun()
+                            this.closeFun4()
+                            this.page = 1
+                            this.getDataFun()
                         }else{
                             this.$message.error(res.message);
                         }
@@ -471,31 +522,111 @@ export default {
         },
         // 获取商品
         getGoodFun(){
-            let obj = {
-                page: this.page2,
-                cols: this.cols2,
-                node_id: this.tbqy,
-                shop_booth_id: this.merchant ? this.merchant : '',
-                region: this.region ? this.region : this.tabRegion,
-                in_date: this.in_date,
-                goods_name: this.name,
-            }
-            QueryGoodsForBiz(obj)
-                .then(res => {
-                    let str = ''
-                    res.data.list.forEach(val => {
-                        if(val.rate < 0){
-                            str = JSON.stringify(val.rate).substring(1)
-                            val.xiaj = str
-                        }
+            if(this.isSearch == true){
+                if(this.selectGood.length > 0){
+                    this.selectGood.forEach(val => {
+                        this.tableData2.forEach(val2 => {
+                            if(val.goods_id == val2.goods_id){
+                                val.price = val2.price
+                            }
+                        })
                     })
-                    this.tableData2 = res.data.list
-                    this.num2 = res.data.bean.total
-                })
-                .catch(() => {
-                    this.$message.error("出错啦!");
-                })
-            
+                }else{
+                    this.selectGood = this.tableData2
+                }
+            }
+            console.log(this.selectGood)
+            if(this.merchant){
+                let obj = {
+                    page: 1,
+                    cols: 10000,
+                    node_id: this.tbqy,
+                    shop_booth_id: this.merchant ? this.merchant : '',
+                    region: this.region ? this.region : this.tabRegion,
+                    in_date: this.in_date,
+                    goods_name: this.name,
+                }
+                QueryGoodsForBiz(obj)
+                    .then(res => {
+                        let str = ''
+                        if(this.isSearch == true){
+                            res.data.list.forEach(val2 => {
+                                this.selectGood.forEach(val => {
+                                    if(val2.goods_id == val.goods_id){
+                                        val2.price = val.price
+                                    }
+                                    if(val.price){
+                                        if(this.company == 1){
+                                            val.price = val.price/2
+                                        }
+                                    }
+                                })
+                            })
+                        }else{
+                            res.data.list.forEach(val => {
+                                if(val.rate < 0){
+                                    str = JSON.stringify(val.rate).substring(1)
+                                    val.xiaj = str
+                                }
+                                if(val.price){
+                                    if(this.company == 1){
+                                        val.price = val.price/2
+                                    }
+                                }
+                            })
+                        }
+                        this.tableData2 = res.data.list
+                        this.num2 = res.data.bean.total
+                    })
+                    .catch(() => {
+                        this.$message.error("出错啦!");
+                    })
+            }else{
+                let obj = {
+                    page: 1,
+                    cols: 10000,
+                    node_id: this.tbqy,
+                    shop_booth_id: this.merchant ? this.merchant : '',
+                    region: this.region ? this.region : this.tabRegion,
+                    in_date: this.in_date,
+                    goods_name: this.name,
+                }
+                QueryGoodsForNode(obj)
+                    .then(res => {
+                        let str = ''
+                        if(this.isSearch == true){
+                            res.data.list.forEach(val2 => {
+                                this.selectGood.forEach(val => {
+                                    if(val2.goods_id == val.goods_id){
+                                        val2.price = val.price
+                                    }
+                                    if(val.price){
+                                        if(this.company == 1){
+                                            val.price = val.price/2
+                                        }
+                                    }
+                                })
+                            })
+                        }else{
+                            res.data.list.forEach(val => {
+                                if(val.rate < 0){
+                                    str = JSON.stringify(val.rate).substring(1)
+                                    val.xiaj = str
+                                }
+                                if(val.price){
+                                    if(this.company == 1){
+                                        val.price = val.price/2
+                                    }
+                                }
+                            })
+                        }
+                        this.tableData2 = res.data.list
+                        this.num2 = res.data.bean.total
+                    })
+                    .catch(() => {
+                        this.$message.error("出错啦!");
+                    })
+            }
         },
         // 选择区域
         selectRegion(ele){
@@ -549,7 +680,8 @@ export default {
                 total:"",
                 userId: this.tbqyUserId,
                 contacts: '',
-                nodeName: ''
+                nodeName: '',
+                node_id: this.tbqy,
             }
             GetMarkets(obj)
                 .then(res => {
@@ -628,6 +760,7 @@ export default {
             // }
             this.isZnlr = true
         },
+        // 智能识别保存
         submitForm2(){
             let obj = {
                 goods: this.message,
@@ -704,6 +837,7 @@ export default {
         // 
         searchGoodFun(){
             this.page2 = 1
+            this.isSearch = true
             if(this.viewNodeId){
                 this.getViewFun()
             }else{
@@ -716,40 +850,88 @@ export default {
                 this.$message.error('请选择填报企业！');
                 return;
             }
-            this.newGoodObj = ele
-            let obj = {
-                node_id: this.tbqy,
-                node_name: this.tbqyName,
-                shop_booth_id: this.merchant,
-                biz_id: this.biz_id,
-                biz_name: this.biz_name,
-                in_date: this.in_date,
-                goods_id: this.newGoodObj.goods_id,
-                goods_code: this.newGoodObj.goods_code,
-                goods_name: this.newGoodObj.goods_name,
-                price: this.newGoodObj.price,
-                yesterday_price: this.newGoodObj.yesterday_price,
-                history_price: this.newGoodObj.history_price,
-                area_id: "",
-                area_name: "",
-                weight: "",
-                real_weight: ""
-            }
-            console.log(obj)
-            Insert(obj)
-                .then(res => {
-                    if(res.result == true){
-                        this.$message.success(res.message);
-                        // this.closeFun()
-                        this.page = 1
-                        this.getDataFun()
-                    }else{
-                        this.$message.error(res.message);
+            let arr = [],goodobj = {};
+            if(this.isSearch == true){
+                this.selectGood.forEach(val => {
+                    this.tableData2.forEach(val2 => {
+                        if(val.goods_id == val2.goods_id){
+                            val.price = val2.price
+                        }
+                    })
+                })
+                this.selectGood.forEach(val => {
+                    if(val.price){
+                        goodobj = {
+                            node_id: val.node_id,
+                            node_name: val.node_name,
+                            shop_booth_id: this.merchant,
+                            biz_id: this.biz_id,
+                            biz_name: this.biz_name,
+                            in_date: this.in_date,
+                            goods_id: val.goods_id,
+                            goods_code: val.goods_code,
+                            goods_name: val.goods_name,
+                            price: val.price,
+                            yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+                            history_price: val.history_price ? val.history_price : '',
+                            area_id: val.area_id ? val.area_id : '',
+                            area_name: val.area_name ? val.area_name : '',
+                            weight: val.weight ? val.weight : '',
+                            real_weight: val.real_weight ? val.real_weight : '',
+                        }
+                        arr.push(goodobj)
+                    }       
+                })
+            }else{    
+                this.tableData2.forEach(val => {
+                    if(val.price){
+                        goodobj = {
+                            node_id: val.node_id,
+                            node_name: val.node_name,
+                            shop_booth_id: this.merchant,
+                            biz_id: this.biz_id,
+                            biz_name: this.biz_name,
+                            in_date: this.in_date,
+                            goods_id: val.goods_id,
+                            goods_code: val.goods_code,
+                            goods_name: val.goods_name,
+                            price: val.price,
+                            yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+                            history_price: val.history_price ? val.history_price : '',
+                            area_id: val.area_id ? val.area_id : '',
+                            area_name: val.area_name ? val.area_name : '',
+                            weight: val.weight ? val.weight : '',
+                            real_weight: val.real_weight ? val.real_weight : '',
+                        }
+                        arr.push(goodobj)
                     }
                 })
-                .catch(res => {
-                    console.log(res)
-                })
+            }
+            if(arr.length > 0){
+                if(this.company == 1){
+                    arr.forEach(val => {
+                        if(val.price){
+                            val.price = val.price*2
+                        }
+                    })
+                }
+                console.log(arr)
+                let obj =  JSON.stringify(arr)
+                InsertList(obj)
+                    .then(res => {
+                        if(res.result == true){
+                            this.$message.success(res.message);
+                            this.closeFun()
+                            this.page = 1
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }
         },
         closeFun(){
             this.isEdits = false
@@ -772,6 +954,11 @@ export default {
             this.istableAdd = false
             var currentTime = new Date()
             this.in_date = formatDate(currentTime)
+            this.company = 0
+            this.isSearch = false
+            this.selectGood = []
+            this.allGood = []
+            this.unitName = '公斤'
         },
         // 导入
         closeFun3(){
@@ -799,9 +986,27 @@ export default {
             this.name = ''
             this.viewNodeId = ''
             this.activeName = 'first'
+            this.company = 0
+            this.isSearch = false
+            this.selectGood = []
+            this.unitName = '公斤'
         },
-        changeFun(item){
-            
+        changeFun(ele){
+            if(ele == 0){
+                this.unitName = '公斤'
+                this.tableData2.forEach(val => {
+                    if(val.price){
+                       val.price = val.price*2
+                    }
+                })
+            }else if(ele == 1){
+                this.unitName = '斤'
+                this.tableData2.forEach(val => {
+                    if(val.price){
+                       val.price = val.price/2
+                    }
+                })
+            }
         },
         addFun(ele){
             if(ele.node_id){
@@ -841,27 +1046,60 @@ export default {
             this.page2 = 1
             this.getViewFun(ele.node_id)
         },
-        // 查看
+        // 查看获取商品
         getViewFun(node_id){
+            if(this.isSearch == true){
+                if(this.selectGood.length > 0){
+                    this.selectGood.forEach(val => {
+                        this.tableData2.forEach(val2 => {
+                            if(val.goods_id == val2.goods_id){
+                                val.price = val2.price
+                            }
+                        })
+                    })
+                }else{
+                    this.selectGood = this.tableData2
+                }
+            }
+            console.log(this.selectGood)
             let params = {
                 node_id: this.viewNodeId,
                 in_date: this.tbrqView,
-                cols2: this.cols,
-                page2: this.page,
+                cols: 10000,
+                page: 1,
                 region: this.tabRegion,
                 goods_name: this.name,
             }
             QueryIndex(params)
                 .then(res => {
                     let str = ''
-                    res.data.list.forEach(val => {
-                        if(val.rate < 0){
-                            str = JSON.stringify(val.rate).substring(1)
-                            val.xiaj = str
-                        }
-                    })
+                    if(this.isSearch == true){
+                        res.data.list.forEach(val2 => {
+                            this.selectGood.forEach(val => {
+                                if(val2.goods_id == val.goods_id){
+                                    val2.price = val.price
+                                }
+                                if(val.price){
+                                    if(this.company == 1){
+                                        val.price = val.price/2
+                                    }
+                                }
+                            })
+                        })
+                    }else{
+                        res.data.list.forEach(val => {
+                            if(val.rate < 0){
+                                str = JSON.stringify(val.rate).substring(1)
+                                val.xiaj = str
+                            }
+                            if(val.price){
+                                if(this.company == 1){
+                                    val.price = val.price/2
+                                }
+                            }
+                        })
+                    }
                     this.tableData2 = res.data.list
-                    this.num2 = res.data.bean.total
                 })
                 .catch((res) => {
                     console.log(res)
@@ -915,14 +1153,6 @@ export default {
         handleCurrentChange(val) {
             this.page = val
             this.getDataFun()
-        },
-        handleCurrentChange2(val) {
-            this.page2 = val
-            if(this.viewNodeId){
-                this.getViewFun()
-            }else{
-                this.getGoodFun()
-            }
         },
         clearFun(){
             this.form = {
@@ -1147,11 +1377,16 @@ export default {
                     }
                 }
                 .tips{
-                    margin-left: 120px;
+                    margin-left: 20px;
                     font-size: 12px;
                     color: #ccc;
                 }
                 .search{
+                    display: flex;
+                    justify-content: space-between;
+                    div{
+                        width: 310px;
+                    }
                     .el-input{
                         margin-left: 30px;
                         width: 200px;
@@ -1162,7 +1397,7 @@ export default {
                         color: #409EFF;
                     }
                     .znlr-btn{
-                        margin-left: 200px;
+                        margin-right: 30px;
                     }
                 }
                 .btn{

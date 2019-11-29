@@ -70,7 +70,7 @@
             <div class="title">
                 <p class="tz-title">全部销售台账</p>
                 <div>
-                    <!--<el-button type="primary" class="addBtn blue-bth">新增销售台账</el-button>-->
+                    <el-button type="primary" class="addBtn blue-bth" @click="downloadFun">导出商户交易额</el-button><!---->
                     <span class="submit">
                         导入台账
                         <form id="upload" enctype="multipart/form-data" method="post"> 
@@ -166,7 +166,7 @@ import Bus from '../common/bus.js';
 import {QueryArea} from '../../js/area/area.js';
 import {GetAllBiz,GetSaleTz,Parse,DownloadXsTzDetail,QueryXsTzDetailByTzId,jcpurchase} from '../../js/standingBook/standingBook.js'
 import axios from 'axios';
-import {baseUrl} from '../../js/address/url.js'
+import {baseUrl,importMoneyAndWeightForMarket} from '../../js/address/url.js'
 export default {
     name: "saleTz",    
     data() {
@@ -215,7 +215,7 @@ export default {
             start_time:'',
             end_time:'',
             loading:true,
-
+            node_id: '',
         }
     },
     mounted() {
@@ -229,6 +229,7 @@ export default {
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
         this.local_node_id_id = localStorage.getItem('nodeidlocal');
+        this.node_id = localStorage.getItem('loginId');
         this.getTime()
         this.getGoodsFun()
         let arr = []
@@ -247,6 +248,10 @@ export default {
         
     },
     methods: {
+        downloadFun(){
+            window.location.href = importMoneyAndWeightForMarket + '?node_id=' + this.node_id +  '&start_date=' + this.startTime 
+            + '&end_date=' + this.endTime
+        },
         getGoodsFun() {
             // alert(this)
         let boothData = {
@@ -419,7 +424,8 @@ export default {
                 total: '',
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{
@@ -509,7 +515,8 @@ export default {
                 total: '',
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{

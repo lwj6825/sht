@@ -101,7 +101,8 @@ export default {
             totalCount: 0,// 所有数据
             loading:true,
             gooduserId:'',
-            fullscreenLoading1:false
+            fullscreenLoading1:false,
+            node_id: '',
          }
      },
      created(){
@@ -109,6 +110,7 @@ export default {
      },
      mounted(){
           window.scrollTo(0,0)
+        this.node_id = localStorage.getItem('loginId');
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId');
           this.getTime();
@@ -209,7 +211,8 @@ export default {
                 total: '',
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             GetMarkets(data)
                 .then(res =>{
@@ -245,6 +248,7 @@ export default {
                 userId: this.userId,
                 name: this.name,
                 boothName: this.boothName,
+                node_id: this.node_id
             }
             GetMarkets(data)
                 .then(res =>{

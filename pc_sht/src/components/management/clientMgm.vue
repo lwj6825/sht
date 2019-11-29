@@ -94,12 +94,14 @@
         areaId: '',
         file: '',
         userId: '',
+        node_id: '',
       }
     },
     mounted() {      
       this.isRegion = localStorage.getItem('isRegion')
       this.scShopId = localStorage.getItem('scShopId');
       this.userId = localStorage.getItem('userId')
+      this.node_id = localStorage.getItem('loginId');
       if(this.isRegion == 'false'){
         this.isShow = false
         this.getAllGys()
@@ -273,6 +275,7 @@
           userId: this.userId,
           name: this.name,
           boothName: this.boothName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {       
@@ -310,6 +313,7 @@
           userId: this.userId,
           name: this.name,
           boothName: this.boothName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res =>{

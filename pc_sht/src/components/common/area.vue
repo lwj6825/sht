@@ -23,11 +23,13 @@ export default {
         selectArea:'',
         userId: '',
         isRegion: '',
+        node_id: '',
       }
     },
     mounted() {
       this.isRegion = localStorage.getItem('isRegion')
-      this.userId = localStorage.getItem('userId')    
+      this.userId = localStorage.getItem('userId')  
+      this.node_id = localStorage.getItem('loginId');  
       if(this.isRegion == 'true'){
         this.getAreaList();//获取区域列表  
       }
@@ -45,7 +47,8 @@ export default {
           total:"",
           userId: this.userId,
           name:"",
-          boothName:""
+          boothName:"",
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res =>{

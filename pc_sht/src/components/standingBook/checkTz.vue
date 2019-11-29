@@ -214,9 +214,11 @@ function getLastYearYestdy(date){
         startTime: '',
         endTime: '',
         isImg: true,
+        node_id: '',
       }
     },
     mounted() {
+      this.node_id = localStorage.getItem('loginId');
       this.BaseImgUrl = BaseImgUrl;
       //获取  区域的  shop_booth_id   node_id   商户的    shop_booth_id
       this.isRegion = localStorage.getItem('isRegion');
@@ -341,6 +343,7 @@ function getLastYearYestdy(date){
           userId: this.userId,
           contacts: this.contacts,
           nodeName: this.nodeName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res =>{
@@ -461,7 +464,8 @@ function getLastYearYestdy(date){
           total: '',
           userId: this.userId,
           contacts: this.contacts,
-          nodeName: this.nodeName
+          nodeName: this.nodeName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {

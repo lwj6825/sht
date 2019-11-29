@@ -102,13 +102,15 @@ export default {
             TodayTime:'',
             // dataMore:'',
             gooduserId: '',
-            fullscreenLoading1:false
+            fullscreenLoading1:false,
+            node_id: '',
         }
      },
      created(){
            this.gooduserId = this.$route.params.gooduserId;
      },
      mounted(){
+        this.node_id = localStorage.getItem('loginId');
           window.scrollTo(0,0)
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId');
@@ -198,7 +200,8 @@ export default {
                 total: '',
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             GetMarkets(data)
                 .then(res =>{
@@ -230,6 +233,7 @@ export default {
                 userId: this.userId,
                 name: this.name,
                 boothName: this.boothName,
+                node_id: this.node_id
             }
             this.fullscreenLoading1 = true;
             setTimeout(()=>{

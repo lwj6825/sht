@@ -393,6 +393,7 @@ export default {
                 userId: this.userId,
                 contacts: this.contacts,
                 nodeName: this.nodeName,
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{
@@ -459,7 +460,8 @@ export default {
                 total: '',
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{

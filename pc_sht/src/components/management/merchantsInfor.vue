@@ -1,235 +1,232 @@
 <template>
   <div class="content" ref="content">  
-      <div class="msg-title" ref="title">账号信息</div>
-      <div class="account-msg" ref="accoutnMsg">
-        <div class="item">
-          <span class="item-name">账号：</span>
-          <el-input v-model="account" type='text'disabled class="input" clearable></el-input>
-        </div>
-        <div class="item password">
-          <span class="item-name">密码：</span>
-          <el-input v-model="password" type='password' disabled class="input" clearable></el-input>
-          <span class="edit-btn" @click="editNumFun">修改密码</span>
-        </div>
-        <div style="clear: both;"></div>
-        <div class="item">
-          <span class="item-name">联系人：</span>
-          <el-input v-model="people" type='text' :disabled="disabled" class="input" clearable></el-input>
-        </div>
-        <div class="item last-itme">
-          <span class="item-name">联系方式：</span>
-          <el-input v-model="phoneNumber" type='text' :disabled="disabled" class="input" maxlength='11' clearable></el-input>
-          <el-checkbox style="display:inline-block;" v-model="checked">是否向商户发送短信告知账号信息？</el-checkbox>
-        </div>
+    <div class="msg-title" ref="title">账号信息</div>
+    <div class="account-msg" ref="accoutnMsg">
+      <div class="item">
+        <span class="item-name">账号：</span>
+        <el-input v-model="account" type='text'disabled class="input" clearable></el-input>
       </div>
-
-      <div class="msg-title">商铺信息</div>
-      <div class="shop-msg">
-        <div class="box" ref="addShop">
-          <div class="shop-name" v-show="showShopListName">
-            <el-button v-for="item in shopList" :key="item.index" @click='lookThis(item.booth_name)' 
-              :class="{current:item.booth_name == lookShopName}" type="primary" class="btn">{{item.booth_name}}</el-button>
-          </div>
-          <el-button type="primary" class="btn" :class="{current:active}" @click='addShop'>添加商铺</el-button>
+      <div class="item password">
+        <span class="item-name">密码：</span>
+        <el-input v-model="password" type='password' disabled class="input" clearable></el-input>
+        <span class="edit-btn" @click="editNumFun">修改密码</span>
+      </div>
+      <div style="clear: both;"></div>
+      <div class="item">
+        <span class="item-name">联系人：</span>
+        <el-input v-model="people" type='text' :disabled="disabled" class="input" clearable></el-input>
+      </div>
+      <div class="item last-itme">
+        <span class="item-name">联系方式：</span>
+        <el-input v-model="phoneNumber" type='text' :disabled="disabled" class="input" maxlength='11' clearable></el-input>
+        <el-checkbox style="display:inline-block;" v-model="checked">是否向商户发送短信告知账号信息？</el-checkbox>
+      </div>
+    </div>
+    <div class="msg-title">商铺信息</div>
+    <div class="shop-msg">
+      <div class="box" ref="addShop">
+        <div class="shop-name" v-show="showShopListName">
+          <el-button v-for="item in shopList" :key="item.index" @click='lookThis(item.booth_name)' 
+            :class="{current:item.booth_name == lookShopName}" type="primary" class="btn">{{item.booth_name}}</el-button>
         </div>
-        <div class="form-content" v-show="!selectAddShop">
-          <!-- 展示商铺信息 -->
-          <div class="infor-msg" v-show="!isEdit">
-            <div v-for="item in shopList" :key="item.id">
-            
-                <div class="section">
-                  <span class="item-name">所属区域：</span>
-                  <span class="item-msg">{{districtName}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">商户编码：</span>
-                  <span class="item-msg">{{item.biz_id}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">营业执照号：</span>
-                  <span class="item-msg">{{item.licenceNo}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">身份证号：</span>
-                  <span class="item-msg">{{item.regId}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">商户名称：</span>
-                  <span class="item-msg">{{item.booth_name}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">企业名称：</span>
-                  <span class="item-msg">{{item.corporate_name}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">联系人：</span>
-                  <span class="item-msg">{{item.contacts}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">联系电话：</span>
-                  <span class="item-msg">{{item.callphone}}</span>
-                </div>
-                <div class="section addr">
-                  <span class="item-name">地址：</span>
-                  <span class="item-msg">{{item.area_name}}</span>
-                  <span class="item-msg">{{item.addr}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">摊位号：</span>
-                  <span class="item-msg">{{item.stall_no}}</span>
-                </div>
-                <div class="section">
-                  <span class="item-name">营业执照：</span>
-                  <span class="item-msg">
-                    <div class="box-fileimg" v-if="item.img_url">
-                      <figure class="image">
-                        <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
-                      </figure>
-                    </div>
-                    <p v-else>无</p>
-                  </span>
-                </div>
-                <div class="section">
-                  <span class="item-name">个人照：</span>
-                  <span class="item-msg">
-                    <div class="box-fileimg" v-if="item.logo">
-                      <figure class="image">
-                        <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.logo">
-                      </figure> 
-                    </div>
-                    <p v-else>无</p>
-                  </span>
-                </div>
-                <div class="section">
-                  <el-button type="primary" @click="modifyMsg(lookMsg.nodeName)">修改</el-button>
-                </div>
+        <el-button type="primary" class="btn" :class="{current:active}" @click='addShop'>添加商铺</el-button>
+      </div>
+      <div class="form-content" v-show="!selectAddShop">
+        <!-- 展示商铺信息 -->
+        <div class="infor-msg" v-show="!isEdit">
+          <div v-for="item in shopList" :key="item.id">
+            <div class="section">
+              <span class="item-name">所属区域：</span>
+              <span class="item-msg">{{districtName}}</span>
             </div>
-            
+            <div class="section">
+              <span class="item-name">商户编码：</span>
+              <span class="item-msg">{{item.biz_id}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">营业执照号：</span>
+              <span class="item-msg">{{item.licenceNo}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">身份证号：</span>
+              <span class="item-msg">{{item.regId}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">商户名称：</span>
+              <span class="item-msg">{{item.booth_name}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">企业名称：</span>
+              <span class="item-msg">{{item.corporate_name}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">联系人：</span>
+              <span class="item-msg">{{item.contacts}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">联系电话：</span>
+              <span class="item-msg">{{item.callphone}}</span>
+            </div>
+            <div class="section addr">
+              <span class="item-name">地址：</span>
+              <span class="item-msg">{{item.area_name}}</span>
+              <span class="item-msg">{{item.addr}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">摊位号：</span>
+              <span class="item-msg">{{item.stall_no}}</span>
+            </div>
+            <div class="section">
+              <span class="item-name">营业执照：</span>
+              <span class="item-msg">
+                <div class="box-fileimg" v-if="item.img_url">
+                  <figure class="image">
+                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
+                  </figure>
+                </div>
+                <p v-else>无</p>
+              </span>
+            </div>
+            <div class="section">
+              <span class="item-name">个人照：</span>
+              <span class="item-msg">
+                <div class="box-fileimg" v-if="item.logo">
+                  <figure class="image">
+                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.logo">
+                  </figure> 
+                </div>
+                <p v-else>无</p>
+              </span>
+            </div>
+            <div class="section">
+              <el-button type="primary" @click="modifyMsg(lookMsg.nodeName)">修改</el-button>
+            </div>
           </div>
-          <!-- 编辑查看 -->
-          <el-form :model="editForm" class="form" label-width="120px" v-show="isEdit">
-            <el-form-item label="所属区域：" >
-              <el-select style="width: 340px;" v-model="editForm.district" filterable size="mini" @change="selectFun">
-                <el-option  v-for="(item,index) in districtArr" :key="index" :label="item.name" :value="item.bootList[0].shop_booth_id" >
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="商户编码：" >
-              <el-input v-model="editForm.biz_id" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="营业执照号：">
-              <el-input v-model="editForm.licenceNo"></el-input>
-            </el-form-item>
-            <el-form-item label="身份证号：">
-              <el-input v-model="editForm.regId"></el-input>
-            </el-form-item>
-            <el-form-item label="商户名称：">
-              <el-input v-model="editForm.nodeName"></el-input>
-            </el-form-item>
-            <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
-              <el-form-item label="企业名称：">
-                <el-input v-model="editForm.corporate_name" style="width: 340px"></el-input>
-              </el-form-item>
-            </el-tooltip>
-            <el-form-item label="联系人：">
-              <el-input v-model="editForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="联系电话：">
-              <el-input v-model="editForm.callphone"></el-input>
-            </el-form-item>
-            <el-form-item label="地址：">
-              <el-cascader class="address" :options="addrOptions" v-model="editForm.addr" placeholder="省/市/县" 
-                clearable :props="props" change-on-select></el-cascader>
-              <el-input v-model="editForm.addrInfo" placeholder="请输入详细地址"></el-input>
-            </el-form-item>
-            <el-form-item label="摊位号：">
-              <el-input v-model="editForm.stallNo" ></el-input>
-            </el-form-item>
-            <el-form-item label="营业执照：">
-              <div class="box-fileimg">
-                <figure class="image" v-if="imgUrl">
-                  <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + imgUrl">
-                </figure>
-                <span class="submit">
-                  上传图片
-                  <form enctype="multipart/form-data" method="post"> 
-                    <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
-                  </form>
-                </span>  
-              </div>
-            </el-form-item>
-            <el-form-item label="个人照：">
-              <div class="box-fileimg">
-                <figure class="image" v-if="logoUrl">
-                  <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + logoUrl">
-                </figure>
-                <span class="submit">
-                  上传图片
-                  <form enctype="multipart/form-data" method="post"> 
-                    <input type="file" class="file" ref="file2" multiple accept="image/*" @change="fileFun2($event)">
-                  </form>
-                </span>  
-              </div>
-            </el-form-item>
-            <el-form-item >
-              <el-button type="primary" @click="saveMsg()">保存</el-button>
-            </el-form-item>
-          </el-form>
         </div>
-        <!-- 新增商户 -->
-        <div class="form-content" v-show="selectAddShop">
-          <el-form :model="form" class="form" label-width="120px">
-            <el-form-item label="营业执照号："  prop="licenceNo">
-              <el-input v-model="form.licenceNo" clearable></el-input>
+        <!-- 编辑查看 -->
+        <el-form :model="editForm" class="form" label-width="120px" v-show="isEdit">
+          <el-form-item label="所属区域：" >
+            <el-select style="width: 340px;" v-model="editForm.district" filterable size="mini" @change="selectFun">
+              <el-option  v-for="(item,index) in districtArr" :key="index" :label="item.name" :value="item.bootList[0].shop_booth_id" >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商户编码：" >
+            <el-input v-model="editForm.biz_id" readonly></el-input>
+          </el-form-item>
+          <el-form-item label="营业执照号：">
+            <el-input v-model="editForm.licenceNo"></el-input>
+          </el-form-item>
+          <el-form-item label="身份证号：">
+            <el-input v-model="editForm.regId"></el-input>
+          </el-form-item>
+          <el-form-item label="商户名称：">
+            <el-input v-model="editForm.nodeName"></el-input>
+          </el-form-item>
+          <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
+            <el-form-item label="企业名称：">
+              <el-input v-model="editForm.corporate_name" style="width: 340px"></el-input>
             </el-form-item>
-            <el-form-item label="身份证号：" prop="regId">
-              <el-input v-model="form.regId" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="商户名称：" prop="nodeName" >
-              <el-input v-model="form.nodeName" clearable></el-input>
-            </el-form-item>
-            <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
-              <el-form-item label="企业名称：" prop="corporate_name" >
-                <el-input v-model="form.corporate_name" clearable style="width: 340px"></el-input>
-              </el-form-item>
-            </el-tooltip>
-            <el-form-item label="联系人：" prop="name">
-              <el-input v-model="form.name" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="联系电话：" prop="callphone">
-              <el-input v-model="form.callphone" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="地址：" prop="addr">
-              <el-cascader class="address" :options="addrOptions" v-model="form.addr" placeholder="省/市/县"
-                clearable :props="props" change-on-select></el-cascader>
-              <el-input v-model="form.addrInfo" placeholder="请输入详细地址" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="摊位号：" prop="stallNo">
-              <el-input v-model="form.stallNo" clearable></el-input>
-            </el-form-item>
-            <el-form-item >
-              <el-button type="primary" @click="submitForm()">保存</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
+          </el-tooltip>
+          <el-form-item label="联系人：">
+            <el-input v-model="editForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="联系电话：">
+            <el-input v-model="editForm.callphone"></el-input>
+          </el-form-item>
+          <el-form-item label="地址：">
+            <el-cascader class="address" :options="addrOptions" v-model="editForm.addr" placeholder="省/市/县" 
+              clearable :props="props" change-on-select></el-cascader>
+            <el-input v-model="editForm.addrInfo" placeholder="请输入详细地址"></el-input>
+          </el-form-item>
+          <el-form-item label="摊位号：">
+            <el-input v-model="editForm.stallNo" ></el-input>
+          </el-form-item>
+          <el-form-item label="营业执照：">
+            <div class="box-fileimg">
+              <figure class="image" v-if="imgUrl">
+                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + imgUrl">
+              </figure>
+              <span class="submit">
+                上传图片
+                <form enctype="multipart/form-data" method="post"> 
+                  <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
+                </form>
+              </span>  
+            </div>
+          </el-form-item>
+          <el-form-item label="个人照：">
+            <div class="box-fileimg">
+              <figure class="image" v-if="logoUrl">
+                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + logoUrl">
+              </figure>
+              <span class="submit">
+                上传图片
+                <form enctype="multipart/form-data" method="post"> 
+                  <input type="file" class="file" ref="file2" multiple accept="image/*" @change="fileFun2($event)">
+                </form>
+              </span>  
+            </div>
+          </el-form-item>
+          <el-form-item >
+            <el-button type="primary" @click="saveMsg()">保存</el-button>
+          </el-form-item>
+        </el-form>
       </div>
-      <div class="passwrd" v-if="isEdits">
-        <div class="text">
-          <div class="close" @click="closeFun">X</div>
-          <el-form class="form" ref="formNum" :model="formNum" label-width="80px">
-            <el-form-item label="旧密码">
-              <el-input type="password" v-model="formNum.oldNum"></el-input>
+      <!-- 新增商户 -->
+      <div class="form-content" v-show="selectAddShop">
+        <el-form :model="form" class="form" label-width="120px">
+          <el-form-item label="营业执照号："  prop="licenceNo">
+            <el-input v-model="form.licenceNo" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="身份证号：" prop="regId">
+            <el-input v-model="form.regId" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="商户名称：" prop="nodeName" >
+            <el-input v-model="form.nodeName" clearable></el-input>
+          </el-form-item>
+          <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
+            <el-form-item label="企业名称：" prop="corporate_name" >
+              <el-input v-model="form.corporate_name" clearable style="width: 340px"></el-input>
             </el-form-item>
-            <el-form-item label="新密码">
-              <el-input type="password" v-model="formNum.newNum"></el-input>
-            </el-form-item>
-            <el-form-item label="确认密码">
-              <el-input type="password" v-model="formNum.sureNum"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="sureNumFun">确认修改</el-button>
-            </el-form-item>
-          </el-form>
+          </el-tooltip>
+          <el-form-item label="联系人：" prop="name">
+            <el-input v-model="form.name" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="联系电话：" prop="callphone">
+            <el-input v-model="form.callphone" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="地址：" prop="addr">
+            <el-cascader class="address" :options="addrOptions" v-model="form.addr" placeholder="省/市/县"
+              clearable :props="props" change-on-select></el-cascader>
+            <el-input v-model="form.addrInfo" placeholder="请输入详细地址" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="摊位号：" prop="stallNo">
+            <el-input v-model="form.stallNo" clearable></el-input>
+          </el-form-item>
+          <el-form-item >
+            <el-button type="primary" @click="submitForm()">保存</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+    <div class="passwrd" v-if="isEdits">
+      <div class="text">
+        <div class="close" @click="closeFun">X</div>
+        <el-form class="form" ref="formNum" :model="formNum" label-width="80px">
+          <el-form-item label="旧密码">
+            <el-input type="password" v-model="formNum.oldNum"></el-input>
+          </el-form-item>
+          <el-form-item label="新密码">
+            <el-input type="password" v-model="formNum.newNum"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码">
+            <el-input type="password" v-model="formNum.sureNum"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="sureNumFun">确认修改</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
   </div>
@@ -286,9 +283,9 @@ export default {
       },
       addrOptions:[],
       props:{
-          label: 'caption',
-          value:'szm',
-          children: 'list'
+        label: 'caption',
+        value:'szm',
+        children: 'list'
       },
       shopList:[],//绑定商铺
       showShopListName:false,//绑定商铺是否展示
@@ -308,12 +305,12 @@ export default {
       districtArr: [],
       districtUserId: '',
       districtName: '',
+      file: '',
+      node_id: '',
     }
   },
-  computed:{
-
-  },
   mounted(){    
+    this.node_id = localStorage.getItem('loginId');
     this.getAddrList();//获取地区列表
     this.getMarketFun()
     this.getShopMsg();//查询商铺信息
@@ -337,7 +334,8 @@ export default {
         total:"",
         userId: this.userId,
         contacts: '',
-        nodeName: ''
+        nodeName: '',
+        node_id: this.node_id
       }
       GetMarkets(obj)
         .then(res => {
@@ -391,135 +389,72 @@ export default {
     // 营业执照
     fileFun(event){
       var that = this;
-      let file = event.target.files;
-      this.imgLength = file.length;
-      let node_id = this.node_id,
-        scShopId = this.scShopId,
-        area_id = this.area_id,
-        addrName = this.addrName,
-        name = this.name,
-        phone = this.phone,
-        addr = this.addr,
-        qyjj = this.qyjj,
-        jglx = this.jglx,
-        logoFile = this.logoFile,
-        qyName = this.qyName;
-      let reg = /.(jpg|png|PNG|JPG)+$/;           
-      if(file[0].size){
-        let point = file[0].name.indexOf('.');
-        if(!reg.test((file[0].name).slice(point))){
-          this.$message.error("上传图片格式不支持");
-          return;
-        }
-        let size = file[0].size / 1024 / 1024 ;
-        if(size > 0.5){
-          that.clarity = 0.5/size;
-        }else{
-          that.clarity = 1;
-        }
-        let reader = new FileReader();
-        reader.readAsDataURL(file[0]); 
-        reader.onload = function(){                    
-          that.imgFun(reader.result,that.clarity,function(src){
-            that.imgArr.push(src.slice(23))
-          })
-        }
-      }
-      let timer = setInterval(()=>{
-        if(this.imgArr.length == file.length){
-          let formData = new FormData()  
-          formData.append('img_url', this.imgArr[0]);   
-          formData.append('biz_id', that.biz_id);  
-          formData.append('shop_booth_id', that.shop_booth_id); 
-          let config = {
-            headers:{'Content-Type':'multipart/form-data'}
-          };
-          const ajaxPost = function (url, params,config) {
-            return new Promise((resolve, reject) => {
-              axios
-                .post(url, params,{config})
-                .then((res) => {
-
-                    resolve(res.data)
-                })
-                .catch(() => {
-                    reject('error')
-                })
+      this.file = event.target.files[0];
+      let formData = new FormData();
+      formData.append('img_url', this.file);   
+      formData.append('biz_id', that.biz_id);  
+      formData.append('shop_booth_id', that.shop_booth_id);     
+      let config = {
+        headers:{'Content-Type':'multipart/form-data'}
+      };
+      const ajaxPost = function (url, params,config) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(url, params,{config})
+            .then((res) => {
+              resolve(res.data)
             })
-          }  
-          let url = baseUrl + 'manage/updateBizImg'
-          ajaxPost(url,formData,config)
-            .then(res => {
-              that.imgArr = []
-              that.imgUrl = res.data.img_url
-              // that.getShopMsg()
+            .catch(() => {
+              reject('error')
             })
-            .catch(res => {
-              console.log(res)
-            })
-          clearInterval(timer);
-        }
-      },1000)
+        })
+      }  
+      const url = baseUrl + 'manage/updateBizImg'
+      ajaxPost(url,formData,config)
+        .then(res => {
+          that.imgArr = []
+          that.imgUrl = res.data.img_url
+          that.file = null
+        })
+        .catch(res => {
+          console.log(res)
+          this.$message.error("出错了");
+        })
     },
     // 个人照
     fileFun2(event){
       var that = this;
-      let file = event.target.files;
-      let reg = /.(jpg|png|PNG|JPG)+$/;           
-      if(file[0].size){
-        let point = file[0].name.indexOf('.');
-        if(!reg.test((file[0].name).slice(point))){
-          this.$message.error("上传图片格式不支持");
-          return;
-        }
-        let size = file[0].size / 1024 / 1024 ;
-        if(size > 0.5){
-          that.clarity = 0.5/size;
-        }else{
-          that.clarity = 1;
-        }
-        let reader = new FileReader();
-        reader.readAsDataURL(file[0]); 
-        reader.onload = function(){                    
-          that.imgFun(reader.result,that.clarity,function(src){
-            that.logoArr.push(src.slice(23))
-          })
-        }
-      }
-      let timer = setInterval(()=>{
-        if(this.logoArr.length == file.length){
-          let formData = new FormData()  
-          formData.append('logo', this.logoArr[0]);  
-          formData.append('biz_id', that.biz_id);  
-          formData.append('shop_booth_id', that.shop_booth_id); 
-          let config = {
-            headers:{'Content-Type':'multipart/form-data'}
-          };
-          const ajaxPost = function (url, params,config) {
-            return new Promise((resolve, reject) => {
-              axios
-                .post(url, params,{config})
-                .then((res) => {
-                  resolve(res.data)
-                })
-                .catch(() => {
-                  reject('error')
-                })
+      this.file = event.target.files[0];
+      let formData = new FormData();
+      formData.append('logo', this.file);   
+      formData.append('biz_id', that.biz_id);  
+      formData.append('shop_booth_id', that.shop_booth_id); 
+      let config = {
+        headers:{'Content-Type':'multipart/form-data'}
+      };   
+      const ajaxPost = function (url, params,config) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(url, params,{config})
+            .then((res) => {
+              resolve(res.data)
             })
-          }  
-          let url = baseUrl + 'manage/updateBizLogo'
-          ajaxPost(url,formData,config)
-            .then(res => {
-              console.log(res)
-              that.logoArr = []
-              that.logoUrl = res.data.logo
+            .catch(() => {
+              reject('error')
             })
-            .catch(res => {
-              console.log(res)
-            })
-          clearInterval(timer);
-        }
-      },1000)
+        })
+      }  
+      const url = baseUrl + 'manage/updateBizLogo'
+      ajaxPost(url,formData,config)
+        .then(res => {
+          that.logoArr = []
+          that.logoUrl = res.data.logo
+          that.file = null
+        })
+        .catch(res => {
+          console.log(res)
+          this.$message.error("出错了");
+        })
     },
     imgFun(path,quality,callback){
       let img = new Image();
@@ -618,20 +553,20 @@ export default {
     getShopMsg(){      
       allBizs({userId:this.$route.params.inforMsg.bootList[0].userId})
         .then(res =>{
-            let len = res.data.dataList.length;
-            this.account = res.data.dataList[0].userName;
-            this.password = res.data.dataList[0].password
-            this.people = res.data.dataList[0].name;
-            this.shopUserId = res.data.dataList[0].userId
-            this.shop_booth_id = res.data.dataList[0].bootList[0].shop_booth_id
-            this.phoneNumber = res.data.dataList[0].telephone;
-            this.biz_id = res.data.dataList[0].bootList[0].biz_id
-            if(len > 0){
-              this.isEdit = false;
-              this.shopList = res.data.dataList[0].bootList;
-              this.lookThis(res.data.dataList[0].bootList[0].booth_name)
-              this.lookShopName = res.data.dataList[0].bootList[0].booth_name;
-            }
+          let len = res.data.dataList.length;
+          this.account = res.data.dataList[0].userName;
+          this.password = res.data.dataList[0].password
+          this.people = res.data.dataList[0].name;
+          this.shopUserId = res.data.dataList[0].userId
+          this.shop_booth_id = res.data.dataList[0].bootList[0].shop_booth_id
+          this.phoneNumber = res.data.dataList[0].telephone;
+          this.biz_id = res.data.dataList[0].bootList[0].biz_id
+          if(len > 0){
+            this.isEdit = false;
+            this.shopList = res.data.dataList[0].bootList;
+            this.lookThis(res.data.dataList[0].bootList[0].booth_name)
+            this.lookShopName = res.data.dataList[0].bootList[0].booth_name;
+          }
         })
         .catch(res =>{
           console.log(res)
@@ -643,7 +578,7 @@ export default {
           this.addrOptions = res.data.dataList
         })
         .catch(res => {
-            console.log(res)
+          console.log(res)
         })
     },
     submitForm(){//添加商铺保存
@@ -711,7 +646,6 @@ export default {
               userId:this.userId,//用户id,
               corporate_name: this.form.corporate_name
             })
-
             // 新增商铺保存后重置页面录入信息
             this.account='';//账号
             this.password='';//密码
@@ -882,6 +816,12 @@ export default {
       this.$router.push({name: "MerchantsMgm"})
     },
     addShop(){//添加商铺
+      if(this.shopList.length == 1){
+        this.shopList.forEach(val => {
+          val.logo = this.logoUrl
+          val.img_url = this.imgUrl
+        })
+      }
       this.lookShopName = '';
       this.active = true;
       this.selectAddShop = true;
@@ -909,9 +849,6 @@ export default {
       }
     }
   },
-  components:{
-
-  }
 }
 </script>
 

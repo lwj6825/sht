@@ -125,13 +125,15 @@ export default {
         loginName: '',
         boxShow: false,
         fileMsg: '',
-        file: ''
+        file: '',
+        node_id: '',
       }
     },    
     created() {
         this.userId = localStorage.getItem('userId')
         this.loginId = localStorage.getItem('loginId')
         this.loginName = localStorage.getItem('loginName')
+        this.node_id = localStorage.getItem('loginId');
     },
     mounted() {
       this.getList();//首页展示-获取供应商列表    
@@ -246,6 +248,7 @@ export default {
           userId: this.userId,
           name: '',
           boothName: '',
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {
@@ -289,6 +292,7 @@ export default {
           userId: this.userId,
           name: '',
           boothName: '',
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {
@@ -335,6 +339,7 @@ export default {
           userId: this.userId,
           name: this.name,
           boothName: this.boothName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {        
@@ -377,6 +382,7 @@ export default {
           userId: this.userId,
           name: '',
           boothName: '',
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res =>{

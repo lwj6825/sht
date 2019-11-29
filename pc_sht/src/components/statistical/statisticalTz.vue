@@ -223,13 +223,15 @@ export default {
             start_time:'',
             end_time:'',
             gooduserId:'',
-            dataMore:''
+            dataMore:'',
+            node_id: '',
         }
     },
     created(){
             this.gooduserId = this.$route.query.gooduserId;
      },
     mounted() {
+        this.node_id = localStorage.getItem('loginId');
         this.getTime()
         setTimeout(() => {
                 this.loading = false
@@ -492,7 +494,8 @@ export default {
                 total: '',
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{
@@ -595,7 +598,8 @@ export default {
                 total: '',
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{

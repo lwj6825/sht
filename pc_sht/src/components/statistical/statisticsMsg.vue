@@ -342,12 +342,14 @@ export default {
             num4:0,
             progress: 0,
             fullscreenLoading:false,
-            fullscreenLoading1:false
+            fullscreenLoading1:false,
             // userId:''
             // screenWidth: document.body.clientWidth,
+            node_id: '',
         }
     },
     mounted(){
+        this.node_id = localStorage.getItem('loginId');
         this.userId = localStorage.getItem('userId');
         this.loginId = localStorage.getItem('loginId')
         this.getComputNodeFun()
@@ -1124,6 +1126,7 @@ export default {
                 userId: this.userId,
                 contacts: this.contacts,
                 nodeName: this.nodeName,
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{

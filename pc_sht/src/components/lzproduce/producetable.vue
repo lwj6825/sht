@@ -252,10 +252,11 @@
         isShow: true,
         isRegion: '',
         user_shop_booth_id: '',
+        node_id: '',
       }
     },
     mounted() {
-
+      this.node_id = localStorage.getItem('loginId');
       this.BaseImgUrl = BaseImgUrl;
 
       // console.log("这是图片地址"+BaseImgUrl);
@@ -392,6 +393,7 @@
           userId: this.userId,
           contacts: this.contacts,
           nodeName: this.nodeName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {
@@ -530,7 +532,8 @@
           total: '',
           userId: this.userId,
           contacts: this.contacts,
-          nodeName: this.nodeName
+          nodeName: this.nodeName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {

@@ -160,12 +160,14 @@ export default {
                     property_name: '图片类型'
                 },
             ],
+            node_id: '',
         }
     },
     created() {
         this.userId = localStorage.getItem('userId')
     },
     mounted() {
+        this.node_id = localStorage.getItem('loginId');
         // console.log(this.$route.params)
         if(this.$route.params){
             this.disabled = true
@@ -227,7 +229,8 @@ export default {
                 total: "",
                 userId: this.userId,
                 name: "",
-                boothName: ""
+                boothName: "",
+                node_id: this.node_id
             }
             GetArea(obj)
                 .then(res => {

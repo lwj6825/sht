@@ -93,7 +93,8 @@
         isShow: true,
         isRegion: '',
         scShopId: '',
-        file: ''
+        file: '',
+        node_id: '',
       }
     },
     created() {
@@ -103,6 +104,7 @@
       // this.getList();//首页展示-获取供应商列表
       this.isRegion = localStorage.getItem('isRegion')
       this.scShopId = localStorage.getItem('scShopId');
+      this.node_id = localStorage.getItem('loginId');
       if(this.isRegion == 'false'){
         this.isShow = false
         this.getAllGys()
@@ -291,6 +293,7 @@
           userId: this.userId,
           name: this.name,
           boothName: this.boothName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {        
@@ -311,6 +314,7 @@
           userId: this.userId,
           name: this.name,
           boothName: this.boothName,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then((res) =>{

@@ -63,7 +63,7 @@
                     <el-button class="search-button" type="primary" v-else @click="seaechXsFun">搜索</el-button>
                 </div>
                 <div class="msg-table">
-                    <el-table :data="dataList" border style="width: 100%" height='360'@selection-change="changeFun">
+                    <el-table ref="multipleTable" :data="dataList" border style="width: 100%" height='360'@selection-change="changeFun">
                         <!--<el-table-column prop="id" label="" width='50'>
                             <template slot-scope="scope">
                                 <el-checkbox @change="changeFun(scope.row)"/>
@@ -119,6 +119,9 @@ export default {
             page: 1,
             page2: 1,
             total: 0,
+            checkGood: [],
+            checkGoodId: [],
+            allGood: [],
         }
     },
     mounted(){
@@ -142,7 +145,6 @@ export default {
             // this.$router.push({path: 'editMarket'})
         },  
         handleSizeChange(val) { //pageSize 改变时会触发
-            console.log(`每页 ${val} 条`);
             this.page = val
             // this.page = val
             if(this.activeName == 'first'){
@@ -231,6 +233,18 @@ export default {
             this.selectGoodsList = [];
             this.getBindingGoodsList()
         },
+        // 表格默认选中
+        checked(){
+            let arr = new Set(this.allGood),
+                newArr = [];
+            newArr = Array.from(arr)
+            for(var i = 0; i < newArr.length; i++){
+                for(var j = 0; j < this.dataList.length; j++){
+                    if(newArr[i].id == this.dataList[j].id)
+                    this.$refs.multipleTable.toggleRowSelection(this.dataList[j],true);
+                }
+            }
+        },
         getBindingGoodsList(){
             let data = {
                 page : this.page2,
@@ -249,6 +263,9 @@ export default {
                     })
                     this.dataList = res.data.dataList
                     this.total = res.data.condition.total
+                    this.$nextTick(function () {
+                        this.checked()
+                    })
                 })
                 .catch(res => {
                     console.log(res)
@@ -258,12 +275,15 @@ export default {
             this.addNew = false;
             this.searchGoodsName = ''
             this.page2 = 1
+            this.checkGoodId = []
+            this.selectGoodsList = []
+            this.allGood = []
         },
         changeFun(item){//复选框勾选
-            this.selectGoodsList = []
-            item.forEach((ele,index) => {
-                if(ele.id){
-                    this.selectGoodsList.push(ele.id);
+            item.forEach(val => {
+                if(val.id){
+                    this.selectGoodsList.push(val.id)
+                    this.allGood.push(val)
                 }
             })
         },
@@ -286,10 +306,17 @@ export default {
             });
         },
         addGoodsSave(){
+            this.selectGoodsList.forEach(val2 => {
+                if(this.checkGoodId.indexOf(val2) == -1){
+                    this.checkGoodId.push(val2)
+                }
+            })
+            let that = this;
+            console.log(this.checkGoodId)
             let numArr = [],state = true;
             if(this.selectGoodsList.length > 0){
                 this.dataList.forEach(val => {
-                    this.selectGoodsList.forEach(ele => {
+                    this.checkGoodId.forEach(ele => {
                         if(state){
                             if(ele == val.id){
                                 if(val.key_number == ''){
@@ -319,7 +346,7 @@ export default {
             }
             if(state == true){
                 let data = {
-                    ids:this.selectGoodsList.join(','),
+                    ids:this.checkGoodId.join(','),
                     goods_type:this.addGoodsType,
                     shop_booth_id:this.$route.params.searchMsg.currShop_shop_booth_id,
                     key_number: numArr.join(','),
@@ -327,12 +354,19 @@ export default {
                 console.log(data)
                 SaveBindingGoods(data)
                     .then(res => {
-                        this.$message.success('恭喜，绑定成功！');
-                        this.searchGoodsName = ''
-                        this.getGoodsList(this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
-                        this.getBindingGoodsList() 
-                        this.addNew = false;
-                        this.page2 = 1
+                        if(res.result == true){
+                            this.$message.success('恭喜，绑定成功！');
+                            this.searchGoodsName = ''
+                            this.checkGoodId = []
+                            this.selectGoodsList = []
+                            this.allGood = []
+                            this.getGoodsList(this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
+                            this.getBindingGoodsList() 
+                            this.addNew = false;
+                            this.page2 = 1
+                        }else{
+                            this.$message.error('抱歉，绑定失败！');
+                        }
                     })
                     .catch(res => {
                         this.$message.error('抱歉，绑定失败！');

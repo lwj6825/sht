@@ -76,6 +76,7 @@ export default {
                 },
             ],
             userId: '',
+            node_id: '',
         }
     },
     mounted(){
@@ -83,6 +84,7 @@ export default {
     },
     created() {
         this.userId = localStorage.getItem('userId')
+        this.node_id = localStorage.getItem('loginId');
     },
     methods:{
         copyCode(areaId,codeId){
@@ -104,7 +106,8 @@ export default {
                 total:"",
                 userId: this.userId,
                 name:"",
-                boothName:""
+                boothName:"",
+                node_id: this.node_id
             }
             QueryArea(data)
                 .then(res =>{

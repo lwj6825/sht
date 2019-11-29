@@ -73,6 +73,7 @@
 <script>
 import {getUserList,deleteUser,GetAllNode} from '../../js/user/user.js'
 import {getRoleList} from '../../js/role/role.js'
+import {router} from '../../js/address/url.js'
 export default {
     name:'userList',
     data(){
@@ -275,6 +276,8 @@ export default {
         },
         addUser(){
             this.$router.push({name:'AddUser'})
+            // console.log( + 'user/addUser')
+            // window.open('http://shop.zhdtech.com/#/home/user/enterpriseAudit'); 
         },
         search(){
             if(this.time){

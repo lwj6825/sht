@@ -1,15 +1,16 @@
 // base url
 export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
 export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
-export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
+export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+export const router = 'http://192.168.1.92:8088/#/home/' // 跳转地址
+// export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 // export const baseUrl = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口
@@ -80,6 +81,8 @@ export const entryGgoodsList = baseUrl + 'goods/getAllPurchaseGoodsForMoreBiz';/
 export const sellGoodsList = baseUrl + 'goods/getAllSalesGoodsForMoreBiz';// 管理商品 - 销售
 export const bindingGoods = baseUrl + 'goods/getAllGoodsForBind';// 管理商品 - 绑定商品列表
 export const saveBindingGoods = baseUrl + 'goods/insertGoodsForBind';// 管理商品 - 绑定商品保存
+export const UpdateGoodsIsNeed = baseUrl + 'goods/UpdateGoodsIsNeed';// 管理商品 - 绑定商品保存
+// 企业接入
 export const getNodeApply = baseUrl + 'nodeApply/getNodeApply';// 获取申请列表
 export const updateNodeApply = baseUrl + 'nodeApply/UpdateNodeApplyState';// 审核状态修改
 export const queryMonitoring = baseUrl + 'nodeApply/queryMonitoring';// 对接信息监控
@@ -244,6 +247,7 @@ export const downloadInTzDetail =  baseUrl + 'tz/downloadInTzDetail';//导出
 export const queryXsTzDetailRegion = baseUrl + 'tz/queryXsTzDetailRegion' // 列表
 export const downloadXsTzDetail = baseUrl + 'tz/downloadXsTzDetail' // 导出
 export const queryXsTzDetailByTzId = baseUrl + 'tz/queryXsTzDetailByTzId' // 查看商品
+export const importMoneyAndWeightForMarket = baseUrl + 'redis/importMoneyAndWeightForMarket' // 导出 全部商户交易额
 //分析
 export const getAllDash = baseUrl + 'bdp/getAllDash' // 列表baseUrl2 + '/bdp/toQx'
 export const toQx = baseUrl + 'bdp/toQx' // 组织机构、用户
@@ -373,7 +377,9 @@ export const downloadErrorLog = baseUrl3 + 'MonLog/downloadErrorLog' // 解析�
 export const queryChangeLogList = baseUrl3 + 'assets/queryChangeLogList' // 变更管理列表
 export const downloadChangeLog = baseUrl3 + 'assets/downloadChangeLog' // 变更管理 下载导出
 export const queryChangeItem = baseUrl3 + 'assets/queryChangeItem' // 变更管理 变更内容
-export const deleteParseMonLogById = baseUrl3 + 'MonLog/deleteParseMonLogById' // 解析运行日志  失败导出
+export const deleteParseMonLogById = baseUrl3 + 'MonLog/deleteParseMonLogById' // 解析运行日志  失败导出queryNo
+export const queryNodeDetailType = baseUrl3 + 'MonLog/queryNodeDetailType' // 解析运行日志  对照管理  节点
+export const deleteAllErrorData = baseUrl3 + 'MonLog/deleteAllErrorData' // 解析运行日志  对照管理  全部删除
 
 // 养殖场
 export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询
@@ -409,3 +415,4 @@ export const insert = baseUrl + 'goodsPrice/insert' // 市场修改和新增报�
 export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看报价单  区域信息 
 export const autoIdentity = baseUrl + 'goodsPrice/autoIdentity' // 智能识别
 export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存
+export const queryGoodsForNode = baseUrl + 'goodsPrice/queryGoodsForNode' // 市场添加报价 商品

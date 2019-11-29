@@ -329,6 +329,7 @@ export default {
             file: '',
             shArr: [],
             sh_name: '',
+            node_id: '',
         }
     },
     computed:{
@@ -344,6 +345,7 @@ export default {
         this.userId = localStorage.getItem('userId');          
     },
     mounted(){
+        this.node_id = localStorage.getItem('loginId');
         this.getFactory();//获取生产厂家
         this.getAllRegion('');//获取大区ID  
     },
@@ -520,6 +522,7 @@ export default {
                 userId: this.userId,
                 name: this.name,
                 boothName: this.boothName,
+                node_id: this.node_id
             }
              QueryArea(data)
                 .then(res => {      

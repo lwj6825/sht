@@ -17,7 +17,8 @@ import {
   insertStkOr,
   getGoodsJdImg,
   updateGoodsJdImg,
-  deleteGoodsJdImg
+  deleteGoodsJdImg,
+  UpdateGoodsIsNeed
 } from '../address/url.js';
 
 
@@ -59,8 +60,6 @@ export const GoodsCode  = function(params) {
   return ajaxPost(goodsCode,params)
 }
 
-
-
 // 查询销售商品列表
 export const sales  = function(params) {
   return ajaxPost(querySales,params)
@@ -97,6 +96,10 @@ export const DeleteStkOr  = function(params) {
 // 新增原料
 export const InsertStkOr  = function(params) {
   return ajaxPost(insertStkOr,params)
+}
+//商品 是否为 生活必需品
+export const updateGoodsIsNeed  = function(params) {
+  return ajaxGet(UpdateGoodsIsNeed +'?'+ params)
 }
 
 

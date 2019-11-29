@@ -6,16 +6,29 @@
     <div class="option-wrapper" ref="optionWrapper">
       <div class="option-wrappers" ref="optionWrapper">
         <div class="search-val">
-          <span class="option-title">商品编码</span>
-          <el-input class="fill-input" v-model="goodsCode" clearable placeholder="请输入内容"></el-input>
-          <span class="option-title">商品名称</span>
-          <el-input class="fill-input" v-model="goodsName" clearable placeholder="请输入内容"></el-input>
-          <span class="option-title">商品简称</span>
-          <el-input class="fill-input" v-model="j_name" clearable placeholder="请输入内容"></el-input>
-        </div>
-        <div>
-          <el-button type="primary" size="medium" class="import" style="margin-left: 10px;" @click="searchConditions">搜索</el-button>
-          <span class="span-clear" @click="clearConditions">清空筛选条件</span>
+          <div>
+            <span class="option-title">商品编码</span>
+            <el-input class="fill-input" v-model="goodsCode" clearable placeholder="请输入内容"></el-input>
+          </div>
+          <div>
+            <span class="option-title">商品名称</span>
+            <el-input class="fill-input" v-model="goodsName" clearable placeholder="请输入内容"></el-input>
+          </div>
+          <div>
+            <span class="option-title">商品简称</span>
+            <el-input class="fill-input" v-model="j_name" clearable placeholder="请输入内容"></el-input>
+          </div>
+          <div>
+            <span class="option-title">是否为报价商品</span>
+            <el-select v-model="isNeed" filterable clearable placeholder="请选择">
+              <el-option  label="是" value="1"></el-option>
+              <el-option  label="否" value="0"></el-option>
+            </el-select>
+          </div>
+          <div>
+            <el-button type="primary" size="medium" class="import" style="margin-left: 10px;" @click="searchConditions">搜索</el-button>
+            <span class="span-clear" @click="clearConditions">清空筛选条件</span>
+          </div>
         </div>
       </div>
     </div>
@@ -55,6 +68,13 @@
               <p v-for="(item,index) in scope.row.stk_list" :key="index">{{item.or_goods_name}}</p>
             </template>
           </el-table-column>
+          <el-table-column label="是否为报价商品" width="160">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.IS_NEED" active-text="是" inactive-text="否"
+              active-value="1" inactive-value="0" @change="isNeedFun(scope.row)">
+              </el-switch>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
               <!--<el-button type="text" size="small" @click="check(scope.$index, scope.row)">{{viewSellGoods}}</el-button>-->
@@ -77,7 +97,7 @@
 
 <script>
   import axios from 'axios';
-  import {sales,deleteGood,purchase} from "../../js/goods/goods.js";
+  import {sales,deleteGood,purchase,updateGoodsIsNeed} from "../../js/goods/goods.js";
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area';
   import {GetSupplier} from '../../js/district/district.js'
@@ -115,7 +135,8 @@
         fileMsg: '',
         goodsCode: '',
         j_name: '',
-        node_id: ''
+        node_id: '',
+        isNeed: '',
       }
     },
     created() {
@@ -137,6 +158,20 @@
       this.getAllSuppliers()
     },   
     methods: {  
+      isNeedFun(ele){
+        let str = 'id=' + ele.ID + '&is_need=' + ele.IS_NEED
+        updateGoodsIsNeed(str)
+          .then(res => {
+            if(res.result == true){
+              this.$message.success(res.message);
+            }else{
+              this.$message.error(res.message);
+            }
+          })
+          .catch(res => {
+            console.log(res)
+          })
+      },
       closeFun(){
         this.boxShow = false;
         this.getSales()
@@ -316,7 +351,8 @@
           region:this.areaId,
           userId: this.userId,
           total: '',
-          j_name: this.j_name
+          j_name: this.j_name,
+          is_need: this.isNeed
         }
         sales(boothData)
           .then(res => {
@@ -336,6 +372,7 @@
           name: this.goodsName,
           goodsCode: this.goodsCode,
           boothName: '',
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {        
@@ -362,11 +399,17 @@
       },
       searchConditions(){//搜索查询商品列表
         // this.queryLists(this.goodsName);// 搜索-查询销售商品列表
+        this.page = 1
+        this.currentPage = 1
         this.getSales()
       },
       selectId(id){//切换地区查询商品列表
         this.page = 1
         this.currentPage = 1
+        this.goodsName = '';
+        this.goodsCode = ''
+        this.j_name = ''
+        this.isNeed = ''
         let data = {
           page: '1',
           cols: '100',
@@ -374,6 +417,7 @@
           userId: this.userId,
           name: this.goodsName,
           boothName: "",
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res =>{
@@ -395,6 +439,10 @@
       clearConditions(){//清空筛选条件
         this.goodsName = '';
         this.goodsCode = ''
+        this.j_name = ''
+        this.isNeed = ''
+        this.page = 1
+        this.currentPage = 1
         this.getSales();
       },
       addSellGood(){ //添加销售商品
@@ -510,15 +558,13 @@
       background: #fff;
     }
     .option-wrappers{
-      display: flex;
-		  flex-wrap: wrap;
       line-height: 40px;
     }
     .search-val{
-      width: 710px;
+      display: flex;
+		  flex-wrap: wrap;
       line-height: 40px;
       font-size: 14px;
-      overflow: hidden;
       .option-title,.fill-input{
         float: left;
         display: block;

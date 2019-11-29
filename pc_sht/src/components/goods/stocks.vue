@@ -115,6 +115,7 @@
         file: '',
         goodsCode: '',
         j_name: '',
+        node_id: '',
       }
     },
     created(){
@@ -123,6 +124,7 @@
       this.scShopId = localStorage.getItem('scShopId');
       this.loginId = localStorage.getItem('loginId')
       this.loginName = localStorage.getItem('loginName')
+      this.node_id = localStorage.getItem('loginId');
     },
     mounted() {  
       this.queryNameData = JSON.parse(localStorage.getItem('queryNameData'))
@@ -380,6 +382,7 @@
           name: this.goodsName,
           boothName: this.supplier.trim(),
           goodsCode: this.goodsCode,
+          node_id: this.node_id
         }
         QueryArea(data)
           .then(res => {      
@@ -410,6 +413,7 @@
             userId: this.userId,
             name: this.goodsName,
             boothName: this.supplier.trim(),
+            node_id: this.node_id
           }
           QueryArea(data)
             .then(res =>{

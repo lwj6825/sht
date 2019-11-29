@@ -37,22 +37,19 @@
                             </ul>
                         </template>    
                     </el-table-column>
-                    <el-table-column
-                        label="是否生成下游台账" width="160">
+                    <el-table-column label="是否生成下游台账" width="160">
                         <template slot-scope="scope">
-                            <el-switch
-                            v-model="scope.row.is_auto"
-                            active-text="开启" inactive-text="禁用"
-                            active-value="1" inactive-value="0" @change="changeFun(scope.row)">
+                            <el-switch v-model="scope.row.is_auto" active-text="开启" inactive-text="禁用"
+                                active-value="1" inactive-value="0" @change="changeFun(scope.row)">
                             </el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="460">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="glMerchantsFun(scope.row)">管理商户&emsp;|</el-button>
+                            <!--<el-button type="text" size="small" @click="glMerchantsFun(scope.row)">管理商户&emsp;|</el-button>
                             <el-button type="text" size="small" @click="glSupplierFun(scope.row)">管理供应商&emsp;|</el-button>
                             <el-button type="text" size="small" @click="glCommodityFun(scope.row)">管理商品&emsp;|</el-button>
-                            <el-button type="text" size="small" @click="glStandingBookFun(scope.row)">管理台账&emsp;|</el-button>
+                            <el-button type="text" size="small" @click="glStandingBookFun(scope.row)">管理台账&emsp;|</el-button>-->
                             <el-button type="text" size="small" @click="redactFun(scope.row)">修改&emsp;|</el-button>
                             <el-button type="text" size="small" @click="deleteMarketsFun(scope.row)">删除</el-button>
                         </template>
@@ -85,6 +82,7 @@ export default {
             cols: 10,
             num: 0,
             userId: '',
+            node_id: '',
         }
     },
     mounted() {
@@ -92,6 +90,7 @@ export default {
     },
     created() {
         this.userId = localStorage.getItem('userId')
+        this.node_id = localStorage.getItem('loginId');
     },
     methods: {
         changeFun(ele){
@@ -133,7 +132,8 @@ export default {
                 total:"",
                 userId: this.userId,
                 contacts: this.contacts,
-                nodeName: this.nodeName
+                nodeName: this.nodeName,
+                node_id: this.node_id
             }
             GetMarkets(obj)
                 .then(res => {
@@ -170,7 +170,7 @@ export default {
         glMerchantsFun(ele){//管理商户
             let param = ele.bootList
             localStorage.setItem("dataList",JSON.stringify(param))
-             this.$router.push({name:'GlMerchants'})
+            this.$router.push({name:'GlMerchants'})
         },
         glSupplierFun(ele){//管理供应商  
             let param = ele.bootList

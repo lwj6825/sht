@@ -14,6 +14,16 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="节点类型">
+                        <el-select v-model="form.node" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_DETAIL_TYPE"
+                            :value="item.NODE_DETAIL_TYPE">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="数据说明">
+                        <el-input class="placeholder" v-model="form.sjsm" clearable placeholder=""></el-input>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
                         <!-- <el-button @click="clearFun">重置</el-button>-->
@@ -30,6 +40,7 @@
                     <el-button type="primary" @click="allSignFun">批量标记</el-button>
                     <el-button type="primary" @click="allDeleteFun">批量删除</el-button><!---->
                     <el-button type="primary" plain @click="downloadFun">导出</el-button>
+                    <el-button type="primary" plain @click="deleteAllDataFun">删除全部</el-button>
                 </div>
             </div>
             <!--<div class="file-btns" v-if="isfile">
@@ -132,7 +143,7 @@ function getNowFormatDate() {//获取当前时间
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {QueryErrorData,QueryErrorLogType,DownloadErrorData,DeleteErrorLogData} from '../../js/traceEquipment/traceEquipment.js'
+import {QueryErrorData,QueryErrorLogType,DownloadErrorData,DeleteErrorLogData,QueryNodeDetailType,DeleteAllErrorData} from '../../js/traceEquipment/traceEquipment.js'
 import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
@@ -142,6 +153,8 @@ export default {
             form: {
                 msg: '',
                 types: '',
+                node: '',
+                sjsm: '',
             },
             unfold: '收起',
             show: true,
@@ -156,6 +169,7 @@ export default {
             isEdits: false,
             threshold: '',
             ids: [],
+            nodeArr: [],
         }
     },
     mounted() {
@@ -165,10 +179,60 @@ export default {
         }else if(this.$route.params.node_name){
             this.form.msg = this.$route.params.node_name
         }
+        this.getNodeFun()
         this.getDataFun()
         this.getTypesFun()
     },
     methods: {
+        // 当前条件结果全部删除，最少有一个条件   全部删除
+        deleteAllDataFun(ele){
+            if(this.form.types == '' && this.form.node == '' && this.form.sjsm == ''){
+                this.$message.error('删除失败，至少添加一个条件');
+                return
+            }
+            this.$confirm('你确定要全部删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {         
+                let params = {
+                    cols: this.cols,
+                    page: this.page,
+                    mon_log_base: this.form.msg,
+                    log_type: this.form.types,
+                    node_detail_type: this.form.node,
+                    message: this.form.sjsm,
+                }
+                DeleteAllErrorData(params)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
+        },
+        // 查询 所有节点
+        getNodeFun(){
+            QueryNodeDetailType('')
+                .then(res => {
+                    // console.log(res)
+                    this.nodeArr = res.data.node_detail_type_list
+                })
+                .catch(res => {
+                    console.log(res);
+                })
+        },
         // 批量标记
         allSignFun(){
             this.$confirm('你确定要批量标记不需要做对照的数据吗?', '提示', {
@@ -299,7 +363,9 @@ export default {
                 cols: this.cols,
                 page: this.page,
                 mon_log_base: this.form.msg,
-                log_type: this.form.types
+                log_type: this.form.types,
+                node_detail_type: this.form.node,
+                message: this.form.sjsm,
             }
             DownloadErrorData( params, {})
                 .then((res) => {
@@ -330,7 +396,6 @@ export default {
         },
         changeFun(item){
             this.ids = []
-            console.log(item)
             item.forEach(ele => {
                 this.ids.push(ele.id)
             })
@@ -361,7 +426,9 @@ export default {
                 cols: this.cols,
                 page: this.page,
                 mon_log_base: this.form.msg,
-                log_type: this.form.types
+                log_type: this.form.types,
+                node_detail_type: this.form.node,
+                message: this.form.sjsm,
             }
             QueryErrorData(params)
                 .then(res => {
@@ -395,6 +462,13 @@ export default {
             this.form = {
                 msg: '',
                 types: '',
+                node: '',
+                sjsm: '',
+            }
+            if(this.$route.params.node_id){
+                this.form.msg = this.$route.params.node_id
+            }else if(this.$route.params.node_name){
+                this.form.msg = this.$route.params.node_name
             }
             this.page = 1
             this.getDataFun()
