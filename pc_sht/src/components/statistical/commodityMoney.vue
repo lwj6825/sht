@@ -114,6 +114,7 @@ export default {
           this.loginId = localStorage.getItem('loginId');
           this.defaultTzFun();
           this.getTime();
+          this.getqueryMoneyAndWeightForGoodsFun()
           this.gooduserId = this.$route.params.gooduserId;
         //   console.log(localStorage.getItem("Time"))
           if(localStorage.getItem("Time")){
@@ -223,6 +224,7 @@ export default {
         selectId(id){//选择区域展示商户列表
             this.page = 1
             this.input = ''
+            this.tableData=''
             let data = {
                 page: this.page,
                 cols: this.cols,

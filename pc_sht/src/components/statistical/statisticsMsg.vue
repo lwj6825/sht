@@ -165,7 +165,7 @@
                                     <ul>
                                         <li class="item" v-for="(item,index) in merchantsArr" :key="index" >
                                             <p class="index" :class="{indexs:index < 5}">{{index + 1}}</p>
-                                            <p class="name" @click='getMerChantName(item.biz_name)'>{{item.biz_name}}</p>
+                                            <p class="name" @click='getMerChantName(item.biz_name)'>{{item.biz_name}}({{item.stall_no}})</p>
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
                                     </ul>
@@ -188,10 +188,12 @@
                         <el-tab-pane label="未录入台账商户" name="second">
                                     <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;">
                                         <el-table-column prop="booth_name" label="商户"></el-table-column>
+                                        <el-table-column  prop="stall_no" label="摊位号" ></el-table-column>
                                         <el-table-column  prop="days" label="近30天连续未录入天数" >
                                             <template slot-scope="scope">{{scope.row.days ? scope.row.days : '无数据'}}
                                         </template>
                                         </el-table-column>
+                                        
                                     </el-table>
                                     <el-pagination v-if="num4" background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
                                     @current-change="handleCurrentChange4"></el-pagination>
@@ -199,6 +201,7 @@
                         <el-tab-pane label="当日已录入台账商户" name="first">
                             <el-table :data="tableData" @sort-change="sortChange" style="width: 100%;">
                             <el-table-column prop="booth_name" label="商户"></el-table-column>
+                            <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                             <el-table-column prop="NUM" label="录入笔数" ></el-table-column>
                         </el-table>
                         <el-pagination background layout="prev, pager, next" :current-page.sync="page" :page-size="cols" :total="num"
@@ -242,6 +245,7 @@
                         <el-tab-pane label="不在线商户" name="second">
                                 <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3">
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
+                                    <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                                 </el-table>
                                 <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num2"
                                 @current-change="handleCurrentChange3"></el-pagination>
@@ -536,6 +540,7 @@ export default {
                             this.getGoodsWeightRankAndAvgPriceFun(val)
                             this.getChartFun4(title,numArr,priceArr)
                              this.goodArr = res.data.list.slice(0,10);
+                             console.log(this.this.goodArr)
                         })
                         .catch(res => {
                             console.log(res);
@@ -1167,10 +1172,10 @@ export default {
                         numArr = [] ,
                         title = [] ;
                     arr.forEach(val => {
-                          title.push(val.biz_name)
+                          title.push(val.biz_name+'('+val.stall_no+')')
                           numArr.push(val.price.toFixed(2))
                     })
-                    this.getChartFun7(title.slice(0,10),numArr.slice(0,10))
+                    this.getChartFun7(title.slice(0,10),numArr.slice(0,10),)
                 })
                 .catch(res => {
                     console.log(res);
@@ -1213,10 +1218,11 @@ export default {
         },
         // 该市场当月上传进货台账的商户信息（未录入天数）
         queryHasNoTzBizByNodeIdFun(){
-            let str = 'page='+this.page4+'&cols='+this.cols4+'&node_id='+this.loginId+'&order='+this.order4+'&name=&type=1'
+            let str = 'page='+this.page4+'&cols='+this.cols4+'&node_id='+this.loginId+'&order='+this.order4+'&name=&type=7'
             QueryHasNoTzBizByNodeId(str)
             .then((res) => {
                 this.tableData4 = res.data.list
+                console.log(this.tableData4)
                 this.num4 = res.data.total
             })
             .catch((res) => {
