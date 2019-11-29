@@ -94,6 +94,7 @@ export default {
     },
     methods: {
         changeFun(ele){
+            console.log(ele)
             let obj = {
                 shop_booth_id: ele.bootList[0].shop_booth_id,
                 is_auto: ele.is_auto

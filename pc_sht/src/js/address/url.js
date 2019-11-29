@@ -2,7 +2,6 @@
 export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
 export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
 export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
-export const router = 'http://192.168.1.92:8088/#/home/' // 跳转地址
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 

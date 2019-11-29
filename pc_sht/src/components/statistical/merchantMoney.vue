@@ -114,6 +114,7 @@ export default {
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId');
           this.getTime();
+          this.getQueryMoneyAndWeightForBizFun()
           this.defaultTzFun();
           this.gooduserId = this.$route.params.gooduserId;
           setTimeout(() => {
@@ -241,6 +242,7 @@ export default {
             }, 4000);
             this.page = 1
             this.input = ''
+            this.tableData = ''
             let data = {
                 page: this.page,
                 cols: this.cols,

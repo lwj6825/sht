@@ -62,6 +62,15 @@
           <el-table-column prop="GB_NAME" label="品种" :formatter="formatter"> </el-table-column>
           <el-table-column prop="PRICE" label="价格"> </el-table-column>
           <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
+          <el-table-column label="生活必需品" width="160">
+                  <template slot-scope="scope">
+                      <el-switch
+                    
+                      active-text="开启" inactive-text="禁用"
+                      active-value="1" inactive-value="0" @change="changeFun(scope.row)">
+                      </el-switch>
+                  </template>  
+          </el-table-column>
           <el-table-column prop="SUPPLIERS_NAME" label="供应商"> </el-table-column>
           <el-table-column label="原料"> 
             <template slot-scope="scope">
