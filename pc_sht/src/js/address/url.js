@@ -1,19 +1,20 @@
 // base url
 export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
 export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+// export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
 export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 // export const baseUrl = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口
 export const loginUrl = baseUrl + 'login/login';
+export const getShtUserInfo = baseUrl + 'login/getShtUserInfo'; // get单点登录
 export const loginout = baseUrl + 'login/loginout';// 登出
 export const updatePassword = baseUrl + 'login/updatePassword'; // 修改密码
 
@@ -369,6 +370,10 @@ export const queryErrorLogType = baseUrl3 + 'MonLog/queryErrorLogType' // 缺对
 export const queryUploadFilesByFtpId = baseUrl3 + 'MonLog/queryUploadFilesByFtpId' // 最近文件上传情况
 export const parseMonLogForRecently = baseUrl3 + 'MonLog/parseMonLogForRecently' // 最近15条解析情况
 export const downloadErrorLog = baseUrl3 + 'MonLog/downloadErrorLog' // 解析异常信息 下载导出
+export const queryChangeLogList = baseUrl3 + 'assets/queryChangeLogList' // 变更管理列表
+export const downloadChangeLog = baseUrl3 + 'assets/downloadChangeLog' // 变更管理 下载导出
+export const queryChangeItem = baseUrl3 + 'assets/queryChangeItem' // 变更管理 变更内容
+export const deleteParseMonLogById = baseUrl3 + 'MonLog/deleteParseMonLogById' // 解析运行日志  失败导出
 
 // 养殖场
 export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询
@@ -395,3 +400,12 @@ export const getAllYzctzjg = baseUrl + 'farming/getAllYzctzjg' // 查询屠宰�
 export const insertYzctzjg = baseUrl + 'farming/insertYzctzjg' // 新增屠宰加工
 export const deleteYzctzjg = baseUrl + 'farming/deleteYzctzjg' // 删除屠宰加工
 export const queryTzGoods = baseUrl + 'production/queryTzGoods' // 删除屠宰加工
+// 报价
+export const queryNodeInfoIndex = baseUrl + 'goodsPrice/queryNodeInfoIndex' // 超管查询所有市场的报价内容
+export const queryIndex = baseUrl + 'goodsPrice/queryIndex' // 市场的点击查看报价单
+export const queryBizGoods = baseUrl + 'goodsPrice/queryBizGoods' // 市场点击按照商户查看queryGoodsForBiz
+export const queryGoodsForBiz = baseUrl + 'goodsPrice/queryGoodsForBiz' // 市场添加报价 点击商户 查看商户的商品
+export const insert = baseUrl + 'goodsPrice/insert' // 市场修改和新增报价单的内容
+export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看报价单  区域信息 
+export const autoIdentity = baseUrl + 'goodsPrice/autoIdentity' // 智能识别
+export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存

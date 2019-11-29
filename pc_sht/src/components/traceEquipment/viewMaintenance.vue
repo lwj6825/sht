@@ -922,6 +922,7 @@ export default {
                 font-size: 14px;
                 .title{
                     margin-bottom: 10px;
+                    font-weight: bold;
                 }
                 .msg{
                     line-height: 30px;

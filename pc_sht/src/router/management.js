@@ -20,14 +20,14 @@ import szAddEnterprise from '../components/management/szAddEnterprise.vue'
 
 export default [
     {
-      path: 'management/merchantsMgm',
-      component: resolve => require(['@/components/management/merchantsMgm'],resolve),
-      name:"MerchantsMgm",
-      meta:{
-        id:'117',
-        node:'management',
-        url:'merchantsMgm',
-      }
+        path: 'management/merchantsMgm',
+        component: resolve => require(['@/components/management/merchantsMgm'],resolve),
+        name:"MerchantsMgm",
+        meta:{
+            id:'117',
+            node:'management',
+            url:'merchantsMgm',
+        }
     },
     {
         path: 'management/newCommodity',

@@ -160,6 +160,21 @@
                             <p :style="add ? {display: 'none'} : {display: 'block'}">{{value.values ? value.values : '无'}}</p>
                         </div>
                     </div>
+                    <div class="data" v-if="isImgList">
+                        <div class="title">单据管理</div>
+                        <div class="msg-item">   
+                            <div class="img-list">
+                                <ul v-if="imgArr1.length > 0">
+                                    <li v-for="(item,index) in imgArr1" :key="index">
+                                        <figure class="image">
+                                            <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="bigImgFun(index)" v-if="item.img_url">
+                                        </figure>
+                                    </li>
+                                </ul>
+                                <p v-else>无</p><!---->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -175,7 +190,8 @@
                         <!--<p v-else-if="val.TYPE_NAME == '进货商品'" :style="add ? {display: 'block'} : {display: 'none'}">
                         
                         {{tableData[scope.$index][ind]}}</p>-->
-                        <el-select v-model="tableData[scope.$index][ind]" filterable v-if="val.TYPE_NAME == '进货商品'" 
+                        <el-select v-model="tableData[scope.$index][ind]" filterable v-if="val.TYPE_NAME == '进货商品'" v-loadmore="loadmore"
+                        remote :remote-method="remoteMethod" reserve-keyword @blur="unfocusFun"
                         :style="add ? {display: 'block'} : {display: 'none'}" size="mini" @change="addGoods(scope.row[0],scope.$index)">
                             <el-option  v-for="(val,index) in tableData2" :key="index" :label="val.GOODS_NAME" :value="val.GOODS_NAME" >
                             </el-option>
@@ -227,6 +243,21 @@
                 <el-button v-if="saveBtn == '保存' && this.ids && !types" @click="clearFun" size="small">取消</el-button>
             </div>
         </div>
+        <div class="bigimg-box" v-show="isBigImg" ref="boxsize">
+            <p class="close" @click="closeFun">X</p>
+            <div class="imgBox">
+                <p class="close" @click="closeFun">X</p>
+            <div class="imgBox">
+                <el-carousel trigger="click" :autoplay="autoplay" :initial-index="current" :height="imgHeight + 'px'">
+                    <el-carousel-item  v-for="(item,index) in imgArr1" :key="index" v-if="imgArr1.length>0">
+                        <figure class="images" v-if="item.img_url">
+                            <img :style="sizeObj" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
+                        </figure>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -244,15 +275,14 @@ function formatDate(date) {
     var second = date.getSeconds(); 
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
-import {TzAdd,UpdatePc,GetAllBiz,QueryInTzDetailByTzId,QuerySuppiler,GetAllTzGys,TzUpdate} from '../../js/standingBook/standingBook.js'
+import {TzAdd,UpdatePc,GetAllBiz,QueryInTzDetailByTzId,QuerySuppiler,GetAllTzGys,TzUpdate,
+    SearchDoc} from '../../js/standingBook/standingBook.js'
 import {purchase,getDefaultProductTypes} from "../../js/goods/goods.js";
 import {getAddr} from '../../js/user/user.js';
 export default {
     name: "addEntryTz",
     data() {
         return {
-            page: 1,
-            cols: 15,
             num: 0,
             showId: false,
             saveBtn: '保存',
@@ -332,7 +362,7 @@ export default {
             areaIds:'', // 商户
             bigAreaId:'', // 大区userId
             page: 1,
-            cols: 10000,
+            cols: 50,
             totalPrice: 0,
             userId: '',
             merchants: '',
@@ -361,7 +391,18 @@ export default {
             ids: '',
             types: '',
             count: 0,
-            pageShow: false
+            pageShow: false,
+            imgArr1: [],
+            isImgList: false,
+            node_id: '',
+            isBigImg: false,
+            imgList: [],
+            autoplay: false,
+            current: 0,
+            imgHeight: '',
+            sizeObj: {},
+            types: 1,
+            query: '',
         }
     },
     created() {
@@ -383,14 +424,11 @@ export default {
         this.isRegion = localStorage.getItem('isRegion')
         this.scShopId = localStorage.getItem('scShopId');
         this.loginName =  localStorage.getItem('loginName');
+        this.node_id = localStorage.getItem('loginId')
         if(this.isRegion == 'false'){
             this.isShow = false
         }
-        this.getAddrList()//获取地区列表
-        this.getGhdwFun()
-        this.getGoodsFun()
         this.getFieldFun()
-        this.getAllSuppliers()
         var currentTime = new Date()
         this.form.in_date = formatDate(currentTime)
         console.log(this.areaId)
@@ -403,6 +441,12 @@ export default {
             this.add = false
             this.saveBtn = '修改'
         }
+        if(this.saveBtn == '保存'){
+            this.getGhdwFun()
+            this.getGoodsFun()
+            this.getAllSuppliers()
+        }
+        this.getAddrList()//获取地区列表
     },
     watch: {
         'tableData': {
@@ -424,14 +468,128 @@ export default {
             },
             deep: true
         },
-        'form.value': function (val) {
-            if(val){
-                this.getAllSuppliers()
-                this.getGoodsFun()
-            }
-        }
     },
     methods: {
+        unfocusFun(){
+            console.log(this.query)
+            // console.log(this.tableData)
+            // let state = true;
+            // this.tableData.forEach(ele => {
+            //     if(ele[0] == ''){
+            //         state = true
+            //     }else{
+            //         state = false
+            //     }
+            // })
+            if(this.query != ''){
+                console.log(111)
+                setTimeout(() => {
+                    this.page = 1
+                    this.types = 1
+                    this.tableData2 = []
+                    this.getGoodsFun()
+                }, 1000)
+            }
+        },
+        remoteMethod(query) {
+            console.log(query)
+            if(this.query != query){
+                this.page = 1
+                this.tableData2 = []
+            }
+            this.query = query
+            if(this.types == 1){
+                this.page = 1
+                this.tableData2 = []
+            }
+            if (query !== '') {
+                this.types = 2
+                setTimeout(() => {
+                    if(this.isRegion == 'false'){
+                        this.isShow = false
+                        let boothData = {
+                            page: this.page,
+                            cols: this.cols,
+                            goodsName: this.query,
+                            suppliersName: '',
+                            region: this.region,
+                            userId: this.userId,
+                            shopBoothId: this.areaId
+                        }
+                        purchase(boothData)
+                        .then(res => {
+                            let arr = res.data.purchaseList
+                            this.tableData2 = this.tableData2.concat(arr)
+                            this.num = res.data.goodsinfo.total
+                        })
+                        .catch(res => {
+                            console.log(res)
+                        })
+                    }else{
+                        let boothData = {
+                            page: this.page,
+                            cols: this.cols,
+                            goodsName: this.query,
+                            suppliersName: '',
+                            region: this.region,
+                            shopBoothId: this.areaId
+                        }
+                        purchase(boothData)
+                            .then(res => {
+                                let arr = res.data.purchaseList
+                                this.tableData2 = this.tableData2.concat(arr)
+                                this.num = res.data.goodsinfo.total
+                            })
+                            .catch(res => {
+                                console.log(res)
+                            })
+                    }
+                }, 200);
+            }else{
+                this.page = 1
+                this.types = 1
+                this.tableData2 = []
+                this.getGoodsFun()
+            }
+        },
+        loadmore (e) { // 加载更多的院线名称
+            this.page = this.page + 1
+            if(this.types == 1){
+                this.getGoodsFun()
+            }else{
+                this.remoteMethod(this.query)
+            }
+        },
+        bigImgFun(item){
+            this.isBigImg = true
+            this.current = item
+            this.$nextTick(()=>{            
+                this.imgHeight = this.$refs.boxsize.offsetHeight - 60
+                let sizeObj = {
+                    'max-height': this.$refs.boxsize.offsetHeight - 60 + 'px',
+                    'max-width': this.$refs.boxsize.offsetWidth - 60 + 'px',
+                    'margin-bottom': 10 + 'px'
+                }
+                this.sizeObj = sizeObj
+            })
+        },
+        closeFun(){
+            this.isBigImg = false
+        },
+        getImgFun(){
+            let obj = {
+                tz_id: this.tzId,
+                node_id: this.node_id,
+                tz_type: 1,
+            }
+            SearchDoc(obj)
+                .then(res => {
+                    this.imgArr1 = res.data              
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         clearFun(){
             this.getFieldFun()
             this.saveBtn = '修改'
@@ -448,7 +606,7 @@ export default {
         },
         handleCurrentChange(val) {
             this.page = val
-            this.getGoodsFun()
+            // this.getGoodsFun()
         },
         deleteFun(ele){
             console.log(ele)
@@ -487,7 +645,6 @@ export default {
                 areaName = '';
             this.dwArr.forEach((ele)=>{ 
                 if(ele.SUPPLIER_NAME == val){
-                    console.log(ele)
                     this.ghdwId = ele.SUPPLIER_ID;
                     areaId = ele.AREA_ID
                     areaName = ele.AREA_NAME
@@ -516,7 +673,6 @@ export default {
                             if(areaName.slice(3,6) == ele.caption){
                                 addrArr.push(ele.szm)
                                 ele.list.forEach(ele => {
-                                    // console.log(ele)
                                     if(areaName.slice(6) == ele.caption){
                                         addrArr.push(ele.szm)                              
                                     }
@@ -630,6 +786,8 @@ export default {
                     this.areaIds = ele.bootList[0].shop_booth_id
                 }
             })
+            this.getAllSuppliers()
+            this.getGoodsFun()
         },
         // 品种
         formatter(row, column){
@@ -694,6 +852,11 @@ export default {
             this.getGoodsFun()
         },
         focusFun(){
+            this.page = 1
+            this.types = 1
+            this.query = ''
+            this.tableData2 = []
+            this.getGoodsFun()
             let obj = {
                 0: '',
                 1: '',
@@ -705,7 +868,7 @@ export default {
             };
             this.tableData.push(obj)                                         
         },
-        // 添加商品
+        // 添加选择商品
         addGoods(ele,ele2){
             let states = false;
             let arr = [],newArr = [];
@@ -799,7 +962,9 @@ export default {
                 }
                 purchase(boothData)
                 .then(res => {
-                    this.tableData2 = res.data.purchaseList;
+                    let arr = res.data.purchaseList
+                    
+                    this.tableData2 = this.tableData2.concat(arr)
                     this.num = res.data.goodsinfo.total
                 })
                 .catch(res => {
@@ -816,7 +981,9 @@ export default {
                 }
                 purchase(boothData)
                     .then(res => {
-                        this.tableData2 = res.data.purchaseList;
+                    
+                        let arr = res.data.purchaseList
+                        this.tableData2 = this.tableData2.concat(arr)
                         this.num = res.data.goodsinfo.total
                     })
                     .catch(res => {
@@ -906,6 +1073,8 @@ export default {
                         this.form.in_date = param.in_date
                         if(this.$route.params.types == 'again'){
                             this.tzId = ''
+                        }else{
+                            this.getImgFun()
                         }
                         this.suppliersList.forEach((ele)=>{
                             // console.log(ele)
@@ -1152,6 +1321,11 @@ export default {
                 }
                 //TzUpdate
             }else{
+                console.log(222)
+                this.getAddrList()//获取地区列表
+                this.getGhdwFun()
+                this.getGoodsFun()
+                this.getAllSuppliers()
                 let addrArr = [];
                 if(this.$route.params.param.area_origin_name){
                     let areaName = this.$route.params.param.area_origin_name    
@@ -1239,12 +1413,12 @@ export default {
                         detailsArr[i][5] = detailsArr[i].bzq
                         detailsArr[i].shopId = detailsArr[i].shop_booth_id
                     }
-                    // console.log(tzListArr[0])
                     this.tableData = detailsArr
                     this.userdefine = tzListArr[0].USERDEFINE
                     if(this.$route.params.types == 'again'){
                         this.is_oc_upload = ''
                     }else{
+                        this.isImgList = true
                         this.is_oc_upload = tzListArr[0].IS_OC_UPLOAD
                     }
                     this.ghdwId = tzListArr[0].SUPPILER_ID
@@ -1297,6 +1471,57 @@ export default {
 <style lang='less' scoped>
     .content{
         height: 100%;
+        .bigimg-box{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 666;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            .close{
+                position: fixed;
+                top: 0;
+                right: 0;
+                z-index: 666;
+                width: 50px;
+                height: 50px;
+                text-align: center;
+                line-height: 50px;
+                color: #fff;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            .images{
+                text-align: center;
+            }
+            .el-carousel{
+                margin: 50px 20px;
+                padding: 10px 0;
+                width: 100%;
+                height: 100%;
+                .image{
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    img{
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                }
+            }
+            .el-carousel__container{
+                width: 100%;
+                height: 100%;
+            }
+            .el-carousel__item{
+                color: #475669;
+                font-size: 14px;
+                margin: 0;
+            }
+        }
         .msg{
             font-size: 14px;
             margin: 12px 0;
@@ -1313,6 +1538,29 @@ export default {
             }
             .el-select,.el-input,.el-cascader{
                 width: 170px;
+            }
+        }
+        .msg-item{
+            display: flex;
+            margin: 10px 0;
+            .img-list{
+                ul{
+                    display: flex;
+                    flex-wrap:wrap;
+                    li{
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        margin-right: 10px;
+                        img{
+                            width: 50px;
+                            height: 50px;
+                        }
+                    }
+                }
+            }
+            p{
+                color: #999;
             }
         }
         .box{

@@ -1,72 +1,50 @@
 <template>
-    <div class="content journal">
+    <div class="content">
+        <div class="content journal">
         <div class="searchs" ref="searchs">
             <div class="search">
-                <!--展开-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}">
-                    <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="节点信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="主键ID、节点ID、节点名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="存入表名">
-                        <el-select v-model="form.crbm" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in crbmArr" :key="index" :label="item.TABLE_NAME_CH"
+                <el-form ref="form" :inline="true" :model="form" label-width="80px">
+                    <el-form-item label="企业类型">
+                        <el-select v-model="form.enterprise" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in enterpriseArr" :key="index" :label="item.TABLE_NAME_CH"
                             :value="item.TABLE_NAME">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="执行结果">
-                        <el-select v-model="form.zxjg" filterable clearable placeholder="请选择">
-                            <el-option value="1" label="成功">成功</el-option>
-                            <el-option value="2" label="失败">失败</el-option>
+                    <el-form-item label="日期" style="width: 380px;" >
+                        <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期" 
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="填报企业">
+                        <el-select v-model="form.tbqy" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in tbqyArr" :key="index" :label="item.TABLE_NAME_CH"
+                            :value="item.TABLE_NAME">
+                            </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="文件名称">
-                        <el-input v-model="form.name" clearable placeholder="请输入"></el-input>
+                    <el-form-item label="状态">
+                        <el-select v-model="form.states" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in statesArr" :key="index" :label="item.TABLE_NAME_CH"
+                            :value="item.TABLE_NAME">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
-                <!--收起-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'none'} : {display: 'block'}" v-if="isShow">
-                    <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="节点信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="主键ID、节点ID、节点名称"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
-                        <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                    </el-form-item>
-                </el-form>
-                <p class="unfold" v-if="isShow" @click="unfoldFun">{{unfold}}筛选条件</p>
             </div>
         </div>
         <div class="table">
             <div class="title">
-                <p class="tz-title">解析运行日志</p>
+                <p class="tz-title">报表预览</p>
                 <div>
-                    <el-button type="primary" @click="allDeleteFun">批量删除</el-button><!---->
-                    <!--<el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
-                    <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>
-                --></div><!--
+                    <el-button type="primary" @click="allDeleteFun"> + 添加</el-button><!---->
+                    <el-button type="primary" id="btn-file" plain @click="isShowFun">批量导入</el-button>
+                </div>
             </div>
             <div class="file-btns" v-if="isfile">
                 <div>
@@ -77,18 +55,10 @@
                         </form>
                     </span>
                 </div>
-                <div>
-                    <span class="submit">
-                        批量修改
-                        <form id="upload" enctype="multipart/form-data" method="post"> 
-                            <input type="file" class="file" ref="files" @change="fileFun($event,2)">
-                        </form>
-                    </span>
-                </div>-->
+                
             </div>
             <div class="tables" >
-                <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
-                    <el-table-column type="selection" width="50"></el-table-column>
+                <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="node_id" label="节点ID"> </el-table-column>
                     <el-table-column prop="node_name" label="节点名称"> </el-table-column>
                     <el-table-column prop="table_name" label="存入表名"> </el-table-column>
@@ -106,16 +76,17 @@
                     </el-table-column>-->
                     <el-table-column label="操作" width="100">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
-                            <el-button type="text" :style="(scope.row.id && scope.row.job_exception) ? {display: 'inline-block'} : {display: 'none'}" size="small" @click="dowoloadFun(scope.row)">下载</el-button>
-                            <el-button type="text" :style="(scope.row.id && scope.row.job_exception) ? {display: 'inline-block'} : {display: 'none'}" size="small" @click="deleteFun(scope.row)">删除</el-button>
-                        </template>
+                            <el-button type="text" size="small" @click="viewFun(scope.row)">查看报价单</el-button>
+                            <el-button type="text" size="small" @click="deleteFun(scope.row)">尚处报价单</el-button>
+                            <el-button type="text" size="small" @click="merchantFun(scope.row)">按商户查看</el-button>
+                            </template>
                     </el-table-column>
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
         </div>
+    </div>
     </div>
 </template>
 
@@ -156,12 +127,8 @@ function getNowFormatDate() {//获取当前时间
             + seperator2 + date.getSeconds();
     return currentdate
 }
-String.prototype.trim=function(){
-  return this.replace(/(^\s*)|(\s*$)/g,'');
-}
-import {ParseMonLog,QueryTableName,DownloadErrorLog,DeleteParseMonLogById} from '../../js/traceEquipment/traceEquipment.js'
 export default {
-    name:"journal",
+    name:"retailRoleList",
     data() {
         return {
             startTime: '',
@@ -169,22 +136,20 @@ export default {
             isShow: true,
             form: {
                 dataTime: '',
-                msg: '',
-                crbm: '',
-                zxjg: '',
-                name: '',
+                enterprise: '',
+                tbqy: '',
+                states: '',
             },
-            unfold: '收起',
-            show: true,
             inline: true,
-            crbmArr: [],
             page: 1,
             cols: 15,
             num: 0,
-            total: '',
             tableData: [],
             userId: '',
-            ids: [],
+            enterpriseArr: [],
+            tbqyArr: [],
+            statesArr: [],
+            isfile: false,
         }
     },
     mounted() {
@@ -194,139 +159,22 @@ export default {
         arr.push(this.endTime)
         this.form.dataTime = arr
         this.userId = localStorage.getItem('userId')
-        this.getDataFun()
-        this.getQueryTableName()
     },
     methods: {
-        deleteFun(ele){
-            this.$confirm('你确定要删除吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                let params = {
-                    ids: ele.id,
-                }
-                DeleteParseMonLogById(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        console.log(res)
-                    })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
-        },
-        changeFun(item){
-            this.ids = []
-            item.forEach(ele => {
-                this.ids.push(ele.id)
-            })
-        },
-        // 批量删除
-        allDeleteFun(){
-            this.$confirm('你确定要批量删除吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                let params = {
-                    ids: this.ids.join(','),
-                }
-                DeleteParseMonLogById(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        console.log(res)
-                    })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
-        },
-        // 下载
-        dowoloadFun(ele){
-            let params = {
-                id: ele.id
-            }
-            DownloadErrorLog(params)
-                .then(res => {
-                    this.downFile(res)
-                })
-                .catch(() => {
-                    this.$message.error("出错啦!");
-                })
-        },
-        downFile (data) {
-            let time = getNowFormatDate()
-            console.log(time)
-            if (!data) { return }
-            let url = window.URL.createObjectURL(new Blob([data]))
-            let link = document.createElement('a')
-            link.style.display = 'none';
-            link.href = url
-            link.setAttribute('download', 'errorLog' + time + '.txt')
-            
-            document.body.appendChild(link)
-            link.click()
-        },
-        getQueryTableName(){
-            QueryTableName('')
-                .then(res => {
-                    this.crbmArr = res.data.table_name
-                })
-                .catch(res => {
-                    console.log(res);
-                })
+        viewFun(){
 
         },
-        getDataFun(){
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            let params = {
-                start_time: this.startTime,
-                end_time: this.endTime,
-                mon_log_base: this.form.msg,
-                execute_result: this.form.name,
-                table_name: this.form.crbm,
-                result: this.form.zxjg,
-                cols: this.cols,
-                page: this.page,
-            }
-            ParseMonLog(params)
-                .then(res => {
-                    this.tableData = res.data.mon_log_list
-                    this.num = res.data.mon_log.total
-                    loading.close();
-                })
-                .catch((res) => {
-                    console.log(res)
-                    loading.close();
-                })
+        deleteFun(){
+
         },
-        viewFun(ele){
-            this.$router.push({name: 'ViewJournal',params: {param: ele}})
+        merchantFun(){
+            
+        },
+        isShowFun(){
+            this.isfile = true
+        },
+        getDataFun(){
+
         },
         searchFun(){
             this.page = 1
@@ -337,22 +185,12 @@ export default {
             this.page = val
             this.getDataFun()
         },
-        unfoldFun(){
-            if(this.show == false){
-                this.show = true
-                this.unfold = '收起'
-            }else{
-                this.show = false
-                this.unfold = '展开'
-            }
-        },
         clearFun(){
             this.form = {
                 dataTime: '',
-                msg: '',
-                crbm: '',
-                zxjg: '',
-                name: '',
+                enterprise: '',
+                tbqy: '',
+                states: '',
             }
             this.page = 1
             this.getTime()
@@ -573,13 +411,4 @@ export default {
         
     }
 </style>
-<style lang="less">
-    .journal{
-        .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
-            line-height: 24px;
-        }
-        .el-input--suffix .el-input__inner{
-            padding-right: 10px !important;
-        }
-    }
-</style>
+

@@ -38,7 +38,7 @@
                         </template>    
                     </el-table-column>
                     <el-table-column
-                        label="是否生成下游台账" width="140">
+                        label="是否生成下游台账" width="160">
                         <template slot-scope="scope">
                             <el-switch
                             v-model="scope.row.is_auto"
@@ -95,6 +95,7 @@ export default {
     },
     methods: {
         changeFun(ele){
+            console.log(ele)
             let obj = {
                 shop_booth_id: ele.bootList[0].shop_booth_id,
                 is_auto: ele.is_auto

@@ -252,37 +252,43 @@
             </div>
         </div>
         <div class="tab">
-            <div class="list-title">巡检信息</div>
+            <div class="list-title">变更内容</div>
             <div class="tab-list">
                 <div class="data">
-                    <div class="title">巡检时间</div>
-                    <div class="msg">{{inspect_time}}</div>
+                    <div class="title">变更时间</div>
+                    <div class="msg">{{c_time ? c_time : '无'}}</div>
                 </div>
                 <div class="data">
-                    <div class="title">巡检人</div>
-                    <div class="msg">{{name}}</div>
+                    <div class="title">操作人</div>
+                    <div class="msg">{{name ? name : '无'}}</div>
                 </div>
                 <div class="data">
-                    <div class="title">附件</div>
-                    <div class="msg" v-if="imgArr.length > 0">
-                        <div class="msg-item">   
-                            <div class="img-list">
-                                <ul>
-                                    <li v-for="(item,index) in imgArr" :key="index" @click="bigImgFun(item)">
-                                        <figure class="image">
-                                            <!--<p class="icon-delete" @click="removeFun(1,item)">-</p>-->
-                                            <img :src="item" v-if="item">
-                                        </figure>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="title">操作方式</div>
+                    <div class="msg">
+                        <p v-if="c_type == 1">批量</p>
+                        <p v-else-if="c_type == 0">手动</p>
+                        <p v-else>无</p>
                     </div>
-                    <div class="msg" v-else>无</div>
                 </div>
                 <div class="data">
-                    <div class="title">备注</div>
-                    <div class="msg">{{remark ? remark : '无'}}</div>
+                    <div class="title">变更内容</div>
+                    <div class="msg">{{c_item ? c_item : '无'}}</div>
+                </div>
+                <div class="data">
+                    <div class="title">变更前</div>
+                    <div class="msg">
+                        <p v-if="c_item != '附件'">{{c_before ? c_before : '无'}}</p>
+                        <img v-else style="width:50px;height: 50px;margin-right: 5px;" 
+                            v-for="(item,index) in c_before" :key="index" :src="item" alt="" @click="bigImgFun(item)">
+                    </div>
+                </div>
+                <div class="data">
+                    <div class="title">变更后</div>
+                    <div class="msg">
+                        <p  v-if="c_item != '附件'">{{c_after ? c_after : '无'}}</p>
+                        <img v-else style="width:50px;height: 50px;margin-right: 5px;"
+                            v-for="(item,index) in c_after" :key="index" :src="item" alt="" @click="bigImgFun(item)">
+                    </div>
                 </div>
             </div>
         </div>
@@ -303,7 +309,7 @@ import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase2,QueryBusi
 import {uploadPhotos} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
-    name:"viewInspection",
+    name:"viewChangeGl",
     data() {
         return {
             btn: '修改',
@@ -342,7 +348,6 @@ export default {
             inspect_time: '',
             inspect_id: '',
             file: '',
-            imgArr1: [],
             imgArr: [],
             param: {},
             isBigImg: false,
@@ -354,22 +359,65 @@ export default {
             zcggArr: [],
             sccjArr: [],
             remark: '',
+            c_time: '',
+            name: '',
+            c_type: '',
+            c_item: '',
+            c_before: '',
+            c_after: '',
             management2: '',
             ssNode_name2: '',
         }
     },
     mounted() {
         this.userId = localStorage.getItem('userId')
-        // console.log(this.$route.params)
+        let param = this.$route.params.param
+        this.c_time = param.c_time
+        this.name = param.name
+        this.c_type = param.c_type
+        this.c_item = param.c_item
+        this.c_before = param.c_before
+        this.c_after = param.c_after
+        this.inspect_id = param.inspect_id
+        this.ruleForm.node = param.node_code // 关联节点信息
+        this.ssNode_name2 = param.node_name // 节点名称
+        this.zcType_name = param.assets_type // 资产类型
+        this.ssq_name = param.sub_period // 所属期
+        this.ruleForm.ssq = param.sub_period_id
+        this.zcState_name = param.a_conf_item // 资产状态
+        this.ruleForm.state = param.a_conf_id
+        this.ruleForm.management = param.merchant_id // 关联商户信息
+        this.management2 = param.merchant_name// 商户名称
+        this.ruleForm.name = param.assets_name // 资产名称
+        this.ruleForm.tmh = param.bar_code // 条码号（SW）
+        this.ruleForm.xlh = param.serial_num // 序列号 
+        this.ruleForm.ggxh = param.specifications // 规格型号
+        this.ruleForm.sccj = param.manufacturer // 生产厂家
+        this.ruleForm.ip = param.ip // IP
+        this.ruleForm.jd = param.longitude // 经度
+        this.ruleForm.bz = param.remark // 备注
+        this.ruleForm.wd = param.latitude
+        this.assets_id = param.assets_id // 资产id
+        this.create_way = param.create_way
+        this.creater = param.name
+        this.create_time = param.create_time.substring(0,18)
+        let img_urls = param.image_url
+        let imgArr1 = img_urls.split(','),obj = {};
+        imgArr1.forEach(val => {
+            obj = {
+                img_url: val
+            }
+            this.imgArr1.push(obj)
+        })
+        console.log(this.$route.params)
         this.getQueryAssetsSpecifications()
         this.getQueryAssetsNames()
         this.getQueryAssetsManufacturers()
         this.getQueryNodeBase()
         this.getQueryAssetsType()
         this.getQueryAssetsConf()
-        let param = this.$route.params
-        this.inspect_id = param.inspect_id
-        this.getMsgFun()
+        this.getQueryBusiness()
+        // this.getMsgFun()
     },
     methods: {
         // 查询所有资产规格
@@ -428,7 +476,67 @@ export default {
             this.btn = '修改'
             this.imgArr1 = []
             this.imgArr = []
-            this.getMsgFun()
+            let param = this.$route.params.param
+            this.ruleForm.node = param.node_code // 关联节点信息
+            this.ssNode_name2 = param.node_name // 节点名称
+            this.zcType_name = param.assets_type // 资产类型
+            this.ssq_name = param.sub_period // 所属期
+            this.ruleForm.ssq = param.sub_period_id
+            this.zcState_name = param.a_conf_item // 资产状态
+            this.ruleForm.state = param.a_conf_id
+            this.ruleForm.management = param.merchant_id // 关联商户信息
+            this.management2 = param.merchant_name// 商户名称
+            this.shArr.forEach(val => {
+                if(val.BIZ_ID == this.$route.params.param.merchant_id){
+                    this.management = val.BIZ_NAME
+                }
+            })
+            this.nodeArr.forEach(val => {
+                if(val.NODE_ID == this.$route.params.param.node_code){
+                    this.ssNode_name = val.NODE_NAME
+                }
+            })
+            this.ruleForm.name = param.assets_name // 资产名称
+            this.ruleForm.tmh = param.bar_code // 条码号（SW）
+            this.ruleForm.xlh = param.serial_num // 序列号 
+            this.ruleForm.ggxh = param.specifications // 规格型号
+            this.ruleForm.sccj = param.manufacturer // 生产厂家
+            this.ruleForm.ip = param.ip // IP
+            this.ruleForm.jd = param.longitude // 经度
+            this.ruleForm.bz = param.remark // 备注
+            this.ruleForm.wd = param.latitude
+            this.assets_id = param.assets_id // 资产id
+            this.create_way = param.create_way
+            this.creater = param.name
+            this.create_time = param.create_time.substring(0,18)
+            let arr = []
+            if(this.$route.params.param.assets_type){
+                this.options.forEach(val => {
+                    if(val.assets_type == this.$route.params.param.assets_type){
+                        arr.unshift(val.assets_type_id)
+                    }else{
+                        if(val.child_list.length > 0){
+                            val.child_list.forEach(val =>{
+                                if(val.assets_type == this.$route.params.param.assets_type){
+                                    arr.unshift(val.assets_type_id)
+                                    arr.unshift(val.parent_ass_type_id)
+                                }
+                            })
+                        }
+                    }
+                })
+                this.ruleForm.type = arr
+            }
+            let img_urls = this.$route.params.param.image_url
+            let imgArr1 = img_urls.split(','),obj = {};
+            imgArr1.forEach(val => {
+                obj = {
+                    img_url: val
+                }
+                this.imgArr1.push(obj)
+            })
+            // this.getMsgFun()
+            this.getQueryBusiness()
         },
         closeFun2(){
             this.imgArrs = []
@@ -444,24 +552,14 @@ export default {
                     let param = res.data.assetsBase[0]
                     this.param = param
                     this.ruleForm.node = param.node_code // 关联节点信息
-                    this.ssNode_name2 = param.node_name // 节点名称
+                    this.ssNode_name = param.node_name // 节点名称
                     this.zcType_name = param.assets_type // 资产类型
                     this.ssq_name = param.sub_period // 所属期
                     this.ruleForm.ssq = param.sub_period_id
                     this.zcState_name = param.a_conf_item // 资产状态
                     this.ruleForm.state = param.a_conf_id
                     this.ruleForm.management = param.merchant_id // 关联商户信息
-                    this.management2 = param.merchant_name// 商户名称
-                    this.shArr.forEach(val => {
-                        if(val.BIZ_ID == this.$route.params.param.merchant_id){
-                            this.management = val.BIZ_NAME
-                        }
-                    })
-                    this.nodeArr.forEach(val => {
-                        if(val.NODE_ID == this.$route.params.param.node_code){
-                            this.ssNode_name = val.NODE_NAME
-                        }
-                    })
+                    this.management = param.merchant_name// 商户名称
                     this.ruleForm.name = param.assets_name // 资产名称
                     this.ruleForm.tmh = param.bar_code // 条码号（SW）
                     this.ruleForm.xlh = param.serial_num // 序列号 
@@ -487,7 +585,7 @@ export default {
                             this.imgArr1.push(obj)
                         }
                     })
-                    this.getQueryBusiness()
+                    // this.getQueryBusiness()
                     let inspectList = res.data.inspectList[0]
                     this.name = inspectList.name
                     this.remark = inspectList.remark
@@ -513,7 +611,7 @@ export default {
                 .then(res => {
                     if (res.result == true) {
                         this.$message.success(res.message);
-                        this.$router.push({name: 'Inspection'})
+                        this.$router.push({name: 'ChangeGl'})
                     }else{
                         this.$message.error(res.message);
                     }
@@ -614,7 +712,7 @@ export default {
                 .then(res => {
                     if (res.result == true) {
                         this.$message.success(res.message);
-                        this.$router.push({name: 'Inspection'})
+                        this.$router.push({name: 'ChangeGl'})
                         this.btn = '修改'
                     }else{
                         this.$message.error(res.message);
@@ -704,14 +802,14 @@ export default {
                     })
                     this.options = res.data.assetsType
                     let arr = []
-                    if(this.$route.params.assets_type){
+                    if(this.$route.params.param.assets_type){
                         this.options.forEach(val => {
-                            if(val.assets_type == this.$route.params.assets_type){
+                            if(val.assets_type == this.$route.params.param.assets_type){
                                 arr.unshift(val.assets_type_id)
                             }else{
                                 if(val.child_list.length > 0){
                                     val.child_list.forEach(val =>{
-                                        if(val.assets_type == this.$route.params.assets_type){
+                                        if(val.assets_type == this.$route.params.param.assets_type){
                                             arr.unshift(val.assets_type_id)
                                             arr.unshift(val.parent_ass_type_id)
                                         }
@@ -945,18 +1043,19 @@ export default {
             }
             .tab-list{
                 display: flex;
-                .data{
-                    padding: 20px;
-                    width: 20%;
-                    font-size: 14px;
-                    .title{
-                        margin-bottom: 10px;
-                        font-weight: bold;
-                    }
-                    .msg{
-                        line-height: 30px;
-                        color: #999;
-                    }
+                flex-wrap: wrap;
+            }
+            .data{
+                margin: 20px;
+                width: 20%;
+                font-size: 14px;
+                .title{
+                    margin-bottom: 10px;
+                    font-weight: bold;
+                }
+                .msg{
+                    line-height: 30px;
+                    color: #999;
                 }
             }
         }

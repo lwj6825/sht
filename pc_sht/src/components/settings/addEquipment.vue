@@ -25,7 +25,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="设备IP"  prop="ip">
-                    <el-input v-model="form.ip" placeholder="请输入" clearable></el-input>
+                    <div class="tips-box">
+                        <el-input v-model="form.ip" placeholder="请输入" style="width: 300px;" clearable></el-input>
+                        <p class="tips">{{tips}}</p>
+                    </div>
                 </el-form-item>
                 <el-form-item label="ICCID">
                     <el-input v-model="form.iccid" placeholder="请输入" clearable></el-input>
@@ -168,7 +171,8 @@ export default {
             equipmenBoothId:'',//编辑时设备下的boothID
             form2: {
                 name: ''
-            }
+            },
+            tips: '',
         }
     },
     created(){
@@ -253,11 +257,15 @@ export default {
                             ssid: this.form.ssid,
                             password: this.form.password
                         }
-                        console.log(data)
                         NewAddEquipment(data)
                             .then(res => {
-                                this.$message.success('添加成功');
-                                this.$router.push('equipmentMsg')
+                                if (res.result == true) {
+                                    this.$message.success(res.message);
+                                    this.$router.push('equipmentMsg')
+                                }else{
+                                    this.tips = res.message
+                                    // this.$message.error(res.message);
+                                }
                             })
                             .catch(res => {
                                 this.$message.warning(res.message)
@@ -285,7 +293,8 @@ export default {
                                     this.$message.success(res.message);
                                     this.$router.push('equipmentMsg')
                                 }else{
-                                    this.$message.error(res.message);
+                                    // this.$message.error(res.message);
+                                    this.tips = res.message
                                 }
                             })
                             .catch(res => {
@@ -332,6 +341,15 @@ export default {
     .content{
         height: 100%;
         box-sizing: border-box;
+        .tips-box{
+            display: flex;
+            width: 800px;
+            .tips{
+                margin-left: 20px;
+                color: red;
+                font-size: 12px;
+            }
+        }
         .panal{
             width: 100%;
             height: 100%;

@@ -13,7 +13,7 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="searchFun" class="search-btn white-bth">搜索</el-button>
-                        <el-button class="file-btn no-btn">导出</el-button>
+                        <!--<el-button class="file-btn no-btn">导出</el-button>-->
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
@@ -72,7 +72,7 @@
                     <el-form-item label="创建时间">
                         <el-date-picker
                             v-model="form2.time"
-                            type="date"
+                            type="date" disabled
                             format="yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
                             placeholder="选择日期">

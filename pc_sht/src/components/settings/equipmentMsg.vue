@@ -10,7 +10,7 @@
             </div>
             <div class="type-item left-distance">
                 <span class='label'>商户信息</span>
-                <el-select class="input" v-model="sh_name" placeholder="请选择" clearable>
+                <el-select class="input" v-model="sh_name" placeholder="请选择" clearable filterable>
                     <el-option v-for="(item,index) in shArr" :key="index" :label="item.bootList[0].booth_name" :value="item.bootList[0].booth_name">
                     </el-option>
                 </el-select>

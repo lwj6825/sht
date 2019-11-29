@@ -233,6 +233,7 @@
                         <el-tab-pane label="在线商户" name="first">
                             <el-table :data="tableData2" style="width: 100%" @sort-change="sortChange2">
                                 <el-table-column prop="seller_booth_name" label="商户名称"></el-table-column>
+                                <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                                 <el-table-column prop="in_date" label="电子秤最早在线时间" ></el-table-column>
                             </el-table>
                             <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page2" :page-size="cols2" :total="num2"
@@ -241,7 +242,6 @@
                         <el-tab-pane label="不在线商户" name="second">
                                 <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3">
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
-                                    <!-- <el-table-column prop="days" label="近30天连续不在线天数" ></el-table-column> -->
                                 </el-table>
                                 <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num2"
                                 @current-change="handleCurrentChange3"></el-pagination>
@@ -1246,7 +1246,7 @@ export default {
             let str = 'node_id=' + this.loginId + '&page=' + this.page2 + '&cols=' + this.cols2 + '&order=' + this.order2
             GetBizOnlineTime(str)
                 .then(res => {
-                    // console.log(res)
+                    console.log(res)
                     this.tableData2 = res.data.list 
                     this.count = res.data.allBizNum  //电子秤总数
                     this.nums = res.data.total; //当前在线数

@@ -42,11 +42,11 @@
                 <div class="list">
                     <div class="data">
                         <div class="title">所属节点</div>
-                        <div class="msg">{{ssNode_name ? ssNode_name : '无'}}</div>
+                        <div class="msg">{{ssNode_name2 ? ssNode_name2 : '无'}}</div>
                     </div>
                     <div class="data">
                         <div class="title">所属商户</div>
-                        <div class="msg">{{management ? management : '无'}}</div>
+                        <div class="msg">{{management2 ? management2 : '无'}}</div>
                     </div>
                     <div class="data">
                         <div class="title">IP</div>
@@ -417,6 +417,8 @@ export default {
             nameArr: [],
             zcggArr: [],
             sccjArr: [],
+            management2: '',
+            ssNode_name2: '',
         }
     },
     mounted() {
@@ -434,7 +436,7 @@ export default {
         }
         let param = this.$route.params.param
         this.ruleForm.node = param.node_code // 关联节点信息
-        this.ssNode_name = param.node_name // 节点名称
+        this.ssNode_name2 = param.node_name // 节点名称
         this.zcType_name = param.assets_type // 资产类型
         // this.ruleForm.type = param.assets_type_id
         this.ssq_name = param.sub_period // 所属期
@@ -442,7 +444,7 @@ export default {
         this.zcState_name = param.a_conf_item // 资产状态
         this.ruleForm.state = param.a_conf_id
         this.ruleForm.management = param.merchant_id // 关联商户信息
-        this.management = param.merchant_name// 商户名称
+        this.management2 = param.merchant_name// 商户名称
         this.ruleForm.name = param.assets_name // 资产名称
         this.ruleForm.tmh = param.bar_code // 条码号（SW）
         this.ruleForm.xlh = param.serial_num // 序列号 
@@ -528,7 +530,7 @@ export default {
             this.btn = '修改'
             let param = this.$route.params.param
             this.ruleForm.node = param.node_code // 关联节点信息
-            this.ssNode_name = param.node_name // 节点名称
+            this.ssNode_name2 = param.node_name // 节点名称
             this.zcType_name = param.assets_type // 资产类型
             // this.ruleForm.type = param.assets_type_id
             this.ssq_name = param.sub_period // 所属期
@@ -536,7 +538,17 @@ export default {
             this.zcState_name = param.a_conf_item // 资产状态
             this.ruleForm.state = param.a_conf_id
             this.ruleForm.management = param.merchant_id // 关联商户信息
-            this.management = param.merchant_name// 商户名称
+            this.shArr.forEach(val => {
+                if(val.BIZ_ID == this.$route.params.param.merchant_id){
+                    this.management = val.BIZ_NAME
+                }
+            })
+            this.nodeArr.forEach(val => {
+                if(val.NODE_ID == this.$route.params.param.node_code){
+                    this.ssNode_name = val.NODE_NAME
+                }
+            })
+            this.management2 = param.merchant_name// 商户名称
             this.ruleForm.name = param.assets_name // 资产名称
             this.ruleForm.tmh = param.bar_code // 条码号（SW）
             this.ruleForm.xlh = param.serial_num // 序列号 
@@ -851,6 +863,11 @@ export default {
                 .then(res => {
                     // console.log(res)
                     this.nodeArr = res.data.nodeBase
+                    this.nodeArr.forEach(val => {
+                        if(val.NODE_ID == this.$route.params.param.node_code){
+                            this.ssNode_name = val.NODE_NAME
+                        }
+                    })
                 })
                 .catch(res => {
                     console.log(res);
@@ -865,6 +882,11 @@ export default {
                     .then(res => {
                         // console.log(res)
                         this.shArr = res.data.business
+                        this.shArr.forEach(val => {
+                            if(val.BIZ_ID == this.$route.params.param.merchant_id){
+                                this.management = val.BIZ_NAME
+                            }
+                        })
                     })
                     .catch(res => {
                         console.log(res);
@@ -1171,6 +1193,9 @@ export default {
         .el-carousel__container{
             width: 800px;
             height: 600px;
+        }
+        .el-table{
+            color: #999;
         }
     }
 </style>

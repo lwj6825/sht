@@ -89,7 +89,10 @@ export default {
             fromPrevPageMsg:"",//返回上级数据
             toPrevPageMsg:'',
             typeArr:[],//二级菜单分类
-            loginName: '管理员'
+            loginName: '管理员',
+            account: '',
+            password: '',
+            remember: '',
         }
     },
     created() {
@@ -112,6 +115,13 @@ export default {
                 })
         }else{
             this.$router.push("/")
+        }
+        if(localStorage.getItem('remember')){
+            this.remember = localStorage.getItem('remember')
+            if(localStorage.getItem('remember') == 'true'){
+                this.account = localStorage.getItem('account')
+                this.password = localStorage.getItem('password');
+            }
         }
     },
     watch:{
@@ -159,6 +169,55 @@ export default {
                             })
                             this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
                                 if(ele.node == "statistical"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                        if(ele.id == parentId){
+                                            this.parentName = ele.text;
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                   }
+               })
+            }else if(to.meta.node == 'retail'){
+                // this.enterChildPage = false;
+                this.mainList.forEach(ele => {
+                   if(ele.node == 'retail'){
+                        if(ele.children.id == toId){
+                            this.enterChildPage = false;
+                        }else{
+                            this.enterChildPage = true;
+                            this.mainList.forEach(ele => {
+                                if(ele.node == "retail"){//market页操作
+                                    ele.children.nodeList.forEach(val=> {
+                                        if(val.id == toId){
+                                            this.parentName = ele.children.nav_title;
+                                            this.childrenName = val.text;
+                                        }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得子级名称
+                                if(ele.node == "retail"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                       if(ele.children && ele.children.nodeList.length > 0){
+                                           ele.children.nodeList.forEach(val => {
+                                               if(val.id == toId ){
+                                                    parentId = val.parentId;
+                                                    if(to.params.name){
+                                                        this.childrenName = to.params.name;
+                                                    }else{
+                                                        this.childrenName = val.text;
+                                                    }
+
+                                                }
+                                           })
+                                       }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
+                                if(ele.node == "retail"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
                                             this.parentName = ele.text;
@@ -220,7 +279,7 @@ export default {
             }else{
                 this.mainList.forEach(ele=> {
                     if(ele.node == to.meta.node){
-                        if(ele.children && ele.children.node && ele.children.node != 'district' && ele.children && ele.children.node && ele.children.node != 'statistical'){
+                        if(ele.children && ele.children.node && ele.children.node != 'district' && ele.children && ele.children.node && ele.children.node != 'statistical' && ele.children && ele.children.node && ele.children.node != 'retail'){
                             if(ele.children.nodeList.length > 0){
                                 ele.children.nodeList.forEach(ele=>{
                                     if(ele.id == toId){
@@ -302,6 +361,19 @@ export default {
                     }
                 })
             }else if(tabTd == '158'){//是区域页
+                this.isShowLevelTwo = false;
+                this.isHasDistance = false;
+                this.levelOneCurrId = tabTd;
+                this.mainList.forEach(ele => {
+                    if(ele.id == tabTd){
+                        this.levelThreeMenu.push({
+                            id:ele.id,
+                            title:ele.children.nav_title
+                        })
+                        this.$router.push({path:`/home/${ele.node}/${ele.children.url}`});
+                    }
+                })
+            }else if(tabTd == '389'){//是报价
                 this.isShowLevelTwo = false;
                 this.isHasDistance = false;
                 this.levelOneCurrId = tabTd;
@@ -402,7 +474,21 @@ export default {
                     this.enterChildPage = false;
                     this.$router.push({name:'StatisticsMsg'})
                 }else{
-                    console.log(222)
+                    this.enterChildPage = true;
+                    this.$router.push({path:this.fromPrevPageMsg.url})
+                }
+            }if(this.$route.meta.node == 'retail'){
+                let name = '';
+                this.mainList.forEach(ele => {
+                    if(ele.node == 'retail'){
+                        name = ele.children.nav_title
+                    }
+                })
+
+                if(this.parentName == name){
+                    this.enterChildPage = false;
+                    this.$router.push({name:'RetailList'})
+                }else{
                     this.enterChildPage = true;
                     this.$router.push({path:this.fromPrevPageMsg.url})
                 }
@@ -491,6 +577,11 @@ export default {
         backLogin(){//退出
             localStorage.clear();
             sessionStorage.clear();
+            if(this.remember == 'true'){
+                localStorage.setItem('account',this.account)
+                localStorage.setItem('password',this.password);
+                localStorage.setItem('remember',this.remember);
+            }
             Loginout()
                 .then(res => {
                     this.$router.push({path:'/'})
@@ -663,7 +754,10 @@ export default {
             background: url('../../assets/images/management.svg') no-repeat center center;
             background-size: 100% 100%;
         }
-        
+        .icon-retail{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
         .level-two-menu{
             position: fixed;
             left: 50px;
