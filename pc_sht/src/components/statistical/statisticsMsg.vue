@@ -125,8 +125,12 @@
                         @click="handleBtnQuery()" 
                 >查询</el-button>
             </div>
-            <div class="no_more" v-if="goodArr.length==0">暂无数据</div>
+           
+            <!-- <div class="no_more" v-if="merchantsArr.length==0">暂无数据</div> -->
             <el-tabs v-model="activeName" @tab-click="handleClick">
+                 <div class="no_more" v-show="show" >暂无数据</div>
+                 <!-- <div class="no_more" v-else></div> -->
+                  <!-- v-if="goodArr.length==0&&merchantsArr.length==0" -->
                 <el-tab-pane label="商品交易额" name="first">
                     <div class="box">
                         <div class="list-title1">
@@ -143,8 +147,8 @@
                                             <p class="name"  @click='getshopList(item.plu_name)'>{{item.plu_name}}</p>
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
-                                        <p v-if="goodArr.length==0" class="no_more1" >暂无数据</p>
-                                        <p v-else class="no_more1" ></p>
+                                        <p v-if="goodArr.length==0" class="no_more1" >暂无数据</p> 
+                                        <p v-else class="no_more1" ></p> 
                                         <p class="lookMore" v-if="goodArr.length!=0" @click='More1()'>查看全部>></p>
                                     </ul>
                                 </div>
@@ -169,9 +173,9 @@
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
                                     </ul>
-                                    <p v-if="goodArr.length==0" class="no_more1" >暂无数据</p>
-                                    <p v-else></p>
-                                    <p class="lookMore" v-if="goodArr.length!=0"  @click='More2()'>查看全部>></p>
+                                    <p v-if="merchantsArr.length==0" class="no_more1" >暂无数据</p>
+                                    <p v-else class="no_more1"></p>
+                                    <p class="lookMore" v-if="merchantsArr.length!=0"  @click='More2()'>查看全部>></p>
                                 </div>
                             </div>
                         </div>
@@ -341,8 +345,8 @@ export default {
             end_time:'',
             time:'',
             gooduserId:'',
-            more:true,
-            more1:true,
+            more:false,
+            more1:false,
             num4:0,
             progress: 0,
             fullscreenLoading:false,
@@ -350,6 +354,7 @@ export default {
             // userId:''
             // screenWidth: document.body.clientWidth,
             node_id: '',
+            show:false
         }
     },
     mounted(){
@@ -366,6 +371,7 @@ export default {
         this.QueryHasTzBizByNodeId()
         this.getBizNotOnlineTimeFun()
         this.queryHasNoTzBizByNodeIdFun()
+        // this.getGoodsWeightRankAndAvgPriceFun()
         // 标准时间转日期格式
         function formatTen(num) { 
             return num > 9 ? (num + "") : ("0" + num); 
@@ -377,19 +383,22 @@ export default {
         this.start_time = year + "-"+formatTen(month) + "-" +formatTen(day)
         this.end_time = year + "-"+formatTen(month) + "-" +formatTen(day)
         this.time = [this.start_time,this.end_time]
-        setTimeout(() => {
-                this.loading = false
-        }, 4000);
-        if(this.goodArr != ''){
+        // setTimeout(() => {
+        //         this.loading = false
+        // }, 4000);
+        if(this.goodArr == ''){
             this.more = true;
+        }
+        if(this.merchantsArr == ''){
+            this.more1 = true;
         }
     },
     methods: {
         handleBtnQuery(){
             this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
+            // setTimeout(() => {
+            //     this.fullscreenLoading1 = false;
+            // }, 4000);
             this.currId = null;
             this.currId2 = this.titArr[0].userId;
             var startTime = this.time[0];
@@ -411,7 +420,7 @@ export default {
             this.time = [this.start_time,this.end_time]
             if(this.activeName == 'first'){
                 // alert()
-                this.getGoodsWeightRankAndAvgPriceFun(this.titArr[0])
+                this.getGoodsWeightRankAndAvgPriceFun(this.titArr[0]) 
             }else if(this.activeName == 'second'){
                 // alert()
                 this.getDayFun2(this.titArr[0])
@@ -509,9 +518,9 @@ export default {
         },
         handleClick(){
             this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
+            // setTimeout(() => {
+               
+            // }, 4000);
             this.start_time = this.time[0];
             this.end_time = this.time[1];
             function formatTen(num) { 
@@ -524,12 +533,14 @@ export default {
                 this.start_time = year + "-"+formatTen(month) + "-" +formatTen(day)
                 this.end_time = year + "-"+formatTen(month) + "-" +formatTen(day)
                 this.time = [this.start_time,this.end_time]
-            this.getGoodsWeightRankAndAvgPriceFun(this.titArr[0]);
+            // this.getGoodsWeightRankAndAvgPriceFun(this.titArr[0]);
             this.currId2 = this.titArr[0].userId
             if(this.activeName == 'first'){
+                  this.getGoodsWeightRankAndAvgPriceFun(this.titArr[0]);
                     let str = 'node_id='+this.loginId+'&region='+ this.titArr[0].bootList[0].shop_booth_id+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page=1&cols=10&name=';
                     QueryMoneyAndWeightForGoods(str)
                         .then(res => {
+                             this.fullscreenLoading1 = false;
                             let arr = res.data,
                                 numArr = [],
                                 title = [],
@@ -539,10 +550,10 @@ export default {
                                 title.push(val.plu_name)
                                 priceArr.push(val.avg.toFixed(2))
                             })
-                            this.getGoodsWeightRankAndAvgPriceFun(val)
+                            this.getGoodsWeightRankAndAvgPriceFun(val) 
                             this.getChartFun4(title,numArr,priceArr)
-                             this.goodArr = res.data.list.slice(0,10);
-                             console.log(this.this.goodArr)
+                            this.goodArr = res.data.list.slice(0,10);
+                             console.log(this.goodArr)
                         })
                         .catch(res => {
                             console.log(res);
@@ -553,6 +564,7 @@ export default {
                     // 商户当天
                     QueryMoneyAndWeightForBiz(str)
                         .then(res => {
+                            this.fullscreenLoading1 = false;
                             res.data.list.forEach(val => {
                                 val.num = val.score.toFixed(2)
                             })
@@ -576,11 +588,9 @@ export default {
         },
         focusFun(item){
             this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
-            // console.log(item)
-            // console.log(this.currld)
+            // setTimeout(() => {
+            //     this.fullscreenLoading1 = false;
+            // }, 4000);
             if(this.currId){
                 if(this.currId !== item){
                     this.currId = item
@@ -588,13 +598,13 @@ export default {
             }else{
                 this.currId = item
             }
-            this.titArr.forEach(val => {
-                if(this.currId2){
-                    if(this.currId2 == val.userId){
+            // this.titArr.forEach(val => {
+            //     if(this.currId2){
+            //         if(this.currId2 == val.userId){
                         // this.getGoodsWeightRankAndAvgPriceFun(val)
-                    }
-                }
-            })
+            //         }
+            //     }
+            // })
             if(item == 0){
                  function formatTen(num) { 
                     return num > 9 ? (num + "") : ("0" + num); 
@@ -611,8 +621,11 @@ export default {
                         if(this.currId2 == val.userId){
                             let title = val.name
                             this.legendData = title.split()
-                            this.getGoodsWeightRankAndAvgPriceFun(val)
-                            if(this.activeName == 'second'){
+                            // this.getGoodsWeightRankAndAvgPriceFun(val)
+                            if(this.activeName == 'first'){
+                                this.getGoodsWeightRankAndAvgPriceFun(val)   
+                            }  
+                            else if(this.activeName == 'second'){
                                 this.getDayFun2(val)
                                 this.getQueryMoneyCurrentDayHourFun()
                             }
@@ -648,10 +661,12 @@ export default {
                         if(this.currId2 == val.userId){
                             let title = val.name
                             this.legendData = title.split()
-                            this.getGoodsWeightRankAndAvgPriceFun(val)
-                            
-                            if(this.activeName == 'second'){
-                                this.getQueryMoneyCurrentWeekFun(val)
+                            // this.getGoodsWeightRankAndAvgPriceFun(val) 
+                            if(this.activeName == 'first'){
+                                this.getGoodsWeightRankAndAvgPriceFun(val)   
+                            } 
+                            else if(this.activeName == 'second'){
+                                // this.getQueryMoneyCurrentWeekFun(val)
                                 this.getDayFun2(val)
                             }
                         }
@@ -694,10 +709,12 @@ export default {
                         if(this.currId2 == val.userId){
                             let title = val.name
                             this.legendData = title.split()
-                            this.getGoodsWeightRankAndAvgPriceFun(val)
-                            if(this.activeName == 'second'){
+                            if(this.activeName == 'first'){
+                                this.getGoodsWeightRankAndAvgPriceFun(val)   
+                            } 
+                            else if(this.activeName == 'second'){
                                 this.getDayFun2(val)
-                                this.getQueryMoneyCurrentMonthFun(val)
+                                // this.getQueryMoneyCurrentMonthFun(val)
                             }
                         }
                     }
@@ -727,11 +744,14 @@ export default {
                         if(this.currId2 == val.userId){
                             let title = val.name
                             this.legendData = title.split()
-                            if(this.activeName == 'second'){
-                                this.getQueryMoneyCurrentYearFun(val)
+                            if(this.activeName == 'first'){
+                                this.getGoodsWeightRankAndAvgPriceFun(val)   
+                            } 
+                            else if(this.activeName == 'second'){
+                                // this.getQueryMoneyCurrentYearFun(val)
                                 this.getDayFun2(val)
                             }
-                            this.getGoodsWeightRankAndAvgPriceFun(val)
+                           
                         }
                     }
                 })
@@ -740,9 +760,9 @@ export default {
         },
         focusFun2(item,index){
             this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
+            // setTimeout(() => {
+            //     this.fullscreenLoading1 = false;
+            // }, 4000);
             this.gooduserId = item.userId
             if(this.currId2){
                 if(this.currId2 !== item.userId){
@@ -751,8 +771,9 @@ export default {
             }else{
                  this.currId2 = item.userId
             }
-            this.getGoodsWeightRankAndAvgPriceFun(item)
+            
             if(this.activeName == 'first'){
+                this.getGoodsWeightRankAndAvgPriceFun(item) 
                 let title = item.name
                 this.legendData = title.split()
                 if(this.currId){
@@ -769,9 +790,6 @@ export default {
                         // this.getQueryMoneyCurrentYearFun(item)
                         this.getGoodsWeightRankAndAvgPriceFun(item)
                     }
-                }else{
-                    // this.getQueryMoneyCurrentDayHourFun(item)
-                    // this.
                 }
             }else if(this.activeName == 'second'){
                 let title = item.name
@@ -779,20 +797,18 @@ export default {
                 this.getDayFun2(item)
                 if(this.currId){
                     if(this.currId == 0){
-                        this.getQueryMoneyCurrentDayHourFun(item)
+                        // this.getQueryMoneyCurrentDayHourFun(item)
                         this.getDayFun2(item)
                     }else if(this.currId == 1){
-                        this.getQueryMoneyCurrentWeekFun(item)
+                        // this.getQueryMoneyCurrentWeekFun(item)
                         this.getDayFun2(item)
                     }else if(this.currId == 2){
-                        this.getQueryMoneyCurrentMonthFun(item)
+                        // this.getQueryMoneyCurrentMonthFun(item)
                         this.getDayFun2(item)
                     }if(this.currId == 3){
-                        this.getQueryMoneyCurrentYearFun(item)
+                        // this.getQueryMoneyCurrentYearFun(item)
                         this.getDayFun2(item)
                     }
-                }else{
-                    // this.getQueryMoneyCurrentDayHourFun(item)
                 }
             }
         },
@@ -1142,17 +1158,19 @@ export default {
                     let str = 'node_id='+this.loginId+'&region='+this.titArr[0].bootList[0].shop_booth_id+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page=1&cols=10&name=';
                      QueryMoneyAndWeightForGoods(str)
                     .then(res => {
-                        let arr = res.data,
-                            numArr = [],
-                            title = [],
-                            priceArr = [];
-                        arr.list.forEach(val => {
-                            numArr.push(val.price.toFixed(2))
-                            title.push(val.plu_name)
-                            priceArr.push(val.avg.toFixed(2))
-                        })
-                            this.getChartFun4(title,numArr,priceArr)
-                            this.goodArr = res.data.list.slice(0,10);
+                            this.loading = false;
+                            // this.this.fullscreenLoading1 = false;
+                            let arr = res.data,
+                                numArr = [],
+                                title = [],
+                                priceArr = [];
+                            arr.list.forEach(val => {
+                                numArr.push(val.price.toFixed(2))
+                                title.push(val.plu_name)
+                                priceArr.push(val.avg.toFixed(2))
+                            })
+                                this.getChartFun4(title,numArr,priceArr)
+                                this.goodArr = res.data.list.slice(0,10);
                         })
                         .catch(res => {
                             console.log(res);
@@ -1167,10 +1185,17 @@ export default {
             let str = 'node_id='+this.loginId+'&region='+item.bootList[0].shop_booth_id+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page=1&cols=10&name=';
             QueryMoneyAndWeightForBiz(str)
                 .then(res => {
+                    this.show = false
+                    this.fullscreenLoading1 = false;
                     res.data.list.forEach(val => {
                         val.num = val.price.toFixed(2)
                     })
                     this.merchantsArr = res.data.list.slice(0,10)
+                    if(this.merchantsArr == ''){
+                            this.show = true;
+                    }else{
+                            this.show = false  
+                    }
                     let arr = res.data.list,
                         numArr = [] ,
                         title = [] ;
@@ -1225,7 +1250,6 @@ export default {
             QueryHasNoTzBizByNodeId(str)
             .then((res) => {
                 this.tableData4 = res.data.list
-                console.log(this.tableData4)
                 this.num4 = res.data.total
             })
             .catch((res) => {
@@ -1255,7 +1279,6 @@ export default {
             let str = 'node_id=' + this.loginId + '&page=' + this.page2 + '&cols=' + this.cols2 + '&order=' + this.order2
             GetBizOnlineTime(str)
                 .then(res => {
-                    console.log(res)
                     this.tableData2 = res.data.list 
                     this.count = res.data.allBizNum  //电子秤总数
                     this.nums = res.data.total; //当前在线数
@@ -1270,7 +1293,7 @@ export default {
         },
         // 该市场当日电子秤不在线商户
         getBizNotOnlineTimeFun(){
-            let str = 'node_id=' + this.loginId + '&page=' + this.page3 + '&cols=' + this.cols3 + '&order=' + this.order2 + '&name=&type=30'
+            let str = 'node_id=' + this.loginId + '&page=' + this.page3 + '&cols=' + this.cols3 + '&order=' + this.order2 + '&name=&type=1'
             GetBizNotOnlineTime(str)
                 .then((res)=>{
                     //  console.log(res,'不在线商户')
@@ -1286,6 +1309,8 @@ export default {
                 let str = 'node_id='+this.loginId+'&region='+item.bootList[0].shop_booth_id+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page=1&cols=10&name=';
                 QueryMoneyAndWeightForGoods(str)
                     .then(res => {
+                        this.show = false
+                        this.fullscreenLoading1 = false;
                         let arr = res.data,
                             numArr = [],
                             title = [],
@@ -1297,7 +1322,9 @@ export default {
                         })
                         this.getChartFun4(title,numArr,priceArr)
                         this.goodArr = res.data.list.slice(0,10);
-                        
+                        if(this.goodArr == ''){
+                            this.show = true;
+                        }
                         // this.getChartFun6(title,numArr,priceArr)
                     })
                     .catch(res => {
