@@ -346,14 +346,10 @@ export default {
     },
     methods: {
         inputFun(val){
-            console.log(val)
             let goodobj = {}
             if(val.id){
-
                 if(this.viewGood.length == 0){
-                    console.log(1)
                     if(!val.price){
-                    console.log(2)
                         goodobj = {
                             node_id: val.node_id,
                             node_name: val.node_name,
@@ -462,37 +458,35 @@ export default {
                     }
                 })
             }
+            if(this.viewGood.length > 0){
+                arr = arr.concat(this.viewGood)
+            }else{
+            }
             if(arr.length > 0){
-                let newArr = []
                 console.log(this.viewGood)
-                if(this.viewGood.lenght > 0){
-                    newArr = arr.concat(this.viewGood)
-                }else{
-                    if(this.company == 1){
-                        arr.forEach(val => {
-                            if(val.price){
-                                val.price = val.price*2
-                            }
-                        })
-                    }
+                if(this.company == 1){
+                    arr.forEach(val => {
+                        if(val.price){
+                            val.price = val.price*2
+                        }
+                    })
                 }
                 console.log(arr)    
-                console.log(newArr)    
                 let obj =  JSON.stringify(arr)
-                // InsertList(obj)
-                //     .then(res => {
-                //         if(res.result == true){
-                //             this.$message.success(res.message);
-                //             this.closeFun4()
-                //             this.page = 1
-                //             this.getDataFun()
-                //         }else{
-                //             this.$message.error(res.message);
-                //         }
-                //     })
-                //     .catch(res => {
-                //         console.log(res)
-                //     })
+                InsertList(obj)
+                    .then(res => {
+                        if(res.result == true){
+                            this.$message.success(res.message);
+                            this.closeFun4()
+                            this.page = 1
+                            this.getDataFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
             }
         },
         // 选择商户
@@ -790,7 +784,13 @@ export default {
             AutoIdentity(obj)
                 .then(res => {
                     if(res.result == true){
-                        this.tableData2 = res.data
+                        this.tableData2.forEach(val => {
+                            res.data.forEach(val2 => {
+                                if(val.goods_id == val2.goods_id){
+                                    val.price = val2.price
+                                }
+                            })
+                        })
                         this.allGood = res.data
                         this.num2 = ''
                         this.isZnlr = false
@@ -805,48 +805,49 @@ export default {
         },
         // 智能录入保存
         allAddFun(){
-            let arr = [], goodobj = {};
-            if(this.allGood.length > 0){
-                this.allGood.forEach(val => {
-                    goodobj = {
-                        node_id: val.node_id,
-                        node_name: val.node_name,
-                        shop_booth_id: this.merchant,
-                        biz_id: this.biz_id,
-                        biz_name: this.biz_name,
-                        in_date: this.in_date,
-                        goods_id: val.goods_id,
-                        goods_code: val.goods_code,
-                        goods_name: val.goods_name,
-                        price: val.price,
-                        yesterday_price: val.yesterday_price ? val.yesterday_price : '',
-                        history_price: val.history_price ? val.history_price : '',
-                        area_id: val.area_id ? val.area_id : '',
-                        area_name: val.area_name ? val.area_name : '',
-                        weight: val.weight ? val.weight : '',
-                        real_weight: val.real_weight ? val.real_weight : '',
-                    }
-                    arr.push(goodobj)
-                })
-                let obj =  JSON.stringify(arr)
-                InsertList(obj)
-                    .then(res => {
-                        if(res.result == true){
-                            this.$message.success(res.message);
-                            this.closeFun()
-                            this.closeFun2()
-                            this.page = 1
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch(res => {
-                        console.log(res)
-                    })
-            }else{
-                return
-            }
+            this.submitForm()
+            // let arr = [], goodobj = {};
+            // if(this.allGood.length > 0){
+            //     this.allGood.forEach(val => {
+            //         goodobj = {
+            //             node_id: val.node_id,
+            //             node_name: val.node_name,
+            //             shop_booth_id: this.merchant,
+            //             biz_id: this.biz_id,
+            //             biz_name: this.biz_name,
+            //             in_date: this.in_date,
+            //             goods_id: val.goods_id,
+            //             goods_code: val.goods_code,
+            //             goods_name: val.goods_name,
+            //             price: val.price,
+            //             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+            //             history_price: val.history_price ? val.history_price : '',
+            //             area_id: val.area_id ? val.area_id : '',
+            //             area_name: val.area_name ? val.area_name : '',
+            //             weight: val.weight ? val.weight : '',
+            //             real_weight: val.real_weight ? val.real_weight : '',
+            //         }
+            //         arr.push(goodobj)
+            //     })
+            //     let obj =  JSON.stringify(arr)
+            //     InsertList(obj)
+            //         .then(res => {
+            //             if(res.result == true){
+            //                 this.$message.success(res.message);
+            //                 this.closeFun()
+            //                 this.closeFun2()
+            //                 this.page = 1
+            //                 this.getDataFun()
+            //             }else{
+            //                 this.$message.error(res.message);
+            //             }
+            //         })
+            //         .catch(res => {
+            //             console.log(res)
+            //         })
+            // }else{
+            //     return
+            // }
         },
         closeFun2(){
             this.isZnlr = false
@@ -968,7 +969,6 @@ export default {
                             }
                         })
                     }
-                    console.log(this.viewGood)
                     this.tableData2 = res.data.list
                 })
                 .catch((res) => {
