@@ -64,7 +64,7 @@ export default {
                 .then(res => {
                     if (res.result == true) {
                         this.$message.success(res.message);
-                        this.$router.push({path:'userList'});
+                        // this.$router.push({path:'userList'});
                     }else{
                         this.$message.error(res.message);
                     }

@@ -72,7 +72,7 @@
                     <el-table-column prop="file_name" label="文件名称"> </el-table-column>
                     <el-table-column prop="create_date" label="上传时间"> </el-table-column>
                     <el-table-column prop="update_time" label="状态更新时间"> </el-table-column>
-                    <el-table-column prop="state" label="状态"> </el-table-column>
+                    <!--<el-table-column prop="state" label="状态"> </el-table-column>-->
                     <el-table-column prop="folder" label="文件路径" > </el-table-column>
                     </el-table-column>
                 </el-table>

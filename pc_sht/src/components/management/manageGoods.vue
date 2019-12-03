@@ -29,9 +29,9 @@
             </el-tab-pane>
             <el-tab-pane name="second">
                 <span slot="label">销售商品({{sellGoodsNumber}})</span>
-                <div ref="btnHeight" :class="{hide:visibleHide}">
-                    <el-button class="btn" type="primary" @click="addGoods(2)">绑定商品</el-button>            
-                </div>  
+                <!--<div ref="btnHeight" :class="{hide:visibleHide}">
+                    <el-button class="btn" type="primary" @click="addGoods(2)">绑定商品</el-button>       
+                </div>  -->
                 <div class="infor-msg">
                     <el-table :data="sellGoodsData" border>
                         <el-table-column prop="GOODS_NAME" label="商品名称" width='130'> </el-table-column>

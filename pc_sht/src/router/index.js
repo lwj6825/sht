@@ -30,7 +30,6 @@ import differentSz from './differentSz'
 import assets from './assets'
 import retail from './retail'
 
-
 Vue.use(Router)
 
 export default new Router({
@@ -40,6 +39,16 @@ export default new Router({
       name: 'login',
       component: Login
     },
+    // {
+    //   path: '/addUser', 
+    //   component: resolve => require(['@/components/user/addUser'],resolve),
+    //   name:'AddUser',
+    //   meta:{
+    //     id:'189',
+    //     node:'user',
+    //     url:'AddUser',
+    //   },
+    // },
     {
       path: '/home',
       name: 'home',

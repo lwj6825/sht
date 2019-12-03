@@ -93,10 +93,12 @@ export default {
             account: '',
             password: '',
             remember: '',
+            roleId: '',
         }
     },
     created() {
         this.loginName =  localStorage.getItem('loginName');
+        this.roleId = localStorage.getItem('roleId');
         // console.log(localStorage.getItem('menuList'));
     },
     mounted(){
@@ -344,7 +346,8 @@ export default {
     },
     methods:{
         jumpFun(){
-            window.open('http://shop.zhdtech.com/login/operation'); 
+            // window.open('http://shop.zhdtech.com/login/operation'); 
+            window.open('http://shop.zhdtech.com/login/operation?role_id=' + this.roleId); 
         },
         changeMenu(tabTd){//菜单切换
             if(tabTd == '344'){//是统计页

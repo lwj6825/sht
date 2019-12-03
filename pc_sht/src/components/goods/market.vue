@@ -62,29 +62,20 @@
           <el-table-column prop="GB_NAME" label="品种" :formatter="formatter"> </el-table-column>
           <el-table-column prop="PRICE" label="价格"> </el-table-column>
           <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
-          <el-table-column label="生活必需品" width="160">
-                  <template slot-scope="scope">
-                      <el-switch
-                    
-                      active-text="开启" inactive-text="禁用"
-                      active-value="1" inactive-value="0" @change="changeFun(scope.row)">
-                      </el-switch>
-                  </template>  
-          </el-table-column>
           <el-table-column prop="SUPPLIERS_NAME" label="供应商"> </el-table-column>
           <el-table-column label="原料"> 
             <template slot-scope="scope">
               <p v-for="(item,index) in scope.row.stk_list" :key="index">{{item.or_goods_name}}</p>
             </template>
           </el-table-column>
-          <el-table-column label="是否为报价商品" width="160">
+          <el-table-column label="是否为报价商品" width="140">
             <template slot-scope="scope">
               <el-switch v-model="scope.row.IS_NEED" active-text="是" inactive-text="否"
               active-value="1" inactive-value="0" @change="isNeedFun(scope.row)">
               </el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <!--<el-button type="text" size="small" @click="check(scope.$index, scope.row)">{{viewSellGoods}}</el-button>-->
               <el-button size="mini" type="text" style="margin-left: 20px" @click="edit(scope.$index, scope.row)">{{editSellGoods}}</el-button>

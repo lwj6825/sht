@@ -305,7 +305,7 @@
                                     <div class="num">
                                         <div>
                                             <p>
-                                                <el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input>
+                                                <el-input @change="inputFun(scope.row)" size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input>
                                             </p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
                                             <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
@@ -423,6 +423,7 @@ export default {
             isSearch: false, // 是否搜索报价商品
             unitName: '公斤',
             node_id: '',
+            viewGood: [],
         }
     },
     mounted() {
@@ -435,6 +436,58 @@ export default {
         this.getNodeFun()
     },
     methods: {
+        inputFun(val){
+            console.log(val)
+            let goodobj = {},count = 0;
+            if(this.viewGood.length == 0){
+                    if(!val.price){
+                        goodobj = {
+                            node_id: val.node_id,
+                            node_name: val.node_name,
+                            shop_booth_id: this.merchant,
+                            biz_id: this.biz_id,
+                            biz_name: this.biz_name,
+                            in_date: this.in_date,
+                            goods_id: val.goods_id,
+                            goods_code: val.goods_code,
+                            goods_name: val.goods_name,
+                            price: val.price,
+                            yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+                            history_price: val.history_price ? val.history_price : '',
+                            area_id: val.area_id ? val.area_id : '',
+                            area_name: val.area_name ? val.area_name : '',
+                            weight: val.weight ? val.weight : '',
+                            real_weight: val.real_weight ? val.real_weight : '',
+                        }
+                        this.viewGood.push(goodobj)
+                    }
+            }else{
+                this.viewGood.forEach((ele,index) => {
+                    if(val.goods_id == ele.goods_id){
+                        this.viewGood.splice(index,1)
+                    }
+                })
+                goodobj = {
+                    node_id: val.node_id,
+                    node_name: val.node_name,
+                    shop_booth_id: this.merchant,
+                    biz_id: this.biz_id,
+                    biz_name: this.biz_name,
+                    in_date: this.in_date,
+                    goods_id: val.goods_id,
+                    goods_code: val.goods_code,
+                    goods_name: val.goods_name,
+                    price: val.price,
+                    yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+                    history_price: val.history_price ? val.history_price : '',
+                    area_id: val.area_id ? val.area_id : '',
+                    area_name: val.area_name ? val.area_name : '',
+                    weight: val.weight ? val.weight : '',
+                    real_weight: val.real_weight ? val.real_weight : '',
+                }
+                this.viewGood.push(goodobj)
+            }
+        },
         // 修改提交
         editFun(ele){
             let arr = [],goodobj = {};
@@ -494,6 +547,7 @@ export default {
                     // }
                 })
             }
+            console.log(this.viewGood)
             if(arr.length > 0){
                 if(this.company == 1){
                     arr.forEach(val => {
@@ -504,20 +558,20 @@ export default {
                 }
                 console.log(arr)
                 let obj =  JSON.stringify(arr)
-                InsertList(obj)
-                    .then(res => {
-                        if(res.result == true){
-                            this.$message.success(res.message);
-                            this.closeFun4()
-                            this.page = 1
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch(res => {
-                        console.log(res)
-                    })
+                // InsertList(obj)
+                //     .then(res => {
+                //         if(res.result == true){
+                //             this.$message.success(res.message);
+                //             this.closeFun4()
+                //             this.page = 1
+                //             this.getDataFun()
+                //         }else{
+                //             this.$message.error(res.message);
+                //         }
+                //     })
+                //     .catch(res => {
+                //         console.log(res)
+                //     })
             }
         },
         // 获取商品
@@ -772,7 +826,13 @@ export default {
             AutoIdentity(obj)
                 .then(res => {
                     if(res.result == true){
-                        this.tableData2 = res.data
+                        this.tableData2.forEach(val => {
+                            res.data.forEach(val2 => {
+                                if(val.goods_id == val2.goods_id){
+                                    val.price = val2.price
+                                }
+                            })
+                        })
                         this.allGood = res.data
                         this.num2 = ''
                         this.isZnlr = false
@@ -787,47 +847,48 @@ export default {
         },
         // 智能录入保存
         allAddFun(){
-            let arr = [], goodobj = {};
-            if(this.allGood.length > 0){
-                this.allGood.forEach(val => {
-                    goodobj = {
-                        node_id: val.node_id,
-                        node_name: val.node_name,
-                        shop_booth_id: this.merchant,
-                        biz_id: this.biz_id,
-                        biz_name: this.biz_name,
-                        in_date: this.in_date,
-                        goods_id: val.goods_id,
-                        goods_code: val.goods_code,
-                        goods_name: val.goods_name,
-                        price: val.price,
-                        yesterday_price: val.yesterday_price ? val.yesterday_price : '',
-                        history_price: val.history_price ? val.history_price : '',
-                        area_id: val.area_id ? val.area_id : '',
-                        area_name: val.area_name ? val.area_name : '',
-                        weight: val.weight ? val.weight : '',
-                        real_weight: val.real_weight ? val.real_weight : '',
-                    }
-                    arr.push(goodobj)
-                })
-                let obj =  JSON.stringify(arr)
-                InsertList(obj)
-                    .then(res => {
-                        if(res.result == true){
-                            this.$message.success(res.message);
-                            this.closeFun()
-                            this.page = 1
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch(res => {
-                        console.log(res)
-                    })
-            }else{
-                return
-            }
+            this.submitForm()
+            // let arr = [], goodobj = {};
+            // if(this.allGood.length > 0){
+            //     this.allGood.forEach(val => {
+            //         goodobj = {
+            //             node_id: val.node_id,
+            //             node_name: val.node_name,
+            //             shop_booth_id: this.merchant,
+            //             biz_id: this.biz_id,
+            //             biz_name: this.biz_name,
+            //             in_date: this.in_date,
+            //             goods_id: val.goods_id,
+            //             goods_code: val.goods_code,
+            //             goods_name: val.goods_name,
+            //             price: val.price,
+            //             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
+            //             history_price: val.history_price ? val.history_price : '',
+            //             area_id: val.area_id ? val.area_id : '',
+            //             area_name: val.area_name ? val.area_name : '',
+            //             weight: val.weight ? val.weight : '',
+            //             real_weight: val.real_weight ? val.real_weight : '',
+            //         }
+            //         arr.push(goodobj)
+            //     })
+            //     let obj =  JSON.stringify(arr)
+            //     InsertList(obj)
+            //         .then(res => {
+            //             if(res.result == true){
+            //                 this.$message.success(res.message);
+            //                 this.closeFun()
+            //                 this.page = 1
+            //                 this.getDataFun()
+            //             }else{
+            //                 this.$message.error(res.message);
+            //             }
+            //         })
+            //         .catch(res => {
+            //             console.log(res)
+            //         })
+            // }else{
+            //     return
+            // }
         },
         closeFun2(){
             this.isZnlr = false

@@ -24,6 +24,9 @@
                     <el-form-item label="数据说明">
                         <el-input class="placeholder" v-model="form.sjsm" clearable placeholder=""></el-input>
                     </el-form-item>
+                    <el-form-item label="备用信息">
+                        <el-input class="placeholder" v-model="form.byxx" clearable placeholder=""></el-input>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
                         <!-- <el-button @click="clearFun">重置</el-button>-->
@@ -155,6 +158,7 @@ export default {
                 types: '',
                 node: '',
                 sjsm: '',
+                byxx: '',
             },
             unfold: '收起',
             show: true,
@@ -202,6 +206,7 @@ export default {
                     log_type: this.form.types,
                     node_detail_type: this.form.node,
                     message: this.form.sjsm,
+                    error_data: this.form.byxx,
                 }
                 DeleteAllErrorData(params)
                     .then(res => {
@@ -366,6 +371,7 @@ export default {
                 log_type: this.form.types,
                 node_detail_type: this.form.node,
                 message: this.form.sjsm,
+                error_data: this.form.byxx,
             }
             DownloadErrorData( params, {})
                 .then((res) => {
@@ -429,6 +435,7 @@ export default {
                 log_type: this.form.types,
                 node_detail_type: this.form.node,
                 message: this.form.sjsm,
+                error_data: this.form.byxx,
             }
             QueryErrorData(params)
                 .then(res => {
@@ -464,6 +471,7 @@ export default {
                 types: '',
                 node: '',
                 sjsm: '',
+                byxx: '',
             }
             if(this.$route.params.node_id){
                 this.form.msg = this.$route.params.node_id
