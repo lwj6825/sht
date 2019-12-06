@@ -70,7 +70,6 @@
           <div class="img_group">
           <img style="width: 50px;height: 50px; margin-right: 20px;" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+ img_url" v-if="img_url && file == ''">
 
-
             <div class="img_box" v-if="allowAddImg">
               <input type="file" accept="image/*" @change="changeImg($event)" ref="inputcheckimg">
               <div class="filter"></div>
