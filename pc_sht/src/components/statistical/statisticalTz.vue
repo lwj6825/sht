@@ -380,6 +380,7 @@ export default {
                 value1: '',
                 value2: '',
                 upload: '',
+                GoodList: '',
             }
             this.getTime()
             this.buyerName = ''

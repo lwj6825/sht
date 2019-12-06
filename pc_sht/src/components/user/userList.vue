@@ -275,13 +275,13 @@ export default {
                 });
         },
         addUser(){
-            // this.$router.push({name:'AddUser'})
+            this.$router.push({name:'AddUser'})
             // console.log( + 'user/addUser')
-            const {href} = this.$router.resolve({
-                name: "AddUser"
-            });
-            console.log(href)
-            window.open(href, '_blank');
+            // const {href} = this.$router.resolve({
+            //     name: "AddUser"
+            // });
+            // console.log(href)
+            // window.open(href, '_blank');
             // window.open('http://192.168.1.92:8088/#/addUser'); 
         },
         search(){

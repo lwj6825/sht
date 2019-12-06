@@ -1,5 +1,6 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
-import {queryNodeInfoIndex,queryIndex,queryBizGoods,insert,queryGoodsForBiz,queryRegion,autoIdentity,insertList,queryGoodsForNode} from '../address/url.js';
+import {queryNodeInfoIndex,queryIndex,queryBizGoods,insert,queryGoodsForBiz,queryRegion,autoIdentity,insertList,queryGoodsForNode,
+    queryRegionForGoodsPrice,queryGoodsIndex} from '../address/url.js';
 
 // 超管查询所有市场的报价内容
 export const  QueryNodeInfoIndex  = function(params) {
@@ -36,4 +37,12 @@ export const  InsertList  = function(params) {
 //  市场添加报价 商品
 export const  QueryGoodsForNode  = function(params) {
     return ajaxPost(queryGoodsForNode,params)
+}
+//  市场添加报价 区域
+export const  QueryRegionForGoodsPrice  = function(params) {
+    return ajaxPost(queryRegionForGoodsPrice,params)
+}
+//  查看市场报价  商户录的报价信息
+export const  QueryGoodsIndex  = function(params) {
+    return ajaxPost(queryGoodsIndex,params)
 }

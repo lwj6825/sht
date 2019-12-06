@@ -258,7 +258,8 @@ export const queryCheckList = baseUrl + 'check/getAllCheck' // 查询检测信�
 export const addCheckItem = baseUrl + 'check/insertCheck' // 新增检测信息
 export const deteleCheckItem = baseUrl + 'check/deleteCheck' // 删除检测信息
 export const BaseImgUrl = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' // 删除检测信息
-export const jcqueryPurchase = baseUrl + 'check/queryCheckGoods ';// 查询进货商品列表
+export const jcqueryPurchase = baseUrl + 'check/queryCheckGoods';// 查询进货商品列表
+export const updateCheck = baseUrl + 'check/updateCheck';// 编辑检测
 
 // 统计
 export const queryMoneyAndWeightForMarket = baseUrl + 'redis/queryMoneyAndWeightForMarket' //查询商品商户总额
@@ -415,3 +416,5 @@ export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看�
 export const autoIdentity = baseUrl + 'goodsPrice/autoIdentity' // 智能识别
 export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存
 export const queryGoodsForNode = baseUrl + 'goodsPrice/queryGoodsForNode' // 市场添加报价 商品
+export const queryRegionForGoodsPrice = baseUrl + 'tz/queryRegionForGoodsPrice' // 市场添加报价 区域
+export const queryGoodsIndex = baseUrl + 'goodsPrice/queryGoodsIndex' //查看市场报价  商户录的报价信息
