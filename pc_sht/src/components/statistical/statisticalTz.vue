@@ -69,7 +69,7 @@
                 <p class="unfold" @click="unfoldFun">{{unfold}}筛选条件</p>
             </div>
         </div>
-        <div class="table" v-loading.body="fullscreenLoading1" style="height:100%"  v-loading="loading">
+        <div class="table" v-loading.body="fullscreenLoading1" style="height:100%" >
             <div class="title">
                 <p class="tz-title">全部销售台账</p>
                 <div>
@@ -205,7 +205,7 @@ export default {
                 upload: '',
                 GoodList:'',//选中商品信息
             },
-            unfold: '展开',
+            unfold: '收起',
             show: true,
             inline: true,
             isShow2: true,
@@ -225,23 +225,38 @@ export default {
             gooduserId:'',
             dataMore:'',
             node_id: '',
+            aid:''
         }
     },
     created(){
             this.gooduserId = this.$route.query.gooduserId;
      },
     mounted() {
+        window.scrollTo(0,0)
         this.node_id = localStorage.getItem('loginId');
         this.getTime()
-        setTimeout(() => {
-                this.loading = false
-        }, 4000);
+        // setTimeout(() => {
+        //         this.loading = false
+        // }, 4000);
         // 接受值
+        this.aid = this.$route.query.areaId;
+        this.input = this.$route.query.input;
         this.gooduserId = this.$route.query.gooduserId;
+        
         this.start_time  = this.$route.query.startTime;
         this.end_time  = this.$route.query.endTime;
-        var date1 = new Date(),
-        time1 =date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var time1 = year + seperator1 + month + seperator1 + strDate;
         var now = new Date(); //当前日期
         var nowDayOfWeek = now.getDay(); //今天本周的第几天
         var nowDay = now.getDate(); //当前日
@@ -262,7 +277,9 @@ export default {
         }
         var weekStartDate =  new Date(nowYear,nowMonth , nowDay - nowDayOfWeek + 1);
         var weekStartDate =  formatDate(weekStartDate);
-        if(this.start_time == time1 || this.start_time == weekStartDate){
+        let end = new Date(this.end_time).getTime()
+        let scope = end - 3600 * 1000 * 24 * 7
+        if(this.start_time == time1 || new Date(this.start_time) > scope){
                 this.start_time  = this.$route.query.startTime;
                 this.end_time  = this.$route.query.endTime;
         }else{
@@ -287,9 +304,6 @@ export default {
         // var Time = localStorage.getItem("Time");
         // localStorage.setItem(Time,Time);
         var dataMore = [this.time,this.input,this.gooduserId]
-        
-        // console.log(this.gooduserId)
-        // console.log(this.$route.params)
         // this.getTime()
         this.getGoodsFun()
         
@@ -316,18 +330,17 @@ export default {
             return false
         },
         back(){
+            let dataMore = [this.form.value1[0],this.form.value1[1],this.form.GoodList,this.gooduserId,this.areaId,this.form.user]
+            localStorage.setItem("Time",dataMore);
             window.history.go(-1);
-            // localStorage.setItem("Time",dataMore);
         },
         getGoodsFun() {
-            // alert(this)
             let boothData = {
             //   region:this.areaId,
             region:920,
             userId:this.userId,
             node_id:this.local_node_id_id,
             }
-                //   console.log(boothData ,'areaid')
             jcpurchase(boothData)
             .then(res => {
                 this.local_check_good_options = res.data;
@@ -349,7 +362,6 @@ export default {
             // this.endTime = formatDate(currentTime)
             // var currentTime = new Date()
             // this.startTime = formatDate(currentTime)
-            // // console.log(this.startTime)
             // this.endTime = this.startTime.substr(0, 10)
         },
         selectGet(val){
@@ -429,7 +441,6 @@ export default {
         fileFun(event){
             // if 文件类型 txt csv xls xlsx--- 大小不能超过 10M
             let param = this.$refs.file.files[0];
-            // console.log(this.$refs.file.files)
             if(param.type == 'text/plain' || param.type == 'text/csv' || param.type == 'application/vnd.ms-excel' || param.type == 'text/csv' || param.type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
                 let fileSize = param.size / 1024
                 if(fileSize > 10240){
@@ -461,7 +472,6 @@ export default {
                     // http://192.168.1.64:8080/analysis-file/ZhdTzParse/demo.do
                     ajaxPost('http://47.92.96.187:13781/zhd-file/ZhdTzParse/shtSaleFileParse.do',formData,config)
                         .then(res => {
-                            // console.log(res)
                             if(res[0].result == true){
                                 this.$message.success(res[0].message);
                             }else{
@@ -586,12 +596,12 @@ export default {
             console.log(ele)
         },
         selectId(id){//选择区域
+           this.form.GoodList=''
            this.fullscreenLoading1 = true;
             setTimeout(() => {
                 this.fullscreenLoading1 = false;
             }, 4000);
             this.getTime()
-            this.form.GoodList=''
             // console.log(id)
             let data = {
                 page: '1',
@@ -607,6 +617,7 @@ export default {
                     // console.log(res,"aaa")
                     res.data.dataList.forEach(ele => {
                         // console.log(ele)
+
                         if(ele.userId == id){
                             this.bigAreaId = id;
                             this.areaId = ele.bootList[0].shop_booth_id;

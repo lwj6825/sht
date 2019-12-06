@@ -276,6 +276,8 @@ export default {
         },
         addUser(){
             this.$router.push({name:'AddUser'})
+<<<<<<< HEAD
+=======
             // console.log( + 'user/addUser')
             // const {href} = this.$router.resolve({
             //     name: "AddUser"
@@ -283,6 +285,7 @@ export default {
             // console.log(href)
             // window.open(href, '_blank');
             // window.open('http://192.168.1.92:8088/#/addUser'); 
+>>>>>>> 185c83f22da3871520a551adb6540f9661c06532
         },
         search(){
             if(this.time){

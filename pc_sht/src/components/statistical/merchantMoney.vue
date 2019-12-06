@@ -1,14 +1,9 @@
 <template>
    <div class="content" ref="content">
-       <!-- <div class="header">
-              <p @click="skipStatistical">返回</p>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;<div>商户交易额明细</div>
-         </div> -->
-         <!-- <div class="back" @click="back">返回</div> -->
         <div class="areaBox" ref="areaBox">
               <AreaSelect @selectId='selectId' :gooduserId="gooduserId"></AreaSelect>
         </div>
         <div class="seacher">
-                <!-- <el-form-item label="进货日期"> -->
                     <p class="data_time">日期&nbsp;</p>
                     <el-date-picker style="width:300px;float:left;margin-top:20px;margin-right:25px;margin-left:60px;"
                                         v-model="time" value-format="yyyy-MM-dd" default-value="2019-01-25" 
@@ -19,28 +14,24 @@
                                         start-placeholder="开始日期"
                                         end-placeholder="结束日期">
                     </el-date-picker>
-                <!-- </el-form-item> -->
                 <div class="goods_name">
-                    <!-- <el-form-item label="商户名称" style="width: 380px;" > -->
                         商户名称&nbsp;&nbsp;&nbsp;
                         <el-input placeholder="请输入商户名" clearable v-model="input" style="width:185px;"></el-input>
                         <el-button type="primary" plain style="margin-left:20px;"
                         @click="handleBtnQuery()" 
                         >搜索</el-button>
-                        <!-- <el-button plain >导出Excel</el-button> -->
-                    <!-- </el-form-item> -->
                 </div>
         </div>
-        <div class="table_cell" v-loading.body="fullscreenLoading1">
-            <div class="table_cell_title" style="margin-left:20px;">
+        <div class="table_cell" v-loading.body="fullscreenLoading2" >
+            <div  class="table_cell_title" style="margin-left:20px;">
                     商户交易额明细&nbsp;&nbsp;&nbsp;[总交易额:{{this.totol_price}}元， 总交易量:{{this.weight}}公斤]
             </div>
-            <el-table :data="tableData"   style="width: 100%;margin-left:20px;height:448px;" :header-cell-style="{background:'#f5f5f5'}" fit
-            v-loading="loading" :row-style="{height:'40px'}"  >
+            <el-table  :data="tableData"   style="width: 100%;margin-left:20px;height:448px;" :header-cell-style="{background:'#f5f5f5'}" fit
+             :row-style="{height:'40px'}"  >
                 <el-table-column prop="stall_no" label="摊位号" fit></el-table-column>
                 <el-table-column prop="biz_name"  label="商户名称" fit></el-table-column>
                 <el-table-column prop="price"  label="总交易额(元)"></el-table-column>
-                <el-table-column prop="weight" label="总公交易量(公斤)" ></el-table-column>
+                <el-table-column prop="weight" label="总交易量(公斤)" ></el-table-column>
                 <el-table-column  label="操作" width="100">
                     <template slot-scope="scope">
                         <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
@@ -99,9 +90,10 @@ export default {
             currentPage:1,
             pageSize:10,
             totalCount: 0,// 所有数据
-            loading:true,
+            loading1:true,
+            loading2:true,
             gooduserId:'',
-            fullscreenLoading1:false,
+            fullscreenLoading2:false,
             node_id: '',
          }
      },
@@ -114,29 +106,24 @@ export default {
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId');
           this.getTime();
-          this.getQueryMoneyAndWeightForBizFun()
-          this.defaultTzFun();
+        //   this.getQueryMoneyAndWeightForBizFun()
+         
           this.gooduserId = this.$route.params.gooduserId;
-          setTimeout(() => {
-                this.loading = false
-          }, 4000);
-          if(localStorage.getItem("Time")){
-              var arr = localStorage.getItem("Time").split(",")
-              this.start_time = arr[0];
-              this.end_time = arr[1];
-              this.time = [this.start_time,this.end_time]
-              this.input = arr[2];
-              this.gooduserId = arr[3];
-              localStorage.removeItem('Time')
-          }else{
-             localStorage.removeItem('Time')
-          }
+          this.getTime1();
+          
+        //   if(localStorage.getItem("Time")){
+        //       var arr = localStorage.getItem("Time").split(",")
+        //       this.start_time = arr[0];
+        //       this.end_time = arr[1];
+        //       this.time = [this.start_time,this.end_time]
+        //       this.input = arr[2];
+        //       this.gooduserId = arr[3];
+        //       localStorage.removeItem('Time')
+        //   }else{
+        //      localStorage.removeItem('Time')
+        //   }
      },
      methods:{
-        //  back(){
-            //   this.$router.push({path:'statisticalMsg'})
-        //     window.history.go(-1);
-        //  },
           //初始化数据
          getTime(){
                 function formatTen(num) { 
@@ -160,12 +147,28 @@ export default {
                 this.getQueryMoneyAndWeightForBizFun();  
                 this.getQueryMoneyAndWeightForMarketFun();
          },
+          getTime1 () {
+               if(localStorage.getItem("Time")){
+                   this.loading = false
+                    var arr = localStorage.getItem("Time").split(",")
+                    console.log(arr)
+                    this.start_time = arr[0];
+                    this.end_time = arr[1];
+                    this.time = [this.start_time,this.end_time]
+                    this.input = arr[5];
+                    this.gooduserId = arr[3]
+                    this.areaId = arr[4]
+                    this.getQueryMoneyAndWeightForBizFun();  
+                    this.getQueryMoneyAndWeightForMarketFun();
+                    localStorage.removeItem('Time')
+                }else{
+                     this.defaultTzFun();
+                    localStorage.removeItem('Time')
+                }
+         },
          //点击搜索
          handleBtnQuery() {
-             this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
+             this.fullscreenLoading2 = true;
             var start_time = this.time[0];
             var end_time = this.time[1];
             this.start_time = start_time;
@@ -236,16 +239,16 @@ export default {
                 })
         },
         selectId(id){//选择区域展示商户列表
-            this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
+            this.fullscreenLoading2 = true;
             this.page = 1
+            this.currentPage = 1
             this.input = ''
-            this.tableData = ''
+            this.tableData = []
+             this.totol_price=''
+            this.weight=''
             let data = {
-                page: this.page,
-                cols: this.cols,
+                page: '1',
+                cols: '100',
                 total: this.total,
                 userId: this.userId,
                 name: this.name,
@@ -254,12 +257,14 @@ export default {
             }
             GetMarkets(data)
                 .then(res =>{
+                    this.fullscreenLoading2 = false;
                     this.titArr = res.data.dataList
                     res.data.dataList.forEach(ele => {
                         if(ele.userId == id){
                             this.bigAreaId = id;
                             this.areaId = ele.bootList[0].shop_booth_id;
                             this.getQueryMoneyAndWeightForBizFun()
+                            this.getQueryMoneyAndWeightForMarketFun()
                         }
                     });
                 })
@@ -287,13 +292,15 @@ export default {
         },
         // 获取商品总额
         getQueryMoneyAndWeightForMarketFun(){
+            this.fullscreenLoading2 = true;
             let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time
             QueryMoneyAndWeightForMarket(str)
                 .then(res=>{
+                    this.fullscreenLoading2 = false;
                       var totol_price = res.data.price;
-                      this.totol_price = totol_price.toFixed(2) ;
+                      this.totol_price = Number(totol_price.toFixed(2));
                       var weight = res.data.weight;
-                      this.weight = weight.toFixed(2);
+                      this.weight = Number(weight.toFixed(2));
                 })
                 .catch(res=>{
                       console.log(res)
