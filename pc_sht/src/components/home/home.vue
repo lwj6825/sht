@@ -480,7 +480,7 @@ export default {
                     this.enterChildPage = true;
                     this.$router.push({path:this.fromPrevPageMsg.url})
                 }
-            }if(this.$route.meta.node == 'retail'){
+            }else if(this.$route.meta.node == 'retail'){
                 let name = '';
                 this.mainList.forEach(ele => {
                     if(ele.node == 'retail'){

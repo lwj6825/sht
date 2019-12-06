@@ -56,7 +56,7 @@ export default [
         } 
     },
     {
-        path: 'statistical/statisticalTz', //商户交易额
+        path: 'statistical/statisticalTz', 
         component: resolve => require(['@/components/statistical/statisticalTz'],resolve),
         name:'StatisticalTz',
         meta:{

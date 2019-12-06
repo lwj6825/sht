@@ -82,7 +82,7 @@ export default {
             userId:'',
             start_time:'',  //开始时间
             end_time:'',  //结束时间
-            time:[],
+            time:'',
             input:'',   
             page: 1,
             cols: 15,
@@ -110,27 +110,27 @@ export default {
            this.gooduserId = this.$route.params.gooduserId;
      },
      mounted(){
-        this.node_id = localStorage.getItem('loginId');
           window.scrollTo(0,0)
+          this.node_id = localStorage.getItem('loginId');
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId');
-          this.defaultTzFun();
-          this.getTime();
-          this.getqueryMoneyAndWeightForGoodsFun()
           this.gooduserId = this.$route.params.gooduserId;
+          function formatTen(num) { 
+            return num > 9 ? (num + "") : ("0" + num); 
+        }
+        var start = new Date(); 
+        var year = start.getFullYear(); 
+        var month = start.getMonth() + 1; 
+        var day = start.getDate(); 
+        this.start_time = year + "-"+formatTen(month) + "-" +formatTen(day)
+        this.end_time = year + "-"+formatTen(month) + "-" +formatTen(day)
+        this.time = [this.start_time,this.end_time]
         //   console.log(localStorage.getItem("Time"))
-          if(localStorage.getItem("Time")){
-              var arr = localStorage.getItem("Time").split(",")
-              this.start_time = arr[0];
-              this.end_time = arr[1];
-              this.time = [this.start_time,this.end_time]
-              this.input = arr[2];
-              this.gooduserId = arr[3]
-              localStorage.removeItem('Time')
-          }else{
-              localStorage.removeItem('Time')
-          }
+     
          
+          this.getTime();
+          this.getTime1()
+          
      },
      methods:{
         getTime(){
@@ -154,11 +154,28 @@ export default {
                 this.input = this.$route.params.shopname;
             }
         },
+        getTime1 () {
+               if(localStorage.getItem("Time")){
+                   this.loading = false
+                    var arr = localStorage.getItem("Time").split(",")
+                    console.log(arr)
+                    this.start_time = arr[0];
+                    this.end_time = arr[1];
+                    this.time = [this.start_time,this.end_time]
+                    this.input = arr[2];
+                    this.gooduserId = arr[3]
+                    this.areaId = arr[4]
+                    console.log(this.areaId)
+                    this.getqueryMoneyAndWeightForGoodsFun()
+                    this.getQueryMoneyAndWeightForMarketFun()
+                    localStorage.removeItem('Time')
+                }else{
+                    this.defaultTzFun();
+                    localStorage.removeItem('Time')
+                }
+        },
         handleBtnQuery() {
             this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
             var start_time = this.time[0];
             var end_time = this.time[1];
             this.start_time = start_time;
@@ -190,9 +207,6 @@ export default {
                             gooduserId:this.bigAreaId
                            }
             })
-        },
-        skipStatistical(){  // 返回统计页面
-            this.$router.push({path:'statistical'})
         },
         defaultTzFun(){
             let data = {
@@ -227,10 +241,10 @@ export default {
         selectId(id){//选择区域展示商户列表
             this.page = 1
             this.input = ''
-            this.tableData=''
+            this.tableData=[]
             let data = {
-                page: this.page,
-                cols: this.cols,
+                page: '1',
+                cols: '100',
                 total: this.total,
                 userId: this.userId,
                 name: this.name,
@@ -238,17 +252,16 @@ export default {
                 node_id: this.node_id
             }
             this.fullscreenLoading1 = true;
-            setTimeout(()=>{
-                this.fullscreenLoading1 = false;
-            },4000)
             GetMarkets(data)
                 .then(res =>{
+                    console.log(res)
                     this.titArr = res.data.dataList
                     res.data.dataList.forEach(ele => {
                         if(ele.userId == id){
                             this.bigAreaId = id;
                             this.areaId = ele.bootList[0].shop_booth_id;
                             this.getqueryMoneyAndWeightForGoodsFun()
+                            this.getQueryMoneyAndWeightForMarketFun()
                         }
                     });
                 })
@@ -261,6 +274,7 @@ export default {
              QueryMoneyAndWeightForMarket(str)
                   .then(res=>{
                     //   console.log(res,'商品总额')
+                            this.fullscreenLoading1 = false;
                       var totol_price = res.data.price;
                       this.totol_price = Number(totol_price.toFixed(2));
                       var weight = res.data.weight;

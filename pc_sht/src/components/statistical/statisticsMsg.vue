@@ -136,7 +136,7 @@
                         <div class="list-title1">
                                     <button class="list-tit" style="outline:none" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</button>
                         </div>
-                        <div class="text" v-loading.body="fullscreenLoading1" style="margin-top:45px;">
+                        <div class="text" v-loading.body="fullscreenLoading2" style="margin-top:45px;">
                             <div id="my-chart4" style="width:1000px;height:400px;"></div>
                             <div class="list">
                                 <div class="list-item">
@@ -236,7 +236,7 @@
                     <el-progress type="circle" :percentage="progress"  :width="100" style="margin-top:10px;" ></el-progress>
                 </div>
                 <div class="table">
-                    <el-tabs v-model="activeName1">
+                    <el-tabs v-model="activeName1" v-loading.body="fullscreenLoading2">
                         <el-tab-pane label="在线商户" name="first">
                             <el-table :data="tableData2" style="width: 100%" @sort-change="sortChange2">
                                 <el-table-column prop="seller_booth_name" label="商户名称"></el-table-column>
@@ -251,7 +251,7 @@
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
                                     <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                                 </el-table>
-                                <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num2"
+                                <el-pagination v-if="num3" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num3"
                                 @current-change="handleCurrentChange3"></el-pagination>
                             </el-tab-pane>
                     </el-tabs> 
@@ -274,6 +274,7 @@ export default {
     name:"statistical",
     data(){
         return{
+            fullscreenLoading2:false,
             tableData4:[],
             tableData3:[],
             activeName1:'first',
@@ -391,6 +392,10 @@ export default {
         }
         if(this.merchantsArr == ''){
             this.more1 = true;
+        }
+        
+        if(localStorage.getItem("Time")){
+            localStorage.removeItem('Time')
         }
     },
     methods: {
@@ -553,7 +558,7 @@ export default {
                             this.getGoodsWeightRankAndAvgPriceFun(val) 
                             this.getChartFun4(title,numArr,priceArr)
                             this.goodArr = res.data.list.slice(0,10);
-                             console.log(this.goodArr)
+                            //  console.log(this.goodArr)
                         })
                         .catch(res => {
                             console.log(res);
@@ -764,6 +769,7 @@ export default {
             //     this.fullscreenLoading1 = false;
             // }, 4000);
             this.gooduserId = item.userId
+            // console.log(item)
             if(this.currId2){
                 if(this.currId2 !== item.userId){
                     this.currId2 = item.userId
@@ -956,8 +962,13 @@ export default {
                             data: title,
                             axisPointer: {
                                 type: 'shadow'
-                            }
+                            },
+                             axisLabel: {  
+                                interval:0,  
+                                rotate:15  
+                            }  
                         }
+                       
                     ],
                     yAxis: [
                         {
@@ -1277,8 +1288,10 @@ export default {
         // 该市场当日电子秤最早在线时间
         getBizOnlineTimeFun(){
             let str = 'node_id=' + this.loginId + '&page=' + this.page2 + '&cols=' + this.cols2 + '&order=' + this.order2
+            this.fullscreenLoading2=true;
             GetBizOnlineTime(str)
                 .then(res => {
+                    this.fullscreenLoading2=false;
                     this.tableData2 = res.data.list 
                     this.count = res.data.allBizNum  //电子秤总数
                     this.nums = res.data.total; //当前在线数
@@ -1294,11 +1307,15 @@ export default {
         // 该市场当日电子秤不在线商户
         getBizNotOnlineTimeFun(){
             let str = 'node_id=' + this.loginId + '&page=' + this.page3 + '&cols=' + this.cols3 + '&order=' + this.order2 + '&name=&type=1'
+            this.fullscreenLoading2=true;
             GetBizNotOnlineTime(str)
                 .then((res)=>{
                     //  console.log(res,'不在线商户')
+                    this.fullscreenLoading2=false;
                      this.tableData3 = res.data.list ;
+                    //  console.log(this.tableData3)
                      this.num3 = res.data.total
+                    //  console.log(this.num3)
                 })
                 .catch((res)=>{
                      console.log(res)
@@ -1354,9 +1371,10 @@ export default {
             let str = 'node_id=' + this.loginId
             ComputNode(str)
                 .then(res => {
-                    // console.log(res)
+                    console.log(res,"交易额")
                     if(res.data.总交易额){
                         this.list_1_num1 = res.data.总交易额.toFixed(2)
+                        console.log(this.list_1_num1)
                     }
                     if(res.data.交易额周环比){
                         this.list_1_num2 = res.data.交易额周环比.toFixed(2)
