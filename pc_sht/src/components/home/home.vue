@@ -472,7 +472,6 @@ export default {
                         name = ele.children.nav_title
                     }
                 })
-
                 if(this.parentName == name){
                     this.enterChildPage = false;
                     this.$router.push({name:'StatisticsMsg'})

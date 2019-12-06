@@ -67,8 +67,8 @@
 
 
         <el-form-item label="上传图片" prop="desc">
-
           <div class="img_group">
+          <img style="width: 50px;height: 50px; margin-right: 20px;" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+ img_url" v-if="img_url && file == ''">
 
 
             <div class="img_box" v-if="allowAddImg">
@@ -117,9 +117,9 @@
 </template>
 
 <script>
-  import {addCheckItem} from '../../js/address/url.js';
+  import {addCheckItem,updateCheck} from '../../js/address/url.js';
   import {purchase, getDefaultProductTypes,} from "../../js/goods/goods.js";
-  import {GetSaleTz, GetAllBiz, Parse, jcpurchase} from '../../js/standingBook/standingBook.js'
+  import {GetSaleTz, GetAllBiz, Parse, jcpurchase,UpdateCheck} from '../../js/standingBook/standingBook.js'
   import axios from 'axios';
 
   export default {
@@ -184,6 +184,9 @@
         goodsType: '进货',
         file: '',
         check_goods_code: '',
+        msg_id: '',
+        img_url: '',
+        count: 1
       }
     },
     mounted() {
@@ -208,7 +211,22 @@
 
       this.getGoodsFun(1)
       this.getMerchantsFun();
-
+      console.log(this.$route.params.msg)
+      if(this.$route.params.msg){
+        let msg = this.$route.params.msg
+        this.local_check_date = msg.check_date // 日期
+        this.local_stall_no = msg.stall_no // 摊位号
+        this.local_check_result = msg.check_result // 检测结果
+        this.local_remark = msg.remark // 备注
+        this.img_url = msg.img_url
+        this.check_project = msg.check_project // 检测项目
+        this.standard_value = msg.standard_value // 检测值
+        this.check_standard = msg.check_standard // 检测标准
+        this.check_res = msg.check_res // 检测结果值
+        this.check_person = msg.check_person // 检测人
+        this.check_mechanism = msg.check_mechanism // 检测机构
+        this.msg_id = msg.id
+      }
 
     },
     methods: {
@@ -278,51 +296,96 @@
 
       //  表单提交数据
       submitFormLz() {
-
-        if (this.submit_goods_name == '') {
-          return false;
-        }
-        ;
-
-        this.getMerchantName();
-        let formData = new FormData();
-        formData.append('node_id', this.local_node_id);
-        formData.append('node_name', this.local_node_name);
-        formData.append('region', this.local_region);
-        formData.append('region_name', this.local_region_name);
-        formData.append('biz_id', this.submit_biz_id);
-        formData.append('shop_booth_id', this.submit_shop_booth_id);
-        formData.append('booth_name', this.submit_booth_name);
-        formData.append('stall_no', this.local_stall_no.toString());
-        formData.append('check_good', this.submit_goods_name);
-        formData.append('check_result', this.local_check_result);
-        formData.append('remark', this.local_remark);
-        formData.append('img', this.file);
-        formData.append('check_date', this.local_check_date);
-        formData.append('check_project', this.check_project); // 检测项目
-        formData.append('standard_value', this.standard_value); // 检测值
-        formData.append('check_standard', this.check_standard); //检测标准
-        formData.append('check_res', this.check_res); //检测结果值 
-        formData.append('check_person', this.check_person); // 检测人
-        formData.append('check_mechanism', this.check_mechanism); //检测机
-        formData.append('check_goods_code', this.check_goods_code); //选择商品的goods_code
-        let config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+        if(this.msg_id){
+          if (this.submit_goods_name == '') {
+            return false;
           }
+          this.getMerchantName();
+          let formData = new FormData();
+          formData.append('node_id', this.local_node_id);
+          formData.append('node_name', this.local_node_name);
+          formData.append('region', this.local_region);
+          formData.append('region_name', this.local_region_name);
+          formData.append('biz_id', this.submit_biz_id);
+          formData.append('shop_booth_id', this.submit_shop_booth_id);
+          formData.append('booth_name', this.submit_booth_name);
+          formData.append('stall_no', this.local_stall_no.toString());
+          formData.append('check_good', this.submit_goods_name);
+          formData.append('check_result', this.local_check_result);
+          formData.append('remark', this.local_remark);
+          formData.append('img', this.file);
+          formData.append('check_date', this.local_check_date);
+          formData.append('check_project', this.check_project); // 检测项目
+          formData.append('standard_value', this.standard_value); // 检测值
+          formData.append('check_standard', this.check_standard); //检测标准
+          formData.append('check_res', this.check_res); //检测结果值 
+          formData.append('check_person', this.check_person); // 检测人
+          formData.append('check_mechanism', this.check_mechanism); //检测机
+          formData.append('check_goods_code', this.check_goods_code); //选择商品的goods_code
+          formData.append('id', this.msg_id); //选择商品的goods_code
+          let config = {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+
+          axios.post(updateCheck, formData, config).then((res) => {
+            if (res.status === 200) {
+
+              this.$message.success(res.data.message);
+              this.$router.go(-1);
+              this.submitclear();
+              this.isShowImg = true;
+              this.showBaseCode = '';
+
+            }
+          })
+        }else{
+          if (this.submit_goods_name == '') {
+            return false;
+          }
+          this.getMerchantName();
+          let formData = new FormData();
+          formData.append('node_id', this.local_node_id);
+          formData.append('node_name', this.local_node_name);
+          formData.append('region', this.local_region);
+          formData.append('region_name', this.local_region_name);
+          formData.append('biz_id', this.submit_biz_id);
+          formData.append('shop_booth_id', this.submit_shop_booth_id);
+          formData.append('booth_name', this.submit_booth_name);
+          formData.append('stall_no', this.local_stall_no.toString());
+          formData.append('check_good', this.submit_goods_name);
+          formData.append('check_result', this.local_check_result);
+          formData.append('remark', this.local_remark);
+          formData.append('img', this.file);
+          formData.append('check_date', this.local_check_date);
+          formData.append('check_project', this.check_project); // 检测项目
+          formData.append('standard_value', this.standard_value); // 检测值
+          formData.append('check_standard', this.check_standard); //检测标准
+          formData.append('check_res', this.check_res); //检测结果值 
+          formData.append('check_person', this.check_person); // 检测人
+          formData.append('check_mechanism', this.check_mechanism); //检测机
+          formData.append('check_goods_code', this.check_goods_code); //选择商品的goods_code
+          let config = {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+
+          axios.post(addCheckItem, formData, config).then((res) => {
+            if (res.status === 200) {
+
+              this.$message.success(res.data.message);
+              this.$router.go(-1);
+              this.submitclear();
+              this.isShowImg = true;
+              this.showBaseCode = '';
+
+            }
+          })
         }
 
-        axios.post(addCheckItem, formData, config).then((res) => {
-          if (res.status === 200) {
-
-            this.$message.success(res.data.message);
-            this.$router.go(-1);
-            this.submitclear();
-            this.isShowImg = true;
-            this.showBaseCode = '';
-
-          }
-        })
+        
       },
 
       /*
@@ -346,7 +409,35 @@
         jcpurchase(boothData)
           .then(res => {
             this.local_check_good_options = res.data;
-
+            if(this.count == 1 && this.$route.params.msg.check_good){
+              let name = '',arr = [];
+              name = this.$route.params.msg.check_good
+              arr = name.split(',')
+              this.local_check_good_options.forEach(val => {
+                arr.forEach(val2 => {
+                  if(val.GOODS_NAME == val2){
+                    this.local_check_good.push(val)
+                  }
+                })
+              })
+              let codeArr = []
+              this.submit_goods_name = '';
+              for (let i = 0; i < this.local_check_good.length; i++) {
+                codeArr.push(this.local_check_good[i].GOODS_CODE)
+                this.submit_goods_name += this.local_check_good[i].GOODS_NAME.toString() + ',';
+              }
+              if(codeArr.length > 0){
+                this.check_goods_code = codeArr.join(',')
+              }else{
+                this.check_goods_code = ''
+              }
+              if(this.$route.params.msg.check_good && this.local_check_good.length == 0){
+                this.goodsType = '销售'
+                this.getGoodsFun(2)
+              }else{
+                this.count = 2
+              }
+            }
           })
           .catch(res => {
           })
@@ -388,7 +479,13 @@
         GetAllBiz(obj)
           .then(res => {
             this.local_booth_name_options = res.data.dataList
-
+            if(this.$route.params.msg && this.count == 1){
+              this.local_booth_name_options.forEach(val => {
+                if(val.bootList[0].booth_name == this.$route.params.msg.booth_name){
+                  this.local_booth_name = val.bootList[0].shop_booth_id
+                }
+              })
+            }
           })
           .catch(() => {
             this.$message.error("出错啦!");
@@ -429,7 +526,9 @@
 </script>
 
 <style lang='less' scoped>
-
+  .img_group{
+    display: flex;
+  }
   .lz-content-jc {
     width: 100%;
     height: 100%;

@@ -94,6 +94,7 @@
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="viewImg(scope.row)">查看附件</el-button>
+              <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
               <el-button type="text" size="small" @click="ifDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -242,6 +243,9 @@ function getLastYearYestdy(date){
       }
     },
     methods: {
+      editFun(ele){
+        this.$router.push({name:'AddCheckTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name, msg: ele}})
+      },
       getTime(){
         var start = new Date();
         this.startTime = getLastYearYestdy(start)
