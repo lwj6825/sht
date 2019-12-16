@@ -1,18 +1,10 @@
 <template>
-    <div class="content repairMsg">
+    <div class="content lsTask">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
                     <el-form-item label="任务信息">
                         <el-input class="placeholder" v-model="form.msg" clearable placeholder="请输入任务ID或任务内容"></el-input>
-                    </el-form-item>
-                    <el-form-item label="所属节点">
-                        <el-select v-model="form.node_id" filterable clearable placeholder="请选择"
-                            v-loadmore="loadmore2" remote :remote-method="remoteMethod2" reserve-keyword @blur="unfocusFun2">
-                            <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_NAME"
-                                :value="item.NODE_ID">
-                            </el-option>
-                        </el-select>
                     </el-form-item>
                     <el-form-item label="报修模式">
                         <el-select v-model="form.bxms_id" filterable clearable placeholder="请选择">
@@ -21,8 +13,15 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="任务类型">
+                        <el-select v-model="form.types" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in typesArr" :key="index" :label="item.node_name"
+                            :value="item.node_id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="工作组">
-                        <el-select v-model="form.work_id" filterable clearable placeholder="请选择" @change="selectWorkFun">
+                        <el-select v-model="form.work_id" filterable clearable placeholder="请选择">
                             <el-option v-for="(item,index) in workArr" :key="index" :label="item.item"
                             :value="item.item">
                             </el-option>
@@ -59,12 +58,12 @@
             <div class="title">
                 <p class="tz-title">任务列表</p>
                 <div>
-                    <el-button type="primary" @click="addFun">+新建报修</el-button>
+                    <el-button type="primary" @click="addFun">+新建任务</el-button>
                     <el-button plain>导出</el-button>
                 </div>
             </div>
             <el-table :data="tableData" :header-cell-style="rowClass" :cell-style="classStyle">
-                <el-table-column prop="id" label="任务ID" width="70"></el-table-column>
+                <el-table-column prop="id" label="任务ID"> </el-table-column>
                 <el-table-column prop="task_content" label="任务内容"> 
                     <template slot-scope="scope">
                         <div class="task_name">
@@ -74,8 +73,8 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="node_name" label="所属节点" width="200"> </el-table-column>
-                <el-table-column prop="assigned_name" label="指派给" width="100">
+                <el-table-column prop="task_model" label="任务类型"> </el-table-column>
+                <el-table-column prop="record_date" label="指派给">
                     <template slot-scope="scope">
                         <div class="zpg" v-if="!scope.row.assigned_name">
                             <span style="font-weight: bolder">未指派</span>
@@ -87,10 +86,10 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="group_name" label="工作组" width="70"> </el-table-column>
-                <el-table-column prop="level" label="优先级" width="70"></el-table-column>
-                <el-table-column prop="create_name" label="创建人" width="100"> </el-table-column>
-                <el-table-column prop="record_time" label="创建时间" width="170"> </el-table-column>
+                <el-table-column prop="group_name" label="工作组"> </el-table-column>
+                <el-table-column prop="level" label="优先级"></el-table-column>
+                <el-table-column prop="create_name" label="创建人"> </el-table-column>
+                <el-table-column prop="record_time" label="创建时间"> </el-table-column>
                 <el-table-column label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button type="text" v-if="scope.row.task_state == 1" size="small" @click="viewFun(scope.row)">查看</el-button>
@@ -115,7 +114,7 @@
                 <div class="clear"></div>
                 <div class="msg">
                     <p>工作组</p>
-                    <el-select v-model="work_id" filterable clearable placeholder="请选择" @change="selectWorkFun">
+                    <el-select v-model="work_id" filterable clearable placeholder="请选择">
                         <el-option v-for="(item,index) in workArr" :key="index" :label="item.item"
                             :value="item.item">
                         </el-option>
@@ -142,7 +141,7 @@
                 </div>
                 <div class="clear"></div>
                 <el-form class="form" ref="form2" :model="form2" :rules="rules" label-width="120px" size="small">
-                    <el-form-item label="选择节点" prop="node_id">
+                    <el-form-item label="选择节点">
                         <el-select v-model="form2.node_id" filterable clearable placeholder="请选择" @change="selectNodeFun"
                             v-loadmore="loadmore2" remote :remote-method="remoteMethod2" reserve-keyword @blur="unfocusFun2">
                             <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_NAME"
@@ -150,16 +149,15 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="选择商户" v-if="merchantArr.length > 0">
-                        <el-select v-model="form2.merchant" filterable clearable placeholder="请选择" @change="selectMerchantFun">
-                            <el-option v-for="(item,index) in merchantArr"  :key="index" :label="item.BIZ_NAME"
-                                :value="item.BIZ_ID">
+                    <el-form-item label="任务模式" prop="bxms_id">
+                        <el-select v-model="form2.bxms_id" filterable clearable placeholder="请选择">
+                            <el-option v-for="item in bxmsArr" :key="item.a_conf_id"  :label="item.booth_name" :value="item.userId">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="报修模式" prop="bxms_id">
-                        <el-select v-model="form2.bxms_id" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in bxmsArr" :key="index"  :label="item.item" :value="item.item">
+                    <el-form-item label="任务类型" prop="bxms_id">
+                        <el-select v-model="form2.types" filterable clearable placeholder="请选择">
+                            <el-option v-for="item in typesArr" :key="item.a_conf_id"  :label="item.booth_name" :value="item.userId">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -171,7 +169,6 @@
                             <div class="img-list">
                             <ul>
                                 <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
-                                    <p class="delete" @click="removeFun(item,index)" v-if="item_id">-</p>
                                     <figure class="image">
                                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
                                     </figure>
@@ -188,7 +185,7 @@
                             </div>
                         </div>
                     </el-form-item>
-                    <el-form-item label="设备信息" class="equipment-list">
+                    <el-form-item label="设备信息">
                         <div v-if="item_id">
                             <div class="equipment" v-for="(item2, index2) in equipmentList" :key="index2">
                                 <el-select v-model="item2.equipment" filterable placeholder="请选择" @change="selectEquipmentFun(item2.equipment,index2)"
@@ -236,11 +233,11 @@
                     <el-form-item label="备注">
                         <el-input clearable v-model="form2.remarke"></el-input>
                     </el-form-item>
+                    <el-form-item class="btn">
+                        <el-button @click="closeFun2">取消</el-button>
+                        <el-button type="primary" @click="submitForm('form2')">确认</el-button>
+                    </el-form-item>
                 </el-form>
-                <div style="margin-left: 470px">
-                    <el-button @click="closeFun2">取消</el-button>
-                    <el-button type="primary" @click="submitForm('form2')">确认</el-button>
-                </div>
             </div>
         </div>
         <!--关闭-->
@@ -251,93 +248,40 @@
                     <p class="iconfont icon-close close" @click="closeFun3"></p>
                 </div>
                 <div class="clear"></div>
-                <!--无设备-->
-                <div v-if="equipmentMsg.length ==0">
-                    <el-form ref="form3" :model="form3" :rules="rules2" label-width="120px" size="small">
-                        <el-form-item label="解决方案" prop="solve">
-                            <textarea v-model="form3.solve" placeholder="例：土豆15黄瓜20"></textarea>
-                        </el-form-item>
-                        <el-form-item>    
-                            <div class="msg-item">   
-                                <div class="img-list">
-                                <ul>
-                                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
-                                        <figure class="image">
-                                            <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
-                                        </figure>
-                                    </li>
-                                </ul>
-                                </div>
-                                <div>
-                                    <div class="submit">
-                                        添加图片
-                                        <form id="upload" enctype="multipart/form-data" method="post"> 
-                                            <input type="file" class="file" ref="file" @change="fileFun($event)">
-                                        </form>
-                                    </div>
-                                </div>
+                <el-form class="form" ref="form3" :model="form3" :rules="rules2" label-width="120px" size="small">
+                    <el-form-item label="故障类型" prop="bxms_id">
+                        <el-select v-model="form2.fault" filterable clearable placeholder="请选择">
+                            <el-option v-for="item in faultArr" :key="item.a_conf_id"  :label="item.booth_name" :value="item.userId">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="解决方案" prop="solve">
+                        <textarea v-model="form3.solve" placeholder="例：土豆15黄瓜20"></textarea>
+                    </el-form-item>
+                    <div class="msg-item">   
+                        <div class="img-list">
+                        <ul>
+                            <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                                <figure class="image">
+                                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                </figure>
+                            </li>
+                        </ul>
+                        </div>
+                        <div>
+                            <div class="submit">
+                                添加图片
+                                <form id="upload" enctype="multipart/form-data" method="post"> 
+                                    <input type="file" class="file" ref="file" @change="fileFun($event)">
+                                </form>
                             </div>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button style="margin-left: 360px;" @click="closeFun3">取消</el-button>
-                            <el-button type="primary" @click="submitForm2('form3')">确认</el-button>
-                        </el-form-item>
-                    </el-form>
-                </div>
-                <!--有设备-->
-                <div v-else>
-                    <div class="form-div">
-                        <el-form class="form" ref="form4" :model="item2" label-width="120px" size="small" v-for="(item2, index2) in equipmentMsg" :key="index2">
-                            <el-form-item label="设备名称">
-                                <p>{{item2.assets_no + '|' + item2.assets_name}}</p>
-                            </el-form-item>
-                            <el-form-item label="设备问题">
-                                <el-input clearable v-model="item2.describe"></el-input>
-                            </el-form-item>
-                            <el-form-item label="更换部件">
-                                <el-select v-model="item2.assets_part" filterable clearable placeholder="请选择" @change="selectWorkFun">
-                                    <el-option v-for="(item3,index3) in partArr" :key="index3" :label="item3.a_conf_item"
-                                        :value="item3.a_conf_item">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="解决方案">
-                                <el-input clearable v-model="item2.text"></el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <div class="msg-item">   
-                                    <div class="img-list">
-                                    <ul>
-                                        <li v-for="(item,index) in item2.imgArr1" :key="index" v-if="item.img_url">
-                                            <figure class="image">
-                                                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
-                                            </figure>
-                                        </li>
-                                    </ul>
-                                    </div>
-                                    <div>
-                                        <div class="submit">
-                                            添加图片
-                                            <form enctype="multipart/form-data" method="post"> 
-                                                <input type="file" class="file" ref="file" @change="fileFun2($event,item2,index2)">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </el-form-item>
-                            <el-form-item label="维修结果">
-                                <el-radio-group v-model="item2.result">
-                                    <el-radio label="0">未完成</el-radio>
-                                    <el-radio label="1">已完成</el-radio>
-                                </el-radio-group>
-                            </el-form-item>
-                        </el-form>
+                        </div>
                     </div>
-                    <div class="btn">
+                    <el-form-item class="btn">
                         <el-button @click="closeFun3">取消</el-button>
-                        <el-button type="primary" @click="submitForm3">确认</el-button>
-                    </div>
-                </div>
+                        <el-button type="primary" @click="submitForm2('form3')">确认</el-button>
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
     </div>
@@ -352,7 +296,7 @@ import {QueryNodeBasePage,GetAssetsConfig,GetAssetsUser,InsertAssetsTask,GetAsse
 import {uploadImgTask} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
-    name:"repairMsg",
+    name:"lsTask",
     data() {
         return {
             page: 1,
@@ -361,12 +305,13 @@ export default {
             tableData: [],
             form: {
                 msg: '',
-                node_id: '',
+                types: '',
                 bxms_id: '',
                 zpg_id: '',
                 work_id: '',
                 people: '',
             },
+            typesArr: [],
             nodeArr: [],
             bxmsArr: [],
             zpgArr: [],
@@ -381,8 +326,8 @@ export default {
             isEdits: false, // 新增，编辑
             form2: {
                 node_id: '', // 选择节点
-                merchant: '',
                 bxms_id: '', // 报修模式
+                types: '', //任务类型
                 task_msg: '', // 任务内容
                 equipment: '', // 设备信息
                 work_id: '', // 工作组
@@ -390,24 +335,29 @@ export default {
                 priority: '高', // 优先级
                 remarke: '', // 备注
             },
-            merchantArr: [],
             rules: {
                 node_id: [
                     { required: true, message: '请选择节点', trigger: 'change' }
                 ],
                 bxms_id: [
-                    { required: true, message: '请选择报修模式', trigger: 'change' }
+                    { required: true, message: '请选择任务模式', trigger: 'change' }
+                ],
+                types: [
+                    { required: true, message: '请选择任务类型', trigger: 'change' }
                 ],
                 task_msg: [
                     { required: true, message: '请输入任务内容', trigger: 'blur' },
                 ],
             },
+            equipmentArr: [],
             imgArr1: [],
             file: '',
             isSolve: false, // 关闭
             form3: {
                 solve: '',
+                fault: '', // 故障类型
             },
+            faultArr: [],
             rules2: {
                 solve: [
                     { required: true, message: '请输入解决方案', trigger: 'blur' },
@@ -438,15 +388,7 @@ export default {
         }
     },
     mounted() {
-        this.userId = localStorage.getItem('userId')
-        this.userName = localStorage.getItem('loginName')
-        this.role_id = localStorage.getItem('roleId')
-        this.getDataFun()
-        this.getQueryNodeBasePage()
-        this.getGetAssetsConfigFun()
-        this.getGetAssetsUserFun()
-        this.getGetAssetsUserFun2()
-        this.getQueryAssetsConf()
+       
     },
     methods: {
         // 获取更换部件
@@ -1339,7 +1281,7 @@ export default {
             this.getGetAssetsUserFun('')
         },
         viewFun(ele){
-            this.$router.push({name: 'ViewRepair',params: ele})
+            this.$router.push({name: 'ViewLsTask',params: ele})
         },
         editFun(ele){
             this.isEdits = false
@@ -1402,7 +1344,7 @@ export default {
                 })
             this.isSolve = true
         },
-        deleteFun(ele){
+        deleteFun(){
             
         },
         selectTypesFun(){
@@ -1444,7 +1386,7 @@ export default {
         clearFun(){
             this.form = {
                 msg: '',
-                node_id: '',
+                types: '',
                 bxms_id: '',
                 zpg_id: '',
                 work_id: '',
@@ -1475,60 +1417,9 @@ export default {
     .content{
         width: 100%;
         height: 100%;
-        .equipment-list{
-            .equipment{
-                display: flex;
-                flex-wrap:wrap;
-                align-items: center;
-                .close-equipment{
-                    cursor: pointer;
-                }
-            }
-            .add-btn{
-                color: #409EFF;
-                cursor: pointer;
-            }
-            .el-select{
-                margin-bottom: 5px;
-            }
-        }
         .search-btn{
             color: #409EFF;
             background: #fff;
-        }
-        .msg-item{
-            width: 400px;
-            display: flex;
-            .img-list{
-                ul{
-                    display: flex;
-                    flex-wrap:wrap;
-                    li{
-                        position: relative;
-                        top: 0;
-                        left: 0;
-                        margin: 0 10px;
-                        .delete{
-                            position: absolute;
-                            top: -6px;
-                            right: -6px;
-                            width: 12px;
-                            height: 12px;
-                            text-align: center;
-                            line-height: 7px;
-                            font-size: 24px;
-                            background: #990000;
-                            color: #fff;
-                            border-radius: 50%;
-                            cursor: pointer;
-                        }
-                        img{
-                            width: 50px;
-                            height: 50px;
-                        }
-                    }
-                }
-            }
         }
         .passwrd{
             position: fixed;
@@ -1544,19 +1435,14 @@ export default {
                 position: relative;
                 top: 50%;
                 left: 50%;
-                margin-top: -310px;
+                margin-top: -265px;
                 margin-left: -300px;
                 width: 600px;
-                height: 620px;
+                height: 530px;
                 background: #fff;
                 font-size: 14px;
-                .clear{
-                    clear: both;
-                }
                 .form{
                     margin-top: 10px;
-                    height: 520px;
-                    overflow: auto;
                     .el-select, .el-input{
                         width: 400px;
                     }
@@ -1676,6 +1562,9 @@ export default {
                         line-height: 30px;
                     }
                 }
+                .clear{
+                    clear: both;
+                }
             }
         }
         .assign{
@@ -1707,21 +1596,13 @@ export default {
             .text{
                 margin-top: -220px;
                 height: 440px;
-                .form,.form-div{
-                    height: 340px;
-                    overflow: auto;
-                }
                 textarea{
-                    margin: 10px;
                     width: 400px;
                     height: 200px;
                     border: 1px solid #ccc;
                 }
                 .submit{
-                    left: 0;
-                }
-                .btn{
-                    margin-left: 470px;
+                    left: 140px;
                 }
             }
         }
@@ -1804,15 +1685,5 @@ export default {
             text-align: center;
         }
         
-    }
-</style>
-<style lang="less">
-    .repairMsg{
-        .el-input__icon{
-            line-height: 30px;
-        }
-        .el-table{
-            font-size: 13px !important;
-        }
     }
 </style>

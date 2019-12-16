@@ -29,7 +29,7 @@
                         <el-input class="placeholder" v-model="form.file_name" clearable placeholder="请输入文件名称"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
+                        <el-button type="primary" class="search-btn" @click="searchFun"style="margin-left: 10px;">搜索</el-button>
                         <!-- <el-button @click="clearFun">重置</el-button>-->
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
@@ -191,6 +191,10 @@ export default {
     .content{
         width: 100%;
         height: 100%;
+        .search-btn{
+            color: #409EFF;
+            background: #fff;
+        }
         .searchs{
             padding: 10px 0;
             background: #fff;

@@ -47,8 +47,8 @@
                 </el-select>
             </el-form-item>
             <br>
-            <el-form-item class="submit-btn">
-                <el-button type="primary" @click="submitForm('form')">保存</el-button>
+            <el-form-item>
+                <el-button class="submit-btn" type="primary" @click="submitForm('form')">保存</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -284,6 +284,7 @@ export default {
             }
             .submit-btn{
                 margin-left: 300px;
+                font-size: 14px;
             }
             
         }

@@ -14,6 +14,8 @@ import lookImages from '../components/settings/lookImages.vue'
 import assetState from '../components/settings/assetState.vue';
 import assetTypes from '../components/settings/assetTypes.vue';
 import partName from '../components/settings/partName.vue';
+import repairMs from '../components/settings/repairMs.vue';
+import taskTypes from '../components/settings/taskTypes.vue';
 
 export default [
   {
@@ -166,5 +168,24 @@ export default [
       url:'partName',
     }
   },
-  
+  {
+    path: 'settings/repairMs',
+    name: 'RepairMs',
+    component: resolve => require(['@/components/settings/repairMs'],resolve),
+    meta:{
+      id:'408',
+      node:'settings',
+      url:'repairMs',
+    }
+  },
+  {
+    path: 'settings/taskTypes',
+    name: 'TaskTypes',
+    component: resolve => require(['@/components/settings/taskTypes'],resolve),
+    meta:{
+      id:'410',
+      node:'settings',
+      url:'taskTypes',
+    }
+  },
 ]

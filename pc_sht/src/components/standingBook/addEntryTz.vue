@@ -190,8 +190,8 @@
                         <!--<p v-else-if="val.TYPE_NAME == '进货商品'" :style="add ? {display: 'block'} : {display: 'none'}">
                         
                         {{tableData[scope.$index][ind]}}</p>-->
-                        <el-select v-model="tableData[scope.$index][ind]" filterable v-if="val.TYPE_NAME == '进货商品'" v-loadmore="loadmore"
-                        remote :remote-method="remoteMethod" reserve-keyword @blur="unfocusFun"
+                        <el-select v-model="tableData[scope.$index][ind]" filterable v-if="val.TYPE_NAME == '进货商品'" 
+                        v-loadmore="loadmore" remote :remote-method="remoteMethod" reserve-keyword @blur="unfocusFun"
                         :style="add ? {display: 'block'} : {display: 'none'}" size="mini" @change="addGoods(scope.row[0],scope.$index)">
                             <el-option  v-for="(val,index) in tableData2" :key="index" :label="val.GOODS_NAME" :value="val.GOODS_NAME" >
                             </el-option>

@@ -102,7 +102,7 @@ export default {
                 .then(res => {
                     // console.log(res)
                     this.tableData = res.data[2].reverse()
-                    this.num = res.data[2].length
+                    // this.num = res.data[2].length
                 })
                 .catch(res => {
                     console.log(res);
