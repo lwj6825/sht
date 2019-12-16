@@ -222,10 +222,19 @@ export default {
             },
             start_time:'',
             end_time:'',
+            shopname:'',
             gooduserId:'',
             dataMore:'',
             node_id: '',
-            aid:''
+            aid:'',
+            areaId1:'',
+            input1:'',
+            gooduserId1:'',
+            start_time1:'',
+            end_time1:'',
+            merChant1:'',
+            shopname1:'',
+            input2:''
         }
     },
     created(){
@@ -240,11 +249,21 @@ export default {
         // }, 4000);
         // 接受值
         this.aid = this.$route.query.areaId;
-        this.input = this.$route.query.input;
-        this.gooduserId = this.$route.query.gooduserId;
-        
+        this.form.GoodList = this.$route.query.shopname;
+        this.input2=this.$route.query.input;
+        this.merChant = this.$route.query.merChant;
+        this.shopname = this.$route.query.shopname;
+        this.areaId1 = this.$route.query.areaId;
         this.start_time  = this.$route.query.startTime;
         this.end_time  = this.$route.query.endTime;
+
+        // this.areaId1 = this.areaId;
+        this.gooduserId1 = this.gooduserId;
+        this.start_time1 = this.start_time;
+        this.end_time1 = this.end_time;
+        this.merChant1 = this.input2;
+        this.shopname1 = this.input2
+
         var date = new Date();
         var seperator1 = "-";
         var year = date.getFullYear();
@@ -330,7 +349,9 @@ export default {
             return false
         },
         back(){
-            let dataMore = [this.form.value1[0],this.form.value1[1],this.form.GoodList,this.gooduserId,this.areaId,this.form.user]
+            console.log(this.shopname1,this.merChant1)
+            let dataMore = [this.start_time1,this.end_time1,this.shopname1,this.gooduserId1,this.areaId1,this.merChant1]
+            console.log(dataMore)
             localStorage.setItem("Time",dataMore);
             window.history.go(-1);
         },

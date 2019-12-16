@@ -136,7 +136,7 @@
                         <div class="list-title1">
                                     <button class="list-tit" style="outline:none" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</button>
                         </div>
-                        <div class="text" v-loading.body="fullscreenLoading2" style="margin-top:45px;">
+                        <div class="text" v-loading.body="fullscreenLoading1" style="margin-top:45px;">
                             <div id="my-chart4" style="width:1000px;height:400px;"></div>
                             <div class="list">
                                 <div class="list-item">
@@ -236,9 +236,9 @@
                     <el-progress type="circle" :percentage="progress"  :width="100" style="margin-top:10px;" ></el-progress>
                 </div>
                 <div class="table">
-                    <el-tabs v-model="activeName1" v-loading.body="fullscreenLoading2">
-                        <el-tab-pane label="在线商户" name="first">
-                            <el-table :data="tableData2" style="width: 100%" @sort-change="sortChange2">
+                    <el-tabs v-model="activeName1" @tab-click="active" >
+                        <el-tab-pane label="在线商户" name="first" >
+                            <el-table :data="tableData2" style="width: 100%" @sort-change="sortChange2" v-loading.body="fullscreenLoading2">
                                 <el-table-column prop="seller_booth_name" label="商户名称"></el-table-column>
                                 <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                                 <el-table-column prop="in_date" label="电子秤最早在线时间" ></el-table-column>
@@ -246,8 +246,8 @@
                             <el-pagination v-if="num2" background layout="prev, pager, next" :current-page.sync="page2" :page-size="cols2" :total="num2"
                             @current-change="handleCurrentChange2"></el-pagination>
                         </el-tab-pane>
-                        <el-tab-pane label="不在线商户" name="second">
-                                <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3">
+                        <el-tab-pane label="不在线商户" name="second" >
+                                <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3" v-loading.body="fullscreenLoading2">
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
                                     <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                                 </el-table>
@@ -399,13 +399,20 @@ export default {
         }
     },
     methods: {
+        active(){
+            if(this.activeName1 == 'first'){
+                this.fullscreenLoading2 = true;
+                this.getBizOnlineTimeFun()
+            }
+            if(this.activeName1 == 'second'){
+                this.fullscreenLoading2 = true;
+                this.getBizNotOnlineTimeFun()
+            }
+        },
         handleBtnQuery(){
             this.fullscreenLoading1 = true;
-            // setTimeout(() => {
-            //     this.fullscreenLoading1 = false;
-            // }, 4000);
             this.currId = null;
-            this.currId2 = this.titArr[0].userId;
+            // this.currId2 = this.titArr[0].userId;  // 点击查询恢复到默认
             var startTime = this.time[0];
             var endTime = this.time[1];
             function formatDate(date) {

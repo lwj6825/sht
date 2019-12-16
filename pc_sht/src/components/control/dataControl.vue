@@ -1,50 +1,32 @@
 <template>
-    <div class="content glContrast">
+    <div class="content jxsjMonitor">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <!--展开-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px">
-                    <el-form-item label="对照信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="ID、节点编码、节点名称"></el-input>
+                <el-form ref="form" :inline="true" :model="form" label-width="100px">
+                    <el-form-item label="节点信息">
+                        <el-input v-model="form.msg" clearable placeholder="节点编码、节点名称"></el-input>
                     </el-form-item>
-                    <el-form-item label="日志类型">
-                        <el-select v-model="form.types" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in typesArr" :key="index" :label="item.LOG_TYPE"
-                            :value="item.LOG_TYPE">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="节点类型">
-                        <el-select v-model="form.node" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_DETAIL_TYPE"
-                            :value="item.NODE_DETAIL_TYPE">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="数据说明">
-                        <el-input class="placeholder" v-model="form.sjsm" clearable placeholder=""></el-input>
-                    </el-form-item>
-                    <el-form-item label="备用信息">
-                        <el-input class="placeholder" v-model="form.byxx" clearable placeholder=""></el-input>
+                    <el-form-item label="无数据天数">
+                        <el-input class="placeholder" v-model="form.minNum" clearable></el-input>
+                         - <el-input class="placeholder" v-model="form.maxNum" clearable></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
+                        <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
                         <!-- <el-button @click="clearFun">重置</el-button>-->
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
-                <!--收起-->
             </div>
         </div>
         <div class="table">
             <div class="title">
-                <p class="tz-title">对照管理</p>
-                <div>
-                    <el-button type="primary" @click="allSignFun">批量标记</el-button>
-                    <el-button type="primary" @click="allDeleteFun">批量删除</el-button><!---->
-                    <el-button type="primary" plain @click="downloadFun">导出</el-button>
-                    <el-button type="primary" plain @click="deleteAllDataFun">删除全部</el-button>
-                </div>
+                <p class="tz-title">解析数据监控</p>
+                <!--<div>
+                    <el-button type="primary" @click="newFun">新增</el-button>
+                    <el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
+                    <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>
+                </div>-->
             </div>
             <!--<div class="file-btns" v-if="isfile">
                 <div>
@@ -65,22 +47,21 @@
                 </div>
             </div>-->
             <div class="tables" >
-                <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
-                    <el-table-column type="selection" width="50"></el-table-column>
-                    <el-table-column prop="id" label="ID"> </el-table-column>
-                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="log_type" label="日志类型"> </el-table-column>
-                    <el-table-column prop="error_code" label="缺对照编码"> </el-table-column>
-                    <el-table-column prop="error_name" label="取对照名称"> </el-table-column>
-                    <el-table-column prop="error_data" label="备用信息" > </el-table-column>
-                    <el-table-column prop="message" label="数据说明" > </el-table-column>
-                    <el-table-column prop="record_date" label="最后时间" > </el-table-column>
-                    <!--<el-table-column prop="SCBJ" label="删除标记" > </el-table-column>-->
-                    <el-table-column label="操作" width="160">
+                <el-table :data="tableData" :header-cell-style="rowClass">
+                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="parse_type_num" label="任务环节"></el-table-column>
+                    <el-table-column prop="table_name_ch" label="存入表"></el-table-column>
+                    <el-table-column prop="last_time" label="最后有效上传时间"></el-table-column>
+                    <el-table-column prop="datenums" label="无数据天数" ></el-table-column>
+                    <el-table-column label="设置" width="260">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="signFun(scope.row)">标记不需要做对照的数据</el-button>
-                            <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="cancalMonitor(scope.row)">取消监控</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="checkFun(scope.row)">取消数据重复校验</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="editFun(scope.row)">设置阈值</el-button>
+                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="contrastFun(scope.row)">对照管理</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ftp_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ftp_id ? false : true" @click="uploadFun(scope.row)">最近文件上传情况</el-button>
+                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="analysisFun(scope.row)">最近15条解析情况</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -146,24 +127,13 @@ function getNowFormatDate() {//获取当前时间
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {QueryErrorData,QueryErrorLogType,DownloadErrorData,DeleteErrorLogData,QueryNodeDetailType,DeleteAllErrorData} from '../../js/traceEquipment/traceEquipment.js'
+import {AnalysisDataMon,SetByFtpId} from '../../js/traceEquipment/traceEquipment.js'
 import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
-    name:"glContrast",
+    name:"jxsjMonitor",
     data() {
         return {
-            form: {
-                msg: '',
-                types: '',
-                node: '',
-                sjsm: '',
-                byxx: '',
-            },
-            unfold: '收起',
-            show: true,
-            inline: true,
-            typesArr: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -172,84 +142,39 @@ export default {
             tableData: [],
             isEdits: false,
             threshold: '',
-            ids: [],
-            nodeArr: [],
+            ftp_id: '',
+            form: {
+                msg: '',
+                minNum: '',
+                maxNum: '',
+            }
         }
     },
     mounted() {
         this.userId = localStorage.getItem('userId')
-        if(this.$route.params.node_id){
-            this.form.msg = this.$route.params.node_id
-        }else if(this.$route.params.node_name){
-            this.form.msg = this.$route.params.node_name
-        }
-        this.getNodeFun()
         this.getDataFun()
-        this.getTypesFun()
     },
     methods: {
-        // 当前条件结果全部删除，最少有一个条件   全部删除
-        deleteAllDataFun(ele){
-            if(this.form.types == '' && this.form.node == '' && this.form.sjsm == ''){
-                this.$message.error('删除失败，至少添加一个条件');
-                return
-            }
-            this.$confirm('你确定要全部删除吗?', '提示', {
+        // 最近15天解析情况
+        analysisFun(ele){
+            this.$router.push({name: 'ZjjxSituation',params: ele})
+        },
+        // 文件上传情况
+        uploadFun(ele){
+            this.$router.push({name: 'WjscSituation',params: ele})
+        },
+        // 取消数据重复校验
+        checkFun(ele){
+            this.$confirm('你确定要取消数据重复校验吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {         
+            }).then(() => {
                 let params = {
-                    cols: this.cols,
-                    page: this.page,
-                    mon_log_base: this.form.msg,
-                    log_type: this.form.types,
-                    node_detail_type: this.form.node,
-                    message: this.form.sjsm,
-                    error_data: this.form.byxx,
-                }
-                DeleteAllErrorData(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        console.log(res)
-                    })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
-        },
-        // 查询 所有节点
-        getNodeFun(){
-            QueryNodeDetailType('')
-                .then(res => {
-                    // console.log(res)
-                    this.nodeArr = res.data.node_detail_type_list
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-        },
-        // 批量标记
-        allSignFun(){
-            this.$confirm('你确定要批量标记不需要做对照的数据吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {                
-                let params = {
-                    ids: this.ids.join(','),
+                    ftp_id: ele.ftp_id,
                     set_type: 2,
                 }
-                DeleteErrorLogData(params)
+                SetByFtpId(params)
                     .then(res => {
                         if (res.result == true) {
                             this.$message.success(res.message);
@@ -268,77 +193,22 @@ export default {
                 });          
             });
         },
-        // 标记不需要做对照的数据
-        signFun(ele){
-            this.$confirm('你确定要标记不需要做对照的数据吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {            
-                let params = {
-                    ids: ele.id,
-                    set_type: 2,
-                }
-                DeleteErrorLogData(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        console.log(res)
-                    })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
+        // 对照管理
+        contrastFun(ele){
+            this.$router.push({name: 'Contrast',params: ele})
         },
-        // 批量删除
-        allDeleteFun(){
-            this.$confirm('你确定要删除吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {        
-                let params = {
-                    ids: this.ids.join(','),
-                    set_type: 1,
-                }
-                DeleteErrorLogData(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        console.log(res)
-                    })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
-        },
-        deleteFun(ele){
-            this.$confirm('你确定要删除吗?', '提示', {
+        // 取消监控
+        cancalMonitor(ele){
+            this.$confirm('你确定要取消监控吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {    
                 let params = {
-                    ids: ele.id,
+                    ftp_id: ele.ftp_id,
                     set_type: 1,
                 }
-                DeleteErrorLogData(params)
+                SetByFtpId(params)
                     .then(res => {
                         if (res.result == true) {
                             this.$message.success(res.message);
@@ -357,69 +227,34 @@ export default {
                 });          
             });
         },
-        downloadFun(){
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            let params = {
-                cols: this.cols,
-                page: this.page,
-                mon_log_base: this.form.msg,
-                log_type: this.form.types,
-                node_detail_type: this.form.node,
-                message: this.form.sjsm,
-                error_data: this.form.byxx,
-            }
-            DownloadErrorData( params, {})
-                .then((res) => {
-                    loading.close();
-                    let time = getNowFormatDate()
-                    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
-                    let url = window.URL.createObjectURL(blob);
-                    let aLink = document.createElement("a");
-                    aLink.style.display = "none";
-                    aLink.href = url;
-                    aLink.setAttribute("download", `对照信息` + time);
-                    document.body.appendChild(aLink);
-                    aLink.click();
-                    document.body.removeChild(aLink); 
-                    window.URL.revokeObjectURL(url); 
-                })
-                .catch(function (res) {});
-        },
-        getTypesFun(){
-            QueryErrorLogType('')
-                .then(res => {
-                    this.typesArr = res.data.log_type_list
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-            
-        },
-        changeFun(item){
-            this.ids = []
-            console.log(item)
-            item.forEach(ele => {
-                this.ids.push(ele.id)
-            })
-        },
-        cancalMonitor(ele){
-
-        },
         submitForm(){
-
+            let params = {
+                ftp_id: this.ftp_id,
+                set_type: 3,
+                threshold: this.threshold
+            }
+            SetByFtpId(params)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                    this.isEdits = false
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
         },
+        // 设置阈值
         editFun(ele){
+            this.ftp_id = ele.ftp_id
             this.isEdits = true
         },
         closeFun(){
-            this.form = {
-                zcState: ''
-            }
+            this.threshold = ''
+            this.ftp_id = ''
             this.isEdits = false
         },
         getDataFun(){
@@ -432,17 +267,14 @@ export default {
             let params = {
                 cols: this.cols,
                 page: this.page,
-                mon_log_base: this.form.msg,
-                log_type: this.form.types,
-                log_type: this.form.types,
-                node_detail_type: this.form.node,
-                message: this.form.sjsm,
-                error_data: this.form.byxx,
+                mon_log_base: this.form.msg.trim(),
+                sdatenums: this.form.minNum.trim(),
+                edatenums: this.form.maxNum.trim()
             }
-            QueryErrorData(params)
+            AnalysisDataMon(params)
                 .then(res => {
-                    this.tableData = res.data.error_data_list
-                    this.num = res.data.error_bean.total
+                    this.tableData = res.data.mon_list
+                    this.num = res.data.mon.total
                     loading.close();
                 })
                 .catch((res) => {
@@ -450,8 +282,15 @@ export default {
                     loading.close();
                 })
         },
+        viewFun(ele){
+            // this.$router.push({name: 'ViewAssets',params: {param: ele}})
+        },
+        newFun(){
+            // this.$router.push({name: 'NewAssets'})
+        },
         searchFun(){
             this.page = 1
+            this.timeChange()
             this.getDataFun()
         },
         handleCurrentChange(val) {
@@ -470,15 +309,8 @@ export default {
         clearFun(){
             this.form = {
                 msg: '',
-                types: '',
-                node: '',
-                sjsm: '',
-                byxx: '',
-            }
-            if(this.$route.params.node_id){
-                this.form.msg = this.$route.params.node_id
-            }else if(this.$route.params.node_name){
-                this.form.msg = this.$route.params.node_name
+                minNum: '',
+                maxNum: '',
             }
             this.page = 1
             this.getDataFun()
@@ -514,6 +346,12 @@ export default {
     .content{
         width: 100%;
         height: 100%;
+        .table-btn{
+            margin: 0 5px;
+            float: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
         .searchs{
             padding: 10px 0;
             background: #fff;
@@ -675,6 +513,8 @@ export default {
                 }
             }
         }
-        
+        .placeholder{
+            width: 100px !important;
+        }
     }
 </style>

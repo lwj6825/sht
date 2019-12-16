@@ -95,6 +95,7 @@ export default {
             gooduserId:'',
             fullscreenLoading2:false,
             node_id: '',
+            input2:''
          }
      },
      created(){
@@ -110,18 +111,6 @@ export default {
          
           this.gooduserId = this.$route.params.gooduserId;
           this.getTime1();
-          
-        //   if(localStorage.getItem("Time")){
-        //       var arr = localStorage.getItem("Time").split(",")
-        //       this.start_time = arr[0];
-        //       this.end_time = arr[1];
-        //       this.time = [this.start_time,this.end_time]
-        //       this.input = arr[2];
-        //       this.gooduserId = arr[3];
-        //       localStorage.removeItem('Time')
-        //   }else{
-        //      localStorage.removeItem('Time')
-        //   }
      },
      methods:{
           //初始化数据
@@ -138,6 +127,7 @@ export default {
                 this.start_time = this.$route.params.startTime; 
                 this.end_time  = this.$route.params.endTime;
                 this.time = [this.start_time,this.end_time]
+                this.gooduserId = this.$route.params.gooduserId;
                 this.input = this.$route.params.merChant; 
                 if(!this.input){
                     this.input = ""
@@ -157,6 +147,7 @@ export default {
                     this.time = [this.start_time,this.end_time]
                     this.input = arr[5];
                     this.gooduserId = arr[3]
+                    this.bigAreaId = arr[3]
                     this.areaId = arr[4]
                     this.getQueryMoneyAndWeightForBizFun();  
                     this.getQueryMoneyAndWeightForMarketFun();
@@ -173,7 +164,6 @@ export default {
             var end_time = this.time[1];
             this.start_time = start_time;
             this.end_time = end_time;
-            this.currentPage = 1;
             if(this.input ==''){
                 this.currentPage = 1;
                 this.getQueryMoneyAndWeightForBizFun();
@@ -181,10 +171,6 @@ export default {
             this.getQueryMoneyAndWeightForBizFun();
             this.getQueryMoneyAndWeightForMarketFun();
          },
-        //跳转首页
-        skipStatistical(){
-            this.$router.push({path:'statistical'})
-        },
         handleSizeChange(val) {
             this.pageSize = val ;
             this.getQueryMoneyAndWeightForBizFun();
@@ -196,17 +182,17 @@ export default {
         handleClick(row) {
             let dataMore = [this.time,this.input,this.gooduserId]
             localStorage.setItem("Time", dataMore);
+            this.input2 = this.input;
             this.input = row.biz_name
             this.$router.push({path:'StatisticalTz',
-                             query:{merChant:this.input,   
+                             query:{input:this.input2,
+                             merChant:row.biz_name,   
                              startTime:this.start_time,  
                              endTime:this.end_time,
-                             gooduserId:this.gooduserId
+                             areaId:this.areaId,
+                             gooduserId:this.bigAreaId
                              }
             })
-        },
-        skipStatistical(){  // 返回统计页面
-                this.$router.push({path:'statistical'})
         },
         defaultTzFun(){
             let data = {
@@ -232,7 +218,8 @@ export default {
                         this.bigAreaId = res.data.dataList[0].userId;
                         this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
                     }
-                    this.handleBtnQuery();
+                    this.getQueryMoneyAndWeightForBizFun();  
+                    this.getQueryMoneyAndWeightForMarketFun();
                 })
                 .catch(res =>{
                     console.log(res)
