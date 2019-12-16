@@ -764,6 +764,22 @@ export default {
             background: url('../../assets/images/goods.svg') no-repeat center center;
             background-size: 100% 100%;
         }
+        .icon-control{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-collect{
+            background: url('../../assets/images/tzFarming.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-analysis{
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-warning{
+            background: url('../../assets/images/standingBook.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
         .level-two-menu{
             position: fixed;
             left: 50px;

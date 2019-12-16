@@ -31,6 +31,10 @@ import assets from './assets'
 import retail from './retail'
 import repair from './repair'
 
+import control from './control'
+import analysis from './analysis'
+import collect from './collect'
+import warning from './warning'
 Vue.use(Router)
 
 export default new Router({
@@ -69,7 +73,11 @@ export default new Router({
         ...tzFarming,
         ...tzSlaughter,
         ...retail,
-        ...repair
+        ...repair,
+        ...control,
+        ...analysis,
+        ...collect,
+        ...warning
       ]
     },
   ]

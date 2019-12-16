@@ -437,3 +437,28 @@ export const insertAssetsTaskResult = baseUrl + 'assetsTask/insertAssetsTaskResu
 export const getAssetsTaskResult = baseUrl + 'assetsTask/getAssetsTaskResult' // 查看关闭任务 没无设备 时解决方案的图片 以及信息
 export const getAssetsTaskLog = baseUrl + 'assetsTask/getAssetsTaskLog' // 查看任务日志
  // 
+
+//pass平台
+// 数据源
+export const getAllDataSource = baseUrl4 + 'warning/getAllDataSource' // 数据源接入查询
+export const queryDataSourceType = baseUrl4 + 'warning/queryDataSourceType' //数据源类型查询
+export const updateDataSource = baseUrl4 + 'warning/updateDataSource' //数据源编辑
+export const insertDataSource = baseUrl4 + 'warning/insertDataSource'  //数据源添加
+export const deleteDataSource = baseUrl4 + 'warning/deleteDataSource' //数据源删除
+// 定时任务
+export const queryQuartzJob = baseUrl4 + 'warning/queryQuartzJob' // 定时任务管理中任务类型
+export const queryQuartzState = baseUrl4 + 'warning/queryQuartzState' //定时任务管理中任务状态
+export const quartzManagerNew = baseUrl4 + 'warning/quartzManagerNew' //定时任务管理查询
+// 任务运行日志
+export const queryJobType = baseUrl4 + 'warning/queryJobType' //任务运行日志中任务类型
+export const queryExecuteResult = baseUrl4 + 'warning/queryExecuteResult' //任务运行日志中任务执行结果
+export const getAllJobExecuteLog = baseUrl4 + 'warning/getAllJobExecuteLog' //任务运行日志查询
+
+// 预警
+export const getAllWarning = baseUrl4 + 'warning/getAllWarning' //预警管理查询
+export const WarningState = baseUrl4 + 'warning/WarningState' //预警状态开启/关闭
+export const getAllLogWarning = baseUrl4 + 'warning/getAllLogWarning' //查询预警日志
+export const insertWarning = baseUrl4 + 'warning/insertWarning' //添加预警工作
+export const updateWarning = baseUrl4 + 'warning/updateWarning' //编辑预警工作
+export const executeWarning = baseUrl4 + 'warning/executeWarning' //主动执行
+export const downloadLogWarning = baseUrl4 + 'warning/downloadLogWarning'//下载日志附件

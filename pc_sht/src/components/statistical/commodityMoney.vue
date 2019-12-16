@@ -104,6 +104,7 @@ export default {
             gooduserId: '',
             fullscreenLoading1:false,
             node_id: '',
+            input2:''
         }
      },
      created(){
@@ -126,11 +127,10 @@ export default {
         this.end_time = year + "-"+formatTen(month) + "-" +formatTen(day)
         this.time = [this.start_time,this.end_time]
         //   console.log(localStorage.getItem("Time"))
-     
-         
           this.getTime();
           this.getTime1()
-          
+           console.log(this.areaId)
+           console.log(this.bigAreaId)
      },
      methods:{
         getTime(){
@@ -164,8 +164,10 @@ export default {
                     this.time = [this.start_time,this.end_time]
                     this.input = arr[2];
                     this.gooduserId = arr[3]
+                    this.bigAreaId = arr[3]
                     this.areaId = arr[4]
                     console.log(this.areaId)
+                    console.log(this.bigAreaId)
                     this.getqueryMoneyAndWeightForGoodsFun()
                     this.getQueryMoneyAndWeightForMarketFun()
                     localStorage.removeItem('Time')
@@ -198,12 +200,15 @@ export default {
         handleClick(row) {
             let dataMore = [this.time,this.input,this.gooduserId]
             localStorage.setItem("Time", dataMore);
+            this.input2 = this.input;
+       
             this.input = row.plu_name
             this.$router.push({name:'StatisticalTz',
-                           query:{shopname:this.input, 
+                           query:{input:this.input2, 
+                           shopname:row.plu_name,
                            startTime:this.start_time,  
                            endTime:this.end_time,
-                        //    gooduserId:this.gooduserId
+                           areaId:this.areaId,
                             gooduserId:this.bigAreaId
                            }
             })
@@ -232,7 +237,8 @@ export default {
                         this.bigAreaId = res.data.dataList[0].userId;
                         this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
                     }
-                    this.handleBtnQuery();
+                    this.getqueryMoneyAndWeightForGoodsFun()
+                    this.getQueryMoneyAndWeightForMarketFun()
                 })
                 .catch(res =>{
                     console.log(res)
@@ -274,7 +280,8 @@ export default {
              QueryMoneyAndWeightForMarket(str)
                   .then(res=>{
                     //   console.log(res,'商品总额')
-                            this.fullscreenLoading1 = false;
+                     this.loading = false;
+                     this.fullscreenLoading1 = false;
                       var totol_price = res.data.price;
                       this.totol_price = Number(totol_price.toFixed(2));
                       var weight = res.data.weight;
@@ -373,7 +380,6 @@ export default {
     width: 100%;
     background-color: #ffffff;
     margin-top: 10px;
-
     .table_cell_title{
         height: 50px;
         line-height: 50px;
