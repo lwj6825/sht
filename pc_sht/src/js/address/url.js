@@ -1,15 +1,7 @@
-<<<<<<< HEAD
-// base url
-// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.1.14:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
-export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/' //pass平台
-=======
 // // base url
 // export const baseUrl = 'http://192.168.1.65:8081/order_sht/';
 // export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
 // export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
->>>>>>> bcfed37f537ff31f2893ee8a82c0ab2861d3ee8d
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
@@ -17,11 +9,7 @@ export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/' //pass平台
 export const baseUrl = 'http://shop.zhdtech.com/';//外网
 export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-<<<<<<< HEAD
-// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
-=======
 export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
->>>>>>> bcfed37f537ff31f2893ee8a82c0ab2861d3ee8d
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口,，，,,
@@ -486,7 +474,6 @@ export const insertWarning = baseUrl4 + 'warning/insertWarning' //添加预警�
 export const updateWarning = baseUrl4 + 'warning/updateWarning' //编辑预警工作
 export const executeWarning = baseUrl4 + 'warning/executeWarning' //主动执行
 export const downloadLogWarning = baseUrl4 + 'warning/downloadLogWarning'//下载日志附件
-<<<<<<< HEAD
 export const queryNodeTypeInfo = baseUrl4 + 'warning/queryNodeTypeInfo'// 数据源节点类型查询
 //查询节点信息
 export const queryNodeTypeInfoForType = baseUrl4 + 'warning/queryNodeTypeInfoForType' //企业类型查询
@@ -508,5 +495,3 @@ export const queryCommunicationRecord = baseUrl4 + 'warning/queryCommunicationRe
 export const queryInfoType = baseUrl4 + 'warning/queryInfoType' //条件查询
 export const querygroupName = baseUrl4 + 'warning/querygroupName' //条件查询
 export const queryNodeDetailType2 = baseUrl4 + 'warning/queryNodeDetailType'
-=======
->>>>>>> bcfed37f537ff31f2893ee8a82c0ab2861d3ee8d
