@@ -1,19 +1,19 @@
 // base url
-export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.1.14:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
 export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/' //pass平台
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
-// 登录地址接口
+// 登录地址接口,，，,,
 export const loginUrl = baseUrl + 'login/login';
 export const getShtUserInfo = baseUrl + 'login/getShtUserInfo'; // get单点登录
 export const loginout = baseUrl + 'login/loginout';// 登出
@@ -319,6 +319,7 @@ export const updateProductionTech = baseUrl + 'farming/updateProductionTech' // 
 export const deleteProductionTech = baseUrl + 'farming/deleteProductionTech' // 删除加工工艺接口
 
 // 资产
+
 export const queryAssetsUser = baseUrl3 + 'assets/queryAssetsUser' // 查询 所有资产用户信息（需要确定用户类型类型）
 export const queryAssetsConf = baseUrl3 + 'assets/queryAssetsConf' // 2.查询 资产状态、所属期 等查询条件下拉框
 export const queryAssetsType = baseUrl3 + 'assets/queryAssetsType' // 3.查询 资产类型树
@@ -381,6 +382,9 @@ export const queryChangeItem = baseUrl3 + 'assets/queryChangeItem' // 变更管�
 export const deleteParseMonLogById = baseUrl3 + 'MonLog/deleteParseMonLogById' // 解析运行日志  失败导出queryNo
 export const queryNodeDetailType = baseUrl3 + 'MonLog/queryNodeDetailType' // 解析运行日志  对照管理  节点
 export const deleteAllErrorData = baseUrl3 + 'MonLog/deleteAllErrorData' // 解析运行日志  对照管理  全部删除
+export const queryLoseDataNode = baseUrl3 + 'MonLog/queryLoseDataNode' // 缺失对照企业
+export const queryFilePath = baseUrl3 + 'MonLog/queryFilePath' // 文件路径
+export const addErrorDateRemark = baseUrl3 + 'MonLog/addErrorDateRemark' //添加备注
 
 // 养殖场
 export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询
@@ -439,8 +443,29 @@ export const getAllJobExecuteLog = baseUrl4 + 'warning/getAllJobExecuteLog' //�
 // 预警
 export const getAllWarning = baseUrl4 + 'warning/getAllWarning' //预警管理查询
 export const WarningState = baseUrl4 + 'warning/WarningState' //预警状态开启/关闭
-export const getAllLogWarning = baseUrl4 + 'warning/getAllLogWarning' //查询预警日志
+export const getAllLogWarning = baseUrl + 'warning/getAllLogWarning' //查询预警日志
 export const insertWarning = baseUrl4 + 'warning/insertWarning' //添加预警工作
 export const updateWarning = baseUrl4 + 'warning/updateWarning' //编辑预警工作
 export const executeWarning = baseUrl4 + 'warning/executeWarning' //主动执行
 export const downloadLogWarning = baseUrl4 + 'warning/downloadLogWarning'//下载日志附件
+export const queryNodeTypeInfo = baseUrl4 + 'warning/queryNodeTypeInfo'// 数据源节点类型查询
+//查询节点信息
+export const queryNodeTypeInfoForType = baseUrl4 + 'warning/queryNodeTypeInfoForType' //企业类型查询
+export const queryTraceabilityType = baseUrl4 + 'warning/queryTraceabilityType' //可追溯品类查询
+export const querySourceWay = baseUrl4 + 'warning/querySourceWay' //流水来源方式查询
+export const queryProvinceToSelect = baseUrl4 + 'warning/queryProvinceToSelect' // 查询省
+export const getCode = baseUrl4 + 'warning/getCode' //查询省市县下拉框
+export const updateNodeState = baseUrl4 + 'warning/updateNodeState' //根据节点ID修改节点的启用停用状态
+export const getNodeInfo1 = baseUrl4 + 'warning/getNodeInfo' // 查询所有节点
+export const insertBasicInfo = baseUrl4 + 'warning/insertBasicInfo' //添加节点信息
+export const updateBasicInfo = baseUrl4 + 'warning/updateBasicInfo' //编辑节点信息
+export const toBasicUpdate = baseUrl4 + 'warning/toBasicUpdate' // 查看节点本条信息
+export const downloadNodeInfo = baseUrl4 + 'warning/downloadNodeInfo' //节点导出
+export const importNodeInfo = baseUrl4 + 'warning/importNodeInfo' //节点导入
+//连续未上报监控
+export const notReportedMonitoring = baseUrl4 + 'warning/notReportedMonitoring' //连续未上报监控查询
+export const insertCommunicationRecord = baseUrl4 + 'warning/insertCommunicationRecord' //添加沟通记录
+export const queryCommunicationRecord = baseUrl4 + 'warning/queryCommunicationRecord' // 沟通记录查询
+export const queryInfoType = baseUrl4 + 'warning/queryInfoType' //条件查询
+export const querygroupName = baseUrl4 + 'warning/querygroupName' //条件查询
+export const queryNodeDetailType2 = baseUrl4 + 'warning/queryNodeDetailType'

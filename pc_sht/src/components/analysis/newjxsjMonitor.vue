@@ -1,74 +1,34 @@
 <template>
-    <div class="content journal">
+    <div class="content jxsjMonitor">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <!--展开-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}">
-                    <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-form-item>
+                <el-form ref="form" :inline="true" :model="form" label-width="100px">
                     <el-form-item label="节点信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="主键ID、节点ID、节点名称" style="width:230px;"></el-input>
+                        <el-input v-model="form.msg" clearable placeholder="节点编码、节点名称" style="width:230px;"></el-input>
                     </el-form-item>
-                    <el-form-item label="存入表名">
-                        <el-select v-model="form.crbm" filterable clearable placeholder="请选择" style="width:230px;">
-                            <el-option v-for="(item,index) in crbmArr" :key="index" :label="item.TABLE_NAME_CH"
-                            :value="item.TABLE_NAME">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="执行结果">
-                        <el-select v-model="form.zxjg" filterable clearable placeholder="请选择" style="width:230px;">
-                            <el-option value="1" label="成功">成功</el-option>
-                            <el-option value="2" label="失败">失败</el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="文件名称" >
-                        <el-input v-model="form.name" clearable placeholder="请输入" style="width:230px;"></el-input>
+                    <el-form-item label="无数据天数">
+                        <el-input class="placeholder" v-model="form.minNum" clearable></el-input>
+                         - <el-input class="placeholder" v-model="form.maxNum" clearable></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
+                        <!-- <el-button @click="clearFun">重置</el-button>-->
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
                 </el-form>
-                <!--收起-->
-                <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'none'} : {display: 'block'}" v-if="isShow">
-                    <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="节点信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="主键ID、节点ID、节点名称" style="width:230px;"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
-                        <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                    </el-form-item>
-                </el-form>
-                <p class="unfold" v-if="isShow" @click="unfoldFun">{{unfold}}筛选条件</p>
             </div>
         </div>
         <div class="table">
             <div class="title">
-                <p class="tz-title">解析运行日志</p>
-                <div>
-                    <el-button type="primary" @click="allDeleteFun">批量删除</el-button><!---->
-                    <!--<el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
+                <p class="tz-title">数据解析监控</p>
+                <!--<div>
+                    <el-button type="primary" @click="newFun">新增</el-button>
+                    <el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
                     <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>
-                --></div><!--
+                </div>-->
             </div>
-            <div class="file-btns" v-if="isfile">
+            <!--<div class="file-btns" v-if="isfile">
                 <div>
                     <span class="submit">
                         批量新增
@@ -84,37 +44,45 @@
                             <input type="file" class="file" ref="files" @change="fileFun($event,2)">
                         </form>
                     </span>
-                </div>-->
-            </div>
-            <div class="tables" v-loading.body="fullscreenLoading">
-                <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
-                    <el-table-column type="selection" width="50"></el-table-column>
-                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="table_name" label="存入表名"> </el-table-column>
-                    <el-table-column prop="start_time" label="执行时间"> </el-table-column>
-                    <el-table-column prop="execute_time" label="执行用时"> </el-table-column>
-                    <el-table-column prop="data_date" label="数据时间"> </el-table-column>
-                    <el-table-column prop="execute_num" label="表存入数"> </el-table-column>
-                    <el-table-column prop="save_total_num" label="总存入数"> </el-table-column>
-                    <el-table-column prop="file_total_num" label="文件总数"> </el-table-column>
-                    <el-table-column prop="execute_result" label="文件名称"> </el-table-column>
-                    <el-table-column prop="result" label="执行消息"> </el-table-column>
-                    <el-table-column prop="job_result" label="执行信息"> </el-table-column>
-                    <!--<el-table-column prop="merchant_name" label="所属商户" >
-                        <template slot-scope="scope">{{scope.row.merchant_name ? scope.row.merchant_name : '- - -'}}</template>
-                    </el-table-column>-->
-                    <el-table-column label="操作" width="100">
+                </div>
+            </div>-->
+            <div class="tables" >
+                <el-table :data="tableData" v-loading.body="fullscreenLoading" :header-cell-style="rowClass">
+                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="parse_type_num" label="任务环节"></el-table-column>
+                    <el-table-column prop="table_name_ch" label="存入表"></el-table-column>
+                    <el-table-column prop="last_time" label="最后有效上传时间"></el-table-column>
+                    <el-table-column prop="datenums" label="无数据天数" ></el-table-column>
+                    <el-table-column label="设置" width="260">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
-                            <el-button type="text" :style="(scope.row.id && scope.row.job_exception) ? {display: 'inline-block'} : {display: 'none'}" size="small" @click="dowoloadFun(scope.row)">下载</el-button>
-                            <el-button type="text" :style="(scope.row.id && scope.row.job_exception) ? {display: 'inline-block'} : {display: 'none'}" size="small" @click="deleteFun(scope.row)">删除</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="cancalMonitor(scope.row)">取消监控</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="checkFun(scope.row)">取消数据重复校验</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="editFun(scope.row)">设置阈值</el-button>
+                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="contrastFun(scope.row)">对照管理</el-button>
+                            <el-button type="text" size="small" :style="scope.row.ftp_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ftp_id ? false : true" @click="uploadFun(scope.row)">最近文件上传情况</el-button>
+                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="analysisFun(scope.row)">最近15条解析情况</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
+            <div class="passwrd" v-if="isEdits">
+                <div class="text">
+                    <div class="box-title">
+                        <p class="tit">设置阈值</p>
+                        <p class="iconfont icon-close close" @click="closeFun"></p>
+                    </div>
+                    <div class="form">
+                        <el-input type="text" clearable v-model="threshold"></el-input>
+                        <div class="btn">
+                            <el-button @click="closeFun">取消</el-button>
+                            <el-button type="primary" @click="submitForm">确认</el-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -159,56 +127,55 @@ function getNowFormatDate() {//获取当前时间
 String.prototype.trim=function(){
   return this.replace(/(^\s*)|(\s*$)/g,'');
 }
-import {ParseMonLog,QueryTableName,DownloadErrorLog,DeleteParseMonLogById} from '../../js/traceEquipment/traceEquipment.js'
+import {AnalysisDataMon,SetByFtpId} from '../../js/traceEquipment/traceEquipment.js'
+import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
+import axios from 'axios';
 export default {
-    name:"journal",
+    name:"jxsjMonitor",
     data() {
         return {
             fullscreenLoading:true,
-            startTime: '',
-            endTime: '',
-            isShow: true,
-            form: {
-                dataTime: '',
-                msg: '',
-                crbm: '',
-                zxjg: '',
-                name: '',
-            },
-            unfold: '收起',
-            show: true,
-            inline: true,
-            crbmArr: [],
             page: 1,
             cols: 15,
             num: 0,
+            userId: '',
             total: '',
             tableData: [],
-            userId: '',
-            ids: [],
+            isEdits: false,
+            threshold: '',
+            ftp_id: '',
+            form: {
+                msg: '',
+                minNum: '',
+                maxNum: '',
+            }
         }
     },
     mounted() {
-        this.getTime()
-        let arr = []
-        arr.push(this.startTime)
-        arr.push(this.endTime)
-        this.form.dataTime = arr
         this.userId = localStorage.getItem('userId')
         this.getDataFun()
-        this.getQueryTableName()
     },
     methods: {
-        deleteFun(ele){
-            this.$confirm('你确定要删除吗?', '提示', {
+        // 最近15天解析情况
+        analysisFun(ele){
+            this.$router.push({name: 'newzjjxSituation',params: ele})
+        },
+        // 文件上传情况
+        uploadFun(ele){
+            this.$router.push({name: 'newwjscSituation',params: ele})
+        },
+        // 取消数据重复校验
+        checkFun(ele){
+            this.$confirm('你确定要取消数据重复校验吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 let params = {
-                    ids: ele.id,
+                    ftp_id: ele.ftp_id,
+                    set_type: 2,
                 }
-                DeleteParseMonLogById(params)
+                SetByFtpId(params)
                     .then(res => {
                         if (res.result == true) {
                             this.$message.success(res.message);
@@ -227,23 +194,22 @@ export default {
                 });          
             });
         },
-        changeFun(item){
-            this.ids = []
-            item.forEach(ele => {
-                this.ids.push(ele.id)
-            })
+        // 对照管理
+        contrastFun(ele){
+            this.$router.push({name: 'newcontrast',params: ele})
         },
-        // 批量删除
-        allDeleteFun(){
-            this.$confirm('你确定要批量删除吗?', '提示', {
+        // 取消监控
+        cancalMonitor(ele){
+            this.$confirm('你确定要取消监控吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
+            }).then(() => {    
                 let params = {
-                    ids: this.ids.join(','),
+                    ftp_id: ele.ftp_id,
+                    set_type: 1,
                 }
-                DeleteParseMonLogById(params)
+                SetByFtpId(params)
                     .then(res => {
                         if (res.result == true) {
                             this.$message.success(res.message);
@@ -262,41 +228,35 @@ export default {
                 });          
             });
         },
-        // 下载
-        dowoloadFun(ele){
+        submitForm(){
             let params = {
-                id: ele.id
+                ftp_id: this.ftp_id,
+                set_type: 3,
+                threshold: this.threshold
             }
-            DownloadErrorLog(params)
+            SetByFtpId(params)
                 .then(res => {
-                    this.downFile(res)
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                    this.isEdits = false
                 })
-                .catch(() => {
-                    this.$message.error("出错啦!");
+                .catch((res) => {
+                    console.log(res)
                 })
         },
-        downFile (data) {
-            let time = getNowFormatDate()
-            console.log(time)
-            if (!data) { return }
-            let url = window.URL.createObjectURL(new Blob([data]))
-            let link = document.createElement('a')
-            link.style.display = 'none';
-            link.href = url
-            link.setAttribute('download', 'errorLog' + time + '.txt')
-            
-            document.body.appendChild(link)
-            link.click()
+        // 设置阈值
+        editFun(ele){
+            this.ftp_id = ele.ftp_id
+            this.isEdits = true
         },
-        getQueryTableName(){
-            QueryTableName('')
-                .then(res => {
-                    this.crbmArr = res.data.table_name
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-
+        closeFun(){
+            this.threshold = ''
+            this.ftp_id = ''
+            this.isEdits = false
         },
         getDataFun(){
             // const loading = this.$loading({
@@ -306,41 +266,41 @@ export default {
             //     background: 'rgba(0, 0, 0, 0.7)'
             // });
             let params = {
-                start_time: this.startTime,
-                end_time: this.endTime,
-                mon_log_base: this.form.msg,
-                execute_result: this.form.name,
-                table_name: this.form.crbm,
-                result: this.form.zxjg,
                 cols: this.cols,
                 page: this.page,
+                mon_log_base: this.form.msg.trim(),
+                sdatenums: this.form.minNum.trim(),
+                edatenums: this.form.maxNum.trim()
             }
-            ParseMonLog(params)
+            AnalysisDataMon(params)
                 .then(res => {
-                    this.tableData = res.data.mon_log_list
-                    this.num = res.data.mon_log.total
+                    this.tableData = res.data.mon_list
+                    this.num = res.data.mon.total
+                    this.fullscreenLoading = false
                     // loading.close();
-                    this.fullscreenLoading = false;
                 })
                 .catch((res) => {
                     console.log(res)
-                    this.fullscreenLoading = false;
+                    this.fullscreenLoading = false
                     // loading.close();
                 })
         },
         viewFun(ele){
-            this.$router.push({name: 'ViewJournal',params: {param: ele}})
+            // this.$router.push({name: 'ViewAssets',params: {param: ele}})
+        },
+        newFun(){
+            // this.$router.push({name: 'NewAssets'})
         },
         searchFun(){
-            this.fullscreenLoading = true;
             this.page = 1
+            this.fullscreenLoading = true
             this.timeChange()
             this.getDataFun()
         },
         handleCurrentChange(val) {
             this.page = val
+            this.fullscreenLoading = true
             this.getDataFun()
-            this.fullscreenLoading = true;
         },
         unfoldFun(){
             if(this.show == false){
@@ -353,18 +313,12 @@ export default {
         },
         clearFun(){
             this.form = {
-                dataTime: '',
                 msg: '',
-                crbm: '',
-                zxjg: '',
-                name: '',
+                minNum: '',
+                maxNum: '',
             }
             this.page = 1
-            this.getTime()
-            let arr = []
-            arr.push(this.startTime)
-            arr.push(this.endTime)
-            this.form.dataTime = arr
+            this.fullscreenLoading = true
             this.getDataFun()
         },
         timeChange(ele){
@@ -378,9 +332,8 @@ export default {
         },
         getTime(){
             var start = new Date();
-            // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            // this.startTime = timestampToTime(startTime)
-            this.startTime = formatDate(start)
+            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
         },
@@ -395,14 +348,20 @@ export default {
 </script>
 
 <style scoped lang='less'>
+    @import '../../assets/css/common.css';
     .content{
         width: 100%;
         height: 100%;
+        .table-btn{
+            margin: 0 5px;
+            float: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
         .searchs{
             padding: 10px 0;
             background: #fff;
             .search{
-                width: 100%;
                 .file-btn{
                     color: #777;
                     background: #fff;
@@ -523,69 +482,45 @@ export default {
                 margin-top: -150px;
                 margin-left: -200px;
                 width: 400px;
-                height: 230px;
+                height: 170px;
                 background: #fff;
-                .download{
-                    margin-top: 20px;
-                    font-size: 14px;
-                    text-align: center;
-                }
-                .submit{
-                    margin: 30px auto;
-                    position: relative;
-                    left: 40%;
-                    display: inline-block;
-                    width: 90px;
-                    height: 30px;
-                    line-height: 30px;
-                    color: #409EFF;
-                    background: #fff;
-                    text-align: center;
-                    overflow: hidden;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    box-sizing: border-box;
-                    border: 1px solid #409EFF;
-                    .file{
-                        position: absolute;
-                        left: 0px;
-                        top: 0px;
-                        width: 90px;
-                        height: 36px;
-                        opacity: 0;
-                        background: rgba(0,0,0,0);
+                .box-title{
+                    margin: 0 10px;
+                    height: 40px;
+                    border-bottom: 1px solid #ccc;
+                    .tit{
+                        float: left;
+                        margin-left: 10px;
+                        width: 330px;
+                        line-height: 40px;
+                        font-size: 14px;
                     }
                 }
-                .submit:hover{
-                    background: #409EFF;
-                    color: #fff;
-                }
                 .close{
-                    margin: 0 10px;
-                    padding-left: 340px;
+                    float: right;
                     width: 40px;
                     height: 40px;
                     text-align: center;
                     line-height: 40px;
                     font-size: 16px;
-                    border-bottom: 1px solid #ccc;
                     cursor: pointer;
                 }
-                .btn{
-                    margin-left: 270px;
+                .form{
+                    clear: both;
+                    margin-top: 20px;
+                    margin-left: 50px;
+                    .el-input{
+                        width: 200px;
+                    }
+                    .btn{
+                        margin-top: 20px;
+                        margin-left: 140px;
+                    }
                 }
             }
         }
-        
-    }
-</style>
-<style lang="less">
-    .journal{
-        .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
-            line-height: 24px;
-        }
-        .el-input--suffix .el-input__inner{
-            padding-right: 10px !important;
+        .placeholder{
+            width: 100px !important;
         }
     }
 </style>

@@ -8,8 +8,11 @@ import {baseUrl,queryAssetsUser,queryAssetsConf,queryAssetsType,queryNodeBase,qu
     queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2,parseMonLog,queryTableName,getFileState,
     queryFtpMonLog,getParseType,analysisDataMon,setByFtpId,queryErrorData,downloadErrorData,deleteErrorLogData,queryErrorLogType,
     queryUploadFilesByFtpId,parseMonLogForRecently,downloadErrorLog,queryChangeLogList,downloadChangeLog,queryChangeItem,
-    deleteParseMonLogById,queryNodeDetailType,deleteAllErrorData
+    deleteParseMonLogById,queryNodeDetailType,deleteAllErrorData,queryFilePath,addErrorDateRemark
     } from "../address/url";
+export const QueryFilePath = function(){
+    return ajaxGet(queryFilePath)
+}
 // 查询 所有资产用户信息（需要确定用户类型类型）
 export const QueryAssetsUser = function(params) {
     return ajaxGet(queryAssetsUser +'?'+ params)
@@ -303,4 +306,8 @@ export const QueryNodeDetailType = function(params) {
 // 解析运行日志  对照管理  全部删除
 export const DeleteAllErrorData = function(params) {
     return ajaxPost(deleteAllErrorData,params)
+}
+//添加备注
+export const AddErrorDateRemark = function(params) {
+    return ajaxPost(addErrorDateRemark,params)
 }

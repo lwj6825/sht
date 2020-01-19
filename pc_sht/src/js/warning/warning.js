@@ -1,5 +1,7 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
-import {getAllWarning,WarningState,getAllLogWarning,insertWarning,updateWarning,executeWarning,downloadLogWarning} from '../address/url.js';
+import {getAllWarning,WarningState,getAllLogWarning,insertWarning,updateWarning,executeWarning,downloadLogWarning,
+    queryLoseDataNode,queryNodeTypeInfo
+} from '../address/url.js';
 
 export const  GetAllWarning  = function(params) { //预警管理查询
     return ajaxPost(getAllWarning,params)
@@ -26,5 +28,13 @@ export const  ExecuteWarning  = function(params) { //主动执行
 }
 
 export const  DownloadLogWarning  = function(params) { //下载日志附件
-    return ajaxPost(downloadLogWarning,params)
+    return ajaxGet(downloadLogWarning + '?' + params)
+}
+
+export const QueryLoseDataNode = function(params) { // 缺失对照企业
+    return ajaxPost(queryLoseDataNode,params)
+}
+
+export const QueryNodeTypeInfo = function(params) {
+    return ajaxGet(queryNodeTypeInfo + '?' + params)
 }

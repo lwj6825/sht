@@ -321,7 +321,7 @@
                         <el-table-column prop="" label="附件">
                             <template slot-scope="scope">
                                 <p v-if="scope.row.image_url == ''" >无</p>
-                                <el-button v-else type="text"size="small" @click="viewFun(scope.row)">查看</el-button>
+                                <el-button v-else type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
                             </template>
                         </el-table-column>
                         <el-table-column prop="remark" label="备注"> </el-table-column>
@@ -897,10 +897,10 @@ export default {
             if(this.btn == '修改'){
                 this.btn = '保存'
             }else if(this.btn == '保存'){
-                if(/^SW\d{6}$/.test(this.ruleForm.tmh) == false){
-                    this.$message.error("请输入正确的条码号!");
-                    return
-                }
+                // if(/^SW\d{6}$/.test(this.ruleForm.tmh) == false){
+                //     this.$message.error("请输入正确的条码号!");
+                //     return
+                // }
                 if(this.ruleForm.name == ''){
                     this.$message.error("请选择资产名称!");
                     return
