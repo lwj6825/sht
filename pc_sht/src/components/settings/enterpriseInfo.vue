@@ -437,7 +437,7 @@ export default {
                     introduce: this.qyjj,
                     node_type: this.jglx
                 }
-                console.log(obj)
+                // console.log(obj)
                 UpdateNodeInfo(obj)
                     .then(res => {
                         if (res.result == true) {
