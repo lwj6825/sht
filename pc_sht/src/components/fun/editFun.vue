@@ -95,7 +95,7 @@ export default {
             })
     },
     mounted(){
-        // console.log(this.$route.params)
+        console.log(this.$route.params)
         this.parentNodeOptions = JSON.parse(localStorage.getItem('parentNodeOptions'));
         if(JSON.stringify(this.$route.params) != "{}"){
             this.isEdit = true;

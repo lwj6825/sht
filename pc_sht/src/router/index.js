@@ -35,6 +35,7 @@ import control from './control'
 import analysis from './analysis'
 import collect from './collect'
 import warning from './warning'
+import nodeManage from './nodeManage'
 Vue.use(Router)
 
 export default new Router({
@@ -77,7 +78,8 @@ export default new Router({
         ...control,
         ...analysis,
         ...collect,
-        ...warning
+        ...warning,
+        ...nodeManage
       ]
     },
   ]

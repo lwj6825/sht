@@ -41,6 +41,46 @@ export default [
             url:'ftpFile',
         }
     },
+    { 
+        path: 'analysis/newjxsjMonitor', //解析数据监控
+        component: resolve => require(['@/components/analysis/newjxsjMonitor'],resolve),
+        name:'NewjxsjMonitor',
+        meta:{
+            id:'435',
+            node:'analysis',
+            url:'newjxsjMonitor',
+        }
+    },
+    { 
+        path: 'analysis/newwjscSituation', //最近文件上传情况
+        component: resolve => require(['@/components/analysis/newwjscSituation'],resolve),
+        name:'newwjscSituation',
+        meta:{
+            id:'436',
+            node:'analysis',
+            url:'newwjscSituation',
+        }
+    },
+    { 
+        path: 'analysis/newzjjxSituation', //最近15条解析情况
+        component: resolve => require(['@/components/analysis/newzjjxSituation'],resolve),
+        name:'newzjjxSituation',
+        meta:{
+            id:'437',
+            node:'analysis',
+            url:'newzjjxSituation',
+        }
+    },
+    { 
+        path: 'analysis/newcontrast', //对照管理
+        component: resolve => require(['@/components/analysis/newcontrast'],resolve),
+        name:'newcontrast',
+        meta:{
+            id:'438',
+            node:'analysis',
+            url:'newcontrast',
+        }
+    },
     // { 
     //     path: 'control/dataControl', //未上传数据企业(数据解析)
     //     component: resolve => require(['@/components/control/dataControl'],resolve),

@@ -1,6 +1,6 @@
 export default [
     { 
-        path: 'warning/warning', //数据解析
+        path: 'warning/warning', //预警管理
         component: resolve => require(['@/components/warning/warning'],resolve),
         name:'Warning',
         meta:{
@@ -10,13 +10,23 @@ export default [
         }
     },
     { 
-        path: 'warning/warnManage', //任务运行日志
+        path: 'warning/warnManage', //全部预警
         component: resolve => require(['@/components/warning/warnManage'],resolve),
         name:'WarnManage',
         meta:{
             id:'429',
             node:'warning',
             url:'warnManage',
+        }
+    },
+    { 
+        path: 'warning/addwarning', //添加预警
+        component: resolve => require(['@/components/warning/addwarning'],resolve),
+        name:'Addwarning',
+        meta:{
+            id:'431',
+            node:'warning',
+            url:'Addwarning',
         }
     },
 ]

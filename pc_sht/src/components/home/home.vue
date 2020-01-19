@@ -1,6 +1,6 @@
 <template>
     <div class="container" ref="container">
-        <div class="level-one-menu">
+        <div class="level-one-menu" :class="isShow==true?'level-one-menu1':'level-one-menu'">
             <figure class="logo"><img src="../../assets/images/logo.png"></figure>
             <ul class="menu-list">
                 <li class="menu-item" v-for="item in mainList" :key="item.id" :class="{active:levelOneCurrId == item.id}"
@@ -94,6 +94,8 @@ export default {
             password: '',
             remember: '',
             roleId: '',
+            user:'',
+            isShow : false
         }
     },
     created() {
@@ -102,6 +104,15 @@ export default {
         // console.log(localStorage.getItem('menuList'));
     },
     mounted(){
+        setTimeout(()=>{
+            this.user = localStorage.getItem("loginName");
+            if(this.user == 'paas'){
+                this.isShow = true;
+            }else{
+                this.isShow = false;
+            }
+        },200)
+        
         if(localStorage.getItem('menuList')){
             this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
             // console.log(this.mainList)
@@ -634,6 +645,7 @@ export default {
             }
             &:hover{
                 width: 100px;
+                // width:135px;
                 .text{
                     width: 200px;
                 }
@@ -673,6 +685,12 @@ export default {
                 width: 24px;
                 height: 24px;
                 vertical-align: text-top;
+            }
+        }
+        .level-one-menu1{
+            &:hover{
+                // width: 100px;
+                width:135px;
             }
         }
         .icon-tzFarming{
@@ -765,19 +783,24 @@ export default {
             background-size: 100% 100%;
         }
         .icon-control{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/control.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        
+        .icon-analysis{
+            background: url('../../assets/images/analysis.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-collect{
-            background: url('../../assets/images/tzFarming.svg') no-repeat center center;
-            background-size: 100% 100%;
-        }
-        .icon-analysis{
-            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background: url('../../assets/images/collection.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-warning{
-            background: url('../../assets/images/standingBook.svg') no-repeat center center;
+            background: url('../../assets/images/warning.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-nodeManage{
+            background: url('../../assets/images/nodeManage.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{

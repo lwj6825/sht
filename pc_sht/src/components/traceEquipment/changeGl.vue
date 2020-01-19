@@ -48,7 +48,7 @@
                     </el-form-item>
                     
                     <el-form-item>
-                        <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
+                        <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
                         <!-- <el-button @click="clearFun">重置</el-button>-->
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
                     </el-form-item>
@@ -514,6 +514,7 @@ export default {
             }
             DownloadChangeLog( params, {})
                 .then((res) => {
+                    console.log(res)
                     let time = getNowFormatDate()
             //         let blob = new Blob([res.data], {type: "application/vnd.ms-excel"}); 
             // 　      let objectUrl = URL.createObjectURL(blob); 

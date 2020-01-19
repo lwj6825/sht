@@ -1,21 +1,44 @@
 <template>
 <div class="content">
     <div class="search">
-            <span class="type">任务类型：</span>
-            <el-select v-model="value" placeholder="请选择" style="width:250px" @change="selectType">
+            <el-form ref="form" :inline="true" :model="form" label-width="100px">
+                <el-form-item label="任务类型：">
+                      <el-select v-model="value" placeholder="请选择" clearable style="width:230px" @change="selectType" >
+                            <el-option v-for="(item,index) in options" :key="index" :label="item.text" :value="item.id">
+                            </el-option>
+                       </el-select>
+                </el-form-item>
+                <el-form-item label="任务名称：">
+                    <el-input v-model="input" placeholder="请输入内容" style="width:230px"></el-input>
+                </el-form-item>
+                <el-form-item label="任务状态：">
+                    <el-select v-model="value1" clearable placeholder="请选择" style="width:230px"  @change="selectStatus" >
+                        <el-option v-for="(item,index) in status" :key="index" :label="item.text" :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button class="btn" type="primary" @click="handleBtn()">搜索</el-button>
+                    <span class="clear-content" @click="clearFun">清空筛选条件</span>
+                </el-form-item>
+            </el-form>
+
+            <!-- <span class="type">任务类型：</span>
+            <el-select v-model="value" placeholder="请选择" style="width:150px" @change="selectType">
                 <el-option v-for="(item,index) in options" :key="index" :label="item.text" :value="item.id">
                 </el-option>
-            </el-select>
-            <span class="task_name">任务名称：</span>
-                 <el-input v-model="input" placeholder="请输入内容" style="width:250px"></el-input>
+            </el-select> -->
+            <!-- <span class="task_name">任务名称：</span>
+            <el-input v-model="input" placeholder="请输入内容" style="width:210px"></el-input>
             <span class="task_status">任务状态：</span>
-            <el-select v-model="value1" placeholder="请选择" style="width:250px"  @change="selectStatus">
+            <el-select v-model="value1" placeholder="请选择" style="width:150px"  @change="selectStatus">
                 <el-option v-for="(item,index) in status" :key="index" :label="item.text" :value="item.id">
                 </el-option>
-            </el-select>
-            <el-button class="btn" type="primary" @click="handleBtn()">搜索</el-button>
+            </el-select> -->
+            <!-- <el-button class="btn" type="primary" @click="handleBtn()">搜索</el-button>
+            <span class="clear-content" @click="clearFun">清空筛选条件</span> -->
     </div>
-    <div class="tables">
+    <div class="tables" v-loading.body="fullscreenLoading">
             <div class="title">
                 <p class="tz-title">全部定时任务</p>
             </div>
@@ -46,6 +69,8 @@ export default {
     name:"timeTask",
     data() {
         return {
+            form:{},
+            fullscreenLoading:true,
             input:'',
             value:'',
             value1:'',
@@ -65,6 +90,15 @@ export default {
         this.getquartzManagerNew();
     },
     methods: {
+        clearFun(){
+            this.value = '' ;
+            this.taskType = '';
+            this.taskStatus = '';
+            this.input = '';
+            this.value1 = '';
+            this.currentPage = 1 ;
+            this.getquartzManagerNew()
+        },
         selectType(ele){  //选择任务类型
             if(ele){
                 this.options.forEach(e => {
@@ -81,8 +115,6 @@ export default {
                 this.status.forEach(ele => {
                     if(val == ele.id){
                         this.taskStatus = ele.id
-                        console.log(ele.id)
-                        console.log(this.taskStatus)
                     }
                 })
             }else{
@@ -113,6 +145,7 @@ export default {
             })
         },
         handleBtn(){
+            this.fullscreenLoading = true;
             this.currentPage = 1;
             this.getquartzManagerNew()
         },
@@ -135,7 +168,7 @@ export default {
             }
             QuartzManagerNew(params)
             .then(res => {    
-                console.log(res)
+                this.fullscreenLoading = false;
                 this.tableData = res.data.dataList;
                 this.total = res.data.condition.total;
             })
@@ -154,10 +187,9 @@ export default {
     width: 100%;
     height: 100%;
     .search{
-        padding-left: 50px;
+        width: 100%;
         background: #fff;
-        height: 60px;
-        line-height: 60px;
+        padding: 10px 0 ;
         span{
             font-size: 14px;
         }
@@ -170,14 +202,24 @@ export default {
         .btn{
             margin-left: 30px;
         }
+        .clear-content{
+            margin-left: 10px;
+            cursor: pointer;
+            color: #999999;
+            font-size: 14px;
+        }
+        .el-form-item{
+            margin-bottom: 0;
+        }
     }
     .tables{
         margin-top: 10px;
         width: 100%;
         background: #fff;
         .title{
-            padding-top: 20px;
-            padding-left: 25px;
+            padding-top: 8px;
+            padding-bottom: 5px;
+            padding-left: 10px;
             .tz-title{
                 flex: 1;
                 height: 20px;
@@ -189,7 +231,6 @@ export default {
             }
         }
         .table-box{
-            margin-top: 10px;
             padding: 10px;
         }
         .pagination{

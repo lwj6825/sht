@@ -1,343 +1,473 @@
 <template>
     <div class="content jxsjMonitor">
         <div class="searchs" ref="searchs">
-            <div class="search">
-                <!--展开-->
                 <el-form ref="form" :inline="true" :model="form" label-width="100px">
-                    <el-form-item label="节点信息">
-                        <el-input v-model="form.msg" clearable placeholder="节点编码、节点名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="无数据天数">
-                        <el-input class="placeholder" v-model="form.minNum" clearable></el-input>
-                         - <el-input class="placeholder" v-model="form.maxNum" clearable></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
-                        <!-- <el-button @click="clearFun">重置</el-button>-->
-                        <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                    </el-form-item>
+                        <el-form-item label="节点信息">
+                            <el-input v-model="form.node_name" style="width:230px" clearable placeholder="节点编码、节点名称" ></el-input>
+                        </el-form-item>
+                        <el-form-item label="无数据天数" style="margin-left:15px;">
+                            <el-input class="placeholder" v-model="form.minNum" clearable></el-input>
+                            - <el-input class="placeholder" v-model="form.maxNum" clearable></el-input>
+                        </el-form-item>
+                        <el-form-item label="节点类型">
+                            <el-select v-model="form.node_detail_type" placeholder="请选择" clearable style="width:230px"  @change="selectNode" >
+                                <el-option v-for="(item,index) in nodeType" :key="index" :label="item.node_detail_type" :value="item.node_detail_type">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属集团">
+                            <el-select v-model="form.group_name" placeholder="请选择" clearable   style="width:230px">
+                                <el-option v-for="(item,index) in groupName" :key="index" :label="item.group_name" :value="item.group_name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="信息类型">
+                            <el-select v-model="form.info_type" multiple collapse-tags  placeholder="请选择" clearable  style="width:230px" @change="selectType" >
+                                <el-option v-for="(item,index) in InfoType" :key="index" :label="item.info_type" :value="item.info_type">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="数据来源">
+                            <el-select v-model="form.data_collection_way" placeholder="请选择" clearable style="width:230px" >
+                                <el-option v-for="(item,index) in dataWay" :key="index" :label="item.data_collection_way" :value="item.data_collection_way">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属大区">
+                            <el-select v-model="form.district_name" placeholder="请选择" clearable style="width:230px" >
+                                <el-option v-for="(item,index) in districtName" :key="index" :label="item.text" :value="item.text">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                         <el-form-item>
+                            <el-button type="primary" plain @click="searchFun" style="margin-left: 32px;">查询</el-button>
+                            <span class="clear-content" @click="clearFun">清空筛选条件</span>
+                        </el-form-item>
                 </el-form>
-            </div>
         </div>
-        <div class="table">
+        <div class="table" v-loading.body="fullscreenLoading">
             <div class="title">
-                <p class="tz-title">解析数据监控</p>
-                <!--<div>
-                    <el-button type="primary" @click="newFun">新增</el-button>
-                    <el-button type="primary" id="btn-file" plain @click="isShowFun($event)" @onblur="closeFun">批量导入</el-button>
-                    <el-button type="primary" plain @click="getDownloadAssetsBase">导出</el-button>
-                </div>-->
+                <p class="tz-title">数据列表</p>
             </div>
-            <!--<div class="file-btns" v-if="isfile">
-                <div>
-                    <span class="submit">
-                        批量新增
-                        <form id="upload" enctype="multipart/form-data" method="post"> 
-                            <input type="file" class="file" ref="file" @change="fileFun($event,1)">
-                        </form>
-                    </span>
-                </div>
-                <div>
-                    <span class="submit">
-                        批量修改
-                        <form id="upload" enctype="multipart/form-data" method="post"> 
-                            <input type="file" class="file" ref="files" @change="fileFun($event,2)">
-                        </form>
-                    </span>
-                </div>
-            </div>-->
             <div class="tables" >
-                <el-table :data="tableData" :header-cell-style="rowClass">
+                <el-table :data="tableData" :header-cell-style="rowClass" @sort-change="sortChange">
+                    <el-table-column prop="node_detail_type" label="节点类型"></el-table-column>
                     <el-table-column prop="node_id" label="节点编码"></el-table-column>
                     <el-table-column prop="node_name" label="节点名称"></el-table-column>
-                    <el-table-column prop="parse_type_num" label="任务环节"></el-table-column>
-                    <el-table-column prop="table_name_ch" label="存入表"></el-table-column>
-                    <el-table-column prop="last_time" label="最后有效上传时间"></el-table-column>
-                    <el-table-column prop="datenums" label="无数据天数" ></el-table-column>
-                    <el-table-column label="设置" width="260">
+                    <el-table-column prop="info_type" label="信息类型"></el-table-column>
+                    <el-table-column :sortable="'custom'" prop="date" label="最后上报日期" width="150px;"></el-table-column>
+                    <el-table-column :sortable="'custom'" prop="days" label="无数据天数" ></el-table-column>
+                    <el-table-column prop="data_collection_way" label="数据来源" ></el-table-column>
+                    <el-table-column prop="group_name" label="所属集团" ></el-table-column>
+                    <el-table-column prop="district_name" label="所属大区" ></el-table-column>
+                    <el-table-column label="操作" fixed="right" align="left">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="cancalMonitor(scope.row)">取消监控</el-button>
-                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="checkFun(scope.row)">取消数据重复校验</el-button>
-                            <el-button type="text" size="small" :style="scope.row.ismon ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ismon ? false : true" @click="editFun(scope.row)">设置阈值</el-button>
-                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="contrastFun(scope.row)">对照管理</el-button>
-                            <el-button type="text" size="small" :style="scope.row.ftp_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.ftp_id ? false : true" @click="uploadFun(scope.row)">最近文件上传情况</el-button>
-                            <el-button type="text" size="small" :style="scope.row.node_id ? {color: '#409EFF'} : {color: '#ccc'}" :disabled="scope.row.node_id ? false : true" @click="analysisFun(scope.row)">最近15条解析情况</el-button>
+                            <el-button type="text" size="small" :style="(scope.row.node_id && scope.row.data_collection_way == 'FTP上传') ? {display: 'inline-block'} : {display: 'none'}"  @click="handleResult1(scope.row)">查看</el-button>
+                            <el-button type="text" size="small" @click="handleResult(scope.row)">记录</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
-            <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
-            layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
-            <div class="passwrd" v-if="isEdits">
-                <div class="text">
-                    <div class="box-title">
-                        <p class="tit">设置阈值</p>
-                        <p class="iconfont icon-close close" @click="closeFun"></p>
-                    </div>
-                    <div class="form">
-                        <el-input type="text" clearable v-model="threshold"></el-input>
-                        <div class="btn">
-                            <el-button @click="closeFun">取消</el-button>
-                            <el-button type="primary" @click="submitForm">确认</el-button>
-                        </div>
-                    </div>
-                </div>
+            <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                                       :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
+                                       :total="total">
+            </el-pagination>
+        </div>
+        <div class="box" v-if="isShow">
+             <div class="form1">
+                  <div class="title">
+                    <p class="tit">查看记录</p>
+                    <p class="iconfont close icon-close" @click="closeForm"></p>
+                  </div>
+                  <div class="container">
+                       <div class="title_note">
+                           <span>记录详情</span>
+                            <el-button style="float:right;margin-top:-28px;margin-left:30px;" @click="addRecord" >+添加沟通记录</el-button>
+                       </div>
+                       <div class="no_data" v-if="recordList == ''" >
+                            <p style="font-size:20px;line-height:300px;text-align:center;color:#ccc">暂无数据</p>
+                       </div>
+                       <div class="container_note" v-for="(item,index) in recordList" :key="index" v-else >
+                             <p>{{item.record_time}}</p>
+                             <span></span>
+                             <div>
+                                <div>{{item.content}}</div>
+                                
+                                 <img v-if="item.img_url != ''" style="height:50px;width:130px;margin-left:20px;margin-top:15px;" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                 <div v-else></div>
+
+                             </div>
+                       </div>
+                       
+                  </div>
+                  <div class="btn1">
+                            <el-button type="primary" @click="closeBtn()">关闭</el-button>
+                  </div>
+            </div>
+        </div>
+        <div class="box1" v-if="isShow1">
+             <div class="form1">
+                  <div class="title">
+                    <p class="tit">添加沟通记录</p>
+                    <p class="iconfont close icon-close" @click="closeForm"></p>
+                  </div>
+                  <el-form  :inline="true" :model="form" label-width="120px" style="margin-top:10px;">
+                       <el-form-item label="添加沟通记录：" style="width:100%">
+                             <el-input type="textarea" style="width:300px;" :autosize="{ minRows: 2, maxRows: 3}"  
+                                  placeholder="请输入内容"  v-model="textarea">
+                             </el-input>
+                       </el-form-item>
+                       <el-form-item label="添加图片" style="width:100%">
+                             <el-upload  ref="img_form"  action=""  list-type="picture-card" :on-remove="handleRemove"
+                                :on-success="handleSuccess" :on-change="handleChange" :on-exceed="handleExceed" :limit="1" :auto-upload="false"
+                                :http-request="uploadSuccess" :on-preview="handlePictureCardPreview">
+                                <i class="el-icon-plus"></i>
+                            </el-upload>
+                            <el-dialog :visible.sync="dialogVisible">
+                                <img width="60px" height="60px" :src="dialogImageUrl" alt="">
+                            </el-dialog>
+                       </el-form-item>
+                       <el-form-item style="position:absolute;right:20px;bottom:10px">
+                            <el-button @click="closeForm">取消</el-button>
+                            <el-button type="primary" @click="handlesubmit()">确认</el-button>
+                       </el-form-item>
+                  </el-form>
+                  
+            </div>
+        </div>
+        <div class="box2" v-if="isShow2">
+             <div class="form1">
+                  <div class="title">
+                    <p class="tit">查看</p>
+                    <p class="iconfont close icon-close" @click="closeForm"></p>
+                  </div>
+                  <div class="table" v-loading.body="fullscreenLoading1">
+                        <el-table :data="mon_list" :header-cell-style="rowClass" style="width:92%;margin:0 auto" >
+                            <el-table-column prop="file_name" label="文件名称" align="center"> </el-table-column>
+                            <el-table-column prop="down_path" label="上传路径" align="center"> </el-table-column>
+                            <el-table-column prop="upload_time" label="最后有效上传时间" align="center"> </el-table-column>
+                        </el-table>
+                  </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-// 时间戳转日期格式
-function timestampToTime(timestamp) {
-    var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-    var Y = date.getFullYear() + '-';
-    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
-    // var h = date.getHours() + ':';
-    // var m = date.getMinutes() + ':';
-    // var s = date.getSeconds();
-    // return Y+M+D+h+m+s;
-    return Y+M+D;
-}
-// 标准时间转日期格式
-function formatTen(num) { 
-    return num > 9 ? (num + "") : ("0" + num); 
-} 
-function formatDate(date) { 
-    var year = date.getFullYear(); 
-    var month = date.getMonth() + 1; 
-    var day = date.getDate(); 
-    var hour = date.getHours(); 
-    var minute = date.getMinutes(); 
-    var second = date.getSeconds(); 
-    return year + "-" + formatTen(month) + "-" + formatTen(day); 
-} 
-function getNowFormatDate() {//获取当前时间
-    var date = new Date();
-    var seperator1 = "-";
-    var seperator2 = ":";
-    var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
-    var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
-    var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
-            + " "  + date.getHours()  + seperator2  + date.getMinutes()
-            + seperator2 + date.getSeconds();
-    return currentdate
-}
-String.prototype.trim=function(){
-  return this.replace(/(^\s*)|(\s*$)/g,'');
-}
-import {AnalysisDataMon,SetByFtpId} from '../../js/traceEquipment/traceEquipment.js'
-import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
+
+import {NotReportedMonitoring,InsertCommunicationRecord,QueryCommunicationRecord,QueryInfoType,QuerygroupName,QueryNodeDetailType} from '../../js/nodeManage/nodeManage.js'
 import axios from 'axios';
+import {QueryUploadFilesByFtpId,DeleteAllErrorData} from '../../js/traceEquipment/traceEquipment.js'
 export default {
-    name:"jxsjMonitor",
+    name:"dataControl",
     data() {
         return {
-            page: 1,
-            cols: 15,
-            num: 0,
-            userId: '',
-            total: '',
+            dialogImageUrl: '',
+            dialogVisible: false,
+            textarea:'',
+            isShow1:false,
+            isShow2:false,
+            isShow:false,
+            fullscreenLoading:true,
+            fullscreenLoading1:true,
+            form:{
+                node_name:'',
+                minNum:'',
+                maxNum:'',
+                info_type:'',
+                group_name:'',
+                node_detail_type:'包装菜企业',
+                data_collection_way:'',
+                district_name:''
+            },
+            currentPage: 1,
+            cols: 10,
+            total: 0,
             tableData: [],
-            isEdits: false,
-            threshold: '',
-            ftp_id: '',
-            form: {
-                msg: '',
-                minNum: '',
-                maxNum: '',
-            }
+            InfoType:[],
+            groupName:[],
+            nodeType:[],
+            dataWay:[],
+            districtName:[
+                {id:"1",text:"东区"},
+                {id:"2",text:"南区"},
+                {id:"3",text:"北区"},
+            ],
+            info_type:'',
+            node_id:'',
+            img_url:'',
+            recordList:[],
+            data_way:true,
+            mon_list:[],
+            img_url1:'',
+            getSort:'',
+            oldOptions:[]
         }
     },
     mounted() {
-        this.userId = localStorage.getItem('userId')
-        this.getDataFun()
+        this.NotReportedMonitoringFun()
+        this.QueryInfoTypeFun()
+        this.QueryNodeDetailTypeFun()
+        this.QuerygroupNameFun1()
     },
     methods: {
-        // 最近15天解析情况
-        analysisFun(ele){
-            this.$router.push({name: 'ZjjxSituation',params: ele})
+        selectNode(val){
+            // console.log(val)
+            this.form.group_name = ''
+            this.QuerygroupNameFun(val)
         },
-        // 文件上传情况
-        uploadFun(ele){
-            this.$router.push({name: 'WjscSituation',params: ele})
-        },
-        // 取消数据重复校验
-        checkFun(ele){
-            this.$confirm('你确定要取消数据重复校验吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
+         selectType(val){
+             this.QueryNodeDetailTypeFun(val)
+         },
+         QueryNodeDetailTypeFun(val){  //可多选
                 let params = {
-                    ftp_id: ele.ftp_id,
-                    set_type: 2,
+                    info_type:this.form.info_type.toString()
                 }
-                SetByFtpId(params)
+                QueryNodeDetailType(params)
                     .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
+                        this.nodeType = res.data.nodeDetailTypeList;
                     })
-                    .catch((res) => {
-                        console.log(res)
+                    .catch(error => {
+                        console.log(error)
                     })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
         },
-        // 对照管理
-        contrastFun(ele){
-            this.$router.push({name: 'Contrast',params: ele})
-        },
-        // 取消监控
-        cancalMonitor(ele){
-            this.$confirm('你确定要取消监控吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {    
+       
+        QuerygroupNameFun(val){
                 let params = {
-                    ftp_id: ele.ftp_id,
-                    set_type: 1,
+                    "node_detail_type":val
                 }
-                SetByFtpId(params)
+                QuerygroupName(params)
                     .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getDataFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
+                        this.groupName = res.data.groupNameList;
+                        // console.log(this.nodeType)
                     })
-                    .catch((res) => {
-                        console.log(res)
+                    .catch(error => {
+                        console.log(error)
                     })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消'
-                });          
-            });
         },
-        submitForm(){
-            let params = {
-                ftp_id: this.ftp_id,
-                set_type: 3,
-                threshold: this.threshold
-            }
-            SetByFtpId(params)
-                .then(res => {
-                    if (res.result == true) {
-                        this.$message.success(res.message);
-                        this.getDataFun()
+
+        QuerygroupNameFun1(){
+                this.fullscreenLoading = true;
+                let params = {
+                    "node_detail_type":'包装菜企业'
+                }
+                QuerygroupName(params)
+                    .then(res => {
+                        this.fullscreenLoading = false;
+                        this.groupName = res.data.groupNameList;
+                        // console.log(this.nodeType)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+        },
+         sortChange(column){
+              var fieldName = column.prop;
+              var sortingType = column.order;
+            //   console.log(fieldName)
+              if(fieldName == "date"){
+                    if(sortingType == 'descending'){
+                        this.fullscreenLoading = true;
+                        this.getSort="按最后上报日期倒叙"
+                        this.NotReportedMonitoringFun()
                     }else{
-                        this.$message.error(res.message);
+                        this.fullscreenLoading = true;
+                        this.getSort="按最后上报日期正序"
+                        this.NotReportedMonitoringFun()
                     }
-                    this.isEdits = false
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+              }
+              if(fieldName=="days"){
+                    if(sortingType == 'descending'){
+                        this.fullscreenLoading = true;
+                        this.getSort="按天数倒叙"
+                        this.NotReportedMonitoringFun()
+                    }else{
+                        this.fullscreenLoading = true;
+                        this.getSort="按天数正序"
+                        this.NotReportedMonitoringFun()
+                    }
+              }
+         },
+         handlePictureCardPreview(file) {
+            this.dialogImageUrl = file;
+            // console.log(file)
+            // console.log(this.dialogImageUrl)
+            this.dialogVisible = true;
         },
-        // 设置阈值
-        editFun(ele){
-            this.ftp_id = ele.ftp_id
-            this.isEdits = true
-        },
-        closeFun(){
-            this.threshold = ''
-            this.ftp_id = ''
-            this.isEdits = false
-        },
-        getDataFun(){
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            let params = {
-                cols: this.cols,
-                page: this.page,
-                mon_log_base: this.form.msg.trim(),
-                sdatenums: this.form.minNum.trim(),
-                edatenums: this.form.maxNum.trim()
-            }
-            AnalysisDataMon(params)
+        uploadSuccess(item){
+            this.img_url1 = item.file;
+            let formData = new FormData()
+            // console.log(item)
+            // console.log(this.img_url1)
+            formData.append('img_url',this.img_url1)
+            formData.append('content',this.textarea)
+            formData.append('node_id',this.node_id)
+            formData.append('info_type',this.info_type)
+            InsertCommunicationRecord(formData)
                 .then(res => {
-                    this.tableData = res.data.mon_list
-                    this.num = res.data.mon.total
-                    loading.close();
+                    //   console.log(formData)
+                      this.$message({
+                        message: '添加沟通记录成功',
+                        type: 'success'
+                      });
                 })
-                .catch((res) => {
-                    console.log(res)
-                    loading.close();
+                .catch(res => {
+                      this.$message({
+                        message: '添加沟通记录失败',
+                        type: 'warning'
+                    });
                 })
+                this.isShow1 =false;
         },
-        viewFun(ele){
-            // this.$router.push({name: 'ViewAssets',params: {param: ele}})
+        handleChange(file,fileList){
         },
-        newFun(){
-            // this.$router.push({name: 'NewAssets'})
+        handlesubmit(){
+            this.$refs.img_form.submit();
         },
-        searchFun(){
-            this.page = 1
-            this.timeChange()
-            this.getDataFun()
+        handleSuccess(response, file, fileList){
+            this.$message({message: '上传成功',type: 'error'});
+            this.img_url1 = file;
         },
-        handleCurrentChange(val) {
-            this.page = val
-            this.getDataFun()
+        handleRemove(file, fileList) {  //移除图片
+            this.$message({message: '移除成功',type: 'error'});
         },
-        unfoldFun(){
-            if(this.show == false){
-                this.show = true
-                this.unfold = '收起'
-            }else{
-                this.show = false
-                this.unfold = '展开'
-            }
+        handleExceed (files, fileList) {
+            this.$message.warning(`当前限制选择1个文件，请删除后继续上传`)
         },
-        clearFun(){
-            this.form = {
-                msg: '',
-                minNum: '',
-                maxNum: '',
-            }
-            this.page = 1
-            this.getDataFun()
+        addRecord(){
+            this.isShow1 = true;
+            this.isShow = false;
         },
-        timeChange(ele){
-            if(this.form.dataTime){
-                this.startTime = this.form.dataTime[0]
-                this.endTime = this.form.dataTime[1]
-            }else{
-                this.startTime = ''
-                this.endTime = ''
-            }
+        closeForm(){
+            this.isShow = false;
+            this.isShow1 = false;
+            this.isShow2 = false;
         },
-        getTime(){
-            var start = new Date();
-            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            this.startTime = timestampToTime(startTime)
-            var currentTime = new Date()
-            this.endTime = formatDate(currentTime)
+        closeBtn(){
+            this.isShow = false;
+            this.isShow1 = false;
         },
-        rowClass({ row, rowIndex}) {
+        rowClass({ row, rowIndex}) {  //表头背景颜色
             return {
                 background: '#f2f2f2',
-                color: '#333'
+                color: '#000'
             }
         },
-    },
+         handleSizeChange(val) {   //每页
+            this.cols = val;
+            this.fullscreenLoading = true;
+            this.NotReportedMonitoringFun()
+        },
+        handleCurrentChange(val) { //当前页
+            this.currentPage = val;
+            this.fullscreenLoading = true;
+            this.NotReportedMonitoringFun()
+        },
+        searchFun(){
+            this.fullscreenLoading = true;
+            this.currentPage = 1;
+            this.NotReportedMonitoringFun()
+        },
+        clearFun(){  // 清楚筛选条件
+            this.form.group_name = ''
+            this.form.district_name = ''
+            this.form.node_name = ''
+            this.form.minNum = ''
+            this.form.maxNum = ''
+            this.form.info_type = ''
+            this.form.node_detail_type = ''
+            this.form.data_collection_way = ''
+            this.currentPage = 1;
+            this.cols = 10 ;
+            this.fullscreenLoading = true;
+            this.QueryNodeDetailTypeFun()
+            this.QuerygroupNameFun()
+            this.NotReportedMonitoringFun()
+        },
+        handleResult1(row){
+            this.fullscreenLoading1 = true;
+            let params = {
+                node_id:row.node_id
+            }
+            QueryUploadFilesByFtpId(params)
+                .then(res => {
+                    this.fullscreenLoading1 = false;
+                    this.mon_list = res.data.mon_list;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            this.isShow2 = true;
+        },
+        handleResult(row){  // 编辑
+            this.node_id = row.node_id
+            this.info_type = row.info_type
+            let params = {
+                 node_id:row.node_id,
+                 info_type:row.info_type
+            }
+            QueryCommunicationRecord(params)
+                .then(res => {
+                    this.recordList = res.data.dataList;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            this.isShow = true;
+        },
+        NotReportedMonitoringFun(){ // 表格数据
+            let params = {
+                  page : this.currentPage,
+                  cols : this.cols,
+                  sort:this.getSort,
+                  group_name : this.form.group_name,
+                  district_name : this.form.district_name,
+                  node_id:this.form.node_name,
+                  start_day:this.form.minNum,
+                  end_day:this.form.maxNum,
+                  info_type:this.form.info_type.toString(),
+                  node_detail_type:this.form.node_detail_type,
+                  data_collection_way:this.form.data_collection_way
+            }
+            NotReportedMonitoring(params)
+                .then(res => {
+                    // console.log(params,"params")
+                    // console.log(res,'table')
+                    this.fullscreenLoading = false;
+                    this.tableData = res.data.dataList;
+                    // console.log( this.tableData)
+                    this.total  = res.data.condition.total;
+                    // this.tableData.map(item => {
+                    //     item.date = this.$moment(item.date).format("YYYY-MM-DD HH:mm:ss");
+                    // });
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            
+        },
+        QueryInfoTypeFun(){ //条件筛选
+            let params = {
+                info_type:'',
+                district_name:'',
+                group_name:'',
+                data_collection_way:'',
+                node_detail_type:''
+            }
+            QueryInfoType(params)
+                .then(res => {
+                    // console.log(res,"各种条件")
+                    // this.districtName = res.data.districtNameList;
+                    this.InfoType = res.data.infoTypeList;
+                    // this.groupName = res.data.groupNameList;
+                    this.dataWay = res.data.dataCollectionWayList;
+                    // this.nodeType = res.data.nodeDetailTypeList;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+    }    
 }
 </script>
 
@@ -353,9 +483,9 @@ export default {
             font-size: 14px;
         }
         .searchs{
+            width:100%;
             padding: 10px 0;
             background: #fff;
-            .search{
                 .file-btn{
                     color: #777;
                     background: #fff;
@@ -386,56 +516,12 @@ export default {
                 .el-form-item{
                     margin-bottom: 0;
                 }
-            }
         }
         .table{
             margin-top: 10px;
             padding: 10px;
             position: relative;
             background: #fff;
-            .file-btns{
-                position: absolute;
-                top: 40px;
-                right: 69px;
-                z-index: 22;
-                background: #fff;
-                div{
-                    margin-bottom: -5px;
-                }
-                .submit{
-                    position: relative;
-                    left: 0;
-                    display: inline-block;
-                    width: 78px;
-                    height: 30px;
-                    line-height: 30px;
-                    color: #333;
-                    background: #fff;
-                    text-align: center;
-                    overflow: hidden;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    box-sizing: border-box;
-                    border: 1px solid #ccc;
-                    .file{
-                        position: absolute;
-                        left: 0px;
-                        top: 0px;
-                        width: 78px;
-                        height: 30px;
-                        opacity: 0;
-                        background: rgba(0,0,0,0);
-                    }
-                }
-                .submit:hover{
-                    background: #409EFF;
-                    color: #fff;
-                }
-            }
-            .import{
-                color: #409EFF;
-                background: #fff;
-            }
             .title{
                 display: flex;
                 margin-bottom: 10px;
@@ -459,7 +545,10 @@ export default {
             margin: 20px 0;
             text-align: center;
         }
-        .passwrd{
+        .placeholder{
+            width: 100px !important;
+        }
+        .box{
             position: fixed;
             top: 0;
             left: 0;
@@ -469,52 +558,212 @@ export default {
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,.6);
-            .text{
+            .container{
+                width: 100%;
+                height:350px;
+                overflow:hidden;
+                overflow-y:auto;
+                .title_note{
+                    height: 45px;
+                    width: 85%;
+                    margin: 0 auto;
+                    border-bottom: 1px solid #ccc;
+                    span{
+                        font-size: 14px;
+                        color: #ccc;
+                        padding-top: 17px;
+                        display: block;
+                    }
+                }
+                .container_note{
+                    height:100px;
+                    width:100%;
+                    // position:absolute;
+                    p{
+                        padding-top:20px;
+                        margin-left:40px;
+                        width:100px;
+                        height:80px;
+                        float:left;
+                        margin-right:20px;
+                        border-right:1px solid #ccc;
+                        font-size:14px;
+                    }
+                    span{
+                        position:relative;
+                        left:130px;
+                        top:27px;
+                        width:20px;
+                        height:20px;
+                        display:block;
+                        border-radius:50%;
+                        background-color:#fff;
+                        border:1px solid #ccc;
+                        z-index:10;
+                    }
+                    div{
+                        // padding-top:0;
+                        // height:80px;
+                        font-size:14px;
+                    }
+                }
+                
+            }
+            .btn1{
+                    text-align:center;
+                    height:50px;
+                    line-height:40px;
+                }
+            .form1{
                 position: relative;
                 top: 50%;
                 left: 50%;
-                margin-top: -150px;
-                margin-left: -200px;
-                width: 400px;
-                height: 170px;
+                margin-top: -250px;
+                margin-left: -250px;
+                width: 500px;
+                height: 450px;
                 background: #fff;
-                .box-title{
-                    margin: 0 10px;
-                    height: 40px;
+                .title{
+                    display: flex;
+                    margin: 0 20px;
+                    height: 50px;
                     border-bottom: 1px solid #ccc;
+                    line-height: 50px;
                     .tit{
-                        float: left;
-                        margin-left: 10px;
-                        width: 330px;
-                        line-height: 40px;
+                        flex: 1;
                         font-size: 14px;
                     }
-                }
-                .close{
-                    float: right;
-                    width: 40px;
-                    height: 40px;
-                    text-align: center;
-                    line-height: 40px;
-                    font-size: 16px;
-                    cursor: pointer;
-                }
-                .form{
-                    clear: both;
-                    margin-top: 20px;
-                    margin-left: 50px;
-                    .el-input{
-                        width: 200px;
-                    }
-                    .btn{
-                        margin-top: 20px;
-                        margin-left: 140px;
+                    .close{
+                        text-align: center;
+                        cursor: pointer;
                     }
                 }
             }
         }
-        .placeholder{
-            width: 100px !important;
+        .box1{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 666;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            .container{
+                // position:absolute;
+                padding:15px;
+                span{
+                    position: relative;
+                    bottom: 32px;
+                    left: 10px; 
+                    font-size: 14px;
+                }
+            }
+            .el-icon-plus{
+                position: relative;
+                bottom: 45px;
+            }
+            .upload{
+                width: 90%;
+                margin-left: 25px;
+                min-height:100px;
+            }
+            .btn1{
+                position: absolute;
+                bottom: 15px;
+                right: 55px;
+            }
+            .form1{
+                overflow: hidden;
+                position: relative;
+                top: 50%;
+                left: 50%;
+                margin-top: -120px;
+                margin-left: -250px;
+                height:250px;
+                width: 500px;
+                // height: 300px;
+                background: #fff;
+                .title{
+                    display: flex;
+                    margin: 0 20px;
+                    height: 50px;
+                    border-bottom: 1px solid #ccc;
+                    line-height: 50px;
+                    .tit{
+                        flex: 1;
+                        font-size: 14px;
+                    }
+                    .close{
+                        text-align: center;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+        .box2{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 666;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            .form1{
+                position: relative;
+                top: 50%;
+                left: 50%;
+                margin-top: -250px;
+                margin-left: -290px;
+                height:500px;
+                width: 580px;
+                background: #fff;
+                .title{
+                    display: flex;
+                    margin: 0 20px;
+                    height: 50px;
+                    border-bottom: 1px solid #ccc;
+                    line-height: 50px;
+                    .tit{
+                        flex: 1;
+                        font-size: 14px;
+                    }
+                    .close{
+                        text-align: center;
+                        cursor: pointer;
+                    }
+                }
+                .table{
+                    height: 500px;
+                    overflow:hidden;
+                    overflow-y:auto;
+                }
+            }
+            .el-table{
+                 overflow:hidden;
+                 overflow-y:auto;
+            }
+        }
+        .disabled .el-upload--picture-card {
+            display: none;
         }
     }
+    
+</style>
+<style lang="less">
+.el-upload--picture-card{
+    height: 60px !important;
+    width: 60px !important;
+}
+.el-upload-list--picture-card .el-upload-list__item{
+    height: 60px !important;
+    width: 60px !important;
+}
+.el-table__body .el-table__row{
+    height: 40px;
+    line-height: 40px;
+}
 </style>

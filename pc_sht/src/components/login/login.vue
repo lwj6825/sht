@@ -59,6 +59,7 @@ export default {
             codeBtn: '获取验证码',
             code: '',
             current: 0,
+            user:''
         }
     },
     created() {
@@ -69,7 +70,8 @@ export default {
         this.getValidationFun()
     },
     mounted(){
-        console.log(this.$route.query)
+        
+        // console.log(this.$route.query)
         if(this.$route.query.account){
             localStorage.clear();
             sessionStorage.clear();
@@ -192,6 +194,8 @@ export default {
             }
             login(data).then((res)=>{
                 console.info(res)
+                // localStorage.setItem("user", res);
+                // console.log(user)
                 if(res.data.booth_list.length != 0){
                     let name = res.data.booth_list[0].name,
                         node_id = res.data.booth_list[0].node_id,
