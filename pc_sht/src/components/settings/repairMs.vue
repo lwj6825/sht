@@ -1,21 +1,20 @@
 <template>
-    <div class="content">
+    <div class="content repairMs">
         <div class="table">
             <div class="title">
-                <p class="tz-title">全部部件</p>
+                <p class="tz-title">全部</p>
                 <div>
-                    <el-button type="primary" @click="newFun" class="blue-bth">新增部件</el-button>
+                    <el-button type="primary" @click="newFun" class="blue-bth"> + 新增报修模式</el-button><!---->
                 </div>
             </div>
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="a_conf_item" label="部件名称"> </el-table-column>
-                    
+                    <el-table-column prop="item" label="报修模式"></el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="editFun(scope.row)">修改</el-button>
                             <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
-                        </template>
+                        </template><!---->
                     </el-table-column>
                 </el-table>
             </div>
@@ -24,22 +23,18 @@
             <div class="passwrd" v-if="isEdits">
                 <div class="text">
                     <div class="box-title">
-                        <p class="tit">{{prompt}}部件名称</p>
+                        <p class="tit">{{prompt}}报修模式</p>
                         <p class="iconfont icon-close close" @click="closeFun"></p>
                     </div>
-                    <el-form class="form" :rules="rules" ref="form" :model="form" label-width="100px">
-                        <el-form-item label="部件名称" prop="zcState">
-                            <el-input type="text" clearable v-model="form.zcState"></el-input>
-                        </el-form-item>
-                        <el-form-item label="部件首字母" prop="search">
-                            <el-input type="text" clearable v-model="form.search" placeholder="请输入首字母，用于部件检索"></el-input>
+                    <el-form class="form" ref="form" :rules="rules" :model="form" label-width="110px">
+                        <el-form-item label="报修模式名称" prop="repairMs">
+                            <el-input type="text" clearable v-model="form.repairMs"></el-input>
                         </el-form-item>
                         <el-form-item class="btn">
-                            <el-button @click="cancelFun">取消</el-button>
-                            <el-button type="primary" @click="submitForm('form')">确认</el-button>
+                            <el-button @click="closeFun">取消</el-button>
+                            <el-button type="primary" :disabled="disabled" @click="submitForm('form')">确认</el-button>
                         </el-form-item>
                     </el-form>
-                
                 </div>
             </div>
         </div>
@@ -47,9 +42,10 @@
 </template>
 
 <script>
-import {QueryAssetsConf,SetAssetsConf,DeleteAssetsConf,UpdateAssetsConf} from '../../js/traceEquipment/traceEquipment.js'
+import {GetAssetsConfig} from '../../js/repair/repair.js'
+import {SetAssetsConf,DeleteAssetsConf,UpdateAssetsConf} from '../../js/traceEquipment/traceEquipment.js'
 export default {
-    name:"assetState",
+    name:"repairMs",
     data() {
         return {
             tableData: [],
@@ -58,121 +54,39 @@ export default {
             num: 0,
             isEdits: false,
             form: {
-                zcState: '',
-                search: '',
+                repairMs: ''
             },
-            
             rules: {
-                zcState: [
-                    { required: true, message: '请输入资产状态', trigger: 'blur' }
-                ],
-                search: [
-                    { required: true, message: '请输入首字母，用于部件检索', trigger: 'blur'},
-                    {validator:function(rule,value,callback){
-                        if(/[a-zA-Z]/.test(value) == false){
-                            callback(new Error("请输入首字母，用于部件检索"));
-                        }else{
-                            callback();
-                        }
-                    }, trigger: 'blur'}
+                repairMs: [
+                    { required: true, message: '请输入报修模式', trigger: 'blur' }
                 ]
             },
-            userId: '',
-            a_conf_item_old: '',
-            a_conf_id: '',
             prompt: '新增',
+            id: '',
+            a_conf_item_old: '',
+            userId: '',
+            disabled: false,
         }
     },
     mounted() {
         this.userId = localStorage.getItem('userId')
-        this.getQueryAssetsConf()
+        this.getGetAssetsConfigFun()
     },
     methods: {
-        editFun(ele){
-            this.prompt = "修改"
-            this.a_conf_id = ele.a_conf_id
-            this.a_conf_item_old = ele.a_conf_item
-            this.form.zcState = ele.a_conf_item
-            this.form.search = ele.acronym
-            this.isEdits = true
-        },
-        // 查询 资产状态、所属期 等查询条件下拉框
-        getQueryAssetsConf(){
-            QueryAssetsConf('')
+        getGetAssetsConfigFun(){
+            GetAssetsConfig('')
                 .then(res => {
-                    // console.log(res)
-                    this.tableData = res.data[2].reverse()
-                    // this.num = res.data[2].length
+                    this.tableData = res.data[4]
                 })
                 .catch(res => {
                     console.log(res);
                 })
         },
-        sureFun(){
-            if(this.a_conf_id){
-                let obj = {
-                    a_conf_type: 2,
-                    a_conf_id: this.a_conf_id,
-                    a_conf_item_old: this.a_conf_item_old,
-                    a_conf_item: this.form.zcState,
-                    userid: this.userId,
-                    acronym: this.form.search,
-                }
-                UpdateAssetsConf(obj)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getQueryAssetsConf()
-                            this.cancelFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch(res => {
-                        console.log(res);
-                    })
-            }else{
-                let obj = {
-                    a_conf_type: 2,
-                    a_conf_item: this.form.zcState,
-                    acronym: this.form.search,
-                    userid: this.userId,
-                }
-                SetAssetsConf(obj)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getQueryAssetsConf()
-                            this.cancelFun()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch(res => {
-                        console.log(res);
-                    })
-            }
-        },
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    this.sureFun()
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-        },
-        cancelFun(){
-            this.form = {
-                zcState: '',
-                search: '',
-            }
-            this.isEdits = false
-            this.a_conf_id = ''
-        },
-        newFun(){
-            this.prompt = "新增"
+        editFun(ele){
+            this.prompt = "修改"
+            this.form.repairMs = ele.item
+            this.a_conf_item_old = ele.item
+            this.id = ele.id
             this.isEdits = true
         },
         deleteFun(ele){
@@ -183,15 +97,15 @@ export default {
             })
             .then(() => {
                 let obj = {
-                    a_conf_type: 2,
-                    a_conf_id: ele.a_conf_id,
+                    a_conf_type: 4,
+                    a_conf_id: ele.id,
                     userid: this.userId,
                 }
                 DeleteAssetsConf(obj)
                     .then(res => {
                         if (res.result == true) {
                             this.$message.success(res.message);
-                            this.getQueryAssetsConf()
+                            this.getGetAssetsConfigFun()
                         }else{
                             this.$message.error(res.message);
                         }
@@ -206,15 +120,78 @@ export default {
                     message: '已取消删除'
                 });          
             });
-            
+        },
+        sureFun(){
+            this.disabled = true
+            if(this.id){    
+                let obj = {
+                    a_conf_type: 4,
+                    a_conf_id: this.id,
+                    a_conf_item_old: this.a_conf_item_old,
+                    a_conf_item: this.form.repairMs,
+                    userid: this.userId,
+                }
+                UpdateAssetsConf(obj)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.disabled = false
+                            this.$message.success(res.message);
+                            this.getGetAssetsConfigFun()
+                            this.closeFun()
+                        }else{
+                            this.disabled = false
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        this.disabled = false
+                        console.log(res);
+                    })
+            }else{
+                let obj = {
+                    a_conf_type: 4,
+                    a_conf_item: this.form.repairMs,
+                    acronym: '',
+                    userid: this.userId,
+                }
+                SetAssetsConf(obj)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.disabled = false
+                            this.$message.success(res.message);
+                            this.getGetAssetsConfigFun()
+                            this.closeFun()
+                        }else{
+                            this.disabled = false
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        this.disabled = false
+                        console.log(res);
+                    })
+            }
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.sureFun()
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        newFun(){
+            this.prompt = "新增"
+            this.isEdits = true
         },
         closeFun(){
+            this.disabled = false
             this.form = {
-                zcState: '',
-                search: '',
+                repairMs: ''
             }
             this.isEdits = false
-            this.a_conf_id = ''
         },
         handleCurrentChange(val) {
             this.page = val
@@ -225,6 +202,7 @@ export default {
                 color: '#333'
             }
         },
+
     },
 }
 </script>
@@ -235,6 +213,7 @@ export default {
         width: 100%;
         height: 100%;
         background: #fff;
+        
         .table{
             padding: 10px;
             background: #fff;
@@ -289,7 +268,7 @@ export default {
                 margin-top: -150px;
                 margin-left: -200px;
                 width: 400px;
-                height: 220px;
+                height: 170px;
                 background: #fff;
                 .box-title{
                     margin: 0 10px;
@@ -315,51 +294,16 @@ export default {
                 .form{
                     clear: both;
                     margin-top: 20px;
-                    margin-left: 30px;
+                    margin-left: 40px;
                     .el-input{
                         width: 200px;
                     }
                     .btn{
                         margin-top: 20px;
-                        margin-left: 140px;
+                        margin-left: 100px;
                     }
                 }
             }
         }
     }
-    .verify_box{
-        width: 240px;
-        height: 40px;
-        background: #e9e6e9;
-        position: relative;
-    }
-    .verify_box p{
-        position: absolute;
-        top:-20%;
-        left: 45%;
-        z-index: 5;
-    }
-    .shadow {
-        position: absolute;
-        height: 40px;
-        background: greenyellow;
-    }
-    .verify_core{
-        background: #fff;
-        border: 1px solid #adadc2;
-        width: 50px;
-        height: 40px;
-        box-sizing: border-box;
-        position: absolute;
-        z-index: 20;
-    }
-    .verify_core img{
-        width: 30px;
-        height: 30px;
-        margin: 5px auto;
-        display: block;
-    }
-
-
 </style>
-

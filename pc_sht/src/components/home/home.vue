@@ -778,6 +778,10 @@ export default {
             background: url('../../assets/images/management.svg') no-repeat center center;
             background-size: 100% 100%;
         }
+        .icon-repair{
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
         .icon-control{
             background: url('../../assets/images/control.svg') no-repeat center center;
             background-size: 100% 100%;

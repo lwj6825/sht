@@ -29,6 +29,8 @@ import analyze from './analyze.js'
 import differentSz from './differentSz'
 import assets from './assets'
 import retail from './retail'
+import repair from './repair'
+
 import control from './control'
 import analysis from './analysis'
 import collect from './collect'
@@ -72,6 +74,7 @@ export default new Router({
         ...tzFarming,
         ...tzSlaughter,
         ...retail,
+        ...repair,
         ...control,
         ...analysis,
         ...collect,

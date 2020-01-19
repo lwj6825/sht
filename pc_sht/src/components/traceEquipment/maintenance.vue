@@ -84,7 +84,7 @@
             <div class="title">
                 <p class="tz-title">任务列表</p>
                 <div>
-                    <el-button type="primary" @click="newFun">新增</el-button>
+                    <!--<el-button type="primary" @click="newFun">新增</el-button>
                     <span class="submit">
                         批量导入
                         <form id="upload" enctype="multipart/form-data" method="post"> 
@@ -92,7 +92,7 @@
                         </form>
                     </span>
                     <el-button type="primary" plain @click="getDownloadMaintain">导出</el-button>
-                </div>
+                --></div>
             </div>
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">

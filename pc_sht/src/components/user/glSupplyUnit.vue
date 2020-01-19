@@ -54,7 +54,7 @@
             <div class="form">
                 <div class="title">
                     <p class="tit">新增供货单位</p>
-                    <p class="close" @click="closeForm">X</p>
+                    <p class="iconfont icon-close close" @click="closeForm"></p>
                 </div>
                 <el-form ref="form2" :rules="rules" :model="form2" label-width="120px">
                     <el-form-item label="节点编码" prop="node_id">
@@ -425,6 +425,7 @@ export default {
 </script>
 
 <style scoped lang='less'>
+    @import '../../assets/css/common.css';
     .content{
         width: 100%;
         height: 100%;
@@ -468,7 +469,6 @@ export default {
         .table{
             margin-top: 10px;
             padding: 10px;
-            position: relative;
             background: #fff;
             .title{
                 display: flex;

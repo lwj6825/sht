@@ -26,24 +26,31 @@
             </el-form-item>
             <div v-if='!isSuper'>
                 <div class="title user-msg">用户信息</div>
-                <el-form-item label="营业执照号：" class="padding-left">
-                    <span class="info-text">{{form.code}} <i class="edit-icon" @click="codeShow()"></i></span>
-                </el-form-item>
-                <el-form-item label="企业名称：" class="padding-left">
-                <span class="info-text">{{form.companyName}} <i class="edit-icon" @click='companyNameShow()'></i></span>
-                </el-form-item>
-                <el-form-item label="身份证号：" class="padding-left">
-                    <span class="info-text">{{form.idCard}} <i class="edit-icon" @click='idCardShow()'></i></span>
-                </el-form-item>
+                <div v-if="isShow">
+                    <el-form-item label="营业执照号：" class="padding-left">
+                        <span class="info-text">{{form.code}} <i class="edit-icon" @click="codeShow()"></i></span>
+                    </el-form-item>
+                    <el-form-item label="企业名称：" class="padding-left">
+                    <span class="info-text">{{form.companyName}} <i class="edit-icon" @click='companyNameShow()'></i></span>
+                    </el-form-item>
+                    <el-form-item label="身份证号：" class="padding-left">
+                        <span class="info-text">{{form.idCard}} <i class="edit-icon" @click='idCardShow()'></i></span>
+                    </el-form-item>
+                </div>
                 <el-form-item label="联系人：" class="padding-left">
                     <span class="info-text">{{form.contantName}} <i class="edit-icon" @click="contantNameShow()"></i></span>
                 </el-form-item>
                 <el-form-item label="联系电话：" class="padding-left">
-                <span class="info-text">{{form.phone}} <i class="edit-icon" @click="phoneShow()"></i></span>
+                    <span class="info-text">{{form.phone}} <i class="edit-icon" @click="phoneShow()"></i></span>
                 </el-form-item>
-                <el-form-item label="地址：" class="padding-left">
-                    <span class="info-text">{{form.areaName}}{{form.addr}} <i class="edit-icon" @click="addrShow()"></i></span>
+                <el-form-item label="邮箱：" class="padding-left">
+                    <span class="info-text">{{form.email}} <i class="edit-icon" @click="emailShow()"></i></span>
                 </el-form-item>
+                <div v-if="isShow">
+                    <el-form-item label="地址：" class="padding-left">
+                        <span class="info-text">{{form.areaName}}{{form.addr}} <i class="edit-icon" @click="addrShow()"></i></span>
+                    </el-form-item>
+                </div>
                 <!-- <el-form-item label="所属节点：" class="padding-left">
                     <span class="info-text">{{form.node}}</span>
                 </el-form-item> -->
@@ -51,7 +58,7 @@
         </el-form>
         
         <el-dialog title="修改系统角色" :visible.sync="systemRoleDialog" class="edit-msg">
-            <el-form :model="systemRoleForm">   
+            <el-form :model="systemRoleForm" label-width="80px">   
                 <el-form-item label="系统角色">
                     <el-select v-model="systemRoleForm.role" placeholder="请选择" clearable>
                         <el-option v-for="item in systemRoleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option> 
@@ -65,7 +72,7 @@
         </el-dialog>
 
         <el-dialog title="修改营业执照号" :visible.sync="licenseCodeDialog"  class="edit-msg" >
-            <el-form :model="licenseCodeForm">   
+            <el-form :model="licenseCodeForm" label-width="80px">   
                 <el-form-item label="营业执照号">
                     <el-input class="fill-input" v-model="licenseCodeForm.code" clearable auto-complete="off"></el-input>
                 </el-form-item>   
@@ -77,7 +84,7 @@
         </el-dialog>
 
          <el-dialog title="修改企业名称" :visible.sync="enterpriseNameDialog"  class="edit-msg" >
-            <el-form :model="enterpriseNameForm">   
+            <el-form :model="enterpriseNameForm" label-width="80px">   
                 <el-form-item label="企业名称">
                     <el-input class="fill-input" v-model="enterpriseNameForm.name" clearable auto-complete="off"></el-input>
                 </el-form-item>   
@@ -88,8 +95,8 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="修改身份证号" :visible.sync="idCardDialog"  class="edit-msg" >
-            <el-form :model="idCardForm">   
+        <el-dialog title="修改身份证号" :visible.sync="idCardDialog"  class="edit-msg">
+            <el-form :model="idCardForm" label-width="80px">   
                 <el-form-item label="身份证号">
                     <el-input class="fill-input" v-model="idCardForm.idCard" clearable auto-complete="off"></el-input>
                 </el-form-item>   
@@ -101,7 +108,7 @@
         </el-dialog>
 
         <el-dialog title="修改联系人" :visible.sync="contactPeopleDialog"  class="edit-msg" >
-            <el-form :model="contactPeopleForm">   
+            <el-form :model="contactPeopleForm" label-width="80px">   
                 <el-form-item label="联系人">
                     <el-input class="fill-input" v-model="contactPeopleForm.people" clearable auto-complete="off"></el-input>
                 </el-form-item>   
@@ -113,7 +120,7 @@
         </el-dialog>
 
         <el-dialog title="修改联系电话" :visible.sync="contactPhoneDialog"  class="edit-msg" >
-            <el-form :model="contactPhoneForm">   
+            <el-form :model="contactPhoneForm" label-width="80px">   
                 <el-form-item label="联系电话">
                     <el-input class="fill-input" v-model="contactPhoneForm.phone" clearable auto-complete="off"></el-input>
                 </el-form-item>   
@@ -125,7 +132,7 @@
         </el-dialog>
 
         <el-dialog title="修改所属节点" :visible.sync="nodeDialog"  class="edit-msg" >
-            <el-form :model="nodeForm">   
+            <el-form :model="nodeForm" label-width="80px">   
                 <el-form-item label="所属节点">
                     <el-input class="fill-input" v-model="nodeForm.node" clearable auto-complete="off"></el-input>
                 </el-form-item>   
@@ -136,7 +143,7 @@
             </div>
         </el-dialog>
         <el-dialog title="地址" :visible.sync="addrDialog">
-            <el-form :model="addrForm">               
+            <el-form :model="addrForm" label-width="80px">               
                 <el-form-item label="地址" :label-width="formLabelWidth">
                     <el-cascader :options="addrOptions" v-model="addrForm.addr" clearable style="width:260px;"
                         :props="props" change-on-select placeholder='省/市/县'> </el-cascader>
@@ -149,7 +156,7 @@
             </div>
         </el-dialog>
         <el-dialog title="修改" :visible.sync="isPassword" class="edit-msg" :before-close="closeFun">
-            <el-form :model="passwordForm">               
+            <el-form :model="passwordForm" label-width="80px">               
                 <el-form-item label="账号">
                     <el-input class="fill-input" v-model="passwordForm.account" clearable></el-input>
                 </el-form-item>
@@ -160,6 +167,17 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="closeFun">取 消</el-button>
                 <el-button type="primary" @click="editPasswordFun">确 定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="修改" :visible.sync="emailDialog" class="edit-msg">
+            <el-form :model="emailForm" label-width="80px">               
+                <el-form-item label="邮箱">
+                    <el-input class="fill-input" v-model="emailForm.email" clearable></el-input>
+                </el-form-item>
+            </el-form> 
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="emailDialog = false">取 消</el-button>
+                <el-button type="primary" @click="editEmailFun">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -191,6 +209,7 @@ export default {
                 node:'',
                 shopBoothId:'',
                 userId:'',
+                email: '',
             },
             value3: true,
             formLabelWidth: '120px',
@@ -237,7 +256,11 @@ export default {
             addrForm: {
                 addr:[],
                 addrInfo:'',
-            },            
+            },     
+            emailDialog: false,//修改邮箱      
+            emailForm: {
+                email: '',
+            },       
             addrOptions: [],
             props:{
                 label: 'caption',
@@ -254,26 +277,29 @@ export default {
             ],
             isPassword: false,
             telphone: '',
+            isShow: true, // 角色是否为运维
         }        
     },
     mounted(){
         console.log(this.$route.params.row)
-        if(this.$route.params.row.roleId == 1){
-            this.isSuper = true;
-
-            this.form.code='';
-            this.form.companyName='';
-            this.form.idCard='';
-            this.form.contantName='';
-            this.form.phone='';
-            this.form.areaId='',
-            this.form.areaName='',
-            this.form.addr='';
-            this.form.shopBoothId = '';
-            this.form.userId = '';
-            this.form.node = '';
+        if(this.$route.params.row.roleId == 5 || this.$route.params.row.roleId == 10){
+            this.isShow = false
         }
-        if(this.$route.params.row.roleId != 1 && this.$route.params.row.userName){
+        // if(this.$route.params.row.roleId == 1){
+        //     this.isSuper = true;
+        //     this.form.code='';
+        //     this.form.companyName='';
+        //     this.form.idCard='';
+        //     this.form.contantName='';
+        //     this.form.phone='';
+        //     this.form.areaId='',
+        //     this.form.areaName='',
+        //     this.form.addr='';
+        //     this.form.shopBoothId = '';
+        //     this.form.userId = '';
+        //     this.form.node = '';
+        // }
+        if(this.$route.params.row.userName){
             this.isSuper = false;
             this.form.isLook = true;            
             this.form.account=this.$route.params.row.userName;
@@ -283,6 +309,8 @@ export default {
             this.telphone = this.$route.params.row.telphone
             this.passwordForm.account=this.$route.params.row.userName;
             this.passwordForm.password=this.$route.params.row.password;
+            this.form.email=this.$route.params.row.email;
+            this.form.shopBoothId = this.$route.params.row.shop_booth_id;
             if(this.$route.params.row.scbj == '启用'){
                 this.form.switchStatus = '1'
             }else{
@@ -293,11 +321,10 @@ export default {
                 this.form.companyName=this.$route.params.row.bootList[0].booth_name;
                 this.form.idCard=this.$route.params.row.bootList[0].regId;
                 this.form.contantName=this.$route.params.row.bootList[0].contacts;
-                this.form.phone=this.$route.params.row.bootList[0].callphone;
                 this.form.areaId=this.$route.params.row.bootList[0].area_id,
                 this.form.areaName=this.$route.params.row.bootList[0].area_name,
                 this.form.addr=this.$route.params.row.bootList[0].addr;
-                this.form.shopBoothId = this.$route.params.row.bootList[0].shop_booth_id;
+                this.form.phone=this.$route.params.row.bootList[0].callphone;
             }
             this.form.userId = this.$route.params.row.userId;
             if(this.$route.params.row.roleId == '3'){
@@ -334,6 +361,49 @@ export default {
             })
     },    
     methods:{
+        // 修改邮箱
+        editEmailFun(){
+            let data = {
+                userName:this.form.account,
+                password:this.form.password,
+                roleId:this.form.roleId,                
+                state:this.form.switchStatus,
+                licenceNo:this.form.code,
+                nodeName:this.form.companyName,
+                regId:this.form.idCard,   
+                name:this.form.contantName,
+                // callphone:this.form.phone,
+                callphone:this.contactPhoneForm.phone,
+                areaId:this.form.areaId,
+                areaName:this.form.areaName,
+                addr:this.form.addr,                
+                nodeId:this.form.node,   
+                shop_booth_id:this.form.shopBoothId,
+                userId:this.form.userId, 
+                email: this.emailForm.email    
+            }            
+            editUser(data)
+                .then(res => {
+                    if(res.result){
+                        this.emailDialog = false ;
+                        this.form.email = this.emailForm.email;
+                        this.$message({
+                            type: 'success',
+                            message: res.message
+                        });
+                    }else{
+                        this.emailDialog = false;
+                        this.$message({
+                            type: 'warring',
+                            message: res.message
+                        });
+                    }
+                    
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         closeFun(){
             this.isPassword = false
             this.passwordForm.account=this.$route.params.row.userName;
@@ -653,6 +723,11 @@ export default {
         phoneShow(){
             this.contactPhoneForm.phone = this.form.phone;
             this.contactPhoneDialog = true;
+        },
+        // 展示邮箱
+        emailShow(){
+            this.emailForm.email = this.form.email;
+            this.emailDialog = true;
         },
         // 修改联系电话
         resetPhone(){

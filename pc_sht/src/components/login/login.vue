@@ -73,6 +73,8 @@ export default {
         
         // console.log(this.$route.query)
         if(this.$route.query.account){
+            localStorage.clear();
+            sessionStorage.clear();
             let str = 'username=' + this.$route.query.account + '&password=' + this.$route.query.password
             GetShtUserInfo(str)
                 .then(res => {

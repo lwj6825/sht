@@ -5,11 +5,7 @@
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
                     <el-form-item label="所属企业">
-                        <el-select v-model="form.enterprise" filterable placeholder="请选择">
-                            <el-option v-for="(item,index) in tbqyArr" :key="index" :label="item.node_name"
-                            :value="item.node_id" @change="selectQy">
-                            </el-option>
-                        </el-select>
+                        {{node_name}}
                     </el-form-item>
                     <el-form-item label="填报商户">
                         <el-select v-model="form.tbsh" filterable clearable placeholder="请选择">
@@ -110,7 +106,7 @@
                         <el-button @click="znlrFun" plain class="znlr-btn">智能录入</el-button>
                     </div>
                     <div class="table">
-                        <el-table :data="tableData2" :header-cell-style="rowClass" height="280" v-loading="loading">
+                        <el-table :data="tableData2" :header-cell-style="rowClass" height="380" v-loading="loading">
                             <el-table-column prop="goods_name" label="商品名称"> 
                                 <template slot-scope="scope">
                                     <div class="name">
@@ -137,7 +133,7 @@
                     </div>
                     <div class="btn">
                         <span>共{{tableData2.length}}种商品</span>
-                        <el-button @click="closeFun" style="margin-left: 330px;">取消</el-button>
+                        <el-button @click="closeFun" style="margin-left: 300px;">取消</el-button>
                         <el-button type="primary" @click="allAddFun" v-if="allGood.length > 0">确认上报</el-button>
                         <el-button type="primary" @click="submitForm" v-else>确认上报</el-button>
                     </div>
@@ -190,7 +186,7 @@
                         </p>
                     </div>
                     <div class="table">
-                        <el-table :data="tableData2" :header-cell-style="rowClass" height="290" v-loading="loading2">
+                        <el-table :data="tableData2" :header-cell-style="rowClass" height="430" v-loading="loading2">
                             <el-table-column prop="goods_name" label="商品名称">
                                 <template slot-scope="scope">
                                     <div class="name">
@@ -217,7 +213,7 @@
                     </div>
                     <div class="btn">
                         <span>共{{tableData2.length}}种商品</span>
-                        <el-button @click="closeFun4" style="margin-left: 330px;">取消</el-button>
+                        <el-button @click="closeFun4" style="margin-left: 350px;">取消</el-button>
                         <el-button type="primary" @click="editFun">确认</el-button>
                     </div>
                 </div>

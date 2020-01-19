@@ -20,8 +20,16 @@
         <section class="item">
             <span class="name">所在地区：</span>
             <div class="box">
-                <p class="addr">{{addrName}}</p>
-                <p>{{addr}}</p>
+                <div v-if="btnMsg == '修改'">
+                    <p class="addr">{{addrName}}</p>
+                    <p>{{addr}}</p>
+                </div>
+                <div v-if="btnMsg == '保存'">
+                    <el-cascader :options="addrOptions" v-model="addrList" 
+                    placeholder="省/市/县" class="address" clearable :props="propes" change-on-select></el-cascader>
+                    <br>
+                    <el-input v-model="addr" clearable></el-input>
+                </div>
             </div>
         </section>
         <section class="item">
@@ -36,7 +44,7 @@
                 </figure>
                 <span class="submit">
                         上传图片
-                    <form id="upload" enctype="multipart/form-data" method="post"> 
+                    <form id="upload1" enctype="multipart/form-data" method="post"> 
                         <input type="file" class="file" ref="file" multiple accept="image/*" @change="fileFun($event)">
                     </form>
                 </span>  
@@ -51,7 +59,7 @@
                 </figure>
                 <span class="submit">
                         上传图片
-                    <form id="upload" enctype="multipart/form-data" method="post"> 
+                    <form id="upload2" enctype="multipart/form-data" method="post"> 
                         <input type="file" class="file" ref="file2" multiple accept="image/*" @change="fileFun2($event)">
                     </form>
                 </span>  
@@ -85,6 +93,7 @@
 <script>
 import {GetNodeInfo,UpdateNodeInfo} from '../../js/settings/settings.js'
 import {baseUrl} from '../../js/address/url.js'
+import {getAddr} from '../../js/user/user.js';
 import axios from 'axios';
 export default {
     name:'enterpriseInfo',
@@ -96,6 +105,7 @@ export default {
             phone: '', // 联系电话
             jglx: '', // 机构类型
             addrName: '', // 所在地区
+            addrId: '', // 所在地区
             addr: '', // 详细地址
             time: '', // 开通日期
             qyjj: '', // 企业简介
@@ -109,16 +119,114 @@ export default {
             scShopId: '',
             logoArr: [],
             imgArr: [],
-            clarity: ''
+            clarity: '',
+            addrList: [],
+            addrOptions:[],
+            propes:{
+                label: 'caption',
+                value:'szm',
+                children: 'list'
+            },
         }
     },
     mounted(){
         this.node_id = localStorage.getItem('loginId')
         this.scShopId = localStorage.getItem('scShopId');
         // console.log(this.$route.meta.title)
+        this.getAddrList()
         this.getQyMsgFun()
     },
     methods: {
+        getAddrList(){//获取地区列表
+            getAddr()
+                .then(res => {
+                    this.addrOptions = res.data.dataList
+                    if(this.addrName){
+                        let addrArr = []
+                        let areaName = this.addrName
+                        if(areaName.slice(0,3) == '北京市'){
+                            addrArr.push('110000')
+                            this.addrOptions.forEach(ele => {
+                                ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                    })
+                                }
+                                })
+                            })
+                            console.log(addrArr)
+                            this.addrList = addrArr.slice(0,3)
+                        }else if(areaName.slice(0,3) == '上海市'){
+                            addrArr.push('310000')
+                            this.addrOptions.forEach(ele => {
+                                ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                    })
+                                }
+                                })
+                            })
+                            this.addrList = addrArr.slice(0,3)
+                        }else if(areaName.slice(0,3) == '天津市'){
+                            addrArr.push('120000')
+                            this.addrOptions.forEach(ele => {
+                                ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                    })
+                                }
+                                })
+                            })
+                            this.addrList = addrArr.slice(0,3)
+                        }else if(areaName.slice(0,3) == '重庆市'){
+                            addrArr.push('500000')
+                            this.addrOptions.forEach(ele => {
+                                ele.list.forEach(ele => {
+                                if(areaName.slice(3,6) == ele.caption){
+                                    addrArr.push(ele.szm)
+                                    ele.list.forEach(ele => {
+                                    if(areaName.slice(6) == ele.caption){
+                                        addrArr.push(ele.szm)                              
+                                    }
+                                    })
+                                }
+                                })
+                            })
+                            this.addrList = addrArr.slice(0,3)
+                        }else{
+                            if(this.addrId){
+                                let originArr = []
+                                if(this.addrId.slice(4,6) != '00'){
+                                    originArr.unshift(this.addrId);
+                                }
+                                if(this.addrId.slice(2,4) != '00'){
+                                    originArr.unshift(this.addrId.slice(0,4)+'00');
+                                }
+                                if(this.addrId.slice(0,2) != '00'){
+                                    originArr.unshift(this.addrId.slice(0,2)+'0000');
+                                }
+                                this.addrList = originArr
+                            }
+                        }
+                        console.log(this.addrList)
+                    }
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         // logo
         fileFun(event){
             var that = this;
@@ -301,24 +409,41 @@ export default {
                 this.btnMsg = '保存'
             }else{
                 this.disabled = true
-                
+                let addrArr = [], originArr = [];
+                this.addrOptions.forEach(ele => {
+                if(ele.szm == this.addrList[0]){
+                    addrArr.push(ele.caption)
+                    ele.list.forEach(ele => {
+                    if(ele.szm == this.addrList[1]){
+                        addrArr.push(ele.caption)
+                        ele.list.forEach(ele => {
+                        if(ele.szm == this.addrList[2]){
+                            addrArr.push(ele.caption)                              
+                        }
+                        })
+                    }
+                    })
+                }
+                })
                 let obj = {
                     node_id: this.node_id,
                     name: this.qyName,
                     shop_booth_id: this.scShopId,
-                    area_id: this.area_id,
-                    area_name: this.addrName,
+                    area_id: this.addrList[this.addrList.length -1],
+                    area_name: addrArr.join(""),
                     contacts: this.name,
                     telephone: this.phone,
                     addr: this.addr,
                     introduce: this.qyjj,
                     node_type: this.jglx
                 }
+                console.log(obj)
                 UpdateNodeInfo(obj)
                     .then(res => {
                         if (res.result == true) {
                             this.$message.success(res.message);
                             this.btnMsg = '修改'
+                            this.getQyMsgFun()
                         }else{
                             this.$message.error(res.message);
                         }
@@ -339,6 +464,7 @@ export default {
                     this.phone = res.data.telephone
                     this.addr = res.data.addr
                     this.addrName = res.data.area_name
+                    this.addrId = res.data.area_name
                     this.imgUrl = res.data.img_url
                     this.logoUrl = res.data.logo
                     this.area_id = res.data.area_id
@@ -394,8 +520,8 @@ export default {
                 background: rgba(0,0,0,0);
             }
         }
-        .el-input{
-            width: 250px;
+        .el-input, .el-cascader{
+            width: 350px;
         }
         .el-input--suffix .el-input__inner{
             padding-right: 0;

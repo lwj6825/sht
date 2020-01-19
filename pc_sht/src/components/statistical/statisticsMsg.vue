@@ -190,7 +190,7 @@
                 <!-- <p style="border-bottom:1px solid #ccc; padding-bottom:15px;font-size:14px;">未录入台账商户数</p> -->
                 <el-tabs v-model="activeName2" style="margin-top:-24px">
                         <el-tab-pane label="未录入台账商户" name="second">
-                                    <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;">
+                                    <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;" :cell-style="classStyle">
                                         <el-table-column prop="booth_name" label="商户"></el-table-column>
                                         <el-table-column  prop="stall_no" label="摊位号" ></el-table-column>
                                         <el-table-column  prop="days" label="近30天连续未录入天数" >
@@ -203,7 +203,7 @@
                                     @current-change="handleCurrentChange4"></el-pagination>
                         </el-tab-pane>
                         <el-tab-pane label="当日已录入台账商户" name="first">
-                            <el-table :data="tableData" @sort-change="sortChange" style="width: 100%;">
+                            <el-table :data="tableData" @sort-change="sortChange" style="width: 100%;" :cell-style="classStyle">
                             <el-table-column prop="booth_name" label="商户"></el-table-column>
                             <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                             <el-table-column prop="NUM" label="录入笔数" ></el-table-column>
@@ -238,7 +238,7 @@
                 <div class="table">
                     <el-tabs v-model="activeName1" @tab-click="active" >
                         <el-tab-pane label="在线商户" name="first" >
-                            <el-table :data="tableData2" style="width: 100%" @sort-change="sortChange2" v-loading.body="fullscreenLoading2">
+                            <el-table :data="tableData2" style="width: 100%" @sort-change="sortChange2" v-loading.body="fullscreenLoading2" :cell-style="classStyle">
                                 <el-table-column prop="seller_booth_name" label="商户名称"></el-table-column>
                                 <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                                 <el-table-column prop="in_date" label="电子秤最早在线时间" ></el-table-column>
@@ -247,7 +247,7 @@
                             @current-change="handleCurrentChange2"></el-pagination>
                         </el-tab-pane>
                         <el-tab-pane label="不在线商户" name="second" >
-                                <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3" v-loading.body="fullscreenLoading2">
+                                <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3" v-loading.body="fullscreenLoading2" :cell-style="classStyle">
                                     <el-table-column prop="biz_name" label="商户名称"></el-table-column>
                                     <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                                 </el-table>
@@ -1584,6 +1584,13 @@ export default {
                     console.log(res);
                 })
         },
+        classStyle({row}){
+            return {
+                height: '23px',
+                lineHeight: '23px',
+            }
+            
+        },
 
     },
     components:{
@@ -1997,6 +2004,10 @@ export default {
         }
         .el-progress__text{
             padding-top: 35px;
+        }
+        .el-table__row{
+            height: 23px !important;
+            line-height: 23px;
         }
     }
 </style>

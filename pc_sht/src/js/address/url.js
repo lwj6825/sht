@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 // base url
 // export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
 // export const baseUrl2 = 'http://192.168.1.14:8081/order_sht/';
 // export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
 export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/' //pass平台
+=======
+// // base url
+// export const baseUrl = 'http://192.168.1.65:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
+>>>>>>> bcfed37f537ff31f2893ee8a82c0ab2861d3ee8d
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
@@ -10,7 +17,11 @@ export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/' //pass平台
 export const baseUrl = 'http://shop.zhdtech.com/';//外网
 export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+<<<<<<< HEAD
 // export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+=======
+export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+>>>>>>> bcfed37f537ff31f2893ee8a82c0ab2861d3ee8d
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口,，，,,
@@ -61,6 +72,7 @@ export const lookShop = baseUrl + 'manage/getBootListById';//新增商户-查看
 export const getAllBizType = baseUrl + 'manage/getAllBizType';//新增商户-商户类型
 export const UpdateBizUser = baseUrl + 'manage/UpdateBizUser';// 商户详情 修改用户信息
 export const UpdateBizBooth = baseUrl + 'manage/UpdateBizBooth';// 商户详情 修改商铺信息
+export const addBizId = baseUrl2 + 'manage/addBizId';// 自动生成得商户编码
 // 供应商
 export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
 export const insertGys = baseUrl + 'manage/insertGys';// 新增供应商
@@ -323,8 +335,8 @@ export const deleteProductionTech = baseUrl + 'farming/deleteProductionTech' // 
 export const queryAssetsUser = baseUrl3 + 'assets/queryAssetsUser' // 查询 所有资产用户信息（需要确定用户类型类型）
 export const queryAssetsConf = baseUrl3 + 'assets/queryAssetsConf' // 2.查询 资产状态、所属期 等查询条件下拉框
 export const queryAssetsType = baseUrl3 + 'assets/queryAssetsType' // 3.查询 资产类型树
-export const queryNodeBase = baseUrl3 + 'assets/queryNodeBaseHasAssets' // 4.查询 所有节点
-export const queryNodeBase2 = baseUrl3 + 'assets/queryNodeBase' // 4.查询 所有节点
+export const queryNodeBase = baseUrl3 + 'assets/queryNodeBaseHasAssets' // 4.查询 有资产所有节点
+export const queryNodeBase2 = baseUrl3 + 'assets/queryNodeBase' // 4.查询 无资产所有节点
 export const queryBusiness = baseUrl3 + 'assets/queryBusiness' // 5.查询 所有商户
 export const queryAssetsBase = baseUrl3 + 'assets/queryAssetsBase' // 6.查询资产信息
 export const downloadAssetsBase = baseUrl3 + 'assets/downloadAssetsBase' // 7.导出资产信息
@@ -423,6 +435,32 @@ export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存
 export const queryGoodsForNode = baseUrl + 'goodsPrice/queryGoodsForNode' // 市场添加报价 商品
 export const queryRegionForGoodsPrice = baseUrl + 'tz/queryRegionForGoodsPrice' // 市场添加报价 区域
 export const queryGoodsIndex = baseUrl + 'goodsPrice/queryGoodsIndex' //查看市场报价  商户录的报价信息
+// 报修
+export const queryNodeBasePage = baseUrl + 'assets/queryNodeBasePage' // 查询节点
+export const getAssetsConfig = baseUrl + 'assetsTask/getAssetsConfig' // 查询用户组以及 报修类型 ，任务类型
+export const getAssetsUser = baseUrl + 'assetsTask/getAssetsUser' // 查询指派人 和创建人
+export const insertAssetsTask = baseUrl + 'assetsTask/insertAssetsTask' // 新增报修任务，临时任务接口
+export const getAssetsTask = baseUrl + 'assetsTask/getAssetsTask' // 查询报修任务 回收站，临时任务（id不为空的时候 （查看任务详情 时用到））
+export const uploadImgTask = baseUrl + 'assetsTask/uploadImg' // 上传图片
+export const uploadVideo = baseUrl + 'assetsTask/uploadVideo' // 上传视频
+export const getAssetsTaskImg = baseUrl + 'assetsTask/getAssetsTaskImg' // 查询报修任务以及临时任务的 图片 （查看任务详情 时用到）
+export const updateAssetsTask = baseUrl + 'assetsTask/updateAssetsTask' // 更新任务内容
+export const deleteAssetsTaskImg = baseUrl + 'assetsTask/deleteAssetsTaskImg' // 删除已存在的任务 图片 （所有图片的删除都可以用这个）
+export const getAssetsTaskInfo = baseUrl + 'assetsTask/getAssetsTaskInfo' // 查询任务详情时 用到（查询任务解决方案 详情） 有设备
+export const insertAssetsImg = baseUrl + 'assetsTask/insertAssetsImg' // 保存图片
+export const updateAssetsTaskInfo = baseUrl + 'assetsTask/updateAssetsTaskInfo' // 更新任务中的设备信息
+export const deleteAssetsInfo = baseUrl + 'assetsTask/deleteAssetsInfo' // 删除任务中的设备信息
+export const updateAssetsTaskAssignId = baseUrl + 'assetsTask/updateAssetsTaskAssignId' // 修改指派人
+export const insertAssetsTaskResult = baseUrl + 'assetsTask/insertAssetsTaskResult' // 关闭 没无设备 时  保存解决方案的图片 以及信息
+export const getAssetsTaskResult = baseUrl + 'assetsTask/getAssetsTaskResult' // 查看关闭任务 没无设备 时解决方案的图片 以及信息
+export const getAssetsTaskLog = baseUrl + 'assetsTask/getAssetsTaskLog' // 查看任务日志
+export const updateAssetsTaskScbj = baseUrl + 'assetsTask/updateAssetsTaskScbj' // 更新任务的 删除标记  1表示未删除，0表示回收站中 
+export const deleteAssetsTask = baseUrl + 'assetsTask/deleteAssetsTask' // 彻底删除
+export const getAllGroup = baseUrl + 'assetsTask/getAllGroup' // 获取所有分组
+export const insertAssetsGroup = baseUrl + 'assetsTask/insertAssetsGroup' // 新增分组 和组员 组长 或者 修改分组
+export const deleteAssetsGroup = baseUrl + 'assetsTask/deleteAssetsGroup' // 删除分组 和组员 组长
+export const queryBusinessForMobile = baseUrl + 'assets/queryBusinessForMobile' // 查询商户分页加载 
+export const downAssetsTaskXsl = baseUrl + 'assetsTask/downAssetsTaskXsl' // 报修任务的导出  
 
 //pass平台
 // 数据源
@@ -448,6 +486,7 @@ export const insertWarning = baseUrl4 + 'warning/insertWarning' //添加预警�
 export const updateWarning = baseUrl4 + 'warning/updateWarning' //编辑预警工作
 export const executeWarning = baseUrl4 + 'warning/executeWarning' //主动执行
 export const downloadLogWarning = baseUrl4 + 'warning/downloadLogWarning'//下载日志附件
+<<<<<<< HEAD
 export const queryNodeTypeInfo = baseUrl4 + 'warning/queryNodeTypeInfo'// 数据源节点类型查询
 //查询节点信息
 export const queryNodeTypeInfoForType = baseUrl4 + 'warning/queryNodeTypeInfoForType' //企业类型查询
@@ -469,3 +508,5 @@ export const queryCommunicationRecord = baseUrl4 + 'warning/queryCommunicationRe
 export const queryInfoType = baseUrl4 + 'warning/queryInfoType' //条件查询
 export const querygroupName = baseUrl4 + 'warning/querygroupName' //条件查询
 export const queryNodeDetailType2 = baseUrl4 + 'warning/queryNodeDetailType'
+=======
+>>>>>>> bcfed37f537ff31f2893ee8a82c0ab2861d3ee8d

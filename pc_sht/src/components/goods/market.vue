@@ -203,7 +203,7 @@
               })
           })
         }  
-        let url = baseUrl + 'goods/importSaleAndOrigin'
+        let url = baseUrl2 + 'goods/importSaleAndOrigin'
         ajaxPost(url,formData,config)
           .then(res => {
             this.boxShow = true;

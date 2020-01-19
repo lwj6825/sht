@@ -57,8 +57,8 @@
             <div class="shop-name" v-show="showShopListName">
               <el-button v-for="item in shopList" :key="item.index" @click='lookThis(item.shopBoothId)' 
                 :class="{current:item.shopName == lookShopName}" type="primary" class="btn">{{item.shopName}}</el-button>
-            </div>
-            <el-button type="primary" class="btn add-btn" :class="{current:active}" @click='addShop'>添加商铺</el-button>
+            </div><!--
+            <el-button type="primary" class="btn add-btn" :class="{current:active}" @click='addShop'>添加商铺</el-button>-->
           </div>
           <div class="form-content" v-show="!selectAddShop">
             <!-- 展示商铺信息 -->
@@ -139,10 +139,10 @@
           <!-- 新增商户 -->
           <div class="form-content" v-show="selectAddShop">
             <el-form-item label="节点编码：" prop="node">
-              <el-input v-model="form.node" clearable></el-input>
+              <el-input v-model="form.node" readonly></el-input>
             </el-form-item>
             <el-form-item label="商户编码：" prop="shangh">
-              <el-input v-model="form.shangh" clearable></el-input>
+              <el-input v-model="form.shangh"></el-input>
             </el-form-item>
             <el-form-item label="营业执照号：">
               <el-input v-model="form.licenceNo" clearable></el-input>
@@ -178,8 +178,7 @@
               <el-input v-model="form.addrInfo" placeholder="请输入详细地址" clearable></el-input>
             </el-form-item>
             <el-form-item label="摊位号：">
-              <el-input style="width: 300px" v-model="form.stallNo" clearable></el-input>
-              <span>&nbsp;&nbsp;例：1厅8排</span>
+              <el-input v-model="form.stallNo" clearable></el-input>
             </el-form-item>
             <el-form-item >
               <el-button type="primary" @click="submitForm('form')">保存</el-button>
@@ -193,7 +192,7 @@
 <script>
 import {getRoleList} from '../../js/role/role.js';
 import {getAddr} from '../../js/user/user.js';
-import {insBiz,LookShop,allBizs,GetAllBizType} from '../../js/management/management.js';
+import {insBiz,LookShop,allBizs,GetAllBizType,AddBizId} from '../../js/management/management.js';
 export default {
   name:"",
   data(){
@@ -203,7 +202,14 @@ export default {
           {required: true, message: '请输入节点编码', trigger: 'blur'}
         ],
         shangh: [
-          {required: true, message: '请输入商户编码', trigger: 'blur'}
+          {required: true, message: '请输入商户编码', trigger: 'blur'},
+          {validator:function(rule,value,callback){
+            if(value.length != 13){
+              callback(new Error("商户编码格式错误"));
+            }else{
+              callback();
+            }
+          }, trigger: 'blur'}
         ],
         account: [
           {required: true, message: '请输入账号', trigger: 'blur'}
@@ -216,14 +222,14 @@ export default {
         ],
         phoneNumber: [
           {required: true, message: '请输入联系电话',trigger: 'blur'},
-          {validator:function(rule,value,callback){
-            if(/^1[34578]\d{9}$/.test(value) == false){
-              callback(new Error("请输入正确的手机号"));
-            }
-            else{
-              callback();
-            }
-          }, trigger: 'blur'}
+          // {validator:function(rule,value,callback){
+          //   if(/^1[34578]\d{9}$/.test(value) == false){
+          //     callback(new Error("请输入正确的手机号"));
+          //   }
+          //   else{
+          //     callback();
+          //   }
+          // }, trigger: 'blur'}
         ],
         licenceNo: [
           {required: true, message: '请输入营业执照',trigger: 'blur'},
@@ -248,13 +254,13 @@ export default {
         ],
         callphone: [
           {required: true, message: '请输入手机号',trigger: 'blur'},
-          {validator:function(rule,value,callback){
-            if(/^1[34578]\d{9}$/.test(value) == false){
-              callback(new Error("请输入正确的手机号"));
-            }else{
-              callback();
-            }
-          }, trigger: 'blur'}
+          // {validator:function(rule,value,callback){
+          //   if(/^1[34578]\d{9}$/.test(value) == false){
+          //     callback(new Error("请输入正确的手机号"));
+          //   }else{
+          //     callback();
+          //   }
+          // }, trigger: 'blur'}
         ],
         addr: [
           {required: true, message: '请选择所在地区',trigger: 'blur'}
@@ -277,7 +283,7 @@ export default {
       userId:'',
       form:{
         node: '',
-        shnagh: '',
+        shangh: '',
         people:'',
         phoneNumber:'',
         account:'',//账号
@@ -318,12 +324,16 @@ export default {
       lookShopName:'',//查看商铺
       selectAddShop:true,//选中添加商品展示表单
       isEdit:false,//是否在编辑
+      nodeidlocal: '',
     }
   },
   created() {
+    this.nodeidlocal = localStorage.getItem('nodeidlocal')
     this.userId = localStorage.getItem('userId')
   },
   mounted(){
+    this.form.node = this.nodeidlocal
+    this.getAddBizIdFun()
     this.getRoleType();//获取角色列表     
     this.getAddrList();//获取地区列表
     this.getBizTypeFun()
@@ -350,10 +360,19 @@ export default {
     }
   },
   methods:{
+    getAddBizIdFun(){
+      let str = 'node_id=' + this.nodeidlocal
+      AddBizId(str)
+          .then(res => {
+            this.form.shangh = res.data.biz
+          })
+          .catch(res => {
+            console.log(res);
+          })
+    },
     getBizTypeFun(){
       GetAllBizType()
         .then(res => {
-          console.log(res)
           this.types = res.data
         })
         .catch(res => {
@@ -462,7 +481,7 @@ export default {
               // this.form.addrInfo='';//地址详细信息
               // this.form.stallNo='';//摊位号
             }else{
-              this.$message.error('账号已存在');
+              this.$message.error('商户编码已存在');
             }
           })
           .catch(res => {

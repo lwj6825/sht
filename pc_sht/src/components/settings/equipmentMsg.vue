@@ -46,14 +46,14 @@
                     <el-button type="primary" class="btn import" @click="loadFun">下载</el-button>
                     <div class="submit">
                         导入设备
-                        <form id="upload" enctype="multipart/form-data" method="post"> 
+                        <form id="upload1" enctype="multipart/form-data" method="post"> 
                         <input type="file" class="file" ref="file" @change="fileFun($event)">
                         </form> 
                     </div>
                     <div class="btn-file">
                         <div class="submits">
                             导入快捷键
-                            <form id="upload" enctype="multipart/form-data" method="post"> 
+                            <form id="upload2" enctype="multipart/form-data" method="post"> 
                             <input type="file" class="files" ref="file" @change="fileFun2($event)">
                             </form> 
                         </div>
@@ -129,7 +129,7 @@
                         <div class="btn-key">
                             <div class="submit">
                                 批量导入
-                                <form id="upload" enctype="multipart/form-data" method="post"> 
+                                <form id="upload3" enctype="multipart/form-data" method="post"> 
                                     <input type="file" class="file" ref="file" @change="fileFun3($event)">
                                 </form> 
                             </div>

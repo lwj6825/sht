@@ -197,7 +197,7 @@
                         <el-button @click="znlrFun" plain class="znlr-btn">智能录入</el-button>
                     </div>
                     <div class="table">
-                        <el-table :data="tableData2" :header-cell-style="rowClass" height="280" v-loading="loading">
+                        <el-table :data="tableData2" :header-cell-style="rowClass" :height="region == '' ? 280 : 330" v-loading="loading">
                             <el-table-column prop="goods_name" label="商品名称">
                                 <template slot-scope="scope">
                                     <div class="name">
@@ -285,7 +285,7 @@
                         </p>
                     </div>
                     <div class="table">
-                        <el-table :data="tableData2" :header-cell-style="rowClass" height="290" v-loading="loading2">
+                        <el-table :data="tableData2" :header-cell-style="rowClass" height="330" v-loading="loading2">
                             <el-table-column prop="goods_name" label="商品名称">
                                 <template slot-scope="scope">
                                     <div class="name" @click="goodMsgFun(scope.row)">
@@ -319,7 +319,7 @@
                     </div>
                     <div class="btn">
                         <span>共{{tableData2.length}}种商品</span>
-                        <el-button @click="closeFun4" style="margin-left: 430px;">取消</el-button>
+                        <el-button @click="closeFun4" style="margin-left: 420px;">取消</el-button>
                     </div>
                 </div>
             </div>
@@ -1446,10 +1446,10 @@ export default {
                 position: relative;
                 top: 50%;
                 left: 50%;
-                margin-top: -330px;
+                margin-top: -315px;
                 margin-left: -300px;
                 width: 600px;
-                height: 660px;
+                height: 630px;
                 background: #fff;
                 .box-title{
                     margin: 0 10px;

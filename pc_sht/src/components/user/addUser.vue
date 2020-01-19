@@ -9,7 +9,7 @@
                 <el-input class="fill" type="password" v-model="form.password" clearable placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-form-item label="系统角色" prop="systemRole">
-                <el-select class="fill" v-model="form.systemRole" clearable placeholder="请选择">
+                <el-select class="fill" v-model="form.systemRole" clearable placeholder="请选择" @change="changeFun">
                     <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"> </el-option>
                 </el-select>
             </el-form-item>
@@ -19,36 +19,42 @@
                     active-text="禁用" inactive-text="启用"> </el-switch>
             </el-form-item>
             <div class="title user-msg">用户信息</div>
-            <el-form-item label="营业执照号：" class="padding-left" prop="code">
-                <el-input class="fill-input" v-model="form.code" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="企业名称：" class="padding-left" prop="name">
-               <el-input class="fill-input" v-model="form.name" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="身份证号：" class="padding-left" prop="idCard">
-                <el-input class="fill-input" v-model="form.idCard" clearable></el-input>
-            </el-form-item>
+            <div v-if="isShow">
+                <el-form-item label="营业执照号：" class="padding-left">
+                    <el-input class="fill-input" v-model="form.code" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="企业名称：" class="padding-left">
+                <el-input class="fill-input" v-model="form.name" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="身份证号：" class="padding-left">
+                    <el-input class="fill-input" v-model="form.idCard" clearable></el-input>
+                </el-form-item>
+            </div>
             <el-form-item label="联系人：" class="padding-left" prop="people">
                 <el-input class="fill-input" v-model="form.people" clearable></el-input>
             </el-form-item>
-            <el-form-item label="联系电话：" class="padding-left" prop="phone">
+            <el-form-item label="联系电话：" class="padding-left">
                <el-input class="fill-input" v-model="form.phone" clearable></el-input>
             </el-form-item>
-            <el-form-item label="地址：" class="padding-left" prop="addr">
-                <el-cascader class="fill-input" :options="addrOptions" v-model="form.addr" clearable
-                     :props="props" change-on-select placeholder='省/市/县'> </el-cascader>
+            <el-form-item label="邮箱：" class="padding-left">
+                <el-input class="fill-input" v-model="form.mailbox" clearable></el-input> 
             </el-form-item>
-            <el-form-item label="详细地址：" class="padding-left" prop="addrInfo">
-                <el-input class="fill-input" v-model="form.addrInfo" clearable placeholder="请输入详细地址"></el-input>
-            </el-form-item>
-            <el-form-item label="所属节点：" class="padding-left" prop="node">
-                <el-select class="fill-input" filterable v-model="form.node" placeholder="请选择" clearable>
-                    <el-option v-for="item in nodeOptions" :key="item.node_id" :label="item.node_name" :value="item.node_id" > </el-option>
-                </el-select>
-            </el-form-item>
-            <br>
-            <el-form-item class="submit-btn">
-                <el-button type="primary" @click="submitForm('form')">保存</el-button>
+            <div v-if="isShow">
+                <el-form-item label="地址：" class="padding-left">
+                    <el-cascader class="fill-input" :options="addrOptions" v-model="form.addr" clearable
+                        :props="props" change-on-select placeholder='省/市/县'> </el-cascader>
+                </el-form-item>
+                <el-form-item label="详细地址：" class="padding-left">
+                    <el-input class="fill-input" v-model="form.addrInfo" clearable placeholder="请输入详细地址"></el-input>
+                </el-form-item>
+                <el-form-item label="所属节点：" class="padding-left">
+                    <el-select class="fill-input" filterable v-model="form.node" placeholder="请选择" clearable>
+                        <el-option v-for="item in nodeOptions" :key="item.node_id" :label="item.node_name" :value="item.node_id" > </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+            <el-form-item>
+                <el-button class="submit-btn" type="primary" @click="submitForm('form')">保存</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -76,7 +82,8 @@ export default {
                 phone:'',
                 addr:[],
                 addrInfo:'',
-                node:''
+                node:'',
+                mailbox: '',
             },
             rules: {
                 account: [
@@ -134,7 +141,8 @@ export default {
                     value: '110114107',
                     label: '水屯批发市场'
                 }
-            ]
+            ],
+            isShow: true, // 角色是否为运维
         }
     },
     mounted(){
@@ -165,7 +173,15 @@ export default {
             })
         
     },
-    methods: {     
+    methods: { 
+        changeFun(item){
+            console.log(item)
+            if(item == 5 || item == 10){
+                this.isShow = false
+            }else{
+                this.isShow = true
+            }
+        }, 
         getNodeFun(){
             GetAllNode()
                 .then(res => {
@@ -204,13 +220,19 @@ export default {
                     })
                 }
             })
+            let node_name = ''
+            if(this.form.systemRole == 5 || this.form.systemRole == 10){
+                node_name = this.form.people
+            }else{
+                node_name = this.form.name
+            }
             let addData = {
                 userName:this.form.account,
                 password:this.form.password,
                 roleID:this.form.systemRole,
                 state:this.form.switchStatus==true?1:0,
                 licenceNo:this.form.code,
-                nodeName:this.form.name,
+                nodeName:node_name,
                 regId:this.form.idCard,
                 name:this.form.people,
                 callphone:this.form.phone,
@@ -218,9 +240,11 @@ export default {
                 areaName:addrArr.join(""),
                 addr:this.form.addrInfo,
                 nodeId:this.form.node,
-                userId:localStorage.getItem('userId')
+                userId:localStorage.getItem('userId'),
+                email: this.form.mailbox,
+                telphone: this.form.phone,
             }
-            // console.log(this.form.addr)
+            console.log(addData)
             addUser(addData)
                 .then(res => {                    
                     this.$message({
@@ -284,6 +308,7 @@ export default {
             }
             .submit-btn{
                 margin-left: 300px;
+                font-size: 14px;
             }
             
         }

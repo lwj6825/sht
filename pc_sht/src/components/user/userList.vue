@@ -1,37 +1,43 @@
 <template>
     <div class="content uesr-list">
         <div class="box">
-            <section>
-                <span class="float-lt margin-rt">开通日期</span>
-                <el-date-picker class="date-picker margin-rt" v-model="time" clearable type="daterange"
-                    range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
-                    format="yyyy-MM-dd" value-format="yyyy-MM-dd"> </el-date-picker>
-                <span class="float-lt margin-rt">账号</span>
-                <el-input class="float-lt file-input" v-model="account" clearable placeholder="请输入内容"></el-input>
-            </section>
-            <section>
-                <span class="float-lt margin-rt">系统角色</span>
-                <el-select class="float-lt margin-rt" v-model="systemRole" clearable placeholder="请选择">
+            <div class="term">
+                <p class="margin-rt">开通日期</p><p></p>
+                <el-date-picker clearable style="width: 300px" v-model="time" value-format="yyyy-MM-dd" type="daterange"
+                    range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                </el-date-picker>
+            </div>
+            <div class="term">
+                <p class="margin-rt">账号</p>
+                <el-input class="file-input" v-model="account" clearable placeholder="请输入内容"></el-input>
+            </div>
+            <div class="term">
+                <p class="margin-rt">系统角色</p>
+                <el-select class="margin-rt file-input" v-model="systemRole" clearable placeholder="请选择">
                     <el-option v-for="item in systemRoleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"> </el-option>
                 </el-select>
-                <span class="float-lt margin-rt">企业名称</span>
-                <el-input class="float-lt file-input margin-rt" v-model="enterpriseName" clearable placeholder="请输入内容"></el-input>
-                <span class="float-lt margin-rt">状态</span>
-                <el-select class="float-lt" v-model="enterpriseStatus" clearable placeholder="请选择">
+            </div>
+            <div class="term">
+                <p class="margin-rt">企业名称</p>
+                <el-input class="file-input margin-rt" v-model="enterpriseName" clearable placeholder="请输入内容"></el-input>
+            </div>
+            <div class="term">
+                <p class="margin-rt">状态</p>
+                <el-select class="file-input" v-model="enterpriseStatus" clearable placeholder="请选择">
                     <el-option v-for="item in enterpriseStatusOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
-            </section>
-            <section>
-                <span class="float-lt margin-rt">节点名称</span>
-                <el-select class="float-lt" v-model="nodeId" clearable filterable placeholder="请选择">
+            </div>
+            <div class="term">
+                <p class="margin-rt">节点名称</p>
+                <el-select class="file-input" v-model="nodeId" clearable filterable placeholder="请选择">
                     <el-option v-for="(item,index) in nodeList" :key="index" :label="item.node_name" :value="item.node_id"></el-option>
                 </el-select>
-            </section>
-            <section>
+            </div>
+            <div class="term">
                 <el-button type="primary" class="search-btn" @click="search()">搜索</el-button>
                 <!--<el-button class="margin-rt file-btn">导出</el-button>-->
                 <span class="clear-all" @click="clearAll()">清空筛选条件</span>
-            </section>
+            </div>
         </div>
         <div class="tables">
             <div class="title">
@@ -363,10 +369,6 @@ export default {
         padding: 10px;
         background: #fff;
     }
-    .float-lt{
-        float: left;
-        display: block;
-    }
     .title{
         margin-bottom: 10px;
         display: flex;
@@ -398,6 +400,7 @@ export default {
         margin-right: 10px;
     }
     .clear-all{
+        margin-left: 10px;
         cursor: pointer;
         color: #999;
     }
@@ -405,22 +408,23 @@ export default {
         height: 100%;
         box-sizing: border-box;
         .box{
+            display: flex;
+            flex-wrap: wrap;
+		    align-items: center;
             padding: 10px;
             font-size: 14px;
             background: #fff;
-            overflow: hidden;
-            section{
-                padding: 5px 30px 0;
-                height: 40px;
-                line-height: 40px;
-                overflow: hidden;
+            .term{
+                margin: 10px;
+                display: flex;
+                align-items: center;
+                height: 30px;
             }
             .file-input{
                 width: 200px;
             }
             .date-picker{
                 float: left;
-                margin-top: 5px;
             }
         }
         .el-range-editor.el-input__inner{
@@ -433,6 +437,12 @@ export default {
     .pagination{
         padding-top: 10px;
         text-align: center;
+    }
+    .el-input__icon{
+        line-height: 30px;
+    }
+    .el-date-editor .el-range-input, .el-date-editor .el-range-separator{
+        font-size: 13px !important;
     }
 }
 </style>

@@ -6,8 +6,8 @@
     <div class="box" v-if="boxShow">
       <div class="select">
         <p class="close" @click="closeFun">X</p>
-        <div class="filemsg">
-          {{fileMsg}}
+        <div class="filemsg" v-html="fileMsg">
+
         </div>
         
       </div>
@@ -225,11 +225,13 @@
               })
           })
         }  
-        let url = baseUrl + 'goods/importPurchase'
+        let url = baseUrl2 + 'goods/importPurchase'
         ajaxPost(url,formData,config)
           .then(res => {
+            console.log(res.message)
             this.boxShow = true;
-            this.fileMsg = res.message
+            this.fileMsg = res.message.replace(/\n/g,'<br>')
+            console.log(this.fileMsg)
             this.$refs.file.value = null
           })
           .catch(res => {
@@ -516,9 +518,9 @@
       .filemsg{
         width: 360px;
         height: 240px;
+        overflow: auto;
         margin: 10px auto;
         font-size: 14px;
-        overflow: hidden;
       }
       .select{
         background: #fff;

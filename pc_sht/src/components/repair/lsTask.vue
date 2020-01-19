@@ -1,22 +1,21 @@
 <template>
-    <div class="content repairMsg">
+    <div class="content lsTask">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
                     <el-form-item label="任务信息">
                         <el-input class="placeholder" v-model="form.msg" clearable placeholder="请输入任务ID或任务内容"></el-input>
                     </el-form-item>
-                    <el-form-item label="所属节点">
-                        <el-select v-model="form.node_id" filterable clearable placeholder="请选择"
-                            v-loadmore="loadmore2" remote :remote-method="remoteMethod2" reserve-keyword @blur="unfocusFun2">
-                            <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_NAME"
-                                :value="item.NODE_ID">
+                    <el-form-item label="任务模式">
+                        <el-select v-model="form.bxms_id" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in bxmsArr" :key="index" :label="item.item"
+                            :value="item.item">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="报修模式">
-                        <el-select v-model="form.bxms_id" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in bxmsArr" :key="index" :label="item.item"
+                    <el-form-item label="任务类型">
+                        <el-select v-model="form.types" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in typesArr" :key="index" :label="item.item"
                             :value="item.item">
                             </el-option>
                         </el-select>
@@ -68,7 +67,7 @@
             <div class="title">
                 <p class="tz-title">任务列表</p>
                 <div>
-                    <el-button type="primary" @click="addFun">+新建报修任务</el-button>
+                    <el-button type="primary" @click="addFun">+新建临时任务</el-button>
                     <el-button plain @click="downloadFun">导出</el-button>
                 </div>
             </div>
@@ -83,8 +82,14 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="node_name" label="所属节点" width="200"> </el-table-column>
-                <el-table-column prop="assigned_name" label="指派给" width="100">
+                <el-table-column prop="task_model" label="任务类型" width="100">
+                    <template slot-scope="scope">
+                        <p v-if="scope.row.task_model == 1">任务类</p>
+                        <p v-else-if="scope.row.task_model == 2">报修类</p>
+                        <p v-else>{{scope.row.task_model}}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="record_date" label="指派给" width="100">
                     <template slot-scope="scope">
                         <div class="zpg" v-if="!scope.row.assigned_name">
                             <span style="font-weight: bolder">未指派</span>
@@ -96,11 +101,10 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="group_name" label="工作组" width="70"> </el-table-column>
+                <el-table-column prop="group_name" label="工作组" width="70"></el-table-column>
                 <el-table-column prop="level" label="优先级" width="70"></el-table-column>
-                <el-table-column prop="create_name" label="创建人" width="100"> </el-table-column>
-                <el-table-column prop="record_time" label="创建时间" width="170" 
-                    :default-sort="{order: order}" sortable="custom"> </el-table-column>
+                <el-table-column prop="create_name" label="创建人" width="100"></el-table-column>
+                <el-table-column prop="record_time" label="创建时间" width="170" sortable="custom"></el-table-column>
                 <el-table-column label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button type="text" v-if="scope.row.task_state == 1" size="small" @click="viewFun(scope.row)">查看</el-button>
@@ -139,7 +143,7 @@
                 </div>
                 <div class="btn">
                     <el-button @click="closeFun">取消</el-button>
-                    <el-button type="primary" @click="saveAssignFun" :disabled="disabled4">指派</el-button>
+                    <el-button type="primary" @click="saveAssignFun" :disabled="disabled3">指派</el-button>
                 </div>
             </div>
         </div>
@@ -147,91 +151,56 @@
         <div class="passwrd" v-if="isEdits">
             <div class="text">
                 <div class="box-title">
-                    <p class="tit">{{prompt}}报修任务</p>
+                    <p class="tit">{{prompt}}临时任务</p>
                     <p class="iconfont icon-close close" @click="closeFun2"></p>
                 </div>
                 <div class="clear"></div>
                 <el-form class="form" ref="form2" :model="form2" :rules="rules" label-width="120px" size="small">
-                    <el-form-item label="选择节点" prop="node_id">
-                        <el-select v-model="form2.node_id" filterable clearable placeholder="请选择" @change="selectNodeFun"
-                            v-loadmore="loadmore2" remote :remote-method="remoteMethod2" reserve-keyword @blur="unfocusFun2"
-                            :disabled="item_id ? true : false">
+                    <el-form-item label="选择节点">
+                        <el-select v-model="form2.node_name" allow-create filterable clearable placeholder="请选择" @change="selectNodeFun"
+                            v-loadmore="loadmore2" remote :remote-method="remoteMethod2" reserve-keyword @blur="unfocusFun2">
                             <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_NAME"
-                                :value="item.NODE_ID">
+                                :value="item.NODE_NAME">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="选择商户" v-if="isSh">
-                        <el-select v-model="form2.merchant" filterable clearable placeholder="请选择" @change="selectMerchantFun"
-                            v-loadmore="loadmore3" remote :remote-method="remoteMethod3" reserve-keyword @blur="unfocusFun3">
-                            <el-option v-for="(item,index) in merchantArr"  :key="index" :label="item.BIZ_NAME"
-                                :value="item.BIZ_ID">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="报修模式" prop="bxms_id">
+                    <el-form-item label="任务模式" prop="bxms_id">
                         <el-select v-model="form2.bxms_id" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in bxmsArr" :key="index"  :label="item.item" :value="item.item">
+                            <el-option v-for="(item,index) in bxmsArr" :key="index" :label="item.item"
+                            :value="item.item">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="任务类型" prop="bxms_id">
+                        <el-select v-model="form2.types" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in typesArr" :key="index" :label="item.item"
+                            :value="item.item">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="任务内容" prop="task_msg">
                         <textarea v-model="form2.task_msg" placeholder=""></textarea>
                     </el-form-item>
-                    <el-form-item label="附件">
+                    <el-form-item label="添加图片">
                         <div class="msg-item">   
                             <div class="img-list">
-                                <ul>
-                                    <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
-                                        <p class="delete" @click="removeFun(item,index)" v-if="item_id">-</p>
-                                        <figure class="image" @click="bigImgFun(item,1)">
-                                            <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
-                                        </figure>
-                                    </li>
-                                    <li v-for="(item3,index3) in videoArr" :key="item3.id" v-if="item3.video_url">
-                                        <p class="delete" @click="removeFun(item3,index3,2)" v-if="item_id">-</p>
-                                        <img class="stop" src="/static/stop.png" alt="">
-                                        <video @click="bigImgFun(item3,3)" class="border" width="50" height="50" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item3.video_url" 
-                                            ></video>
-                                    </li>
-                                    <li>
-                                        <div class="submit">
-                                            上传图片或视频
-                                            <form id="upload" enctype="multipart/form-data" method="post"> 
-                                                <input type="file" class="file" ref="files" @change="fileFun($event)">
-                                            </form>
-                                        </div>
-                                    </li>
-                                </ul>
+                            <ul>
+                                <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                                    <p class="delete" @click="removeFun(item,index)" v-if="item_id">-</p>
+                                    <figure class="image" @click="bigImgFun(item,1)">
+                                        <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                    </figure>
+                                </li>
+                            </ul>
                             </div>
-                        </div>
-                    </el-form-item>
-                    <el-form-item label="设备信息" class="equipment-list">
-                        <div class="equipment-box" v-if="item_id">
-                            <div class="equipment" v-for="(item2, index2) in equipmentList" :key="index2">
-                                <el-select v-model="item2.equipment" filterable placeholder="请选择" @change="selectEquipmentFun(item2.equipment,index2)"
-                                    v-loadmore="loadmore1" remote :remote-method="remoteMethod1" reserve-keyword @blur="unfocusFun1"
-                                    @focus="focusFun1">
-                                    <el-option v-for="(item,index) in equipmentArr" :key="index" :label="item.bar_code + '|' + item.assets_type" 
-                                        :value="item.assets_id">
-                                    </el-option>
-                                </el-select>
-                                <p class="iconfont icon-close close-equipment" v-if="item2.equipment" @click="deleteEquipmentFun(item2,index2)"></p><!---->
+                            <div>
+                                <div class="submit">
+                                    上传图片
+                                    <form id="upload" enctype="multipart/form-data" method="post"> 
+                                        <input type="file" class="file" ref="file" @change="fileFun($event)">
+                                    </form>
+                                </div>
                             </div>
-                            <p class="add-btn" @click="addEquipmentFun">添加设备</p>
-                        </div>
-                        <div v-else class="equipment-box">
-                            <div class="equipment" v-for="(item2,index2) in equipmentList" :key="index2">
-                                <el-select v-model="item2.equipment" filterable placeholder="请选择" @change="selectEquipmentFun(item2.equipment,index2)"
-                                    v-loadmore="loadmore1" remote :remote-method="remoteMethod1" reserve-keyword @blur="unfocusFun1"
-                                    @focus="focusFun1">
-                                    <el-option v-for="(item,index) in equipmentArr" :key="index" :label="item.bar_code + '|' + item.assets_type" 
-                                        :value="item.assets_id">
-                                    </el-option>
-                                </el-select>
-                                <p class="iconfont icon-close close-equipment" v-if="item2.equipment" @click="deleteEquipmentFun2(index2)"></p>
-                            </div>
-                            <p class="add-btn" @click="addEquipmentFun">添加设备</p>
                         </div>
                     </el-form-item>
                     <el-form-item label="指派给">
@@ -259,7 +228,7 @@
                         <el-input clearable v-model="form2.remarke"></el-input>
                     </el-form-item>
                 </el-form>
-                <div style="margin-left: 470px">
+                <div class="btn">
                     <el-button @click="closeFun2">取消</el-button>
                     <el-button type="primary" :disabled="disabled" @click="submitForm('form2')">确认</el-button>
                 </div>
@@ -267,19 +236,18 @@
         </div>
         <!--关闭-->
         <div class="passwrd solve" v-if="isSolve">
-            <div class="text" :style="equipmentMsg.length ==0 ? {'height': '340px'} : {'height': '440px'}">
+            <div class="text">
                 <div class="box-title">
                     <p class="tit">关闭任务</p>
                     <p class="iconfont icon-close close" @click="closeFun3"></p>
                 </div>
                 <div class="clear"></div>
-                <!--无设备-->
                 <div class="jjfa" v-if="equipmentMsg.length ==0">
                     <el-form ref="form3" :model="form3" :rules="rules2" label-width="120px" size="small">
                         <el-form-item label="解决方案" prop="solve">
                             <textarea v-model="form3.solve" placeholder=""></textarea>
                         </el-form-item>
-                        <el-form-item>    
+                        <el-form-item>
                             <div class="msg-item">   
                                 <div class="img-list">
                                 <ul>
@@ -300,79 +268,10 @@
                                 </div>
                             </div>
                         </el-form-item>
-                        <el-form-item>
-                            <el-button style="margin-left: 360px;" @click="closeFun3">取消</el-button>
-                            <el-button type="primary" :disabled="disabled2" @click="submitForm2('form3')">确认</el-button>
-                        </el-form-item>
                     </el-form>
-                </div>
-                <!--有设备-->
-                <div v-else>
-                    <div class="form-div">
-                        <div class="form-list" v-for="(item2, index2) in equipmentMsg" :key="index2">
-                            <div class="form-box">
-                                <div class="form-tit"><span class="verification">&nbsp;&nbsp;</span>设备名称</div>
-                                <div class="form-msg">{{item2.assets_no + '|' + item2.assets_name}}</div>
-                            </div>
-                            <div class="form-box">
-                                <div class="form-tit"><span class="verification">*</span>设备问题</div>
-                                <div class="form-msg">
-                                    <el-input clearable v-model="item2.describe"></el-input>
-                                </div>
-                            </div>
-                            <div class="form-box">
-                                <div class="form-tit"><span class="verification">&nbsp;&nbsp;</span>更换部件</div>
-                                <div class="form-msg">
-                                    <el-select v-model="item2.assets_part" filterable clearable placeholder="请选择">
-                                        <el-option v-for="(item3,index3) in partArr" :key="index3" :label="item3.a_conf_item"
-                                            :value="item3.a_conf_item">
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                            </div>
-                            <div class="form-box">
-                                <div class="form-tit"><span class="verification">*</span>解决方案</div>
-                                <div class="form-msg">
-                                    <el-input clearable v-model="item2.text"></el-input>
-                                </div>
-                            </div>
-                            <div class="form-box">
-                                <div class="form-tit"><span class="verification">&nbsp;&nbsp;</span></div>
-                                <div class="msg-item">   
-                                    <div class="img-list">
-                                    <ul>
-                                        <li v-for="(item,index) in item2.imgArr1" :key="index" v-if="item.img_url">
-                                            <p class="delete" @click="removeFun2(item,index,item2.imgArr1)">-</p><!---->
-                                            <figure class="image" @click="bigImgFun(item,2,item2)">
-                                                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
-                                            </figure>
-                                        </li>
-                                    </ul>
-                                    </div>
-                                    <div>
-                                        <div class="submit">
-                                            添加图片
-                                            <form enctype="multipart/form-data" method="post"> 
-                                                <input type="file" class="file" ref="file" @change="fileFun2($event,item2,index2)">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-box">
-                                <div class="form-tit"><span class="verification">*</span>维修结果</div>
-                                <div class="form-msg">
-                                    <el-radio-group v-model="item2.result">
-                                        <el-radio label="0">未完成</el-radio>
-                                        <el-radio label="1">已完成</el-radio>
-                                    </el-radio-group>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="btn">
                         <el-button @click="closeFun3">取消</el-button>
-                        <el-button type="primary" :disabled="disabled3" @click="submitForm3">确认</el-button>
+                        <el-button type="primary" :disabled="disabled2" @click="submitForm2('form3')">确认</el-button>
                     </div>
                 </div>
             </div>
@@ -380,11 +279,7 @@
         <!--查看大图-->
         <div class="bigimg-box" v-show="isBigImg" ref="boxsize">
             <p class="iconfont icon-close close" @click="closeImgFun"></p>
-            <div class="videos" v-if="video_url">
-                <video width="500" height="600" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + video_url" 
-                    controls="controls"></video>
-            </div>
-            <div class="imgBox" v-else>
+            <div class="imgBox">
                 <el-carousel trigger="click" :autoplay="autoplay" :initial-index="current" :height="imgHeight + 'px'">
                     <el-carousel-item  v-for="(item,index) in imgArr" :key="index" v-if="imgArr">
                         <figure class="images" v-if="item.img_url">
@@ -402,11 +297,11 @@ import {QueryNodeBase2,QueryBusiness,QueryAssetsBase,QueryAssetsConf} from '../.
 import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
 import {QueryNodeBasePage,GetAssetsConfig,GetAssetsUser,InsertAssetsTask,GetAssetsTask,GetAssetsTaskImg,UpdateAssetsTask,
     DeleteAssetsTaskImg,GetAssetsTaskInfo,InsertAssetsImg,UpdateAssetsTaskInfo,DeleteAssetsInfo,UpdateAssetsTaskAssignId,
-    InsertAssetsTaskResult,UpdateAssetsTaskScbj,QueryBusinessForMobile,DownAssetsTaskXsl} from '../../js/repair/repair.js'
-import {uploadImgTask,uploadVideo} from '../../js/address/url.js'
+    InsertAssetsTaskResult,UpdateAssetsTaskScbj,DownAssetsTaskXsl} from '../../js/repair/repair.js'
+import {uploadImgTask} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
-    name:"repairMsg",
+    name:"lsTask",
     data() {
         return {
             page: 1,
@@ -415,13 +310,14 @@ export default {
             tableData: [],
             form: {
                 msg: '',
-                node_id: '',
+                types: '',
                 bxms_id: '',
                 zpg_id: '',
                 work_id: '',
                 people: '',
                 dataTime: '',
             },
+            typesArr: [],
             nodeArr: [],
             bxmsArr: [],
             zpgArr: [],
@@ -435,9 +331,9 @@ export default {
             prompt: '新建',
             isEdits: false, // 新增，编辑
             form2: {
-                node_id: '', // 选择节点
-                merchant: '',
+                node_name: '', // 选择节点
                 bxms_id: '', // 报修模式
+                types: '', //任务类型
                 task_msg: '', // 任务内容
                 equipment: '', // 设备信息
                 work_id: '', // 工作组
@@ -445,24 +341,29 @@ export default {
                 priority: '高', // 优先级
                 remarke: '', // 备注
             },
-            merchantArr: [],
             rules: {
                 node_id: [
                     { required: true, message: '请选择节点', trigger: 'change' }
                 ],
                 bxms_id: [
-                    { required: true, message: '请选择报修模式', trigger: 'change' }
+                    { required: true, message: '请选择任务模式', trigger: 'change' }
+                ],
+                types: [
+                    { required: true, message: '请选择任务类型', trigger: 'change' }
                 ],
                 task_msg: [
                     { required: true, message: '请输入任务内容', trigger: 'blur' },
                 ],
             },
+            equipmentArr: [],
             imgArr1: [],
             file: '',
             isSolve: false, // 关闭
             form3: {
                 solve: '',
+                fault: '', // 故障类型
             },
+            faultArr: [],
             rules2: {
                 solve: [
                     { required: true, message: '请输入解决方案', trigger: 'blur' },
@@ -470,48 +371,39 @@ export default {
             },
             equipmentArr: [],
             merchant_name: '',
-            node_name: '',
+            node_id: '',
             page1: 1, // 设备
             cols1: 50,
             num1: '',
-            types1: 1,
+            types1: '',
             query1: '',
             page2: 1, // 节点
             cols2: 50,
             num2: '',
-            types2: 1,
+            types2: '',
             query2: '',
-            page3: 1, // 商户
-            cols3: 50,
-            num3: '',
-            types3: 1,
-            query3: '',
             userId: '', // 登录人
             userName: '', // 登录人
             role_id: '', // 登录人
             item_id: '', // 数据id
             assert_info: [], // 设备信息
-            equipmentList: [],
+            equipmentList: [{equipment: ''}],
             solve_id: '', // 关闭数据id
             equipmentMsg: [], // 关闭任务获取设备信息
             partArr: [], // 更换部件
-            isSh: false,
             startTime: '',
             endTime: '',
-            node_type: '',
             isBigImg: false,
             sizeObj: {},
             autoplay: false,
             current: 0,
             imgHeight: '',
             imgArr: [],
-            videoArr: [],
-            video_url: '',
+            node_type: '',
             order: 'desc',
             disabled: false,
             disabled2: false,
             disabled3: false,
-            disabled4: false,
         }
     },
     mounted() {
@@ -539,7 +431,6 @@ export default {
         closeImgFun(){
             this.imgArr = []
             this.isBigImg = false
-            this.video_url = ''
         },
         bigImgFun(item,ele2,ele3){
             if(ele2 == 1){
@@ -556,8 +447,6 @@ export default {
                     }
                 })
                 this.imgArr = ele3.imgArr1
-            }else if (ele2 == 3){
-                this.video_url = item.video_url
             }
             this.$nextTick(()=>{            
                 this.imgHeight = this.$refs.boxsize.offsetHeight - 60
@@ -583,8 +472,9 @@ export default {
                 user_id: this.userId, // 当前登录人的 userid
                 task_state: this.labelPosition,
                 role_id: this.role_id,
-                task_type: 1, // 1表示报修任务，2 表示临时任务
+                task_type: 2, // 1表示报修任务，2 表示临时任务
                 scbj: 1, // 1表示未删除，0 表示回收站中 
+                task_model: this.form.types,
                 start_time: this.startTime,
                 end_time: this.endTime,
                 order: this.order
@@ -601,34 +491,13 @@ export default {
                     let aLink = document.createElement("a");
                     aLink.style.display = "none";
                     aLink.href = url;
-                    aLink.setAttribute("download", `报修任务.xls`);
+                    aLink.setAttribute("download", `临时任务.xls`);
                     document.body.appendChild(aLink);
                     aLink.click();
                     document.body.removeChild(aLink); 
                     window.URL.revokeObjectURL(url); 
                 })
                 .catch(function (res) {});
-        },
-        removeFun2(ele,ele2,ele3){
-            if(ele.id){
-                let params = {
-                    id: ele.id,
-                }
-                DeleteAssetsTaskImg(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            ele3.splice(ele2,1)
-                            ele3.length - 1
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch((res) => {
-                        this.$message.error("出错啦!");
-                        console.log(res)
-                    })
-            }
         },
         // 获取更换部件
         getQueryAssetsConf(){
@@ -642,65 +511,29 @@ export default {
         },
         // 新增设备
         addEquipmentFun(){
-            if(!this.form2.node_id){
-                this.$message.warning('请先选择节点');
-                return
+            let obj = {
+                equipment: '',
             }
-            let states = true;
-            if(this.equipmentList.length > 0){
-                this.equipmentList.forEach(val => {
-                    if(states == true){
-                        if(!val.equipment){
-                            this.$message.warning('请选择设备');
-                            states = false
-                            return
-                        }
-                    }
-                })
-                if(states == true){
-                    let obj = {
-                        equipment: '',
-                    }
-                    this.equipmentList.push(obj)
-                }
-            }else{
-                let obj = {
-                    equipment: '',
-                }
-                this.equipmentList.push(obj)
-            }
-            
+            this.equipmentList.push(obj)
         },
         // 删除设备信息
-        deleteEquipmentFun(ele,ele2){
-            console.log(ele)
-            if(ele.id){
-                let str = 'id=' + ele.id
-                DeleteAssetsInfo(str)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success(res.message);
-                            this.getGetAssetsTaskInfo()
-                        }else{
-                            this.$message.error(res.message);
-                        }
-                    })
-                    .catch(res => {
-                        console.log(res);
-                    })
-            }else{
-                console.log(2)
-                this.equipmentList.splice(ele2,1)
-                this.equipmentList.length - 1
-            }
-        },
-        // 新增删除设备
-        deleteEquipmentFun2(ele){
-            this.equipmentList.splice(ele,1)
-            this.equipmentList.length - 1
+        deleteEquipmentFun(ele){
+            let str = 'id=' + ele.id
+            DeleteAssetsInfo(str)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getGetAssetsTaskInfo()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch(res => {
+                    console.log(res);
+                })
         },
         // 删除图片
-        removeFun(ele,ele2,ele3){
+        removeFun(ele,ele2){
             if(ele.id){
                 let params = {
                     id: ele.id,
@@ -719,33 +552,21 @@ export default {
                         console.log(res)
                     })
             }else{
-                if(ele3 == 2){
-                    this.videoArr.splice(ele2,1)
-                    this.videoArr.length - 1
-                }else{
-                    this.imgArr1.splice(ele2,1)
-                    this.imgArr1.length - 1
-                }
+                this.imgArr1.splice(ele2,1)
+                this.imgArr1.length - 1
             }
         },
         // 查看图片
         getImgFun(){
             this.imgArr1 = []
-            this.videoArr = []
             let params = {
                 id: this.item_id,
             }
             GetAssetsTaskImg(params)
                 .then(res => {
                     res.data.forEach(val => {
-                        if(val.url.substr(val.url.length - 4, val.url.length - 1) == '.mp4'){
-                            val.video_url = val.url
-                            this.videoArr.push(val)
-                        }
-                        if(val.url.substr(val.url.length - 4, val.url.length - 1) != '.mp4'){
-                            val.img_url = val.url
-                            this.imgArr1.push(val)
-                        }
+                        val.img_url = val.url
+                        this.imgArr1.push(val)
                     })
                 })
                 .catch((res) => {
@@ -765,8 +586,8 @@ export default {
             let states = false;
             let arr = [],newArr = [];
             this.equipmentList.forEach(val => {
-                if(ele == Number(val.equipment)){
-                    arr.push(Number(val.equipment))
+                if(ele == val.equipment){
+                    arr.push(val.equipment)
                 }
             })
             arr.forEach(val => {
@@ -789,12 +610,42 @@ export default {
                     this.equipmentArr.forEach(val => {
                         this.equipmentList.forEach(val2 => {
                             if(val2.equipment == val.assets_id){
-                                val2.assets_name = val.assets_type
+                                val2.assets_name = val.assets_name
                                 val2.assets_no = val.bar_code
                                 obj = val2
                             }
                         })
                     })
+                    let newobj = {}
+                    let arr = []
+                    newobj = {
+                        id: obj.id,
+                        assets_id: obj.assets_id,
+                        assets_no: obj.assets_no,
+                        assets_name: obj.assets_name, // 电子秤，
+                        describe: '', // 设备问题描述,
+                        assets_part: '', // 设备部件
+                        text: '', // 解决方案
+                        result: '', //  维修结果 0 未完成，1已完成
+                        task_id: this.item_id,
+                        create_name : this.userName,  // 当前登录人的名字
+                    }
+                    arr.push(newobj)
+                    let params = arr
+                    UpdateAssetsTaskInfo(params)
+                        .then(res => {
+                            if (res.result == true) {
+                                this.equipmentList = []
+                                this.$message.success(res.message);
+                                this.getGetAssetsTaskInfo()
+                            }else{
+                                this.$message.error(res.message);
+                            }
+                        })
+                        .catch((res) => {
+                            this.$message.error("出错啦!");
+                            console.log(res)
+                        })
                 }else{
                     this.assert_info = []
                     this.equipmentArr.forEach(val => {
@@ -806,8 +657,21 @@ export default {
                     })
                 }
             }else{
-                this.equipmentList.splice(ele2,1)
-                this.equipmentList.length - 1
+                if(this.item_id){
+                    this.getGetAssetsTaskInfo()
+                }else{
+                    this.equipmentList.splice(ele2,1)
+                    this.equipmentList.length - 1
+                }
+                
+            }
+            if(this.item_id){
+                let obj = {}
+                this.equipmentArr.forEach(val => {
+                    if(val.assets_id == ele){
+                        obj = val
+                    }
+                })
                 
             }
         },
@@ -845,6 +709,7 @@ export default {
                 .then(res => {
                     this.bxmsArr = res.data[4]
                     this.workArr = res.data[5]
+                    this.typesArr = res.data[6]
                 })
                 .catch(res => {
                     console.log(res);
@@ -879,7 +744,7 @@ export default {
                 setTimeout(() => {
                     let params = {
                         assets_base: this.query1,
-                        node_code: this.form2.node_id, // 关联节点信息 --
+                        node_code: this.node_id, // 关联节点信息 --
                         start_time: '',
                         end_time: '',
                         assets_type_id: '', // 资产类型 -- 
@@ -920,7 +785,7 @@ export default {
         },
         // 设备获取焦点
         focusFun1(){
-            if(!this.form2.node_id){
+            if(!this.node_id){
                 this.$message.error('请先选择节点');
                 return
             }
@@ -988,60 +853,6 @@ export default {
                 }, 1000)
             }
         },
-        // 加载更多的商户
-        loadmore3 (e) { 
-            this.page3 = this.page3 + 1
-            if(this.types3 == 1){
-                this.getQueryBusiness()
-            }else{
-                this.remoteMethod3(this.query3)
-            }
-        },
-        // 搜索商户
-        remoteMethod3(query) {
-            if(this.query3 != query){
-                this.page3 = 1
-                this.merchantArr = []
-            }
-            this.query3 = query
-            if(this.types3 == 1){
-                this.page3 = 1
-                this.merchantArr = []
-            }
-            if (query != '') {
-                this.types3 = 2
-                setTimeout(() => {
-                    // node_id  先选节点后选商户  新增
-                    let str = 'node_id=' + this.form2.node_id + '&merchant_name=' + this.query3 + '&cols=' + this.cols3 + '&page=' + this.page3
-                    QueryBusinessForMobile(str)
-                        .then(res => {
-                            if(this.page3 > 1){
-                                this.isSh = true
-                            }
-                            let arr = res.data.business
-                            this.merchantArr = this.merchantArr.concat(arr)
-                        })
-                        .catch(res => {
-                            console.log(res);
-                        })
-                }, 200);
-            }else{
-                this.page3 = 1
-                this.types3 = 1
-                this.merchantArr = []
-                this.getQueryBusiness()
-            }
-        },
-        unfocusFun3(){
-            if(this.query3 != ''){
-                setTimeout(() => {
-                    this.page3 = 1
-                    this.types3 = 1
-                    this.merchantArr = []
-                    this.getQueryBusiness()
-                }, 1000)
-            }
-        },
         // 选择商户
         selectMerchantFun(ele){
             this.merchantArr.forEach(val => {
@@ -1049,95 +860,58 @@ export default {
                     this.merchant_name = val.BIZ_NAME
                 }
             })
-            if(this.item_id){
-                this.equipmentArr = []
-                this.getQueryAssetsBase(ele)
-                if(this.equipmentList.length > 0){
-                    this.$message.warning('您已切换商户，请确认设备信息是否正确！');
-                    return
-                }
-            }else{
-                this.equipmentList = []
-                this.equipmentArr = []
-                this.assert_info =  []
-                this.page1 = 1
-                this.types1 = 1
-                this.query1 = ''
-                this.getQueryAssetsBase(ele)
-            }
             if(!ele){
                 this.merchant_name = ''
             }
         },
         // 选择节点
         selectNodeFun(ele){
-            this.nodeArr.forEach(val => {
-                if(val.NODE_ID == ele){
-                    this.node_name = val.NODE_NAME
-                    this.node_type = val.TYPENAME
-                }
-            })
-            this.form2.merchant = ''
-            this.merchant_name = ''
-            this.merchantArr = []
-            this.equipmentArr = []
-            this.assert_info =  []
-            this.form2.equipment = ''
             if(ele){
-                this.page3 = 1
-                this.types3 = 1
-                this.query3 = ''
+                this.node_id = '999999999'
+                this.node_type = ''
+                this.nodeArr.forEach(val => {
+                    if(val.NODE_NAME == ele){
+                        if(val.NODE_ID){
+                            this.node_id = val.NODE_ID
+                            this.node_type = val.TYPENAME
+                        }
+                    }
+                })
+                this.form2.merchant = ''
+                this.merchant_name = ''
                 this.getQueryBusiness()
                 this.page1 = 1
                 this.types1 = 1
                 this.query1 = ''
                 this.getQueryAssetsBase()
+            }else{
+                this.node_id = ''
+                this.node_type = ''
+                this.form2.merchant = ''
+                this.merchant_name = ''
+                this.merchantArr = []
+                this.equipmentArr = []
+                this.assert_info =  []
+                this.form2.equipment = ''
             }
         },
         // 查询设备信息
-        getQueryAssetsBase(merchant){
-            let that = this;
+        getQueryAssetsBase(){
             let params = {
                 assets_base: '',
-                node_code: this.form2.node_id, // 关联节点信息 --
+                node_code: this.node_id, // 关联节点信息 --
                 start_time: '',
                 end_time: '',
                 assets_type_id: '', // 资产类型 -- 
                 sub_period_id: '', // 所属期 -- 
                 a_conf_id: '', // 资产状态 -- 
-                merchant_id: merchant, // 关联商户信息
+                merchant_id: '', // 关联商户信息
                 merchant_name: '',
                 cols: this.cols1,
                 page: this.page1,
             }
             QueryAssetsBase(params)
                 .then(res => {
-                    if(merchant && this.page1 == 1){
-                        if(res.data.assets_base_list.length == 0){
-                            let obj = {
-                                assets_base: '',
-                                node_code: that.form2.node_id, // 关联节点信息 --
-                                start_time: '',
-                                end_time: '',
-                                assets_type_id: '', // 资产类型 -- 
-                                sub_period_id: '', // 所属期 -- 
-                                a_conf_id: '', // 资产状态 -- 
-                                merchant_id: '', // 关联商户信息
-                                merchant_name: '',
-                                cols: this.cols1,
-                                page: this.page1,
-                            }
-                            QueryAssetsBase(obj)
-                                .then(res => {
-                                    let arr = res.data.assets_base_list
-                                    this.equipmentArr = this.equipmentArr.concat(arr)
-                                    this.num1 = res.data.assets_base.total
-                                })
-                                .catch((res) => {
-                                    console.log(res)
-                                })
-                        }
-                    }
                     let arr = res.data.assets_base_list
                     this.equipmentArr = this.equipmentArr.concat(arr)
                     this.num1 = res.data.assets_base.total
@@ -1161,22 +935,12 @@ export default {
         },
         // 查询 所有商户
         getQueryBusiness(){
-            if(this.form2.node_id){
+            if(this.node_id){
                 // node_id  先选节点后选商户  新增
-                let str = 'node_id=' + this.form2.node_id + '&merchant_name=' + '' + '&cols=' + this.cols3 + '&page=' + this.page3
-                QueryBusinessForMobile(str)
+                let str = 'node_id=' + this.node_id
+                QueryBusiness(str)
                     .then(res => {
-                        if(this.page3 == 1){
-                            if(res.data.business.length > 0){
-                                this.isSh = true
-                            }else{
-                                this.isSh = false
-                            }
-                        }else{
-                            this.isSh = true
-                        }
-                        let arr = res.data.business
-                        this.merchantArr = this.merchantArr.concat(arr)
+                        this.merchantArr = res.data.business
                     })
                     .catch(res => {
                         console.log(res);
@@ -1250,73 +1014,10 @@ export default {
                     })
             }
         },
-        // 有设备信息关闭任务保存
-        submitForm3(){ 
-            this.disabled3 = true
-            let arr = [], obj = {},states = true;
-            this.equipmentMsg.forEach(val => {
-                if(states == true){
-                    if(!val.describe){
-                        this.$message.error("请输入设备问题！");
-                        states = false
-                        return
-                    }
-                    if(!val.text){
-                        this.$message.error("请输入解决方案！");
-                        states = false
-                        return
-                    }
-                    if(!val.result){
-                        this.$message.error("请选择维修结果！");
-                        states = false
-                        return
-                    }
-                    obj = {
-                        id: val.id,
-                        assets_id: val.assets_id,
-                        assets_no: val.assets_no,
-                        assets_name: val.assets_name, // 电子秤，
-                        describe: val.describe, // 设备问题描述,
-                        assets_part: val.assets_part, // 设备部件
-                        text: val.text, // 解决方案
-                        result: val.result, //  维修结果 0 未完成，1已完成
-                        task_id: this.solve_id,
-                        create_name : this.userName,  // 当前登录人的名字
-                        create_id: this.userId, // 创建人 当前登录人
-                        img_url: val.imgArr1.length > 0 ? val.imgArr1[0].img_url : ''
-                    }
-                    arr.push(obj)
-                }else{
-                    return
-                }
-            })
-            console.log(obj)
-            if(states == true){
-                let params = arr
-                UpdateAssetsTaskInfo(params)
-                    .then(res => {
-                        if (res.result == true) {
-                            this.$message.success('关闭成功');
-                            this.closeFun3()
-                            this.getDataFun()
-                            this.disabled3 = false
-                        }else{
-                            this.$message.error('关闭失败');
-                            this.disabled3 = false
-                        }
-                    })
-                    .catch((res) => {
-                        this.$message.error("出错啦!");
-                        this.disabled3 = false
-                        console.log(res)
-                    })
-            }
-        },
         // 关闭任务
         closeFun3(){
             this.isSolve = false
             this.disabled2 = false
-            this.disabled3 = false
             this.form3 = {
                 solve: '',
             },
@@ -1325,8 +1026,7 @@ export default {
             this.imgArr1 = []
             this.equipmentMsg = []
         },
-        // 关闭任务有设备
-        fileFun2(event,item,index){
+        fileFun(event){
             let that = this
             this.file = event.target.files[0];
             let formData = new FormData();
@@ -1354,21 +1054,13 @@ export default {
                         let obj = {
                             img_url: res.data
                         }
-                        this.equipmentMsg[index].imgArr1.push(obj)
+                        let arr = []
+                        arr.push(obj)
+                        this.imgArr1.push(obj)
+                        // if(this.prompt == '修改'){
+                        //     this.editImgArr.push(res.data)
+                        // }
                         this.$message.success(res.message);
-                        let imgobj = {
-                            url: res.data,
-                            id: item.id,
-                            url_type: 2,
-                        }
-                        InsertAssetsImg(imgobj)
-                            .then(res => {
-                                this.equipmentMsg[index].imgArr1[this.equipmentMsg[index].imgArr1.length - 1].id = res.data
-                            })
-                            .catch((res) => {
-                                this.$message.error("出错啦!");
-                                console.log(res)
-                            })
                     }else{
                         this.$message.error(res.message);
                     }
@@ -1379,88 +1071,6 @@ export default {
                     console.log(res)
                 })
 
-        },
-        fileFun(event){
-            let that = this, types = '', states = true;
-            this.file = event.target.files[0];
-            let url = '',loading = '';
-            if(event.target.files[0].type == 'video/mp4'){
-                let fileSize = event.target.files[0].size / 1024 / 1024
-                if(fileSize > 10){
-                    this.$message.error('视频大小不能超过10M');
-                    states = false
-                    return
-                }
-                url = uploadVideo
-                types = 'video'
-                loading = this.$loading({
-                    lock: true,
-                    text: 'Loading',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                });
-            }else{
-                url = uploadImgTask
-                types = 'img'
-            }
-            let formData = new FormData();
-            formData.append('img_url', this.file);   
-            let config = {
-                headers:{'Content-Type':'multipart/form-data'}
-            };
-            const ajaxPost = function (url, params,config) {
-                return new Promise((resolve, reject) => {
-                    axios
-                        .post(url, params,{config})
-                        .then((res) => {
-
-                            resolve(res.data)
-                        })
-                        .catch(() => {
-                            reject('error')
-                        })
-                })
-            }  
-            if(states == true){
-                ajaxPost(url,formData,config)
-                    .then(res => {
-                        if(types == 'video'){
-                            if(res.result == true){
-                                loading.close();
-                                let obj = {
-                                    video_url: res.data
-                                }
-                                let arr = []
-                                arr.push(obj)
-                                this.videoArr.push(obj)
-                                this.$message.success(res.message);
-                            }else{
-                                loading.close();
-                                this.$message.error(res.message);
-                            }
-                        }else if(types == 'img'){
-                            if(res.result == true){
-                                let obj = {
-                                    img_url: res.data
-                                }
-                                let arr = []
-                                arr.push(obj)
-                                this.imgArr1.push(obj)
-                                this.$message.success(res.message);
-                            }else{
-                                this.$message.error(res.message);
-                            }
-                        }
-                        // that.$refs.file.value = null
-                        this.file = null
-                    })
-                    .catch(res => {
-                        // loading.close();
-                        console.log(res)
-                    })
-            }else{
-                this.file = null
-            }
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
@@ -1477,24 +1087,16 @@ export default {
             if(this.form2.work_id){
                 if(!this.form2.assign_id){
                     this.$message.error('请选择运维人员！');
-                    this.disabled = false
                     return
                 }
             }
             let img_url = '';
-            if(this.imgArr1.length > 0 || this.videoArr.length > 0){
+            if(this.imgArr1.length > 0){
                 this.imgArr1.forEach(val => {
                     if(val.id){
                         return
                     }else{
                         img_url += val.img_url + ','
-                    }
-                })
-                this.videoArr.forEach(val => {
-                    if(val.id){
-                        return
-                    }else{
-                        img_url += val.video_url + ','
                     }
                 })
                 if(img_url != ''){
@@ -1519,54 +1121,28 @@ export default {
                         console.log(res)
                     })
             }
+            let assert_info = '';
+            if(this.assert_info.length > 0){
+                this.assert_info.forEach((val,idx) => {
+                    assert_info += (idx + 1) + ',' + val.bar_code + ',' + val.assets_name + '::'
+                })
+                if(assert_info != ''){
+                    assert_info = assert_info.substr(0, assert_info.length-2)
+                }
+            }
             if(this.item_id){
                 // 编辑
-                let assign_name = '',assert_info_arr = [],equipmentObj = {};
+                let assign_name = '';
                 this.assignArr.forEach(val => {
                     if(val.userid == this.form2.assign_id){
                         assign_name = val.name
                     }
                 })
-                if(this.equipmentList.length > 0){
-                    this.equipmentList.forEach(val => {
-                        if(val.equipment){
-                            if(val.id){
-                                if(val.equipment == val.assets_id){
-                                    return
-                                }else{
-                                    equipmentObj = {
-                                        id: val.id,
-                                        assets_id: val.equipment,
-                                        assets_no: val.assets_no,
-                                        assets_name: val.assets_name,
-                                        create_name: this.userName, // 当前登录人，
-                                        task_id: this.item_id, // 任务id，
-                                        type: 'update',
-                                    }
-                                    assert_info_arr.push(equipmentObj)
-                                }
-                            }else{
-                                equipmentObj = {
-                                    assets_id: val.equipment,
-                                    assets_no: val.assets_no,
-                                    assets_name: val.assets_name,
-                                    create_name: this.userName, // 当前登录人，
-                                    task_id: this.item_id, // 任务id，
-                                    type: 'new',
-                                }
-                                assert_info_arr.push(equipmentObj)
-                            }
-                        }else{
-                            return
-                        }
-                    })
-                }
-                console.log(assert_info_arr)
                 let params = {
                     level: this.form2.priority, 
                     task_content: this.form2.task_msg, // --任务内容
-                    node_id: this.form2.node_id,
-                    node_name: this.node_name,
+                    node_id: this.node_id,
+                    node_name: this.form2.node_name,
                     repair_model: this.form2.bxms_id, // -- 报修模式
                     remark: this.form2.remarke,
                     create_name : this.userName,  // 当前登录人的名字
@@ -1577,9 +1153,8 @@ export default {
                     user_id: this.userId,
                     biz_id: this.form2.merchant,
                     biz_name: this.merchant_name,
-                    list: assert_info_arr
+                    task_model: this.form2.types, // 任务类型
                 }
-                console.log(params)
                 UpdateAssetsTask(params)
                     .then(res => {
                         if (res.result == true) {
@@ -1594,46 +1169,29 @@ export default {
                     })
                     .catch((res) => {
                         this.$message.error("出错啦!");
-                        console.log(res)
                         this.disabled = false
+                        console.log(res)
                     })
             }else{
-                this.assert_info = []
-                this.equipmentArr.forEach(val => {
-                    this.equipmentList.forEach(val2 => {
-                        if(val2.equipment == val.assets_id){
-                            this.assert_info.push(val)
-                        }
-                    })
-                })
-                let assert_info = '';
-                if(this.assert_info.length > 0){
-                    this.assert_info.forEach((val,idx) => {
-                        assert_info += val.assets_id + ',' + val.bar_code + ',' + val.assets_type + '::'
-                    })
-                    if(assert_info != ''){
-                        assert_info = assert_info.substr(0, assert_info.length-2)
-                    }
-                }
                 let params = {
-                    node_id: this.form2.node_id,
-                    node_name: this.node_name,
+                    node_id: this.node_id,
+                    node_name: this.form2.node_name,
                     biz_id: this.form2.merchant,
                     biz_name: this.merchant_name,
-                    repair_model: this.form2.bxms_id, // -- 报修模式
+                    repair_model: this.form2.bxms_id, // -- 任务模式 同  报修模式
                     task_content: this.form2.task_msg, // --任务内容
                     create_id: this.userId, // 创建人 当前登录人
                     create_name : this.userName,  // 当前登录人的名字
                     group_name: this.form2.work_id, // 工作组
                     assigned_id: this.form2.assign_id, // 指派人
-                    assert_info: assert_info, // 设备信息
+                    assert_info: '', // 设备信息
                     url: img_url, // 图片
-                    task_model: '',
                     level: this.form2.priority, 
                     remark: this.form2.remarke,
                     task_state: 0, // 状态 0 为未解决，1 是已解决
                     scbj: 1, // 删除标价 1位未删除，0位删除 在回收站可查询
-                    task_type: 1, // 1位报修 2为 临时任务
+                    task_type: 2, // 1位报修 2为 临时任务
+                    task_model: this.form2.types, // 任务类型
                     node_type: this.node_type,
                 }
                 console.log(params)
@@ -1661,7 +1219,7 @@ export default {
             this.isEdits = false
             this.disabled = false
             this.form2 = {
-                node_id: '', // 选择节点
+                node_name: '', // 选择节点
                 merchant: '',
                 bxms_id: '', // 报修模式
                 task_msg: '', // 任务内容
@@ -1673,16 +1231,15 @@ export default {
             }
             this.merchantArr = []
             this.merchant_name = ''
-            this.node_name = ''
+            this.node_id = ''
+            this.node_type = ''
             this.prompt = '新增'
             this.file = ''
             this.item_id = ''
             this.imgArr1 = []
-            this.videoArr = []
             this.equipmentArr = []
             this.assert_info =  []
-            this.equipmentList = []
-            this.node_type = ''
+            this.equipmentList = [{equipment: ''}]
             this.getGetAssetsUserFun(this.form.work_id)
         },
         // 打开指派
@@ -1699,12 +1256,12 @@ export default {
             this.assign_id = '' // 运维人员
             this.work_id = '' // 工作组
             this.item_id = ''
-            this.disabled4 = false
+            this.disabled3 = false
             this.getGetAssetsUserFun(this.form.work_id)
         },
         // 保存指派
         saveAssignFun(){
-            this.disabled4 = true
+            this.disabled3 = true
             if(!this.work_id){
                 this.$message.error('请选择工作组！');
                 return
@@ -1729,17 +1286,17 @@ export default {
             UpdateAssetsTaskAssignId(params)
                 .then(res => {
                     if (res.result == true) {
-                        this.disabled4 = false
+                        this.disabled3 = false
                         this.$message.success(res.message);
                         this.closeFun()
                         this.getDataFun()
                     }else{
-                        this.disabled4 = false
+                        this.disabled3 = false
                         this.$message.error(res.message);
                     }
                 })
                 .catch((res) => {
-                    this.disabled4 = false
+                    this.disabled3 = false
                     this.$message.error("出错啦!");
                     console.log(res)
                 })
@@ -1749,7 +1306,7 @@ export default {
             this.getGetAssetsUserFun('')
         },
         viewFun(ele){
-            this.$router.push({name: 'ViewRepair',params: ele})
+            this.$router.push({name: 'ViewLsTask',params: ele})
         },
         editFun(ele){
             let params = {
@@ -1764,7 +1321,7 @@ export default {
                 user_id: this.userId, // 当前登录人的 userid
                 task_state: '',
                 role_id: this.role_id,
-                task_type: 1, // 1表示报修任务，2 表示临时任务
+                task_type: 2, // 1表示报修任务，2 表示临时任务
                 scbj: 1, // 1表示未删除，0 表示回收站中 
                 id: ele.id
             }
@@ -1774,8 +1331,9 @@ export default {
                 .catch((res) => {
                     console.log(res)
                 })
+            this.isEdits = false
             this.form2 = {
-                node_id: ele.node_id, // 选择节点
+                node_name: ele.node_name, // 选择节点
                 merchant: ele.biz_id,
                 bxms_id: ele.repair_model, // 报修模式
                 task_msg: ele.task_content, // 任务内容
@@ -1784,29 +1342,18 @@ export default {
                 assign_id: ele.assigned_id, // 技术人员
                 priority: ele.level, // 优先级
                 remarke: ele.remark, // 备注
+                types: ele.task_model,
             }
             this.item_id = ele.id
-            this.merchant_name = ele.biz_name
-            this.node_name = ele.node_name
-            this.page2 = 1
-            let str = 'page=' + this.page2 + '&cols=' + this.cols2 + '&node_name=' + this.node_name
-            QueryNodeBasePage(str)
-                .then(res => {
-                    let arr = res.data.map1.nodeBase
-                    this.nodeArr = this.nodeArr.concat(arr)
-                    this.num2 = res.data.total
-                })
-                .catch(res => {
-                    console.log(res);
-                })
-            this.getQueryAssetsBase(this.form2.merchant)
+            this.getQueryAssetsBase()
             this.getQueryBusiness()
             this.getGetAssetsUserFun(ele.group_name)
             this.getImgFun()
-            setTimeout(() => {
-                this.getGetAssetsTaskInfo()
-            }, 800)
+            this.getGetAssetsTaskInfo()
+            this.merchant_name = ele.biz_name
+            this.node_id = ele.node_id
             this.prompt = '编辑'
+            this.equipmentList = []
             this.isEdits = true
         },
         // 获取数据已保存设备
@@ -1817,16 +1364,12 @@ export default {
             GetAssetsTaskInfo(str)
                 .then(res => {
                     res.data.forEach(val => {
-                        val.equipment = val.assets_id
-                        val.bar_code = val.assets_no
-                        val.assets_type = val.assets_name
-                        this.equipmentList.push(val)
-                        this.equipmentArr.forEach((val2,idx2) => {
-                            if(val.assets_id == val2.assets_id){
-                                this.equipmentArr.splice(idx2,1)
+                        this.equipmentArr.forEach(val2 => {
+                            if(val.assets_no == val2.bar_code){
+                                val.equipment = val2.assets_id
+                                this.equipmentList.push(val)
                             }
                         })
-                        this.equipmentArr.push(val)
                     })
                 })
                 .catch(res => {
@@ -1835,39 +1378,15 @@ export default {
         },
         // 关闭任务
         stopFun(ele){
-            if(!ele.assigned_id){
-                this.$message.error("请先指派工作组!");
-                return
-            }else{
-                this.solve_id = ele.id
-                let str = 'id=' + this.solve_id;
-                GetAssetsTaskInfo(str)
-                    .then(res => {
-                        res.data.forEach(val => {
-                            if(val.info_list.length > 0){
-                                val.info_list.forEach(val3 => {
-                                    val3.img_url = val3.url
-                                })
-                                val.imgArr1 = val.info_list
-                            }else{
-                                val.imgArr1 = []
-                            }
-                            val.result = ''
-                        })
-                        this.equipmentMsg = res.data
-                    })
-                    .catch(res => {
-                        console.log(res);
-                    })
-                this.isSolve = true
-            }
+            this.solve_id = ele.id
+            this.isSolve = true
         },
         deleteFun(ele){
             this.$confirm('你确定要删除吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {             
+            }).then(() => {                 
                 let params = {
                     scbj: 0,
                     id: ele.id,
@@ -1921,8 +1440,9 @@ export default {
                 user_id: this.userId, // 当前登录人的 userid
                 task_state: this.labelPosition,
                 role_id: this.role_id,
-                task_type: 1, // 1表示报修任务，2 表示临时任务
+                task_type: 2, // 1表示报修任务，2 表示临时任务
                 scbj: 1, // 1表示未删除，0 表示回收站中 
+                task_model: this.form.types,
                 start_time: this.startTime,
                 end_time: this.endTime,
                 order: this.order
@@ -1948,7 +1468,7 @@ export default {
         clearFun(){
             this.form = {
                 msg: '',
-                node_id: '',
+                types: '',
                 bxms_id: '',
                 zpg_id: '',
                 work_id: '',
@@ -1960,12 +1480,6 @@ export default {
             this.page = 1
             this.getDataFun()
             this.getGetAssetsUserFun(this.form.work_id)
-        },
-        rowClass({ row, rowIndex}) {
-            return {
-                background: '#f2f2f2',
-                color: '#333'
-            }
         },
         timeChange(ele){
             if(this.form.dataTime){
@@ -1982,6 +1496,12 @@ export default {
             this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
+        },
+        rowClass({ row, rowIndex}) {
+            return {
+                background: '#f2f2f2',
+                color: '#333'
+            }
         },
         classStyle({row}){
             if(row.is_read == 0){
@@ -2009,10 +1529,6 @@ export default {
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,.6);
-            .videos{
-                margin-top: 100px;
-                text-align: center;
-            }
             .close{
                 position: fixed;
                 top: 0;
@@ -2054,34 +1570,13 @@ export default {
                 margin: 0;
             }
         }
-        .form-list{
-            padding-bottom: 20px;
-            .form-box{
-                margin: 15px 0;
-                display: flex;
-                .form-tit{
-                    width: 120px;
-                    text-align: center;
-                }
-                .verification{
-                    color: red;
-                }
-            }
-        }
         .equipment-list{
-            position: relative;
-            top: 0;
-            left: 0;
-            .equipment-box{
-                .equipment{
-                    display: flex;
-                    flex-wrap:wrap;
-                    align-items: center;
-                    .close-equipment{
-                        position: absolute;
-                        left: 380px;
-                        cursor: pointer;
-                    }
+            .equipment{
+                display: flex;
+                flex-wrap:wrap;
+                align-items: center;
+                .close-equipment{
+                    cursor: pointer;
                 }
             }
             .add-btn{
@@ -2112,7 +1607,6 @@ export default {
                             position: absolute;
                             top: -6px;
                             right: -6px;
-                            z-index: 66;
                             width: 12px;
                             height: 12px;
                             text-align: center;
@@ -2123,18 +1617,9 @@ export default {
                             border-radius: 50%;
                             cursor: pointer;
                         }
-                        .stop{
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            width: 50px;
-                            height: 50px;
-                            border: none;
-                        }
                         img{
                             width: 50px;
                             height: 50px;
-                            border: 1px solid #eaeaea;
                         }
                     }
                 }
@@ -2154,10 +1639,10 @@ export default {
                 position: relative;
                 top: 50%;
                 left: 50%;
-                margin-top: -310px;
+                margin-top: -290px;
                 margin-left: -300px;
                 width: 600px;
-                height: 620px;
+                height: 580px;
                 background: #fff;
                 font-size: 14px;
                 border-radius: 5px;
@@ -2166,8 +1651,11 @@ export default {
                 }
                 .form{
                     margin-top: 10px;
-                    height: 520px;
+                    height: 460px;
                     overflow: auto;
+                    .el-select, .el-input{
+                        width: 400px;
+                    }
                     .zpg{
                         .el-select, .el-input{
                             width: 200px;
@@ -2175,15 +1663,12 @@ export default {
                     }
                     textarea{
                         padding-left: 10px;
-                        max-width: 400px;
-                        width: 390px;
+                        max-width: 390px;
+                        width: 400px;
                         height: 50px;
                         border: 1px solid #DCDFE6;
                         border-radius: 4px;
                     }
-                }
-                .el-select, .el-input{
-                    width: 400px;
                 }
                 .box-title{
                     margin: 0 10px;
@@ -2251,7 +1736,7 @@ export default {
                 }
                 .btn{
                     margin-top: 10px;
-                    margin-left: 330px;
+                    margin-left: 460px;
                     span{
                         font-size: 14px;
                         color: #999;
@@ -2267,7 +1752,7 @@ export default {
                     position: relative;
                     left: 0;
                     display: inline-block;
-                    width: 110px;
+                    width: 90px;
                     height: 30px;
                     line-height: 30px;
                     color: #333;
@@ -2282,7 +1767,7 @@ export default {
                         position: absolute;
                         left: 0px;
                         top: 0px;
-                        width: 110px;
+                        width: 90px;
                         height: 30px;
                         opacity: 0;
                         background: rgba(0,0,0,0);
@@ -2324,8 +1809,8 @@ export default {
         }
         .solve{
             .text{
-                margin-top: -220px;
-                height: 440px;
+                margin-top: -170px;
+                height: 340px;
                 .jjfa{
                     margin-top: 20px;
                 }
@@ -2435,40 +1920,25 @@ export default {
     }
 </style>
 <style lang="less">
-    .repairMsg{
-        .sele, .form-box{
-            .el-input__icon{
-                line-height: 30px;
-            }
+    .lsTask{
+        .el-radio-button,.el-radio-button__inner{
+            width: 150px !important;
         }
         .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
             line-height: 24px;
         }
+        .sele{
+            .el-input__icon{
+                line-height: 30px;
+            }
+        }
         .el-table{
             font-size: 13px !important;
-        }
-        .el-radio-button,.el-radio-button__inner{
-            width: 150px !important;
         }
         .solve{
             .el-form-item{
                 margin-bottom: 0 !important;
             }
         }
-        /**.passwrd{
-            ::-webkit-scrollbar-track{
-                -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
-                border-radius: 5px;
-                background-color: rgba(255,255,255,0.8);
-            }
-            ::-webkit-scrollbar{
-                width: 5px;
-            } 
-            ::-webkit-scrollbar-thumb{
-                border-radius: 5px;
-                -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,.3);
-                background-color: #555;
-            }
-        } **/
     }
 </style>
