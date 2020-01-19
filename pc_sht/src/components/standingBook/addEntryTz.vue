@@ -33,7 +33,7 @@
                                 :value="item.bootList[0].shop_booth_id">
                                 </el-option>
                             </el-select>
-                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{merchants ? merchants : '无'}}</p>
+                            <p :style="add ? {display: 'none'} : {display: 'block'}">{{oldmerchants ? oldmerchants : '无'}}</p>
                         </div>
                     </div>
                     <div class="data" v-if="show.gys">
@@ -208,7 +208,7 @@
                             </el-date-picker>
                             <p v-else-if="val.TYPE_NAME == '规格'" :style="add ? {display: 'block'} : {display: 'none'}">{{tableData[scope.$index][ind]}}</p>
                             <el-input v-model="tableData[scope.$index][ind]" size="mini" v-else-if="val.TYPE_NAME != '进货商品'" style="width: 100%;"
-                            :style="add ? {display: 'block'} : {display: 'none'}"></el-input>
+                            :style="add ? {display: 'block'} : {display: 'none'}" :maxlength="valLength1" @input="valueFun($event,1)"></el-input>
                             <p :style="add ? {display: 'none'} : {display: 'block'}">{{tableData[scope.$index][ind]}}</p>
                         </div>
                     </template>
@@ -403,6 +403,9 @@ export default {
             sizeObj: {},
             types: 1,
             query: '',
+            oldmerchants: '',
+            states: 1,
+            valLength1: 4,
         }
     },
     created() {
@@ -470,6 +473,16 @@ export default {
         },
     },
     methods: {
+        valueFun(e,ele){
+            let val = e
+            if(ele == 1){
+                if(val.indexOf(".") != -1){
+                    this.valLength1 = val.substring(0,val.indexOf(".")).length + 3
+                }else{
+                    this.valLength1 = 6
+                }
+            }
+        },
         unfocusFun(){
             console.log(this.query)
             // console.log(this.tableData)
@@ -775,7 +788,6 @@ export default {
                     this.suppliersId = ele.shop_concacts_id;
                 }
             })
-            console.log(this.suppliersId)
         },
         // 选择商户
         selectGet(val){
@@ -1063,10 +1075,11 @@ export default {
                         let param = this.$route.params.param
                         this.tzId = param.tz_id
                         this.ids = param.id
+                        this.getAllSuppliers()
                         this.detailTzFun()
                         this.form.value = param.buyer_booth_id
                         this.form.remark = param.remark
-                        this.merchants = param.buyer_booth_name
+                        this.oldmerchants = param.buyer_booth_name
                         this.payAmount = param.actual_money
                         this.form3.payWay = param.pay_way
                         this.form.suppliersName = param.seller_booth_name
@@ -1105,6 +1118,16 @@ export default {
             GetAllBiz(obj)
                 .then(res => {
                     this.options = res.data.dataList
+                    if(this.states == 1){
+                        this.options.forEach(ele => {
+                            if(this.$route.params.param.buyer_booth_id == ele.bootList[0].shop_booth_id){
+                                this.merchants = ele.bootList[0].booth_name
+                                this.bigAreaId = ele.userId
+                                this.areaIds = ele.bootList[0].shop_booth_id
+                            }
+                        })
+                        this.states == 2
+                    }
                 })
                 .catch(() => {
                     this.$message.error("出错啦!");
@@ -1185,6 +1208,7 @@ export default {
                 }else{
                     var buyer_booth_id = this.form.value,
                         buyer_booth_name = this.merchants;
+                    console.log(this.merchants)
                 }
                 let goodObj = '',goodStr = '';
                 if(this.tableData.length > 0){
@@ -1298,25 +1322,25 @@ export default {
                             is_oc_upload: this.is_oc_upload
                         }
                         console.log(obj)
-                        TzUpdate(obj)
-                            .then(res => {
-                                // console.log(res)
-                                if(this.tzId != ''){
-                                    if (res.result == true) {
-                                        this.$message.success('进货台账编辑成功');
-                                        this.$router.push('entryTz')
-                                    }else{
-                                        this.$message.error('进货台账编辑失败');
-                                    }
-                                }else{
-                                    if (res.result == true) {
-                                        this.$message.success(res.message);
-                                        this.$router.push('entryTz')
-                                    }else{
-                                        this.$message.error(res.message);
-                                    }
-                                }
-                            })
+                        // TzUpdate(obj)
+                        //     .then(res => {
+                        //         // console.log(res)
+                        //         if(this.tzId != ''){
+                        //             if (res.result == true) {
+                        //                 this.$message.success('进货台账编辑成功');
+                        //                 this.$router.push('entryTz')
+                        //             }else{
+                        //                 this.$message.error('进货台账编辑失败');
+                        //             }
+                        //         }else{
+                        //             if (res.result == true) {
+                        //                 this.$message.success(res.message);
+                        //                 this.$router.push('entryTz')
+                        //             }else{
+                        //                 this.$message.error(res.message);
+                        //             }
+                        //         }
+                        //     })
                     }
                 }
                 //TzUpdate

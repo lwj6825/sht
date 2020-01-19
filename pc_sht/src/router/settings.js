@@ -16,6 +16,7 @@ import assetTypes from '../components/settings/assetTypes.vue';
 import partName from '../components/settings/partName.vue';
 import repairMs from '../components/settings/repairMs.vue';
 import taskTypes from '../components/settings/taskTypes.vue';
+import groupMsg from '../components/settings/groupMsg.vue';
 
 export default [
   {
@@ -186,6 +187,16 @@ export default [
       id:'410',
       node:'settings',
       url:'taskTypes',
+    }
+  },
+  {
+    path: 'settings/groupMsg',
+    name: 'GroupMsg',
+    component: resolve => require(['@/components/settings/groupMsg'],resolve),
+    meta:{
+      id:'440',
+      node:'settings',
+      url:'groupMsg',
     }
   },
 ]

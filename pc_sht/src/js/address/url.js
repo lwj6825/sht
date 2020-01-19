@@ -1,13 +1,13 @@
-// base url
-export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.62:8081/order_sht/'; // 资产
+// // base url
+// export const baseUrl = 'http://192.168.1.65:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
@@ -60,6 +60,7 @@ export const lookShop = baseUrl + 'manage/getBootListById';//新增商户-查看
 export const getAllBizType = baseUrl + 'manage/getAllBizType';//新增商户-商户类型
 export const UpdateBizUser = baseUrl + 'manage/UpdateBizUser';// 商户详情 修改用户信息
 export const UpdateBizBooth = baseUrl + 'manage/UpdateBizBooth';// 商户详情 修改商铺信息
+export const addBizId = baseUrl2 + 'manage/addBizId';// 自动生成得商户编码
 // 供应商
 export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
 export const insertGys = baseUrl + 'manage/insertGys';// 新增供应商
@@ -425,6 +426,7 @@ export const getAssetsUser = baseUrl + 'assetsTask/getAssetsUser' // 查询指�
 export const insertAssetsTask = baseUrl + 'assetsTask/insertAssetsTask' // 新增报修任务，临时任务接口
 export const getAssetsTask = baseUrl + 'assetsTask/getAssetsTask' // 查询报修任务 回收站，临时任务（id不为空的时候 （查看任务详情 时用到））
 export const uploadImgTask = baseUrl + 'assetsTask/uploadImg' // 上传图片
+export const uploadVideo = baseUrl + 'assetsTask/uploadVideo' // 上传视频
 export const getAssetsTaskImg = baseUrl + 'assetsTask/getAssetsTaskImg' // 查询报修任务以及临时任务的 图片 （查看任务详情 时用到）
 export const updateAssetsTask = baseUrl + 'assetsTask/updateAssetsTask' // 更新任务内容
 export const deleteAssetsTaskImg = baseUrl + 'assetsTask/deleteAssetsTaskImg' // 删除已存在的任务 图片 （所有图片的删除都可以用这个）
@@ -436,7 +438,13 @@ export const updateAssetsTaskAssignId = baseUrl + 'assetsTask/updateAssetsTaskAs
 export const insertAssetsTaskResult = baseUrl + 'assetsTask/insertAssetsTaskResult' // 关闭 没无设备 时  保存解决方案的图片 以及信息
 export const getAssetsTaskResult = baseUrl + 'assetsTask/getAssetsTaskResult' // 查看关闭任务 没无设备 时解决方案的图片 以及信息
 export const getAssetsTaskLog = baseUrl + 'assetsTask/getAssetsTaskLog' // 查看任务日志
- // 
+export const updateAssetsTaskScbj = baseUrl + 'assetsTask/updateAssetsTaskScbj' // 更新任务的 删除标记  1表示未删除，0表示回收站中 
+export const deleteAssetsTask = baseUrl + 'assetsTask/deleteAssetsTask' // 彻底删除
+export const getAllGroup = baseUrl + 'assetsTask/getAllGroup' // 获取所有分组
+export const insertAssetsGroup = baseUrl + 'assetsTask/insertAssetsGroup' // 新增分组 和组员 组长 或者 修改分组
+export const deleteAssetsGroup = baseUrl + 'assetsTask/deleteAssetsGroup' // 删除分组 和组员 组长
+export const queryBusinessForMobile = baseUrl + 'assets/queryBusinessForMobile' // 查询商户分页加载 
+export const downAssetsTaskXsl = baseUrl + 'assetsTask/downAssetsTaskXsl' // 报修任务的导出  
 
 //pass平台
 // 数据源

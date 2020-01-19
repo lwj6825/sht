@@ -22,28 +22,34 @@
                         <div class="msg">{{node_name ? node_name : '无'}}</div>
                     </div>
                     <div class="data data3">
-                        <div class="title">报修模式</div>
+                        <div class="title">任务模式</div>
                         <div class="msg">{{bxms_name ? bxms_name : '无'}}</div>
                     </div>
                 </div>
                 <div class="list">
                     <div class="data data2">
                         <div class="title">任务内容</div>
-                        <div class="msg">{{task_msg ? task_msg : '无'}}</div>
                     </div>
                 </div>
-                <div class="list">
-                    <div class="data data2">
-                        <div class="msg" v-if="imgArr1.length > 0">
-                            <div class="msg-item">   
-                                <div class="img-list">
-                                    <ul>
-                                        <li v-for="(item,index) in imgArr1" :key="index" @click="bigImgFun(item)" v-if="item.img_url">
-                                            <figure class="image">
-                                                <img :src="item.img_url">
-                                            </figure>
-                                        </li>
-                                    </ul>
+                <div class="taskmsg">
+                    <div class="list">
+                        <div class="data data2">
+                            <div class="msg">{{task_msg ? task_msg : '无'}}</div>
+                        </div>
+                    </div>
+                    <div class="list">
+                        <div class="data data2">
+                            <div class="msg" v-if="imgArr1.length > 0">
+                                <div class="msg-item">   
+                                    <div class="img-list">
+                                        <ul>
+                                            <li v-for="(item,index) in imgArr1" :key="index" @click="bigImgFun(item,1)" v-if="item.img_url">
+                                                <figure class="image">
+                                                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                                </figure>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -63,8 +69,10 @@
                         <div class="msg">{{priority ? priority : '无'}}</div>
                     </div>
                     <div class="data">
-                        <div class="title">设备信息</div>
-                        <div class="msg">{{equipment ? equipment : '无'}}</div>
+                        <div class="title">任务类型</div>
+                        <div class="msg">
+                            <p>{{task_model}}</p>
+                        </div>
                     </div>
                 </div>
                 <div class="list">
@@ -81,38 +89,33 @@
                         <div class="msg">{{time ? time : '无'}}</div>
                     </div>
                 </div>
-                
-                
             </div>
+        </div>
+        <div class="box border">
             <div class="list-title">
                 <div class="list-tit">解决方案</div>
             </div>
-            <div class="list">
-                <div class="data data4">
-                    <div class="title">解决方案</div>
-                    <div class="msg">{{solve ? solve : '无'}}</div>
-                </div>
-            </div>
-            <div class="list">
-                <div class="data data4">
-                    <div class="title">设备名称</div>
-                    <div class="msg">{{solve ? solve : '无'}}</div>
-                </div>
-                <div class="data data4">
-                    <div class="title">设备问题</div>
-                    <div class="msg">{{solve ? solve : '无'}}</div>
-                </div>
-                <div class="data data4">
-                    <div class="title">更换部件</div>
-                    <div class="msg">{{solve ? solve : '无'}}</div>
-                </div>
-                <div class="data data4">
-                    <div class="title">解决方案</div>
-                    <div class="msg">{{solve ? solve : '无'}}</div>
-                </div>
-                <div class="data data4">
-                    <div class="title">维修结果</div>
-                    <div class="msg">{{solve ? solve : '无'}}</div>
+            <div class="view">
+                <div class="list">
+                    <div class="data data4">
+                        <div class="title">解决方案</div>
+                        <div class="msg">{{solve ? solve : '无'}}</div>
+                    </div>
+                    <div class="data data2">
+                        <div class="msg" v-if="imgArr2.length > 0">
+                            <div class="msg-item">   
+                                <div class="img-list">
+                                    <ul>
+                                        <li v-for="(item,index) in imgArr2" :key="index" @click="bigImgFun(item,2)" v-if="item.img_url">
+                                            <figure class="image">
+                                                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                                            </figure>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,51 +127,40 @@
                 </div>
                 <div class="clear"></div>
                 <el-timeline>
-                    <el-timeline-item placement="top">
+                    <el-timeline-item placement="top" v-for="(item, index) in taskList" :key="index">
                         <el-card>
                             <div class="operation">
-                                <p>2019-12-10 15:40</p>
-                                <p>删除</p>
-                                <p>操作人：王萍</p>
+                                <p>{{item.operation_time}}</p>
+                                <p class="method">{{item.operation_type}}</p>
+                                <p>操作人：{{item.operation_name}}</p>
                             </div>
-                            <p class="msg">删除了任务</p>
+                            <p class="msg">{{item.operation_text}}</p>
                         </el-card>
                     </el-timeline-item>
-                    <el-timeline-item placement="top">
-                        <el-card>
-                            <div class="operation">
-                                <p>2019-12-10 15:40</p>
-                                <p>删除</p>
-                                <p>操作人：王萍</p>
-                            </div>
-                            <p class="msg">删除了任务</p>
-                            <p class="msg">删除了任务</p>
-                            <p class="msg">删除了任务</p>
-                        </el-card>
-                    </el-timeline-item>
-                    <el-timeline-item placement="top">
-                        <el-card>
-                            <div class="operation">
-                                <p>2019-12-10 15:40</p>
-                                <p>删除</p>
-                                <p>操作人：王萍</p>
-                            </div>
-                            <p class="msg">删除了任务</p>
-                        </el-card>
-                    </el-timeline-item>
-                    <el-timeline-item placement="top">
-                        
-                    </el-timeline-item>
+                    <el-timeline-item placement="top" v-if="taskList.length > 0"></el-timeline-item>
                 </el-timeline>
                 <div class="btn">
                     <el-button type="primary" @click="closeFun">关闭</el-button>
                 </div>
             </div>
         </div>
+        <div class="bigimg-box" v-show="isBigImg" ref="boxsize">
+            <p class="iconfont icon-close close" @click="closeFun2"></p>
+            <div class="imgBox">
+                <el-carousel trigger="click" :autoplay="autoplay" :initial-index="current" :height="imgHeight + 'px'">
+                    <el-carousel-item  v-for="(item,index) in imgArr" :key="index" v-if="imgArr">
+                        <figure class="images" v-if="item.img_url">
+                            <img :style="sizeObj" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                        </figure>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import {GetAssetsTaskInfo,GetAssetsTaskImg,GetAssetsTaskResult,GetAssetsTaskLog} from '../../js/repair/repair.js'
 export default {
     name:"viewLsTask",
     data() {
@@ -187,18 +179,131 @@ export default {
             time: '',
             isShow: false,
             imgArr1: [],
+            imgArr2: [],
             isBigImg: false,
+            equipmentList: [],
+            taskList: [],
+            task_model: '',
+            sizeObj: {},
+            autoplay: false,
+            current: 0,
+            imgHeight: '',
+            imgArr: []
         }
     },
     mounted() {
-       
+        let msg = this.$route.params
+        this.id = msg.id
+        this.node_name = msg.node_name // 选择节点
+        this.bxms_name = msg.repair_model // 报修模式
+        this.task_msg = msg.task_content // 任务内容
+        this.zpg_name = msg.assigned_name // 指派给
+        this.work_name = msg.group_name // 工作组
+        this.priority = msg.level // 优先级
+        this.remarke = msg.remark // 备注
+        this.peolpe = msg.create_name // 设备信息
+        this.time = msg.record_time
+        this.task_model = msg.task_model
+        this.getImgFun()
+        this.getGetAssetsTaskResult()
+        this.getGetAssetsTaskLog()
     },
     methods: {
+        getGetAssetsTaskLog (){
+            let str = 'id=' + this.id;
+            GetAssetsTaskLog(str)
+                .then(res => {
+                    this.taskList = res.data
+                })
+                .catch((res) => {
+                    this.$message.error("出错啦!");
+                    console.log(res)
+                })
+        },
+        closeFun2(){
+            this.imgArr = []
+            this.isBigImg = false
+        },
+        bigImgFun(item,ele2,ele3){
+            if(ele2 == 1){
+                this.imgArr1.forEach((ele,index) => {
+                    if(item.id == ele.id){
+                        this.current = index
+                    }
+                })
+                this.imgArr = this.imgArr1
+            }else if(ele2 == 2){
+                this.imgArr2.forEach((ele,index) => {
+                    if(item.id == ele.id){
+                        this.current = index
+                    }
+                })
+                this.imgArr = this.imgArr2
+            }else if(ele2 == 3){
+                ele3.info_list.forEach((ele,index) => {
+                    ele.img_url = ele.url
+                    if(item.id == ele.id){
+                        this.current = index
+                    }
+                })
+                this.imgArr = ele3.info_list
+            }
+            this.$nextTick(()=>{            
+                this.imgHeight = this.$refs.boxsize.offsetHeight - 60
+                let sizeObj = {
+                    'max-height': this.$refs.boxsize.offsetHeight - 60 + 'px',
+                    'max-width': this.$refs.boxsize.offsetWidth - 60 + 'px',
+                    'margin-bottom': 10 + 'px'
+                }
+                this.sizeObj = sizeObj
+            })
+            this.isBigImg = true
+        },
+        // 查看解决方案
+        getGetAssetsTaskResult(){
+            let str = 'id=' + this.id;
+            GetAssetsTaskResult(str)
+                .then(res => {
+                    if(res.data){
+                        this.solve = res.data.text
+                        if(res.data.img_list.length > 0){
+                            res.data.img_list.forEach(val => {
+                                val.img_url = val.url
+                                this.imgArr2.push(val)
+                            })
+                        }
+                    }
+                })
+                .catch((res) => {
+                    this.$message.error("出错啦!");
+                    console.log(res)
+                })
+        },
+        // 查看图片
+        getImgFun(){
+            this.imgArr1 = []
+            let params = {
+                id: this.id,
+            }
+            GetAssetsTaskImg(params)
+                .then(res => {
+                    res.data.forEach(val => {
+                        val.img_url = val.url
+                        this.imgArr1.push(val)
+                    })
+                })
+                .catch((res) => {
+                    this.$message.error("出错啦!");
+                    console.log(res)
+                })
+        },
         showFun(){
+            this.getGetAssetsTaskLog()
             this.isShow = true
         },
         closeFun(){
             this.isShow = false
+            this.taskList = []
         },
     },
 }
@@ -207,12 +312,72 @@ export default {
 <style scoped lang='less'>
     @import '../../assets/css/common.css';
     .content{
+        .taskmsg{
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+        .view{
+            margin: 0 10px;
+        }
+        .border{
+            margin-top: 10px;
+        }
+        .bigimg-box{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 666;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            .close{
+                position: fixed;
+                top: 0;
+                right: 0;
+                z-index: 666;
+                width: 50px;
+                height: 50px;
+                text-align: center;
+                line-height: 50px;
+                color: #fff;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            .images{
+                text-align: center;
+            }
+            .el-carousel{
+                margin: 30px auto;
+                padding: 10px 0;
+                width: 90%;
+                height: 90%;
+                .image{
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    img{
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                }
+            }
+            .el-carousel__container{
+                width: 100%;
+                height: 100%;
+            }
+            .el-carousel__item{
+                color: #475669;
+                font-size: 14px;
+                margin: 0;
+            }
+        }
         .box{
             padding: 10px 20px;
             background: #fff;
             .list-title{
                 padding: 30px 0;
-                margin: 0 30px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -257,8 +422,8 @@ export default {
                 flex-wrap: wrap;
             }
             .data{
-                margin: 5px 20px;
-                width: 20%;
+                margin: 5px 10px;
+                width: 22%;
                 font-size: 14px;
                 .title{
                     margin-bottom: 10px;
@@ -274,7 +439,7 @@ export default {
                             position: relative;
                             top: 0;
                             left: 0;
-                            margin: 10px;
+                            margin: 0 10px;
                             .icon-delete{
                                 position: absolute;
                                 top: -6px;
@@ -297,7 +462,6 @@ export default {
                     }
                 }
                 .msg-item{
-                    margin: 10px 0;
                     width: 500px;
                     display: flex;
                 }
@@ -368,6 +532,10 @@ export default {
                     display: flex;
                     p{
                         flex: 1;
+                    }
+                    .method{
+                        text-align: center;
+                        font-weight: bolder;
                     }
                 }
                 .msg{

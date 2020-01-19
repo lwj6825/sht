@@ -4,17 +4,17 @@
             <div class="title">
                 <p class="tz-title">全部</p>
                 <div>
-                    <el-button type="primary" @click="newFun" class="blue-bth"> + 新增任务类型</el-button>
+                    <el-button type="primary" @click="newFun" class="blue-bth"> + 新增任务类型</el-button><!---->
                 </div>
             </div>
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="a_conf_item" label="任务类型"> </el-table-column>
+                    <el-table-column prop="item" label="任务类型"> </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="editFun(scope.row)">修改</el-button>
                             <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
-                        </template>
+                        </template><!---->
                     </el-table-column>
                 </el-table>
             </div>
@@ -32,7 +32,7 @@
                         </el-form-item>
                         <el-form-item class="btn">
                             <el-button @click="closeFun">取消</el-button>
-                            <el-button type="primary" @click="submitForm('form')">确认</el-button>
+                            <el-button type="primary" :disabled="disabled" @click="submitForm('form')">确认</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -42,11 +42,13 @@
 </template>
 
 <script>
+import {SetAssetsConf,DeleteAssetsConf,UpdateAssetsConf} from '../../js/traceEquipment/traceEquipment.js'
+import {GetAssetsConfig} from '../../js/repair/repair.js'
 export default {
     name:"taskTypes",
     data() {
         return {
-            tableData: [{a_conf_item: '任务类型'}],
+            tableData: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -60,38 +62,115 @@ export default {
                 ]
             },
             prompt: '新增',
+            id: '',
+            a_conf_item_old: '',
+            userId: '',
+            disabled: false,
         }
     },
     mounted() {
-       
+        this.userId = localStorage.getItem('userId')
+        this.getGetAssetsConfigFun()
     },
     methods: {
+        getGetAssetsConfigFun(){
+            GetAssetsConfig('')
+                .then(res => {
+                    this.tableData = res.data[6]
+                })
+                .catch(res => {
+                    console.log(res);
+                })
+        },
         editFun(ele){
             this.prompt = "修改"
+            this.form.repairMs = ele.item
+            this.a_conf_item_old = ele.item
+            this.id = ele.id
             this.isEdits = true
         },
         deleteFun(ele){
-            // let obj = {
-            //     a_conf_type: 1,
-            //     a_conf_id: ele.a_conf_id,
-            //     userid: this.userId,
-            // }
-            // DeleteAssetsConf(obj)
-            //     .then(res => {
-            //         if (res.result == true) {
-            //             this.$message.success(res.message);
-            //             this.getQueryAssetsConf()
-            //         }else{
-            //             this.$message.error(res.message);
-            //         }
-            //     })
-            //     .catch(res => {
-            //         console.log(res);
-            //     })
-            
+            this.$confirm('你确定要删除吗', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+            .then(() => {
+                let obj = {
+                    a_conf_type: 5,
+                    a_conf_id: ele.id,
+                    userid: this.userId,
+                }
+                DeleteAssetsConf(obj)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.getGetAssetsConfigFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        console.log(res);
+                    })
+            })
+            .catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         },
         sureFun(){
-            
+            this.disabled = true
+            if(this.id){    
+                let obj = {
+                    a_conf_type: 5,
+                    a_conf_id: this.id,
+                    a_conf_item_old: this.a_conf_item_old,
+                    a_conf_item: this.form.repairMs,
+                    userid: this.userId,
+                }
+                UpdateAssetsConf(obj)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.disabled = false
+                            this.$message.success(res.message);
+                            this.getGetAssetsConfigFun()
+                            this.closeFun()
+                        }else{
+                            this.disabled = false
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        this.disabled = false
+                        console.log(res);
+                    })
+            }else{
+                let obj = {
+                    a_conf_type: 5,
+                    a_conf_item: this.form.repairMs,
+                    acronym: '',
+                    userid: this.userId,
+                }
+                SetAssetsConf(obj)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.disabled = false
+                            this.$message.success(res.message);
+                            this.getGetAssetsConfigFun()
+                            this.closeFun()
+                        }else{
+                            this.disabled = false
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        this.disabled = false
+                        console.log(res);
+                    })
+            }
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
@@ -108,6 +187,7 @@ export default {
             this.isEdits = true
         },
         closeFun(){
+            this.disabled = false
             this.form = {
                 repairMs: ''
             }
@@ -214,7 +294,7 @@ export default {
                 .form{
                     clear: both;
                     margin-top: 20px;
-                    margin-left: 50px;
+                    margin-left: 40px;
                     .el-input{
                         width: 200px;
                     }

@@ -56,6 +56,44 @@
                 <div class="msg-type">
                     <div class="msg-item">
                         <div class="item-tit">
+                            <img class="logo" src="../../assets/images/license.png" >
+                            <p class="type-1">营业执照</p>
+                            <div class="submit">
+                                <div class="btn">
+                                    <p class="icon-add">+</p>
+                                    <p>添加图片</p>     
+                                </div>
+                                <form id="upload" enctype="multipart/form-data" method="post"> 
+                                    <input type="file" class="file" ref="file2" multiple accept="image/*" @change="fileFun($event,5)">
+                                </form>
+                            </div>  
+                            <p v-if="msgArr1.length > 4" class="list-btn" @click="moreFun(5)">{{moreBtn1}}</p>
+                        </div>
+                        <div class="list">
+                            <ul>
+                                <li v-for="(item,index) in imgArr5" :key="index">
+                                    <figure class="image">
+                                        <p class="icon-delete" @click="removeFun(5,item)">-</p>
+                                        <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="viewFun(5,item)">
+                                    </figure>
+                                </li>
+                            </ul>
+                            <!--<div class="showMsg" v-if="showMsg5 && msgArr5.length > 0">
+                                <p  class="name">1.jpg</p>
+                                <p class="list-btn" @click="viewFun(5)">查看</p>
+                                <p class="list-btn" @click="removeFun(5)">删除</p>
+                            </div>
+                            <ul v-if="!showMsg1">
+                                <li v-for="(item,index) in msgArr5" :key="index">
+                                    <p  class="name">{{(index+1) + '.jpg' }}</p>
+                                    <p class="list-btn" @click="viewFun(5,item)">查看</p>
+                                    <p class="list-btn" @click="removeFun(5,item)">删除</p>
+                                </li>
+                            </ul>-->
+                        </div>
+                    </div>
+                    <div class="msg-item">
+                        <div class="item-tit">
                             <img class="logo" src="../../assets/images/u166.png" >
                             <p class="type-1">有机认证</p>
                             <div class="submit">
@@ -216,6 +254,8 @@ export default {
             moreBtn3: '更多',
             showMsg4: true,
             moreBtn4: '更多',
+            showMsg5: true,
+            moreBtn5: '更多',
             node_id: '',
             node_name: '',
             logoFile: '',
@@ -226,6 +266,7 @@ export default {
             imgArr2: [],
             imgArr3: [],
             imgArr4: [],
+            imgArr5: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -239,6 +280,7 @@ export default {
         this.getMsgFun2()
         this.getMsgFun3()
         this.getMsgFun4()
+        this.getMsgFun5()
     },
     methods: {
         handleCurrentChange(val){
@@ -262,6 +304,8 @@ export default {
                                 this.getMsgFun3()
                             }else if(ele == 4){
                                 this.getMsgFun4()
+                            }else if(ele == 5){
+                                this.getMsgFun5()
                             }
                             this.$message.success('删除成功');
                         }else{
@@ -520,6 +564,69 @@ export default {
                         clearInterval(timer);
                     }
                 },1000)
+            }else if(ele == 5){
+                var that = this;
+                let file = event.target.files;
+                let reader = new FileReader();
+                let reg = /.(jpg|png|tif|PNG|JPG)+$/;   
+                console.log(file[0].size)        
+                if(file[0].size){
+                    let point = file[0].name.indexOf('.');
+                    if(!reg.test((file[0].name).slice(point))){
+                        this.$message.error("上传图片格式不支持");
+                        return;
+                    }
+                    let size = file[0].size / 1024 / 1024 ;
+
+                    if(size > 0.5){
+                        that.clarity = 0.5/size;
+                    }else{
+                        that.clarity = 1;
+                    }
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file[0]); 
+                    reader.onload = function(){                
+                        that.imgFun(reader.result,that.clarity,function(src){
+                            that.logoArr.push(src.slice(23))
+                        })
+                    }
+                }
+                let timer = setInterval(()=>{
+                    if(this.logoArr.length == file.length){
+                        let formData = new FormData()  
+                        formData.append('img_url', this.logoArr[0]);  
+                        formData.append('node_id', that.node_id);  
+                        formData.append('img_type', 5); 
+                        formData.append('type_name', '营业执照'); 
+                        formData.append('node_name', that.node_name); 
+                        let config = {
+                            headers:{'Content-Type':'multipart/form-data'}
+                        };
+                        const ajaxPost = function (url, params,config) {
+                            return new Promise((resolve, reject) => {
+                                axios
+                                    .post(url, params,{config})
+                                    .then((res) => {
+
+                                        resolve(res.data)
+                                    })
+                                    .catch(() => {
+                                        reject('error')
+                                    })
+                            })
+                        }  
+                        let url = baseUrl + 'login/uploadZzrzInfoForTrace'
+                        ajaxPost(url,formData,config)
+                            .then(res => {
+                                that.logoArr = []
+                                that.getMsgFun5()
+                            })
+                            .catch(res => {
+                                console.log(res)
+                            })
+                        clearInterval(timer);
+                    }
+                },1000)
             }
         },
         // 查看有机认证图片列表
@@ -581,6 +688,22 @@ export default {
                     this.moreBtn4 = '更多'
                     this.msgArr4 = res.data
                     this.imgArr4 = this.msgArr4.slice(0,4)
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
+        // 营业执照
+        getMsgFun5(){
+            let obj = {
+                node_id: this.node_id,
+                img_type: 5
+            }
+            GetNodeZzrzForTrace(obj)
+                .then(res => {
+                    this.moreBtn5 = '更多'
+                    this.msgArr5 = res.data
+                    this.imgArr5 = this.msgArr5.slice(0,4)
                 })
                 .catch(res => {
                     console.log(res)

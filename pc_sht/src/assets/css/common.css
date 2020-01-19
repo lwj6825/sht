@@ -43,6 +43,7 @@
 }
 .icon-select::before{
     content: '\e614'; 
-    font-size: 20px;
+    font-size: 16px;
     color: #999;
+    padding-left: 5px;
 }

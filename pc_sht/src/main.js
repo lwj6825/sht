@@ -6,7 +6,7 @@ import router from './router'
 import echarts from 'echarts';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import './components/common/style.css'
+import'../static/style.css'
 import directives from '../static/directives'
 Vue.prototype.$echarts = echarts;
 Vue.use(ElementUI);

@@ -1,7 +1,9 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
+import axios from 'axios';
 import { queryNodeBasePage,getAssetsConfig,getAssetsUser,insertAssetsTask,getAssetsTask,getAssetsTaskImg,updateAssetsTask,
     deleteAssetsTaskImg,getAssetsTaskInfo,insertAssetsImg,updateAssetsTaskInfo,deleteAssetsInfo,updateAssetsTaskAssignId,
-    insertAssetsTaskResult,getAssetsTaskResult,getAssetsTaskLog
+    insertAssetsTaskResult,getAssetsTaskResult,getAssetsTaskLog,updateAssetsTaskScbj,deleteAssetsTask,getAllGroup,insertAssetsGroup,
+    queryBusinessForMobile,downAssetsTaskXsl,deleteAssetsGroup
 } from '../address/url.js';
 
 // 查询节点
@@ -67,4 +69,42 @@ export const  GetAssetsTaskResult  = function(params) {
 // 查看任务日志
 export const  GetAssetsTaskLog  = function(params) {
     return ajaxGet(getAssetsTaskLog +'?'+ params)
+}
+// 更新任务的 删除标记 
+export const  UpdateAssetsTaskScbj  = function(params) {
+    return ajaxPost(updateAssetsTaskScbj, params)
+}
+// 彻底删除
+export const  DeleteAssetsTask  = function(params) {
+    return ajaxPost(deleteAssetsTask, params)
+}
+// 获取所有分组
+export const  GetAllGroup  = function(params) {
+    return ajaxGet(getAllGroup +'?'+ params)
+}
+// 新增分组 和组员 组长 或者 修改分组
+export const  InsertAssetsGroup  = function(params) {
+    return ajaxPost(insertAssetsGroup, params)
+}
+// 删除分组
+export const  DeleteAssetsGroup  = function(params) {
+    return ajaxPost(deleteAssetsGroup, params)
+}
+
+// 商户分页加载
+export const  QueryBusinessForMobile  = function(params) {
+    return ajaxGet(queryBusinessForMobile +'?'+ params)
+}
+// 报修导出
+export const DownAssetsTaskXsl = function(form) {
+    return axios({ // 用axios发送post请求
+        method: 'post',
+        url: downAssetsTaskXsl, // 请求地址
+        data: form, // 参数
+        // responseType: 'blob', // 表明返回服务器返回的数据类型
+        responseType: 'arraybuffer',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
 }

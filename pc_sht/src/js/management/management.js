@@ -20,6 +20,7 @@ import {getAllBiz,lookShop,
   getAllBizType,
   downloadGys,
   downloadCustomer,
+  addBizId,
 } from '../address/url.js';
 
 // 查询商户列表
@@ -122,4 +123,8 @@ export const BindingGoods = function(params){
 //管理商品 - 绑定商品保存
 export const SaveBindingGoods = function(params){
   return ajaxPost(saveBindingGoods,params)
+}
+// 自动生成得商户编码
+export const  AddBizId  = function(params) {
+  return ajaxGet(addBizId +'?'+ params)
 }
