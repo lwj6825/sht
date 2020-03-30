@@ -36,6 +36,7 @@ import analysis from './analysis'
 import collect from './collect'
 import warning from './warning'
 import nodeManage from './nodeManage'
+import traceabiltyInfo from './traceabiltyInfo'
 Vue.use(Router)
 
 export default new Router({
@@ -79,7 +80,8 @@ export default new Router({
         ...analysis,
         ...collect,
         ...warning,
-        ...nodeManage
+        ...nodeManage,
+        ...traceabiltyInfo
       ]
     },
   ]
