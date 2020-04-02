@@ -1,15 +1,19 @@
 // // base url
-export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
-// export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/'
+// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.1.14:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.1.14:8081/order_sht/'; // 资产
+// export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/';
+// export const baseUrl5 = 'https://mobile.zhdtech.com/order_sht/';
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+
 export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl5 = 'http://shop.zhdtech.com/';//外网
+
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口,，，,,
@@ -279,7 +283,7 @@ export const queryBizRankCurrentDay = baseUrl + 'redis/queryBizRankCurrentDay' /
 export const queryBizRankCurrentMonth = baseUrl + 'redis/queryBizRankCurrentMonth' // 查询当月商户交易额排行
 export const queryBizRankCurrentYear = baseUrl + 'redis/queryBizRankCurrentYear' // 查询当年商户交易额排行
 export const getTzInfoUploadDays = baseUrl + 'redis/getTzInfoUploadDays' // 该市场当月上传进货台账的商户信息（录入天数）
-export const queryHasTzBizByNodeId = baseUrl4 + 'redis/queryHasTzBizByNodeId' // 该市场当月上传进货台账的商户信息（录入笔数）
+export const queryHasTzBizByNodeId = baseUrl5 + 'redis/queryHasTzBizByNodeId' // 该市场当月上传进货台账的商户信息（录入笔数）
 export const getTzInfoUploadBizNum = baseUrl + 'redis/getTzInfoUploadBizNum' //  该市场当月上传进货台账的商户信息（商户数）
 export const getBizOnlineTime = baseUrl + 'redis/getBizOnlineTime' // 该市场当日电子秤最早在线时间
 export const getBizNotOnlineTime = baseUrl + 'redis/getBizNotOnlineTime' //该市场电子秤不在线天数
@@ -499,3 +503,27 @@ export const queryCommunicationRecord = baseUrl4 + 'warning/queryCommunicationRe
 export const queryInfoType = baseUrl4 + 'warning/queryInfoType' //条件查询
 export const querygroupName = baseUrl4 + 'warning/querygroupName' //条件查询
 export const queryNodeDetailType2 = baseUrl4 + 'warning/queryNodeDetailType'
+//解码规则管理
+export const queryDecodeRule = baseUrl4 + 'warning/queryDecodeRule' //解码规则查询
+export const queryCodeTypeSelect = baseUrl4 + 'warning/queryCodeTypeSelect' //解码规则中码类型查询
+export const queryNodeSelect = baseUrl4 + 'warning/queryNodeSelect' //所有企业查询
+export const insertDecodeRule = baseUrl4 + 'warning/insertDecodeRule' //添加解码规则
+export const updateDecodeRule = baseUrl4 + 'warning/updateDecodeRule'//修改解码规则
+export const deleteDecodeRule = baseUrl4 + 'warning/deleteDecodeRule'//删除解码规则
+export const downloadDecodeRule = baseUrl4 + 'warning/downloadDecodeRule'//下载解码规则 
+export const importDecodeRule = baseUrl4 + 'warning/importDecodeRule'//导入解码规则
+//物品码管理
+export const queryTraceabilityCode = baseUrl4 + 'warning/queryTraceabilityCode'//物品码查询
+export const insertTraceabilityCode = baseUrl4 + 'warning/insertTraceabilityCode'//添加物品码 
+export const updateTraceabilityCode = baseUrl4 + 'warning/updateTraceabilityCode'//修改物品码 
+export const deleteTraceabilityCode = baseUrl4 + 'warning/deleteTraceabilityCode'//删除物品码 
+export const downloadTraceabilityCode = baseUrl4 + 'warning/downloadTraceabilityCode'//物品码下载 
+export const importTraceabilityCode = baseUrl4 + 'warning/importTraceabilityCode'//导入物品码
+export const querySupplierSelect = baseUrl4 + 'warning/querySupplierSelect'//查询所有供货单位  
+//追溯信息管理
+export const queryTraceInfo = baseUrl4 + 'warning/queryTraceInfo'//查询所有供货单位 
+export const insertTraceInfo = baseUrl4 + 'warning/insertTraceInfo'//添加追溯信息 
+export const updateTraceInfo = baseUrl4 + 'warning/updateTraceInfo'//修改追溯信息 
+export const deleteTraceInfo = baseUrl4 + 'warning/deleteTraceInfo'//删除追溯信息 
+export const downloadTraceInfo = baseUrl4 + 'warning/downloadTraceInfo'//下载追溯信息
+export const importTraceInfo = baseUrl4 + 'warning/importTraceInfo'//导入追溯信息
