@@ -855,7 +855,30 @@ const menu = [
               },
             ]
           }
-        }
+        },
+        {
+          id:'0606',
+          parentId:'06',
+          name:'大屏设置',
+          node:'settings',
+          type:'企业宣传',
+          level:2,
+          children:{
+            nodeList:[
+              {
+                id:'060600',
+                parentId:'0606',
+                name:'大屏设置',
+                url:'enterpriseProp',
+                node:'settings',
+                level:3,
+                children:{
+                  nodeList:[]
+                }
+              },
+            ]
+          }
+        },
       ]
     }
   },

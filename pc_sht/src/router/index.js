@@ -40,6 +40,7 @@ import warning from './warning'
 import nodeManage from './nodeManage'
 import monitor from './monitor'
 import supervise from './supervise'
+import traceabiltyInfo from './traceabiltyInfo'
 Vue.use(Router)
 
 export default new Router({
@@ -88,6 +89,7 @@ export default new Router({
         ...enterprise,
         ...monitor,
         ...supervise,
+        ...traceabiltyInfo
       ]
     },
   ]

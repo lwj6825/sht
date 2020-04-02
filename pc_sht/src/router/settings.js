@@ -23,6 +23,7 @@ import newRolePermissions from '../components/settings/newRolePermissions.vue';
 import newWorkers from '../components/settings/newWorkers.vue';
 import editWorkers from '../components/settings/editWorkers.vue';
 import viewWorkers from '../components/settings/viewWorkers.vue';
+import enterpriseProp from '@/components/settings/enterpriseProp'
 
 export default [
   {
@@ -33,6 +34,16 @@ export default [
       id:'99',
       node:'settings',
       url:'enterpriseInfo',
+    }
+  },
+  {
+    path: 'settings/enterpriseProp',
+    component: resolve => require(['@/components/settings/enterpriseProp'],resolve),
+    name:"enterpriseProp",
+    meta:{
+      id:'499',
+      node:'settings',
+      url:'enterpriseProp',
     }
   },
   {

@@ -1,17 +1,22 @@
 // base url
-export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产62
+// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产62
+// export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/';
+// export const baseUrl5 = 'https://mobile.zhdtech.com/order_sht/';
 
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl5 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl6 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?' 
+
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口,，，,,
@@ -191,7 +196,7 @@ export const symGetAllUrl = baseUrl + 'farming/getAllSymApply';// 获取所有�
 export const symInsertUrl = baseUrl + 'farming/insertSymApply';// 溯源码新增
 export const queryTzSymApply = baseUrl + 'farming/queryTzSymApply';// 溯源码查询 ===> 兔子
 
-//农事商品相关地址   
+//农事商品相关地址
 export const nsGoodsQueryUrl = baseUrl + 'farming/queryGoodsBreed';// 农事商品查询
 export const nsGoodsInsertUrl = baseUrl + 'farming/insertGoodsBreed';// 农事商品新增
 export const nsGoodsDeleteUrl = baseUrl + 'farming/deleteGoodsBreed';// 农事商品删除
@@ -239,6 +244,10 @@ export const deleteStall = baseUrl + 'manage/deleteStall'; // 删除员工
 export const updateStall = baseUrl + 'manage/updateStall'; // 修改员工信息
 export const getAllStallFunction = baseUrl + 'manage/getAllStallFunction'; // 查询该员工的pc端权限 mobile_flag:"1"  1 pc  2 移动
 
+// 大屏设置
+export const getScreenStyle = baseUrl + 'setting/getScreenStyle';//查询字体样式和营业执照
+export const updateScreenStyle = baseUrl + 'setting/UpdateScreenStyle';//修改字体样式
+
 // 台账
 export const getAllTzGys = baseUrl2 + 'tz/getAllTzGys' // 获取台账供应商
 // ----进货台账
@@ -280,17 +289,17 @@ export const queryGoodsRankCurrentMonth = baseUrl + 'redis/queryGoodsRankCurrent
 export const queryGoodsRankCurrentWeek = baseUrl + 'redis/queryGoodsRankCurrentWeek' // 查询当周商品交易额排行
 export const queryGoodsRankCurrentDay = baseUrl + 'redis/queryGoodsRankCurrentDay' // 查询当天商品交易额排行
 export const queryBizRankCurrentWeek = baseUrl + 'redis/queryBizRankCurrentWeek' // 查询当周商户交易额排行
-export const queryBizRankCurrentDay = baseUrl + 'redis/queryBizRankCurrentDay' // 查询当天商户交易额排行 
+export const queryBizRankCurrentDay = baseUrl + 'redis/queryBizRankCurrentDay' // 查询当天商户交易额排行
 export const queryBizRankCurrentMonth = baseUrl + 'redis/queryBizRankCurrentMonth' // 查询当月商户交易额排行
 export const queryBizRankCurrentYear = baseUrl + 'redis/queryBizRankCurrentYear' // 查询当年商户交易额排行
 export const getTzInfoUploadDays = baseUrl + 'redis/getTzInfoUploadDays' // 该市场当月上传进货台账的商户信息（录入天数）
-export const queryHasTzBizByNodeId = baseUrl4 + 'redis/queryHasTzBizByNodeId' // 该市场当月上传进货台账的商户信息（录入笔数）
+export const queryHasTzBizByNodeId = baseUrl5 + 'redis/queryHasTzBizByNodeId' // 该市场当月上传进货台账的商户信息（录入笔数）
 export const getTzInfoUploadBizNum = baseUrl + 'redis/getTzInfoUploadBizNum' //  该市场当月上传进货台账的商户信息（商户数）
 export const getBizOnlineTime = baseUrl + 'redis/getBizOnlineTime' // 该市场当日电子秤最早在线时间
 export const getBizNotOnlineTime = baseUrl + 'redis/getBizNotOnlineTime' //该市场电子秤不在线天数
 export const queryHasNoTzBizByNodeId = baseUrl + 'redis/queryHasNoTzBizByNodeId' // 未录入台账商户数
 export const getGoodsWeightRankAndAvgPrice = baseUrl + 'redis/getGoodsWeightRankAndAvgPrice' // 商品交易量及价格走势(前10)
-export const computNode = baseUrl + 'redis/computNode' // 某个市场统计页面 的总金额 ,总条数,总商户数,总商品数以及日同比，周同比、当月总金额 
+export const computNode = baseUrl + 'redis/computNode' // 某个市场统计页面 的总金额 ,总条数,总商户数,总商品数以及日同比，周同比、当月总金额
 export const computNodeNumWeek = baseUrl + 'redis/computNodeNumWeek' // 交易笔数周表数据
 export const computPluNumWeek = baseUrl + 'redis/computPluNumWeek' // 交易商品周表数据
 export const queryMoneyCurrentWeek = baseUrl + 'redis/queryMoneyCurrentWeek' // 查询本周交易额数据
@@ -343,8 +352,8 @@ export const importAssets = baseUrl3 + 'assets/importAssets' // 10.资产批量�
 export const importAssetsUpdate = baseUrl3 + 'assets/importAssetsUpdate' // 11.资产批量导入 -- 修改
 export const uploadPhotos = baseUrl3 + 'assets/uploadPhoto2' // 图片上传
 export const muploadPhotos = baseUrl3 + 'assets/uploadPhotos' // 多图片上传
-export const queryChangeListByAssetsId = baseUrl3 + 'assets/queryChangeListByAssetsId' // 资产--查询变更记录 
-export const queryInspectinfoListByAssetsId = baseUrl3 + 'assets/queryInspectinfoListByAssetsId' // 资产--查询巡检记录 
+export const queryChangeListByAssetsId = baseUrl3 + 'assets/queryChangeListByAssetsId' // 资产--查询变更记录
+export const queryInspectinfoListByAssetsId = baseUrl3 + 'assets/queryInspectinfoListByAssetsId' // 资产--查询巡检记录
 export const queryMaintaininfoListByAssetsId = baseUrl3 + 'assets/queryMaintaininfoListByAssetsId' // 资产--查询维修记录
 export const updateMoreAssetsStatus = baseUrl3 + 'assets/updateMoreAssetsStatus' // 批量变更
 export const inspectMoreAssets = baseUrl3 + 'assets/inspectMoreAssets' // 批量巡检
@@ -426,7 +435,7 @@ export const queryIndex = baseUrl2 + 'goodsPrice/queryIndex' // 市场的点击�
 export const queryBizGoods = baseUrl + 'goodsPrice/queryBizGoods' // 市场点击按照商户查看queryGoodsForBiz
 export const queryGoodsForBiz = baseUrl + 'goodsPrice/queryGoodsForBiz' // 市场添加报价 点击商户 查看商户的商品
 export const insert = baseUrl + 'goodsPrice/insert' // 市场修改和新增报价单的内容
-export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看报价单  区域信息 
+export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看报价单  区域信息
 export const autoIdentity = baseUrl + 'goodsPrice/autoIdentity' // 智能识别
 export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存
 export const queryGoodsForNode = baseUrl + 'goodsPrice/queryGoodsForNode' // 市场添加报价 商品
@@ -451,13 +460,13 @@ export const updateAssetsTaskAssignId = baseUrl + 'assetsTask/updateAssetsTaskAs
 export const insertAssetsTaskResult = baseUrl + 'assetsTask/insertAssetsTaskResult' // 关闭 没无设备 时  保存解决方案的图片 以及信息
 export const getAssetsTaskResult = baseUrl + 'assetsTask/getAssetsTaskResult' // 查看关闭任务 没无设备 时解决方案的图片 以及信息
 export const getAssetsTaskLog = baseUrl + 'assetsTask/getAssetsTaskLog' // 查看任务日志
-export const updateAssetsTaskScbj = baseUrl + 'assetsTask/updateAssetsTaskScbj' // 更新任务的 删除标记  1表示未删除，0表示回收站中 
+export const updateAssetsTaskScbj = baseUrl + 'assetsTask/updateAssetsTaskScbj' // 更新任务的 删除标记  1表示未删除，0表示回收站中
 export const deleteAssetsTask = baseUrl + 'assetsTask/deleteAssetsTask' // 彻底删除
 export const getAllGroup = baseUrl + 'assetsTask/getAllGroup' // 获取所有分组
 export const insertAssetsGroup = baseUrl + 'assetsTask/insertAssetsGroup' // 新增分组 和组员 组长 或者 修改分组
 export const deleteAssetsGroup = baseUrl + 'assetsTask/deleteAssetsGroup' // 删除分组 和组员 组长
-export const queryBusinessForMobile = baseUrl + 'assets/queryBusinessForMobile' // 查询商户分页加载 
-export const downAssetsTaskXsl = baseUrl + 'assetsTask/downAssetsTaskXsl' // 报修任务的导出  
+export const queryBusinessForMobile = baseUrl + 'assets/queryBusinessForMobile' // 查询商户分页加载
+export const downAssetsTaskXsl = baseUrl + 'assetsTask/downAssetsTaskXsl' // 报修任务的导出
 
 //pass平台
 // 数据源
@@ -540,3 +549,27 @@ export const vegMeatProvince = baseUrl2 + 'compute/meatProvincePc' // 猪肉省�
 export const vegetableProvince = baseUrl2 + 'compute/vegProvincePc' // 蔬菜省份来源
 export const getGoodsType = baseUrl2 + 'cygl/getGoodsType' // 上报商品种类
 export const getNodeJgInfoType = baseUrl2 + 'cygl/getNodeJgInfoType' // 企业数量按类型查看
+//解码规则管理
+export const queryDecodeRule = baseUrl4 + 'warning/queryDecodeRule' //解码规则查询
+export const queryCodeTypeSelect = baseUrl4 + 'warning/queryCodeTypeSelect' //解码规则中码类型查询
+export const queryNodeSelect = baseUrl4 + 'warning/queryNodeSelect' //所有企业查询
+export const insertDecodeRule = baseUrl4 + 'warning/insertDecodeRule' //添加解码规则
+export const updateDecodeRule = baseUrl4 + 'warning/updateDecodeRule'//修改解码规则
+export const deleteDecodeRule = baseUrl4 + 'warning/deleteDecodeRule'//删除解码规则
+export const downloadDecodeRule = baseUrl4 + 'warning/downloadDecodeRule'//下载解码规则 
+export const importDecodeRule = baseUrl4 + 'warning/importDecodeRule'//导入解码规则
+//物品码管理
+export const queryTraceabilityCode = baseUrl4 + 'warning/queryTraceabilityCode'//物品码查询
+export const insertTraceabilityCode = baseUrl4 + 'warning/insertTraceabilityCode'//添加物品码 
+export const updateTraceabilityCode = baseUrl4 + 'warning/updateTraceabilityCode'//修改物品码 
+export const deleteTraceabilityCode = baseUrl4 + 'warning/deleteTraceabilityCode'//删除物品码 
+export const downloadTraceabilityCode = baseUrl4 + 'warning/downloadTraceabilityCode'//物品码下载 
+export const importTraceabilityCode = baseUrl4 + 'warning/importTraceabilityCode'//导入物品码
+export const querySupplierSelect = baseUrl4 + 'warning/querySupplierSelect'//查询所有供货单位  
+//追溯信息管理
+export const queryTraceInfo = baseUrl4 + 'warning/queryTraceInfo'//查询所有供货单位 
+export const insertTraceInfo = baseUrl4 + 'warning/insertTraceInfo'//添加追溯信息 
+export const updateTraceInfo = baseUrl4 + 'warning/updateTraceInfo'//修改追溯信息 
+export const deleteTraceInfo = baseUrl4 + 'warning/deleteTraceInfo'//删除追溯信息 
+export const downloadTraceInfo = baseUrl4 + 'warning/downloadTraceInfo'//下载追溯信息
+export const importTraceInfo = baseUrl4 + 'warning/importTraceInfo'//导入追溯信息

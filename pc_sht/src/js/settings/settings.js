@@ -21,8 +21,10 @@ import {getAllTzType,queryArea,updateTz,saveTzProperty,saveTzUserdefineProperty,
     deleteNodeZzrzForTrace,
     uploadZzrzInfoForTrace,
     updatePassword,
-    getAllStall, query, insertStall, deleteStall, updateStall, getAllStallFunction
+    getAllStall, query, insertStall, deleteStall, updateStall, getAllStallFunction,
 
+    getScreenStyle,
+    updateScreenStyle
 } from '../address/url.js'
 
 // 进货台账 销售台账 进货 tz_type = 1 销售 tz_type = 2
@@ -164,4 +166,11 @@ export const UpdateStall = function(params){
 // 查询该员工的pc端权限 mobile_flag:"1"  1 pc  2 移动
 export const GetAllStallFunction = function(params){
     return ajaxPost(getAllStallFunction,params)
+}
+//大屏设置
+export const urlGetScreenStyle = function(params){
+    return ajaxGet(getScreenStyle+'?'+ params)
+}
+export const urlUpdateScreenStyle = function(params){
+    return ajaxPost(updateScreenStyle,params)
 }
