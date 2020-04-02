@@ -21,6 +21,8 @@ import {getAllTzType,queryArea,updateTz,saveTzProperty,saveTzUserdefineProperty,
     deleteNodeZzrzForTrace,
     uploadZzrzInfoForTrace,
     updatePassword,
+    getAllStall, query, insertStall, deleteStall, updateStall, getAllStallFunction
+
 } from '../address/url.js'
 
 // 进货台账 销售台账 进货 tz_type = 1 销售 tz_type = 2
@@ -137,4 +139,29 @@ export const UploadZzrzInfoForTrace = function(params){
 // 账户管理
 export const UpdatePassword = function(params) {
     return ajaxGet(updatePassword +'?'+ params)
+}
+// ----员工管理
+// 员工管理查询
+export const GetAllStall = function(params){
+    return ajaxPost(getAllStall,params)
+}
+// 员工管理的条件(角色查询) 下拉选择
+export const Query = function(params){
+    return ajaxPost(query,params)
+}
+// 新增员工
+export const InsertStall = function(params){
+    return ajaxPost(insertStall,params)
+}
+// 删除员工
+export const DeleteStall = function(params){
+    return ajaxPost(deleteStall,params)
+}
+// 修改员工信息
+export const UpdateStall = function(params){
+    return ajaxPost(updateStall,params)
+}
+// 查询该员工的pc端权限 mobile_flag:"1"  1 pc  2 移动
+export const GetAllStallFunction = function(params){
+    return ajaxPost(getAllStallFunction,params)
 }

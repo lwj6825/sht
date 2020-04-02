@@ -77,6 +77,10 @@
               <span class="item-msg">{{item.stall_no}}</span>
             </div>
             <div class="section">
+              <span class="item-name">工行支付账户：</span>
+              <span class="item-msg">{{item.shop_mer_id}}</span>
+            </div>
+            <div class="section">
               <span class="item-name">营业执照：</span>
               <span class="item-msg">
                 <div class="box-fileimg" v-if="item.img_url">
@@ -141,6 +145,9 @@
           </el-form-item>
           <el-form-item label="摊位号：">
             <el-input v-model="editForm.stallNo" ></el-input>
+          </el-form-item>
+          <el-form-item label="工行支付账户：">
+            <el-input v-model="editForm.shop_mer_id" ></el-input>
           </el-form-item>
           <el-form-item label="营业执照：">
             <div class="box-fileimg">
@@ -266,6 +273,7 @@ export default {
         addr:[],
         addrInfo: '',//地址
         stallNo: '',//摊位号
+        shop_mer_id: '',
       },
       lookMsg:{},
       editForm:{
@@ -280,6 +288,7 @@ export default {
         addrInfo: '',//地址
         stallNo: '',//摊位号
         district: '', // 所属区域
+        shop_mer_id: '',
       },
       addrOptions:[],
       props:{
@@ -536,7 +545,8 @@ export default {
         biz_id: this.biz_id,
         corporate_name: this.editForm.corporate_name,
         paternt: this.districtUserId, // 区域userid      
-        region: this.editForm.district// 区域shop_booth_id
+        region: this.editForm.district, // 区域shop_booth_id
+        shop_mer_id: this.editForm.shop_mer_id,
       }
       updateBizBooth(obj)
         .then(res =>{
@@ -550,6 +560,7 @@ export default {
           console.log(res)
         })
     },
+    // 详情
     getShopMsg(){      
       allBizs({userId:this.$route.params.inforMsg.bootList[0].userId})
         .then(res =>{
@@ -563,6 +574,7 @@ export default {
           this.biz_id = res.data.dataList[0].bootList[0].biz_id
           if(len > 0){
             this.isEdit = false;
+            res.data.dataList[0].bootList[0].shop_mer_id = res.data.dataList[0].shop_mer_id
             this.shopList = res.data.dataList[0].bootList;
             this.lookThis(res.data.dataList[0].bootList[0].booth_name)
             this.lookShopName = res.data.dataList[0].bootList[0].booth_name;
@@ -692,6 +704,7 @@ export default {
           this.lookMsg.stallNo = ele.stallNo;//摊位号
           this.lookMsg.region = ele.region;//大区id
           this.lookMsg.corporate_name = ele.corporate_name
+          this.lookMsg.shop_mer_id = ele.shop_mer_id
           this.districtArr.forEach(val => {
             if(ele.region == val.bootList[0].shop_booth_id){
               this.districtName = val.bootList[0].booth_name
@@ -799,6 +812,7 @@ export default {
           // this.editForm.region = ele.region;//大区id
           // this.editForm.area_name = ele.area_name
           this.editForm.biz_id = ele.biz_id
+          this.editForm.shop_mer_id = ele.shop_mer_id
           this.districtArr.forEach(val => {
             if(ele.region == val.bootList[0].shop_booth_id){
               this.districtUserId = val.bootList[0].userId
@@ -840,6 +854,7 @@ export default {
       this.form.addrInfo='';//地址详细信息
       this.form.stallNo='';//摊位号
       this.form.corporate_name = ''
+      this.form.shop_mer_id = ''
     },
   },
    watch:{

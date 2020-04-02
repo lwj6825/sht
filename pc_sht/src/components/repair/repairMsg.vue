@@ -7,10 +7,10 @@
                         <el-input class="placeholder" v-model="form.msg" clearable placeholder="请输入任务ID或任务内容"></el-input>
                     </el-form-item>
                     <el-form-item label="所属节点">
-                        <el-select v-model="form.node_id" filterable clearable placeholder="请选择"
+                        <el-select v-model="form.node_id" filterable clearable placeholder="请选择" allow-create
                             v-loadmore="loadmore2" remote :remote-method="remoteMethod2" reserve-keyword @blur="unfocusFun2">
                             <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_NAME"
-                                :value="item.NODE_ID">
+                                :value="item.NODE_NAME">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -165,7 +165,7 @@
                         <el-select v-model="form2.merchant" filterable clearable placeholder="请选择" @change="selectMerchantFun"
                             v-loadmore="loadmore3" remote :remote-method="remoteMethod3" reserve-keyword @blur="unfocusFun3">
                             <el-option v-for="(item,index) in merchantArr"  :key="index" :label="item.BIZ_NAME"
-                                :value="item.BIZ_ID">
+                                :value="item.BIZ_NAME">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -470,6 +470,7 @@ export default {
             },
             equipmentArr: [],
             merchant_name: '',
+            merchant_id: '',
             node_name: '',
             page1: 1, // 设备
             cols1: 50,
@@ -1046,7 +1047,7 @@ export default {
         selectMerchantFun(ele){
             this.merchantArr.forEach(val => {
                 if(val.BIZ_ID == ele){
-                    this.merchant_name = val.BIZ_NAME
+                    this.merchant_id = val.BIZ_ID
                 }
             })
             if(this.item_id){
@@ -1066,7 +1067,7 @@ export default {
                 this.getQueryAssetsBase(ele)
             }
             if(!ele){
-                this.merchant_name = ''
+                this.merchant_id = ''
             }
         },
         // 选择节点
@@ -1078,7 +1079,7 @@ export default {
                 }
             })
             this.form2.merchant = ''
-            this.merchant_name = ''
+            this.merchant_id = ''
             this.merchantArr = []
             this.equipmentArr = []
             this.assert_info =  []
@@ -1161,7 +1162,7 @@ export default {
         },
         // 查询 所有商户
         getQueryBusiness(){
-            if(this.form2.node_id){
+            // if(this.form2.node_id){
                 // node_id  先选节点后选商户  新增
                 let str = 'node_id=' + this.form2.node_id + '&merchant_name=' + '' + '&cols=' + this.cols3 + '&page=' + this.page3
                 QueryBusinessForMobile(str)
@@ -1181,7 +1182,7 @@ export default {
                     .catch(res => {
                         console.log(res);
                     })
-            }
+            // }
         },
         // 关闭任务
         submitForm2(formName) {
@@ -1575,8 +1576,8 @@ export default {
                     group_name: this.form2.work_id, // 工作组
                     id: this.item_id,
                     user_id: this.userId,
-                    biz_id: this.form2.merchant,
-                    biz_name: this.merchant_name,
+                    biz_id: this.merchant_id,
+                    biz_name: this.form2.merchant,
                     list: assert_info_arr
                 }
                 console.log(params)
@@ -1618,8 +1619,8 @@ export default {
                 let params = {
                     node_id: this.form2.node_id,
                     node_name: this.node_name,
-                    biz_id: this.form2.merchant,
-                    biz_name: this.merchant_name,
+                    biz_id: this.merchant_id,
+                    biz_name: this.form2.merchant,
                     repair_model: this.form2.bxms_id, // -- 报修模式
                     task_content: this.form2.task_msg, // --任务内容
                     create_id: this.userId, // 创建人 当前登录人
@@ -1673,6 +1674,7 @@ export default {
             }
             this.merchantArr = []
             this.merchant_name = ''
+            this.merchant_id = ''
             this.node_name = ''
             this.prompt = '新增'
             this.file = ''
@@ -1776,7 +1778,7 @@ export default {
                 })
             this.form2 = {
                 node_id: ele.node_id, // 选择节点
-                merchant: ele.biz_id,
+                merchant: ele.biz_name,
                 bxms_id: ele.repair_model, // 报修模式
                 task_msg: ele.task_content, // 任务内容
                 equipment: '', // 设备信息
@@ -1785,8 +1787,9 @@ export default {
                 priority: ele.level, // 优先级
                 remarke: ele.remark, // 备注
             }
+            this.merchant_id = ele.biz_id
+            this.getQueryBusiness()
             this.item_id = ele.id
-            this.merchant_name = ele.biz_name
             this.node_name = ele.node_name
             this.page2 = 1
             let str = 'page=' + this.page2 + '&cols=' + this.cols2 + '&node_name=' + this.node_name
@@ -1800,7 +1803,6 @@ export default {
                     console.log(res);
                 })
             this.getQueryAssetsBase(this.form2.merchant)
-            this.getQueryBusiness()
             this.getGetAssetsUserFun(ele.group_name)
             this.getImgFun()
             setTimeout(() => {
@@ -2470,5 +2472,11 @@ export default {
                 background-color: #555;
             }
         } **/
+    }
+</style>
+<style>
+    .el-tooltip__popper {
+        max-width: 400px;
+        line-height: 180%;
     }
 </style>

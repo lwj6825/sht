@@ -6,6 +6,8 @@ import AddSaleTz from '@/components/standingBook/addSaleTz'
 import CheckTz from '@/components/standingBook/checkTz'
 import AddCheckTz from '@/components/standingBook/addCheckTz'
 import imgUpload from '../components/standingBook/imgUpload.vue'
+import viewCheckTz from '../components/standingBook/viewCheckTz.vue'
+import viewEntryTz from '../components/standingBook/viewEntryTz.vue'
 
 export default [
     {
@@ -77,6 +79,26 @@ export default [
             id:'265',
             node:'standingBook',
             url:'imgUpload',
+        }
+    },
+    {
+        path: 'standingBook/viewCheckTz',
+        component: resolve => require(['@/components/standingBook/viewCheckTz'],resolve),
+        name:'ViewCheckTz',
+        meta:{
+            id:'446',
+            node:'standingBook',
+            url:'viewCheckTz',
+        }
+    },
+    {
+        path: 'standingBook/viewEntryTz',
+        component: resolve => require(['@/components/standingBook/viewEntryTz'],resolve),
+        name:'ViewEntryTz',
+        meta:{
+            id:'445',
+            node:'standingBook',
+            url:'viewEntryTz',
         }
     },
 ]

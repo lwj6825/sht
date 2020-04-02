@@ -207,16 +207,7 @@
         ajaxPost(url,formData,config)
           .then(res => {
             this.boxShow = true;
-            if(res.message == ""){
-              this.fileMsg = res.message
-            }else{
-              if(res.result == true){
-                this.fileMsg = "导入成功"
-              }else{
-                this.fileMsg = "导入失败"
-              }
-            }
-            this.$refs.file.value = null
+            this.fileMsg = res.message
           })
           .catch(res => {
             console.log(res)
@@ -446,7 +437,7 @@
         this.getSales();
       },
       addSellGood(){ //添加销售商品
-        this.$router.push({name:'EditMarket',params: {'areaId':this.areaId,'bigAreaId':this.bigAreaId}})
+        this.$router.push({name:'NewMarket',params: {'areaId':this.areaId,'bigAreaId':this.bigAreaId}})
       },
       check(index, row){//查看销售商品
         this.$router.push({name:'ViewMarket',params:{'goodsMsg':row,'areaId':this.areaId}})

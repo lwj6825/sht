@@ -60,10 +60,11 @@
                 <el-table-column prop="roleName" label="系统角色" align="center"> </el-table-column>
                 <el-table-column prop="scbj" label="状态" align="center"> </el-table-column>
                 <el-table-column prop="record_date" label="开通日期"> </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="lookInfo(scope.row)">查看</el-button>
                         <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
+                        <el-button type="text" v-if="scope.row.roleId == '2'" size="small" @click="loginFun(scope.row)">跳转登录</el-button>           
                     </template>
                 </el-table-column>
             </el-table>
@@ -80,6 +81,7 @@
 import {getUserList,deleteUser,GetAllNode} from '../../js/user/user.js'
 import {getRoleList} from '../../js/role/role.js'
 import {router} from '../../js/address/url.js'
+import {login,login2,GetShtUserInfo,Loginout} from "../../js/login/ajax.js";
 export default {
     name:'userList',
     data(){
@@ -154,6 +156,54 @@ export default {
         this.getNodeFun()
     },
     methods: {
+        loginFun(ele){//退出
+            localStorage.clear();
+            sessionStorage.clear();
+            let data = {
+                username : ele.userName,
+                password : ele.password,
+            }
+            login(data).then((res)=>{
+                location.reload();
+                if(res.data.booth_list.length != 0){
+                    let name = res.data.booth_list[0].name,
+                        node_id = res.data.booth_list[0].node_id,
+                        isRegion = res.data.role_list[0].region,
+                        scShopId = res.data.booth_list[0].SHOP_BOOTH_ID,
+                        roleId = res.data.role_list[0].ROLEID;
+                    localStorage.setItem('loginName',name);
+                    localStorage.setItem('loginId',node_id);
+                    localStorage.setItem('isRegion',isRegion);
+                    localStorage.setItem('scShopId',scShopId);
+                    localStorage.setItem('roleId',roleId);
+                    localStorage.setItem('account',this.account);
+                    localStorage.setItem('password',this.password);
+                    localStorage.setItem('userType',JSON.stringify(res.data.booth_list[0].usertype));
+                }
+                if(res.result){
+                    if(this.check){
+                        localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                        localStorage.setItem('username',JSON.stringify(this.account));
+                        localStorage.setItem('checked',JSON.stringify(true));
+                        localStorage.setItem('userId',res.data.userId);
+                        localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
+                        this.userId = res.data.userId;
+                    }else{
+                        localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                        localStorage.setItem('username',JSON.stringify(this.account));
+                        localStorage.setItem('userId',res.data.userId);
+                        localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
+                        this.userId = res.data.userId;
+                    }
+                    this.$router.push({name:'home'})
+                }else{
+                    clocalStorage.clear();                    
+                }                
+            })
+            .catch((res)=>{
+                console.log(res)
+            })
+        },
         getNodeFun(){
             GetAllNode()
                 .then(res => {

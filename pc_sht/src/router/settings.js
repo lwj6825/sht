@@ -17,6 +17,12 @@ import partName from '../components/settings/partName.vue';
 import repairMs from '../components/settings/repairMs.vue';
 import taskTypes from '../components/settings/taskTypes.vue';
 import groupMsg from '../components/settings/groupMsg.vue';
+import editEquipment from '../components/settings/editEquipment.vue';
+import rolePermissions from '../components/settings/rolePermissions.vue';
+import newRolePermissions from '../components/settings/newRolePermissions.vue';
+import newWorkers from '../components/settings/newWorkers.vue';
+import editWorkers from '../components/settings/editWorkers.vue';
+import viewWorkers from '../components/settings/viewWorkers.vue';
 
 export default [
   {
@@ -197,6 +203,66 @@ export default [
       id:'440',
       node:'settings',
       url:'groupMsg',
+    }
+  },
+  {
+    path: 'settings/editEquipment',
+    name: 'EditEquipment',
+    component: resolve => require(['@/components/settings/editEquipment'],resolve),
+    meta:{
+      id:'448',
+      node:'settings',
+      url:'editEquipment',
+    }
+  },
+  // {
+  //   path: 'settings/rolePermissions',
+  //   name: 'RolePermissions',
+  //   component: resolve => require(['@/components/settings/rolePermissions'],resolve),
+  //   meta:{
+  //     // id:'440',
+  //     node:'settings',
+  //     url:'rolePermissions',
+  //   }
+  // },
+  // {
+  //   path: 'settings/newRolePermissions',
+  //   name: 'NewRolePermissions',
+  //   component: resolve => require(['@/components/settings/newRolePermissions'],resolve),
+  //   meta:{
+  //     // id:'440',
+  //     node:'settings',
+  //     url:'newRolePermissions',
+  //   }
+  // },
+  {
+    path: 'settings/newWorkers',
+    name: 'NewWorkers',
+    component: resolve => require(['@/components/settings/newWorkers'],resolve),
+    meta:{
+      id:'449',
+      node:'settings',
+      url:'newWorkers',
+    }
+  },
+  {
+    path: 'settings/editWorkers',
+    name: 'EditWorkers',
+    component: resolve => require(['@/components/settings/editWorkers'],resolve),
+    meta:{
+      id:'450',
+      node:'settings',
+      url:'editWorkers',
+    }
+  },
+  {
+    path: 'settings/viewWorkers',
+    name: 'ViewWorkers',
+    component: resolve => require(['@/components/settings/viewWorkers'],resolve),
+    meta:{
+      id:'451',
+      node:'settings',
+      url:'viewWorkers',
     }
   },
 ]

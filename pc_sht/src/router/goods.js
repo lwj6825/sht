@@ -5,6 +5,8 @@ import ViewStocks from '@/components/goods/viewStocks'
 import Market from '@/components/goods/market'
 import EditMarket from '@/components/goods/editMarket'
 import ViewMarket from '@/components/goods/viewMarket'
+import newStocks from '../components/goods/newStocks.vue'
+import newMarket from '../components/goods/newMarket.vue'
 
 export default [
   {
@@ -22,7 +24,7 @@ export default [
     component:  resolve => require(['@/components/goods/editStocks'],resolve),
     name:'EditStocks',
     meta:{
-      id:'135',
+      id:'137',
       node:'goods',
       url:'editStocks',
     }
@@ -65,6 +67,26 @@ export default [
       id:'140',
       node:'goods',
       url:'viewMarket',
+    }
+  },
+  {
+    path: 'goods/newStocks',
+    component:  resolve => require(['@/components/goods/newStocks'],resolve),
+    name:'NewStocks',
+    meta:{
+      id:'447',
+      node:'goods',
+      url:'newStocks',
+    }
+  },
+  {
+    path: 'goods/newMarket',
+    component:  resolve => require(['@/components/goods/newMarket'],resolve),
+    name:'NewMarket',
+    meta:{
+      id:'139',
+      node:'goods',
+      url:'newMarket',
     }
   },
 ]

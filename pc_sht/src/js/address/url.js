@@ -1,15 +1,17 @@
-// // base url
-// export const baseUrl = 'http://192.168.1.65:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
+// base url
+export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
+export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产62
+
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl6 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?' 
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
 // 登录地址接口,，，,,
@@ -20,9 +22,9 @@ export const updatePassword = baseUrl + 'login/updatePassword'; // 修改密码
 
 
 // superadmin用户模块
-export const superGetUserList = baseUrl + 'login/getAllUser';//所有用户信息
-export const superAddUser = baseUrl + 'login/insert';//新增用户
-export const superEditUser = baseUrl + 'login/update';//修改用户
+export const superGetUserList = baseUrl2 + 'login/getAllUser';//所有用户信息
+export const superAddUser = baseUrl2 + 'login/insert';//新增用户
+export const superEditUser = baseUrl2 + 'login/update';//修改用户
 export const superDeleteUser = baseUrl + 'login/delete';//删除用户
 export const superGetAddr = baseUrl + 'comm/getAllSSQX';//获取地区
 export const getAllNode = baseUrl + 'login/getAllNode';//创建用户--所属节点
@@ -54,12 +56,12 @@ export const superEdit = baseUrl + 'function/update'; //编辑功能
 //“管理”菜单
 // 商户
 export const queryMoneyLittleTime = baseUrl + 'redis/queryMoneyLittleTime'; //查询月总交易额
-export const getAllBiz = baseUrl + 'manage/getAllBiz';// 查询商户列表
-export const insertBiz = baseUrl + 'manage/insertBiz';// 新增商户
-export const lookShop = baseUrl + 'manage/getBootListById';//新增商户-查看店铺
+export const getAllBiz = baseUrl2 + 'manage/getAllBiz';// 查询商户列表
+export const insertBiz = baseUrl2 + 'manage/insertBiz';// 新增商户
+export const lookShop = baseUrl2 + 'manage/getBootListById';//新增商户-查看店铺
 export const getAllBizType = baseUrl + 'manage/getAllBizType';//新增商户-商户类型
-export const UpdateBizUser = baseUrl + 'manage/UpdateBizUser';// 商户详情 修改用户信息
-export const UpdateBizBooth = baseUrl + 'manage/UpdateBizBooth';// 商户详情 修改商铺信息
+export const UpdateBizUser = baseUrl2 + 'manage/UpdateBizUser';// 商户详情 修改用户信息
+export const UpdateBizBooth = baseUrl2 + 'manage/UpdateBizBooth';// 商户详情 修改商铺信息
 export const addBizId = baseUrl2 + 'manage/addBizId';// 自动生成得商户编码
 // 供应商
 export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
@@ -229,9 +231,16 @@ export const insertGoodsForTrace = baseUrl + 'goods/insertGoodsForTrace';//追�
 export const getNodeZzrzForTrace = baseUrl + 'login/getNodeZzrzForTrace';//查询资质认证图片信息
 export const deleteNodeZzrzForTrace = baseUrl + 'login/deleteNodeZzrzForTrace';//删除资质认证图片信息
 export const uploadZzrzInfoForTrace = baseUrl + 'login/uploadZzrzInfoForTrace';//上传资质认证图片信息
+// 员工管理
+export const getAllStall = baseUrl + 'manage/getAllStall'; // 员工管理查询
+export const query = baseUrl + 'role/query'; // 员工管理的条件(角色查询) 下拉选择
+export const insertStall = baseUrl + 'manage/insertStall'; // 新增员工
+export const deleteStall = baseUrl + 'manage/deleteStall'; // 删除员工
+export const updateStall = baseUrl + 'manage/updateStall'; // 修改员工信息
+export const getAllStallFunction = baseUrl + 'manage/getAllStallFunction'; // 查询该员工的pc端权限 mobile_flag:"1"  1 pc  2 移动
 
 // 台账
-export const getAllTzGys = baseUrl + 'tz/getAllTzGys' // 获取台账供应商
+export const getAllTzGys = baseUrl2 + 'tz/getAllTzGys' // 获取台账供应商
 // ----进货台账
 export const queryInTzDetailRegion = baseUrl + 'tz/queryInTzDetailRegion' // 列表
 export const tzAdd = baseUrl + 'tz/tzAdd' // 新增台账
@@ -413,7 +422,7 @@ export const deleteYzctzjg = baseUrl + 'farming/deleteYzctzjg' // 删除屠宰�
 export const queryTzGoods = baseUrl + 'production/queryTzGoods' // 删除屠宰加工
 // 报价
 export const queryNodeInfoIndex = baseUrl + 'goodsPrice/queryNodeInfoIndex' // 超管查询所有市场的报价内容
-export const queryIndex = baseUrl + 'goodsPrice/queryIndex' // 市场的点击查看报价单
+export const queryIndex = baseUrl2 + 'goodsPrice/queryIndex' // 市场的点击查看报价单
 export const queryBizGoods = baseUrl + 'goodsPrice/queryBizGoods' // 市场点击按照商户查看queryGoodsForBiz
 export const queryGoodsForBiz = baseUrl + 'goodsPrice/queryGoodsForBiz' // 市场添加报价 点击商户 查看商户的商品
 export const insert = baseUrl + 'goodsPrice/insert' // 市场修改和新增报价单的内容
@@ -421,7 +430,7 @@ export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看�
 export const autoIdentity = baseUrl + 'goodsPrice/autoIdentity' // 智能识别
 export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存
 export const queryGoodsForNode = baseUrl + 'goodsPrice/queryGoodsForNode' // 市场添加报价 商品
-export const queryRegionForGoodsPrice = baseUrl + 'tz/queryRegionForGoodsPrice' // 市场添加报价 区域
+export const queryRegionForGoodsPrice = baseUrl2 + 'tz/queryRegionForGoodsPrice' // 市场添加报价 区域
 export const queryGoodsIndex = baseUrl + 'goodsPrice/queryGoodsIndex' //查看市场报价  商户录的报价信息
 // 报修
 export const queryNodeBasePage = baseUrl + 'assets/queryNodeBasePage' // 查询节点
@@ -495,3 +504,39 @@ export const queryCommunicationRecord = baseUrl4 + 'warning/queryCommunicationRe
 export const queryInfoType = baseUrl4 + 'warning/queryInfoType' //条件查询
 export const querygroupName = baseUrl4 + 'warning/querygroupName' //条件查询
 export const queryNodeDetailType2 = baseUrl4 + 'warning/queryNodeDetailType'
+// 企业管理
+export const getJgjgByNodeid = baseUrl2 + 'cygl/getJgjgByNodeid' // 所属街道
+export const getNodeJgInfoGroupForJg = baseUrl2 + 'cygl/getNodeJgInfoGroupForJgPc' // 企业列表
+export const insertNodeJgInfo = baseUrl2 + 'cygl/insertNodeJgInfo' // 新增企业
+export const updateNodeJgInfo = baseUrl2 + 'cygl/updateNodeJgInfo' // 编辑企业
+export const deleteNodeJgInfo = baseUrl2 + 'cygl/deleteNodeJgInfo' // 删除企业
+// 检索
+export const getNodeTzInfoGroupForJg = baseUrl2 + 'cygl/getNodeTzInfoGroupForJgPc' // 企业类型为餐饮 台账列表
+export const queryInTzDetailBySjjgjg = baseUrl2 + 'tz/queryInTzDetailBySjjgjg' // 企业类型为零售市场 台账列表
+export const getSuperMeatIn = baseUrl6 + 'method=getSuperMeatIn' // 企业类型为超市 台账列表
+export const getGoodsTzInfoGroupForJg = baseUrl2 + 'cygl/getGoodsTzInfoGroupForJg' // 按商品查询
+export const getBusinessTzInfoGroupForJg = baseUrl2 + 'cygl/getBusinessTzInfoGroupForJg' // 按企业查询
+export const getJdhyd = baseUrl2 + 'cygl/getJdhyd' // 企业活跃度
+export const getTzcyInfo = baseUrl2 + 'cygl/getTzcyInfo' // 查看台账 按商品，企业查询
+export const jcqueryRegion = baseUrl2 + 'tz/queryRegion' // 所属区域
+export const querybizByNodeId = baseUrl2 + 'tz/querybizByNodeId'// 商户名称
+export const queryTtxfjcxxDetailApi = baseUrl6 + 'method=queryTtxfjcxxDetailApi' // 餐饮查看详情
+export const queryOriginalDocAPI = baseUrl6 + 'method=queryOriginalDocAPI' // 餐饮查看单据
+export const jsqueryInTzDetailByTzId = baseUrl2 + 'tz/queryInTzDetailByTzId' // 零售市场查看详情
+export const getAllOriginalDoc = baseUrl2 + 'originalDoc/getAllOriginalDoc' // 零售市场查看单据
+export const queryMeatOriginalDoc = baseUrl6 + 'method=queryMeatOriginalDoc' // 超市查看单据
+export const queryAllWsSupplierName = baseUrl2 + 'cygl/queryAllWsSupplierName' // 来源市场
+// 监测
+export const queryNodeInfoIndexNew = baseUrl2 + 'goodsPrice/queryNodeInfoIndexNew' // 价格监测列表
+export const getAllNodeJc = baseUrl2 + 'cygl/getAllNode' // 填报企业
+// 统计分析
+export const traceDataReporting = baseUrl2 + 'compute/traceDataReporting' // 各类型企业上报数据量
+export const getNodeCount = baseUrl2 + 'cygl/getNodeCount' // 企业数量?node_id=110114311
+export const getJdhydPc = baseUrl2 + 'cygl/getJdhydPc' // 已上报企业?node_id=110114311&type=year
+export const quantityReportedNew = baseUrl2 + 'compute/quantityReportedNew' // 上报数据量
+export const getGoodsAvgPc = baseUrl2 + 'dataReport/getGoodsAvgPc' // 生活必需品价格走势
+export const getWsPriceIndexPc = baseUrl2 + 'cygl/getPriceForCpPc' // 生活必需品价格走势文字内容
+export const vegMeatProvince = baseUrl2 + 'compute/meatProvincePc' // 猪肉省份来源
+export const vegetableProvince = baseUrl2 + 'compute/vegProvincePc' // 蔬菜省份来源
+export const getGoodsType = baseUrl2 + 'cygl/getGoodsType' // 上报商品种类
+export const getNodeJgInfoType = baseUrl2 + 'cygl/getNodeJgInfoType' // 企业数量按类型查看

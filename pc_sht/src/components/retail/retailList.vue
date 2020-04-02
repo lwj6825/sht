@@ -109,6 +109,7 @@
                         <template slot-scope="scope">
                             <div v-if="scope.row.state == '已上报'">
                                 <el-button type="text" size="small" @click="viewFun(scope.row)">查看报价单</el-button><!--
+                                <el-button type="text" size="small" @click="againFun(scope.row)">再次报价</el-button>
                                 <el-button type="text" size="small" @click="deleteFun(scope.row)">删除报价单</el-button>-->
                                 <el-button type="text" size="small" @click="merchantFun(scope.row)">按商户查看</el-button>
                             </div>
@@ -222,6 +223,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100"></el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -315,6 +317,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100"></el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -350,6 +353,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100"></el-table-column>
                         </el-table>
                     </div>
                 </div>
@@ -1118,6 +1122,10 @@ export default {
                     }
                 })
             }
+        },
+        // 再次报价
+        againFun(ele){
+
         },
         addFun(ele){
             if(ele.node_id){

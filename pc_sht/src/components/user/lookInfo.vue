@@ -1,6 +1,6 @@
 <template>
-    <div class="content">
-        <el-form class="form" ref="form" :model="form" label-width="100px">
+    <div class="content loolInfo">
+        <el-form class="form" ref="form" :model="form" label-width="120px">
             <div class="title">账号信息</div>
             <el-form-item>
                 <span class="text">账号：</span>
@@ -17,12 +17,10 @@
                 <span class="role-text">{{form.role}} 
                     <!-- <i class="edit-icon" @click='systemRoleDialog = true'></i> -->
                 </span>
-                <span class="text">状态：</span>         
-                <el-switch
-                v-model="form.switchStatus"
-                active-text="启用" inactive-text="禁用"
-                active-value="1" inactive-value="0" @change="toggleStatus(form.switchStatus)">
-                </el-switch>
+                <span class="text">状态：</span>   
+                    <el-switch v-model="form.switchStatus" active-text="禁用" inactive-text="启用"
+                    active-value="1" inactive-value="0" @change="toggleStatus(form.switchStatus)">
+                    </el-switch>
             </el-form-item>
             <div v-if='!isSuper'>
                 <div class="title user-msg">用户信息</div>
@@ -45,6 +43,9 @@
                 </el-form-item>
                 <el-form-item label="邮箱：" class="padding-left">
                     <span class="info-text">{{form.email}} <i class="edit-icon" @click="emailShow()"></i></span>
+                </el-form-item>
+                <el-form-item label="工行支付账户：" class="padding-left">
+                    <span class="info-text">{{form.shop_mer_id}} <i class="edit-icon" @click="shopShow()"></i></span>
                 </el-form-item>
                 <div v-if="isShow">
                     <el-form-item label="地址：" class="padding-left">
@@ -180,6 +181,17 @@
                 <el-button type="primary" @click="editEmailFun">确 定</el-button>
             </div>
         </el-dialog>
+         <el-dialog title="修改" :visible.sync="shopDialog" class="edit-msg">
+            <el-form :model="shopForm" label-width="120px">               
+                <el-form-item label="工行支付账户">
+                    <el-input class="fill-input" v-model="shopForm.shop_mer_id" clearable></el-input>
+                </el-form-item>
+            </el-form> 
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="shopDialog = false">取 消</el-button>
+                <el-button type="primary" @click="editshopFun">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -210,6 +222,7 @@ export default {
                 shopBoothId:'',
                 userId:'',
                 email: '',
+                shop_mer_id: '',
             },
             value3: true,
             formLabelWidth: '120px',
@@ -278,6 +291,10 @@ export default {
             isPassword: false,
             telphone: '',
             isShow: true, // 角色是否为运维
+            shopDialog: false,
+            shopForm: {
+                shop_mer_id: '',
+            }
         }        
     },
     mounted(){
@@ -311,6 +328,7 @@ export default {
             this.passwordForm.password=this.$route.params.row.password;
             this.form.email=this.$route.params.row.email;
             this.form.shopBoothId = this.$route.params.row.shop_booth_id;
+            this.form.shop_mer_id = this.$route.params.row.shop_mer_id;
             if(this.$route.params.row.scbj == '启用'){
                 this.form.switchStatus = '1'
             }else{
@@ -380,7 +398,8 @@ export default {
                 nodeId:this.form.node,   
                 shop_booth_id:this.form.shopBoothId,
                 userId:this.form.userId, 
-                email: this.emailForm.email    
+                email: this.emailForm.email,
+                shop_mer_id: this.form.shop_mer_id,
             }            
             editUser(data)
                 .then(res => {
@@ -464,7 +483,8 @@ export default {
                 areaId:this.form.areaId,
                 areaName:this.form.areaName,
                 addr:this.form.addr,                
-                nodeId:this.form.node,                
+                nodeId:this.form.node,    
+                shop_mer_id: this.form.shop_mer_id,            
             }
             editUser(data)
                 .then(res => {
@@ -549,7 +569,8 @@ export default {
                 addr:this.form.addr,                
                 nodeId:this.form.node,   
                 shop_booth_id:this.form.shopBoothId,
-                userId:this.form.userId,      
+                userId:this.form.userId,     
+                shop_mer_id: this.form.shop_mer_id, 
             }
             editUser(data)
                 .then(res => {
@@ -599,6 +620,7 @@ export default {
                 nodeId:this.form.node,   
                 shop_booth_id:this.form.shopBoothId,
                 userId:this.form.userId,      
+                shop_mer_id: this.form.shop_mer_id,
             }            
             // console.log(data)
             editUser(data)
@@ -647,6 +669,7 @@ export default {
                 nodeId:this.form.node,   
                 shop_booth_id:this.form.shopBoothId,
                 userId:this.form.userId,      
+                shop_mer_id: this.form.shop_mer_id,
             }            
             // console.log(data)
             editUser(data)
@@ -694,7 +717,8 @@ export default {
                 addr:this.form.addr,                
                 nodeId:this.form.node,   
                 shop_booth_id:this.form.shopBoothId,
-                userId:this.form.userId,      
+                userId:this.form.userId,    
+                shop_mer_id: this.form.shop_mer_id,  
             }            
             // console.log(data)
             editUser(data)
@@ -729,6 +753,55 @@ export default {
             this.emailForm.email = this.form.email;
             this.emailDialog = true;
         },
+        // 展示线下档案账号
+        shopShow(){
+            this.shopForm.shop_mer_id = this.form.shop_mer_id;
+            this.shopDialog = true;
+        },
+        // 修改线下档案账号
+        editshopFun(){
+            let data = {
+                userName:this.form.account,
+                password:this.form.password,
+                roleId:this.form.roleId,                
+                state:this.form.switchStatus,
+                licenceNo:this.form.code,
+                nodeName:this.form.companyName,
+                regId:this.form.idCard,   
+                name:this.form.contantName,
+                // callphone:this.form.phone,
+                callphone:this.contactPhoneForm.phone,
+                areaId:this.form.areaId,
+                areaName:this.form.areaName,
+                addr:this.form.addr,                
+                nodeId:this.form.node,   
+                shop_booth_id:this.form.shopBoothId,
+                userId:this.form.userId,      
+                shop_mer_id: this.shopForm.shop_mer_id,
+            }            
+            // console.log(data)
+            editUser(data)
+                .then(res => {
+                    if(res.result){
+                        this.shopDialog = false ;
+                        this.form.shop_mer_id = this.shopForm.shop_mer_id;
+                        this.$message({
+                            type: 'success',
+                            message: res.message
+                        });
+                    }else{
+                        this.shopDialog = false;
+                        this.$message({
+                            type: 'warring',
+                            message: res.message
+                        });
+                    }
+                    
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         // 修改联系电话
         resetPhone(){
             let data = {
@@ -748,6 +821,7 @@ export default {
                 nodeId:this.form.node,   
                 shop_booth_id:this.form.shopBoothId,
                 userId:this.form.userId,      
+                shop_mer_id: this.form.shop_mer_id,
             }            
             // console.log(data)
             editUser(data)
@@ -876,6 +950,7 @@ export default {
                 nodeId:this.form.node,   
                 shop_booth_id:this.form.shopBoothId,
                 userId:this.form.userId,      
+                shop_mer_id: this.form.shop_mer_id,
             }            
             // console.log(data)
             editUser(data)
@@ -909,17 +984,17 @@ export default {
     // 　　　　return this.form.switchStatus
     // 　　}
     // },
-    // watch:{
-    //     switchStatus(){    
-    //         if(value){
-    //             this.activeIconClass=true
-    //             this.inActiveIconClass=false
-    //         }else{
-    //             this.activeIconClass=false
-    //             this.inActiveIconClass=true
-    //         }   
-    //     }
-    // }
+    watch:{
+        switchStatus(){    
+            if(value){
+                this.activeIconClass=true
+                this.inActiveIconClass=false
+            }else{
+                this.activeIconClass=false
+                this.inActiveIconClass=true
+            }   
+        }
+    }
 }
 </script>
 <style scoped lang='less'>
@@ -989,29 +1064,52 @@ export default {
             display: block;
             width: 260px;
         }
-        
+        .edit-msg{
+            .fill-input{
+                width:200px;
+            }
+            .dialog-footer{
+                text-align:center;
+            }
+        }
 
     }
 </style>
 <style lang='less'>
-    
-    .inactive-icon-class .el-switch__label--left,.active-icon-class .el-switch__label--right{   
-        display: none;
-    }
-
-    .el-cascader-menu{
-        height: 160px;
-    }
-
-    .edit-msg{
+    .loolInfo{
+        .el-switch__label--left{
+            margin-right:-28px;
+            z-index: 2;
+            color: #fff;
+            >span{
+                position: relative;
+                left: 4px;
+            }
+        }
+        .el-switch__label--right{
+            margin-left:-28px;
+            z-index: 2;
+            >span{
+                position: relative;
+                right: 4px;
+            }
+        }
+        .el-switch.is-checked {
+            .el-switch__core::after{
+                z-index: 5;
+            }
+        }
+        .el-switch__core{
+            width: 54px !important;
+        }
+        .is-active{
+            display: none !important;
+        }
+        .el-cascader-menu{
+            height: 160px;
+        }
         .el-dialog{
             width: 360px;
-        }
-        .fill-input{
-            width:200px;
-        }
-        .dialog-footer{
-            text-align:center;
         }
     }
 </style>

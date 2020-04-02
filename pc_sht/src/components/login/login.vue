@@ -209,6 +209,7 @@ export default {
                     localStorage.setItem('roleId',roleId);
                     localStorage.setItem('account',this.account);
                     localStorage.setItem('password',this.password);
+                    localStorage.setItem('userType',res.data.booth_list[0].usertype);
                     sessionStorage.setItem('userName',this.account)
                     this.setCookie('userName',this.account)
                 }

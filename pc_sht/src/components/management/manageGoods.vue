@@ -3,9 +3,15 @@
         <el-tabs v-model="activeName" type="card" @tab-click="tabsClick">
             <el-tab-pane name="first">
                 <span slot="label">进货商品({{entryGoodsNumber}})</span>
-                <div ref="btnHeight" :class="{hide:visibleHide}">
-                    <el-button class="btn" type="primary" @click="addGoods(1)">绑定商品</el-button>            
-                </div>  
+                <div class="tit" :class="{hide:visibleHide}">
+                    <el-button class="btn" type="primary" @click="addGoods(1)">绑定商品</el-button>         
+                    <div class="submit">
+                        批量导入
+                        <form id="upload" enctype="multipart/form-data" method="post"> 
+                        <input type="file" class="file" ref="file" @change="fileFun($event, 1)">
+                        </form> 
+                    </div>
+                </div>
                 <div class="infor-msg">
                     <el-table :data="entryGoodsData" border >
                         <el-table-column prop="GOODS_NAME" label="商品名称" width='130'> </el-table-column>
@@ -32,6 +38,15 @@
                 <!--<div ref="btnHeight" :class="{hide:visibleHide}">
                     <el-button class="btn" type="primary" @click="addGoods(2)">绑定商品</el-button>       
                 </div>  -->
+                <div class="tit" style="margin-bottom: 10px;" :class="{hide:visibleHide}">
+                    <div></div>        
+                    <div class="submit">
+                        批量导入
+                        <form id="upload2" enctype="multipart/form-data" method="post"> 
+                        <input type="file" class="file" ref="file2" @change="fileFun($event, 2)">
+                        </form> 
+                    </div>
+                </div>
                 <div class="infor-msg">
                     <el-table :data="sellGoodsData" border>
                         <el-table-column prop="GOODS_NAME" label="商品名称" width='130'> </el-table-column>
@@ -94,6 +109,8 @@
 <script>
 import {EntryGoodsList,SellGoodsList,BindingGoods,SaveBindingGoods} from "../../js/management/management.js";
 import {deleteGood} from '../../js/goods/goods.js'
+import axios from 'axios';
+import {baseUrl,baseUrl2} from '../../js/address/url.js'
 export default {    
     name:'manageGoods',
     data(){
@@ -122,12 +139,106 @@ export default {
             checkGood: [],
             checkGoodId: [],
             allGood: [],
+            file: '',
+            userId: '',
+            areaId: '',
+            loginId: '',
+            loginName: '',
         }
     },
     mounted(){
+        this.loginId = localStorage.getItem('loginId')
+        this.loginName = localStorage.getItem('loginName')
+        this.userId = this.$route.params.searchMsg.userId
+        this.areaId = this.$route.params.searchMsg.region
         this.getGoodsList(1,this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
     },
     methods: {
+        fileFun(event, ele){
+            if(ele == 1){
+                // 进货
+                let param = this.$refs.file.files[0];
+                this.file = event.target.files[0];
+                let formData = new FormData();
+                formData.append('purchase', this.file);  
+                formData.append('userId', this.userId);  
+                formData.append('node_id',this.loginId); 
+                formData.append('region', ''); 
+                formData.append('node_name',this.loginName); 
+                let config = {
+                    headers:{'Content-Type':'multipart/form-data'}
+                };
+                const ajaxPost = function (url, params,config) {
+                    return new Promise((resolve, reject) => {
+                        axios
+                        .post(url, params,{config})
+                        .then((res) => {
+                            resolve(res.data)
+                        })
+                        .catch(() => {
+                            reject('error')
+                        })
+                    })
+                }  
+                let url = baseUrl + 'goods/importPurchase'
+                ajaxPost(url,formData,config)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.page = 1
+                            this.getEntryGoodsList();
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                        this.flie = ''
+                    })
+                    .catch(res => {
+                        console.log(res)
+                        this.$message.error("出错了");
+                    })
+            }else if(ele == 2){
+                // 销售
+                let param = this.$refs.file.files[0];
+                this.file = event.target.files[0];
+                let formData = new FormData();
+                formData.append('saleAndOrigin', this.file);  
+                formData.append('userId', this.userId);  
+                formData.append('node_id',this.loginId); 
+                formData.append('region', ''); 
+                formData.append('node_name',this.loginName); 
+                let config = {
+                    headers:{'Content-Type':'multipart/form-data'}
+                };
+                const ajaxPost = function (url, params,config) {
+                    return new Promise((resolve, reject) => {
+                        axios
+                        .post(url, params,{config})
+                        .then((res) => {
+                            resolve(res.data)
+                        })
+                        .catch(() => {
+                            reject('error')
+                        })
+                    })
+                }  
+                let url = baseUrl + 'goods/importSaleAndOrigin'
+                ajaxPost(url,formData,config)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.page = 1
+                            this.getSellGoodsList();
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                        this.flie = ''
+                    })
+                    .catch(res => {
+                        console.log(res)
+                        this.$message.error("出错了");
+                    })
+            }
+        },
         handleCurrentChange2(val){
             this.page2 = val
             this.getBindingGoodsList()
@@ -385,6 +496,36 @@ export default {
         height: 100%;
         background: #fff;
         box-sizing: border-box;
+        .tit{
+            display: flex;
+            justify-content: space-between;
+            .submit{
+                position: relative;
+                top: 0;
+                display: inline-block;
+                margin: 0 10px;
+                width: 90px;
+                height: 30px;
+                line-height: 30px;
+                color: #409EFF;
+                background: #fff;
+                text-align: center;
+                overflow: hidden;
+                border-radius: 5px;
+                font-size: 14px;
+                box-sizing: border-box;
+                border: 1px solid #409EFF;
+                .file{
+                    position: absolute;
+                    left: 0px;
+                    top: 0px;
+                    width: 90px;
+                    height: 30px;
+                    opacity: 0;
+                    background: rgba(0,0,0,0);
+                }
+            }
+        }
         .btn{
             margin-bottom: 10px;
         }

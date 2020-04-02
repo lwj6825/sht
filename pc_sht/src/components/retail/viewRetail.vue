@@ -129,6 +129,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100"></el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -209,6 +210,7 @@
                                     </div>
                                 </template>
                             </el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100"></el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">

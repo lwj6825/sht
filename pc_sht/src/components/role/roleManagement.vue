@@ -16,10 +16,11 @@
             </div>
             <div class="table-box">
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="roleName" label="角色名称" align="center" fixed> </el-table-column>
+                    <el-table-column prop="roleName" label="角色名称" align="center"></el-table-column>
+                    <el-table-column prop="parent" label="父级角色" align="center"></el-table-column>
                     <el-table-column prop="description" label="描述" align="center"> </el-table-column>
                     <el-table-column prop="iN_DATE" label="创建时间" align="center"> </el-table-column>
-                    <el-table-column label="操作" fixed="right" align="center">
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="handleEdit(scope.row)">{{edit}}</el-button>
                             <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
@@ -29,7 +30,7 @@
             </div>
             <div class="pagination">
                 <el-pagination v-if="dataTotal" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage" :page-size="15" layout="total, prev, pager, next, jumper" :total='dataTotal'>
+                    :current-page.sync="currentPage" :page-size="cols" layout="total, prev, pager, next, jumper" :total='dataTotal'>
                 </el-pagination>
             </div>
         </div>
@@ -47,7 +48,7 @@ export default {
             searchInput:'',
             tableData: [],
             page: 1,
-            cols: 10,
+            cols: 15,
             num: 0,
             userId: '',
             currentPage:1,

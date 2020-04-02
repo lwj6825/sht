@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="table">
-                <el-table :data="tableData" border :header-cell-style="rowClass">
+                <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="name" label="市场区域"></el-table-column>
                     <el-table-column prop="boothType" label="经营范围" width="80">
                         <template slot-scope="scope">

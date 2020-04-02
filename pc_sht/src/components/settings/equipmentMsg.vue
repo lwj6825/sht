@@ -878,7 +878,7 @@ export default {
             link.click()
         },
         handleEidt(row){//编辑      
-            this.$router.push({name: 'AddEquipment', params: {areaId: this.areaId,row: row}})
+            this.$router.push({name: 'EditEquipment', params: {areaId: this.areaId,row: row}})
         }, 
         handleDelete(row){//删除
             // console.log(row)

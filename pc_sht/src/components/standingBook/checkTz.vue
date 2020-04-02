@@ -93,8 +93,8 @@
           <el-table-column prop="check_person" label="检测人"></el-table-column>-->
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="viewImg(scope.row)">查看附件</el-button>
-              <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
+              <el-button type="text" size="small" @click="viewImg(scope.row)">查看附件</el-button><!---->
+              <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
               <el-button type="text" size="small" @click="ifDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -141,20 +141,29 @@ function formatDate(date) {
   var second = date.getSeconds(); 
   return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
-function getLastYearYestdy(date){   
-  var datastr = ''
-  var strYear = date.getFullYear() - 1;     
-  var strDay = date.getDate();     
-  var strMonth = date.getMonth()+1;   
-  if(strMonth<10){     
-    strMonth='0'+strMonth;     
-  }   
-  if(strDay<10){     
-    strDay= '0'+strDay;     
-  }   
-  datastr = strYear+'-'+strMonth+'-'+strDay;   
-  return datastr;   
-}  
+// function getLastYearYestdy(date){   
+//   var datastr = ''
+//   var strYear = date.getFullYear() - 1;     
+//   var strDay = date.getDate();     
+//   var strMonth = date.getMonth()+1;   
+//   if(strMonth<10){     
+//     strMonth='0'+strMonth;     
+//   }   
+//   if(strDay<10){     
+//     strDay= '0'+strDay;     
+//   }   
+//   datastr = strYear+'-'+strMonth+'-'+strDay;   
+//   return datastr;   
+// }  
+function getLastYearYestdy(date) { 
+  var year = date.getFullYear(); 
+  var month = date.getMonth() + 1; 
+  var day = date.getDate(); 
+  var hour = date.getHours(); 
+  var minute = date.getMinutes(); 
+  var second = date.getSeconds(); 
+  return year + "-" + formatTen(month) + "-" + formatTen(day); 
+} 
   import AreaSelect from '../common/area';
   import {QueryArea} from '../../js/area/area.js';
   import {getCheckList,GetAllBiz, DeteleCheckItem, Parse,jcpurchase} from '../../js/standingBook/standingBook.js'
@@ -243,12 +252,13 @@ function getLastYearYestdy(date){
       }
     },
     methods: {
-      editFun(ele){
-        this.$router.push({name:'AddCheckTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name, msg: ele}})
+      viewFun(ele){
+        this.$router.push({name:'ViewCheckTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name, msg: ele}})
       },
       getTime(){
         var start = new Date();
-        this.startTime = getLastYearYestdy(start)
+        var aa = start.getTime() - 3600 * 1000 * 24 * 30;
+        this.startTime = getLastYearYestdy(new Date(aa))
         var currentTime = new Date()
         this.endTime = formatDate(currentTime)
       },
@@ -299,9 +309,10 @@ function getLastYearYestdy(date){
         this.local_booth_name = '';
         this.local_date_start_end = '';
         this.local_check_good = '';
-        this.form = {
-          dataTime: ''
-        }
+        let arr = []
+        arr.push(this.startTime)
+        arr.push(this.endTime)
+        this.form.dataTime = arr
         this.getCheckListtable(this.page_local);
       },
       // 获取商品列表
@@ -403,8 +414,8 @@ function getLastYearYestdy(date){
           cols: '10',
           node_id: this.local_node_id,
           region: this.areaId,
-          check_good:this.local_check_good.GOODS_NAME,
-          shop_booth_id: this.user_shop_booth_id,
+          check_good:this.local_check_good ? this.local_check_good.GOODS_NAME : '',
+          shop_booth_id: this.local_booth_name,
           check_result:this.local_check_result,
           start_time: this.startTime,
           end_time: this.endTime,

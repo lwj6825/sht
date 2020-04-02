@@ -346,7 +346,7 @@
         this.getPurchase()
       },
       newStocksMgm(){
-        this.$router.push({name:'EditStocks',params:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'scShopId': this.scShopId}})
+        this.$router.push({name:'NewStocks',params:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'scShopId': this.scShopId}})
       },
       check(index, row){
         this.$router.push({name:'ViewStocks',params:{'name':this.viewGoods,'goodsMsg':row,'scShopId': this.scShopId}})

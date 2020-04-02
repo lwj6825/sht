@@ -1,5 +1,5 @@
 <template>
-    <div class="content">
+    <div class="content addUser">
         <el-form class="form" ref="form" :inline="true" :model="form" :rules="rules"  label-width="120px" size="small">
             <div class="title">账号信息</div>
             <el-form-item label="账号" prop="account">
@@ -38,6 +38,9 @@
             </el-form-item>
             <el-form-item label="邮箱：" class="padding-left">
                 <el-input class="fill-input" v-model="form.mailbox" clearable></el-input> 
+            </el-form-item>
+            <el-form-item label="工行支付账户：" class="padding-left">
+                <el-input class="fill-input" v-model="form.shop_mer_id" clearable></el-input> 
             </el-form-item>
             <div v-if="isShow">
                 <el-form-item label="地址：" class="padding-left">
@@ -84,6 +87,7 @@ export default {
                 addrInfo:'',
                 node:'',
                 mailbox: '',
+                shop_mer_id: '',
             },
             rules: {
                 account: [
@@ -243,6 +247,7 @@ export default {
                 userId:localStorage.getItem('userId'),
                 email: this.form.mailbox,
                 telphone: this.form.phone,
+                shop_mer_id: this.form.shop_mer_id,
             }
             console.log(addData)
             addUser(addData)
@@ -319,32 +324,34 @@ export default {
     }
 </style>
 <style lang='less'>
-.el-switch__label--left{
-    margin-right:-28px;
-    z-index: 2;
-    color: #fff;
-    >span{
-        position: relative;
-        left: 4px;
+    .addUser{
+        .el-switch__label--left{
+            margin-right:-28px;
+            z-index: 2;
+            color: #fff;
+            >span{
+                position: relative;
+                left: 4px;
+            }
+        }
+        .el-switch__label--right{
+            margin-left:-28px;
+            z-index: 2;
+            >span{
+                position: relative;
+                right: 4px;
+            }
+        }
+        .el-switch.is-checked {
+            .el-switch__core::after{
+                z-index: 5;
+            }
+        }
+        .el-switch__core{
+            width: 54px !important;
+        }
+        .inactive-icon-class .el-switch__label--left,.active-icon-class .el-switch__label--right{   
+            display: none;
+        }
     }
-}
-.el-switch__label--right{
-    margin-left:-28px;
-    z-index: 2;
-    >span{
-        position: relative;
-        right: 4px;
-    }
-}
-.el-switch.is-checked {
-    .el-switch__core::after{
-        z-index: 5;
-    }
-}
-.el-switch__core{
-    width: 54px !important;
-}
-.inactive-icon-class .el-switch__label--left,.active-icon-class .el-switch__label--right{   
-    display: none;
-}
 </style>

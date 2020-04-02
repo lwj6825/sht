@@ -60,84 +60,8 @@
             </div><!--
             <el-button type="primary" class="btn add-btn" :class="{current:active}" @click='addShop'>添加商铺</el-button>-->
           </div>
-          <div class="form-content" v-show="!selectAddShop">
-            <!-- 展示商铺信息 -->
-            <div class="infor-msg" v-show="!isEdit">
-              <div class="section">
-                <span class="item-name">营业执照号：</span>
-                <span class="item-msg">{{lookMsg.licenceNo}}</span>
-              </div>
-              <div class="section">
-                <span class="item-name">身份证号：</span>
-                <span class="item-msg">{{lookMsg.regId}}</span>
-              </div>
-              <div class="section">
-                <span class="item-name">商户名称：</span>
-                <span class="item-msg">{{lookMsg.nodeName}}</span>
-              </div> 
-              <div class="section">
-                <span class="item-name">企业名称：</span>
-                <span class="item-msg">{{lookMsg.corporate_name}}</span>
-              </div> 
-              <div class="section">
-                <span class="item-name">联系人：</span>
-                <span class="item-msg">{{lookMsg.name}}</span>
-              </div>
-              <div class="section">
-                <span class="item-name">联系电话：</span>
-                <span class="item-msg">{{lookMsg.callphone}}</span>
-              </div>
-              <div class="section addr">
-                <span class="item-name">地址：</span>
-                <span class="item-msg">{{lookMsg.addr}}</span>
-                <span class="item-msg">{{lookMsg.addrInfo}}</span>
-              </div>
-              <div class="section">
-                <span class="item-name">摊位号：</span>
-                <span class="item-msg">{{lookMsg.stallNo}}</span>
-              </div>
-              <div class="section">
-                <el-button type="primary" @click="modifyMsg(lookMsg.nodeName)">修改</el-button>
-              </div>
-            </div>
-            <!-- 编辑查看 -->
-            <el-form :model="editForm" class="form" label-width="120px" v-show="isEdit">
-              <el-form-item label="营业执照号：">
-                <el-input v-model="editForm.licenceNo"></el-input>
-              </el-form-item>
-              <el-form-item label="身份证号：">
-                <el-input v-model="editForm.regId"></el-input>
-              </el-form-item>
-              <el-form-item label="商户名称：" prop="nodeName" >
-                <el-input v-model="editForm.nodeName"></el-input>
-              </el-form-item>
-              <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
-                <el-form-item label="企业名称：" prop="corporate_name" >
-                  <el-input v-model="editForm.corporate_name" clearable></el-input>
-                </el-form-item>
-              </el-tooltip>
-              <el-form-item label="联系人：" prop="name">
-                <el-input v-model="editForm.name"></el-input>
-              </el-form-item>
-              <el-form-item label="联系电话：" prop="callphone">
-                <el-input v-model="editForm.callphone"></el-input>
-              </el-form-item>
-              <el-form-item label="地址：" prop="addr">
-                <el-cascader class="address" :options="addrOptions" v-model="editForm.addr" placeholder="省/市/县" 
-                  clearable :props="props" change-on-select></el-cascader>
-                <el-input v-model="editForm.addrInfo" placeholder="请输入详细地址"></el-input>
-              </el-form-item>
-              <el-form-item label="摊位号：" prop="stallNo">
-                <el-input style="width: 70%" v-model="editForm.stallNo" ></el-input>
-                <span>&nbsp;&nbsp;例：1厅10排</span>
-              </el-form-item>
-              <el-form-item >
-                <el-button type="primary" @click="saveMsg()">保存</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
           <!-- 新增商户 -->
-          <div class="form-content" v-show="selectAddShop">
+          <div class="form-content">
             <el-form-item label="节点编码：" prop="node">
               <el-input v-model="form.node" readonly></el-input>
             </el-form-item>
@@ -176,6 +100,9 @@
             </el-form-item>
             <el-form-item>
               <el-input v-model="form.addrInfo" placeholder="请输入详细地址" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="工行支付账户：">
+              <el-input v-model="form.shop_mer_id" clearable></el-input>
             </el-form-item>
             <el-form-item label="摊位号：">
               <el-input v-model="form.stallNo" clearable></el-input>
@@ -298,7 +225,8 @@ export default {
         addr:[],
         addrInfo: '',//地址
         stallNo: '',//摊位号
-        node_type: ''
+        node_type: '',
+        shop_mer_id: '',
       },
       types: [],
       lookMsg:{
@@ -458,12 +386,11 @@ export default {
           userId:this.userId,//用户id
           node_id: this.form.node,
           biz_id: this.form.shangh,
-          type: this.form.node_type
+          type: this.form.node_type,
+          shop_mer_id: this.form.shop_mer_id,
         }
-        console.log(data)
         insBiz(data)
           .then(res => {
-            console.log(res)
             if(res.message == '保存成功'){
               this.$message({
                 message: '恭喜您，保存成功！',

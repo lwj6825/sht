@@ -484,7 +484,7 @@ export default {
         },
         detailTzFun(ele){
             // console.log(ele)
-            this.$router.push({name:'AddEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: ele}})
+            this.$router.push({name:'ViewEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: ele}})
         },
         againFun(ele){
             this.$router.push({name:'AddEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: ele,types: 'again'}})

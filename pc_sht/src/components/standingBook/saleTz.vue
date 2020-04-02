@@ -216,6 +216,7 @@ export default {
             end_time:'',
             loading:true,
             node_id: '',
+            startTime2: '',
         }
     },
     mounted() {
@@ -276,7 +277,7 @@ export default {
         },
         getTime(){
             var start = new Date();
-            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+            var startTime = start.setTime(start.getTime());
             this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
@@ -315,6 +316,10 @@ export default {
                 upload: '',
             }
             this.getTime()
+            let arr = []
+            arr.push(this.startTime)
+            arr.push(this.endTime)
+            this.form.value1 = arr
             this.buyerName = ''
             this.page = 1
             this.getSaleTzFun()
@@ -441,10 +446,10 @@ export default {
         },
         getSaleTzFun(){
             let end = new Date(this.endTime).getTime()
-            let scope = end - 3600 * 1000 * 24 * 7
+            let scope = end - 3600 * 1000 * 24 * 31
             let states = true;
             if(new Date(this.startTime) < scope){
-                this.$message.warning('数据量过大，最多只能查询7天的数据');
+                this.$message.warning('数据量过大，最多只能查询31天的数据');
                 states = false
                 return
             }else{
@@ -462,7 +467,8 @@ export default {
                         start_time: this.startTime,
                         end_time: this.endTime,
                         page: this.page,
-                        cols: this.cols
+                        cols: this.cols,
+                        node_id: this.node_id
                     }
 
                     GetSaleTz(obj)
@@ -486,6 +492,7 @@ export default {
                         end_time: this.endTime,
                         page: this.page,
                         cols: this.cols,
+                        node_id: this.node_id
                     }
                     GetSaleTz(obj)
                         .then(res => {

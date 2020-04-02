@@ -453,13 +453,15 @@ export default {
                     this.ruleForm.management = param.merchant_id // 关联商户信息
                     this.management2 = param.merchant_name// 商户名称
                     this.shArr.forEach(val => {
-                        if(val.BIZ_ID == this.$route.params.param.merchant_id){
+                        if(val.BIZ_ID == this.$route.params.merchant_id){
                             this.management = val.BIZ_NAME
                         }
                     })
                     this.nodeArr.forEach(val => {
-                        if(val.NODE_ID == this.$route.params.param.node_code){
-                            this.ssNode_name = val.NODE_NAME
+                        if(this.$route.params.node_code){
+                            if(val.NODE_ID == this.$route.params.node_code){
+                                this.ssNode_name = val.NODE_NAME
+                            }
                         }
                     })
                     this.ruleForm.name = param.assets_name // 资产名称
@@ -733,8 +735,10 @@ export default {
                     // console.log(res)
                     this.nodeArr = res.data.nodeBase
                     this.nodeArr.forEach(val => {
-                        if(val.NODE_ID == this.$route.params.param.node_code){
-                            this.ssNode_name = val.NODE_NAME
+                        if(this.$route.params.node_code){
+                            if(val.NODE_ID == this.$route.params.node_code){
+                                this.ssNode_name = val.NODE_NAME
+                            }
                         }
                     })
                 })
@@ -752,7 +756,7 @@ export default {
                         // console.log(res)
                         this.shArr = res.data.business
                         this.shArr.forEach(val => {
-                            if(val.BIZ_ID == this.$route.params.param.merchant_id){
+                            if(val.BIZ_ID == this.$route.params.merchant_id){
                                 this.management = val.BIZ_NAME
                             }
                         })

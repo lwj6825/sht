@@ -241,6 +241,104 @@ export default {
                         }
                    }
                })
+            }else if(to.meta.node == 'role'){
+                // this.enterChildPage = false;
+                this.mainList.forEach(ele => {
+                   if(ele.node == 'role'){
+                        if(ele.children.id == toId){
+                            this.enterChildPage = false;
+                        }else{
+                            this.enterChildPage = true;
+                            this.mainList.forEach(ele => {
+                                if(ele.node == "role"){//market页操作
+                                    ele.children.nodeList.forEach(val=> {
+                                        if(val.id == toId){
+                                            this.parentName = ele.children.nav_title;
+                                            this.childrenName = val.text;
+                                        }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得子级名称
+                                if(ele.node == "role"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                       if(ele.children && ele.children.nodeList.length > 0){
+                                           ele.children.nodeList.forEach(val => {
+                                               if(val.id == toId ){
+                                                    parentId = val.parentId;
+                                                    if(to.params.name){
+                                                        this.childrenName = to.params.name;
+                                                    }else{
+                                                        this.childrenName = val.text;
+                                                    }
+
+                                                }
+                                           })
+                                       }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
+                                if(ele.node == "role"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                        if(ele.id == parentId){
+                                            this.parentName = ele.text;
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                   }
+               })
+            }else if(to.meta.node == 'retrieval'){
+                // this.enterChildPage = false;
+                this.mainList.forEach(ele => {
+                   if(ele.node == 'retrieval'){
+                        if(ele.children.id == toId){
+                            this.enterChildPage = false;
+                        }else{
+                            this.enterChildPage = true;
+                            this.mainList.forEach(ele => {
+                                if(ele.node == "retrieval"){//market页操作
+                                    ele.children.nodeList.forEach(val=> {
+                                        if(val.id == toId){
+                                            this.parentName = ele.children.nav_title;
+                                            this.childrenName = val.text;
+                                        }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得子级名称
+                                if(ele.node == "retrieval"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                       if(ele.children && ele.children.nodeList.length > 0){
+                                           ele.children.nodeList.forEach(val => {
+                                               if(val.id == toId ){
+                                                    parentId = val.parentId;
+                                                    if(to.params.name){
+                                                        this.childrenName = to.params.name;
+                                                    }else{
+                                                        this.childrenName = val.text;
+                                                    }
+
+                                                }
+                                           })
+                                       }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
+                                if(ele.node == "retrieval"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                        if(ele.id == parentId){
+                                            this.parentName = ele.text;
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                   }
+               })
             }else if(to.meta.node == 'district'){
                 this.mainList.forEach(ele => {
                    if(ele.node == 'district'){
@@ -292,7 +390,7 @@ export default {
             }else{
                 this.mainList.forEach(ele=> {
                     if(ele.node == to.meta.node){
-                        if(ele.children && ele.children.node && ele.children.node != 'district' && ele.children && ele.children.node && ele.children.node != 'statistical' && ele.children && ele.children.node && ele.children.node != 'retail'){
+                        if(ele.children && ele.children.node && ele.children.node != 'district' && ele.children.node != 'statistical' && ele.children.node != 'retail' && ele.children.node != 'role' && ele.children.node != 'retrieval'){
                             if(ele.children.nodeList.length > 0){
                                 ele.children.nodeList.forEach(ele=>{
                                     if(ele.id == toId){
@@ -388,6 +486,19 @@ export default {
                     }
                 })
             }else if(tabTd == '389'){//是报价
+                this.isShowLevelTwo = false;
+                this.isHasDistance = false;
+                this.levelOneCurrId = tabTd;
+                this.mainList.forEach(ele => {
+                    if(ele.id == tabTd){
+                        this.levelThreeMenu.push({
+                            id:ele.id,
+                            title:ele.children.nav_title
+                        })
+                        this.$router.push({path:`/home/${ele.node}/${ele.children.url}`});
+                    }
+                })
+            }else if(tabTd == '191'){//是角色2级菜单id
                 this.isShowLevelTwo = false;
                 this.isHasDistance = false;
                 this.levelOneCurrId = tabTd;
@@ -501,6 +612,36 @@ export default {
                 if(this.parentName == name){
                     this.enterChildPage = false;
                     this.$router.push({name:'RetailList'})
+                }else{
+                    this.enterChildPage = true;
+                    this.$router.push({path:this.fromPrevPageMsg.url})
+                }
+            }else if(this.$route.meta.node == 'role'){
+                let name = '';
+                this.mainList.forEach(ele => {
+                    if(ele.node == 'role'){
+                        name = ele.children.nav_title
+                    }
+                })
+
+                if(this.parentName == name){
+                    this.enterChildPage = false;
+                    this.$router.push({name:'RoleManagement'})
+                }else{
+                    this.enterChildPage = true;
+                    this.$router.push({path:this.fromPrevPageMsg.url})
+                }
+            }else if(this.$route.meta.node == 'retrieval'){
+                let name = '';
+                this.mainList.forEach(ele => {
+                    if(ele.node == 'retrieval'){
+                        name = ele.children.nav_title
+                    }
+                })
+
+                if(this.parentName == name){
+                    this.enterChildPage = false;
+                    this.$router.push({name:'LedgerMsg'})
                 }else{
                     this.enterChildPage = true;
                     this.$router.push({path:this.fromPrevPageMsg.url})
@@ -693,6 +834,14 @@ export default {
                 width:135px;
             }
         }
+        .icon-retrieval{
+            background: url('../../assets/images/tzFarming.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-enterprise{
+            background: url('../../assets/images/standingBook.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
         .icon-tzFarming{
             background: url('../../assets/images/tzFarming.svg') no-repeat center center;
             background-size: 100% 100%;
@@ -735,51 +884,43 @@ export default {
         }
 
         .icon-farmwork{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/farmwork.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-statistical{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/statistical.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-district{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/district.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-role{
-            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background: url('../../assets/images/role.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-fun{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/fun.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-analyze{
-            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background: url('../../assets/images/analyze.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-traceEquipment{
-            background: url('../../assets/images/management.svg') no-repeat center center;
-            background-size: 100% 100%;
-        }
-        .icon-farmwork{
-            background: url('../../assets/images/goods.svg') no-repeat center center;
-            background-size: 100% 100%;
-        }
-        .icon-farmwork{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/traceEquipment.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-assets{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/assets.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-retail{
-            background: url('../../assets/images/management.svg') no-repeat center center;
+            background: url('../../assets/images/retail.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-repair{
-            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background: url('../../assets/images/repair.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-control{
@@ -801,6 +942,14 @@ export default {
         }
         .icon-nodeManage{
             background: url('../../assets/images/nodeManage.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-supervise{
+            background: url('../../assets/images/nodeManage.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-monitor{
+            background: url('../../assets/images/statistical.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{

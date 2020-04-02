@@ -11,30 +11,54 @@
                         <el-input type="textarea" :autosize="true" class="fill-input text" placeholder="请输入内容" v-model="ruleForm.roleDescription">
                         </el-input>
                     </el-form-item>
+                    <el-form-item label="父级角色" prop="">
+                        <el-select class="fill-input" v-model="ruleForm.parent" placeholder="请选择" v-loadmore="loadmore" @change="changeFun">
+                            <el-option v-for="(item, index) in roleArr" :key="index" :label="item.roleName" :value="item.roleName">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                 </el-form>
             </div>
         </div>
         <el-tabs v-model="activeName">
             <el-tab-pane label="功能权限" name="first">
-                 <div class="role">
-                    <el-tree
-                        :data="dataMsg" default-expand-all
-                        show-checkbox checked
-                        node-key="level_id"
-                        :default-checked-keys="entry"
-                        ref="tree" @check="handleCheckChange"
+                <div class="role">
+                    <div>
+                        <p>台账相关功能菜单</p>
+                        <el-tree
+                            :data="dataMsg" default-expand-all
+                            show-checkbox checked
+                            node-key="level_id"
+                            :default-checked-keys="entry"
+                            ref="tree" @check="handleCheckChange"
+                            highlight-current
+                            :props="defaultProps">
+                        </el-tree>
+                    </div>
+                    <div>
+                        <p>电脑端功能菜单</p>
+                        <el-tree
+                        :data="data2"
+                        show-checkbox :default-checked-keys="checkM"
+                        @check="handleCheckChange2"
+                        node-key="id"
+                        ref="tree2"
                         highlight-current
-                        :props="defaultProps">
-                    </el-tree>
-                    <el-tree
-                    :data="data2"
-                    show-checkbox :default-checked-keys="checkM"
-                    default-expand-all @check="handleCheckChange2"
-                    node-key="id"
-                    ref="tree2"
-                    highlight-current
-                    :props="defaultProps2">
-                    </el-tree>
+                        :props="defaultProps2">
+                        </el-tree>
+                    </div>
+                    <div>
+                        <p>移动端功能菜单</p>
+                        <el-tree
+                        :data="data3"
+                        show-checkbox :default-checked-keys="checkM"
+                        @check="handleCheckChange3"
+                        node-key="id"
+                        ref="tree3"
+                        highlight-current
+                        :props="defaultProps3">
+                        </el-tree>
+                    </div>
                 </div>
                 <el-button class="save-btn" type="primary" @click="submitForm('ruleForm')">保存</el-button>
             </el-tab-pane>
@@ -97,6 +121,7 @@
 import {getRoleList,addRoleList,queryRoleId,editRoleList,parentRoleList,GetRoleNode,InsertRoleNode,
     DeleteRoleNode,DeleteRoleNodeList,importRoleNode,} from '../../js/role/role.js'
 import {downloadRoleNode,baseUrl} from '../../js/address/url.js'
+import {Query} from '../../js/settings/settings.js'
 import axios from 'axios';
 export default {
     name:'editRole',
@@ -106,6 +131,7 @@ export default {
             ruleForm: {
                 roleName:'',
                 roleDescription:'',
+                parent: '',
             },
             rules: {
                 roleName: [
@@ -133,12 +159,17 @@ export default {
             child: [], // 1
             entry: [], // 选中
             data2: [],
+            data3: [],
             defaultProps2: {
                 children: 'children',
                 label: 'label'
             },
+            defaultProps3: {
+                children: 'children',
+                label: 'label'
+            },
             mchildTd: '',
-            checkM: [], // 选中mchild
+            checkM: [], // 选中的菜单id  mchild
             activeName: 'first',
             nodeName: '',
             page: 1,
@@ -154,6 +185,10 @@ export default {
             node_id: '',
             isShowNode: false,
             file: '',
+            mchildTd3: [],
+            roleArr: [],
+            parentTotal: 1, // 父级角色页数
+            parent_id: '',
         }
     },
     mounted(){
@@ -214,6 +249,30 @@ export default {
                         }
                     })
                     this.data2 = child_list
+                    let m_child_mobile_list = res.data.m_child_mobile_list
+                    m_child_mobile_list.forEach(v => {
+                        v.label = v.describe
+                        v.children = v.node_list
+                        if(v.node_list){
+                            v.node_list.forEach(v =>{
+                                v.label = v.describe
+                                v.children = v.node_list
+                                if(v.node_list){
+                                    v.node_list.forEach(v =>{
+                                        v.label = v.describe
+                                        v.children = v.node_list
+                                        if(v.node_list){
+                                            v.node_list.forEach(v =>{
+                                                v.label = v.describe
+                                                v.children = v.node_list
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    this.data3 = m_child_mobile_list
                 })
                 .catch(res => {
                     console.log(res.result)
@@ -223,13 +282,15 @@ export default {
                 this.isEdit = true;
                 this.ruleForm.roleName = param.roleName;
                 this.ruleForm.roleDescription = param.description;
+                this.ruleForm.parent = param.parent
+                this.parent_id = param.parent_id
                 this.roleId = param.roleId
                 this.setCheckedKeys()
                 this.isShowNode = true
                 this.role_id = param.roleId
                 this.getNodeFun()
             }
-            
+            this.getQueryFun()
         })
     },
     watch: {
@@ -242,6 +303,37 @@ export default {
         // }
     },
     methods:{
+        changeFun(ele){
+            this.roleArr.forEach(val => {
+                if(ele == val.roleName){
+                    this.parent_id = val.roleId
+                }
+            })
+        },
+        getQueryFun(){
+            let obj = {
+                page: this.parentTotal,
+                cols: 100,
+            }
+            Query(obj)
+                .then(res => {
+                    this.num = res.data.roleFuncton.total
+                    if(res.data.roleList.length > 0){
+                        let arr = res.data.roleList
+                        this.roleArr = this.roleArr.concat(arr)
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        loadmore (e) { 
+            if(this.roleArr.length == this.num){
+                return
+            }
+            this.parentTotal = this.parentTotal + 1
+            this.getQueryFun()
+        },
         fileFun(event){
             let param = this.$refs.file.files[0];
             this.file = event.target.files[0];
@@ -381,7 +473,6 @@ export default {
         newFun(){
             this.getAllNode()
             this.isEdits = true
-            
         },
         closeFun(){
             this.form = {
@@ -518,22 +609,37 @@ export default {
             })
             this.mchildTd = mchildArr.join(',')
         },
+        handleCheckChange3(){
+            let mchild3 = this.$refs.tree3.getCheckedNodes(),
+                mchildArr = [];
+            mchild3.forEach(v => {
+                mchildArr.push(v.functionId)
+            })
+            this.mchildTd3 = mchildArr.join(',')
+        },
         save(){
             this.handleCheckChange()
             this.handleCheckChange2()
+            this.handleCheckChange3()
             let arr = [];
-            if(this.mchildTd.length == 0 && this.entryId.length == 0 && this.saleId.length == 0){
+            if(this.mchildTd.length == 0 && this.mchildTd3.length == 0 && this.entryId.length == 0 && this.saleId.length == 0){
                 this.$message.error('请选择角色权限');
             }else{
+                if(this.mchildTd3.length > 0){
+                    this.mchildTd += ',' + this.mchildTd3
+                }
+                let mchildTd = this.mchildTd
+                console.log(mchildTd)
                 if(this.isEdit){
                     let editData = {
                         roleName:this.ruleForm.roleName,
-                        function:this.mchildTd, 
+                        function: mchildTd, 
                         description:this.ruleForm.roleDescription,
                         roleId:this.roleId,
                         userId:JSON.parse(localStorage.getItem("userId")),  
                         tzEntry: this.entryId,
-                        tzSale: this.saleId,     
+                        tzSale: this.saleId,  
+                        parent: this.parent_id 
                     }
                     editRoleList(editData)
                         .then(res => {
@@ -554,10 +660,11 @@ export default {
                     let data = {
                         roleName:this.ruleForm.roleName,
                         description:this.ruleForm.roleDescription,
-                        function:this.mchildTd,      
+                        function: mchildTd,      
                         userId:JSON.parse(localStorage.getItem("userId")),          
                         tzEntry: this.entryId,
-                        tzSale: this.saleId,     
+                        tzSale: this.saleId,    
+                        parent: this.parent_id
                     }           
                     addRoleList(data)
                         .then(res => {
@@ -608,7 +715,7 @@ export default {
         }
         .section{
             .el-form{
-                width: 800px;
+                width: 880px;
             }
         }
         .fill-input{
@@ -633,9 +740,12 @@ export default {
             margin:0 10px 10px;
         }
         .role{
+            display: flex;
+            div{
+                flex: 1;
+            }
             .el-tree{
                 padding-top: 10px;
-                margin-left: 50px;
                 padding-left: 50px;
             }
         }
@@ -739,7 +849,7 @@ export default {
                     clear: both;
                     margin-top: 20px;
                     margin-left: 50px;
-                    .el-input{
+                    .el-input, .el-select{
                         width: 200px;
                     }
                     .btn{

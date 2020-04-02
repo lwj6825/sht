@@ -20,6 +20,8 @@ import tzSlaughter from "./tzSlaughter"
 import farmworkcommodity from "./farmworkcommodity.js";
 import farmworkreview from "./farmworkreview.js";
 import production from "./production.js"
+import retrieval from "./retrieval.js"
+import enterprise from "./enterprise.js"
 // 超管    ...farmworksy,
 import user from './user.js'
 import role from './role.js'
@@ -36,6 +38,8 @@ import analysis from './analysis'
 import collect from './collect'
 import warning from './warning'
 import nodeManage from './nodeManage'
+import monitor from './monitor'
+import supervise from './supervise'
 Vue.use(Router)
 
 export default new Router({
@@ -79,7 +83,11 @@ export default new Router({
         ...analysis,
         ...collect,
         ...warning,
-        ...nodeManage
+        ...nodeManage,
+        ...retrieval,
+        ...enterprise,
+        ...monitor,
+        ...supervise,
       ]
     },
   ]
