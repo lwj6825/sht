@@ -17,6 +17,7 @@ import partName from '../components/settings/partName.vue';
 import repairMs from '../components/settings/repairMs.vue';
 import taskTypes from '../components/settings/taskTypes.vue';
 import groupMsg from '../components/settings/groupMsg.vue';
+import enterpriseProp from '@/components/settings/enterpriseProp'
 
 export default [
   {
@@ -27,6 +28,16 @@ export default [
       id:'99',
       node:'settings',
       url:'enterpriseInfo',
+    }
+  },
+  {
+    path: 'settings/enterpriseProp',
+    component: resolve => require(['@/components/settings/enterpriseProp'],resolve),
+    name:"enterpriseProp",
+    meta:{
+      id:'499',
+      node:'settings',
+      url:'enterpriseProp',
     }
   },
   {

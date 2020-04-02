@@ -1,12 +1,12 @@
 // // base url
-// export const baseUrl = 'http://192.168.1.65:8081/order_sht/';
+export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
 // export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
 // export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产
-// export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
+// export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/'
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
 export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
@@ -189,7 +189,7 @@ export const symGetAllUrl = baseUrl + 'farming/getAllSymApply';// 获取所有�
 export const symInsertUrl = baseUrl + 'farming/insertSymApply';// 溯源码新增
 export const queryTzSymApply = baseUrl + 'farming/queryTzSymApply';// 溯源码查询 ===> 兔子
 
-//农事商品相关地址   
+//农事商品相关地址
 export const nsGoodsQueryUrl = baseUrl + 'farming/queryGoodsBreed';// 农事商品查询
 export const nsGoodsInsertUrl = baseUrl + 'farming/insertGoodsBreed';// 农事商品新增
 export const nsGoodsDeleteUrl = baseUrl + 'farming/deleteGoodsBreed';// 农事商品删除
@@ -229,6 +229,10 @@ export const insertGoodsForTrace = baseUrl + 'goods/insertGoodsForTrace';//追�
 export const getNodeZzrzForTrace = baseUrl + 'login/getNodeZzrzForTrace';//查询资质认证图片信息
 export const deleteNodeZzrzForTrace = baseUrl + 'login/deleteNodeZzrzForTrace';//删除资质认证图片信息
 export const uploadZzrzInfoForTrace = baseUrl + 'login/uploadZzrzInfoForTrace';//上传资质认证图片信息
+
+// 大屏设置
+export const getScreenStyle = baseUrl + 'setting/getScreenStyle';//查询字体样式和营业执照
+export const updateScreenStyle = baseUrl + 'setting/UpdateScreenStyle';//修改字体样式
 
 // 台账
 export const getAllTzGys = baseUrl + 'tz/getAllTzGys' // 获取台账供应商
@@ -271,7 +275,7 @@ export const queryGoodsRankCurrentMonth = baseUrl + 'redis/queryGoodsRankCurrent
 export const queryGoodsRankCurrentWeek = baseUrl + 'redis/queryGoodsRankCurrentWeek' // 查询当周商品交易额排行
 export const queryGoodsRankCurrentDay = baseUrl + 'redis/queryGoodsRankCurrentDay' // 查询当天商品交易额排行
 export const queryBizRankCurrentWeek = baseUrl + 'redis/queryBizRankCurrentWeek' // 查询当周商户交易额排行
-export const queryBizRankCurrentDay = baseUrl + 'redis/queryBizRankCurrentDay' // 查询当天商户交易额排行 
+export const queryBizRankCurrentDay = baseUrl + 'redis/queryBizRankCurrentDay' // 查询当天商户交易额排行
 export const queryBizRankCurrentMonth = baseUrl + 'redis/queryBizRankCurrentMonth' // 查询当月商户交易额排行
 export const queryBizRankCurrentYear = baseUrl + 'redis/queryBizRankCurrentYear' // 查询当年商户交易额排行
 export const getTzInfoUploadDays = baseUrl + 'redis/getTzInfoUploadDays' // 该市场当月上传进货台账的商户信息（录入天数）
@@ -281,7 +285,7 @@ export const getBizOnlineTime = baseUrl + 'redis/getBizOnlineTime' // 该市场�
 export const getBizNotOnlineTime = baseUrl + 'redis/getBizNotOnlineTime' //该市场电子秤不在线天数
 export const queryHasNoTzBizByNodeId = baseUrl + 'redis/queryHasNoTzBizByNodeId' // 未录入台账商户数
 export const getGoodsWeightRankAndAvgPrice = baseUrl + 'redis/getGoodsWeightRankAndAvgPrice' // 商品交易量及价格走势(前10)
-export const computNode = baseUrl + 'redis/computNode' // 某个市场统计页面 的总金额 ,总条数,总商户数,总商品数以及日同比，周同比、当月总金额 
+export const computNode = baseUrl + 'redis/computNode' // 某个市场统计页面 的总金额 ,总条数,总商户数,总商品数以及日同比，周同比、当月总金额
 export const computNodeNumWeek = baseUrl + 'redis/computNodeNumWeek' // 交易笔数周表数据
 export const computPluNumWeek = baseUrl + 'redis/computPluNumWeek' // 交易商品周表数据
 export const queryMoneyCurrentWeek = baseUrl + 'redis/queryMoneyCurrentWeek' // 查询本周交易额数据
@@ -334,8 +338,8 @@ export const importAssets = baseUrl3 + 'assets/importAssets' // 10.资产批量�
 export const importAssetsUpdate = baseUrl3 + 'assets/importAssetsUpdate' // 11.资产批量导入 -- 修改
 export const uploadPhotos = baseUrl3 + 'assets/uploadPhoto2' // 图片上传
 export const muploadPhotos = baseUrl3 + 'assets/uploadPhotos' // 多图片上传
-export const queryChangeListByAssetsId = baseUrl3 + 'assets/queryChangeListByAssetsId' // 资产--查询变更记录 
-export const queryInspectinfoListByAssetsId = baseUrl3 + 'assets/queryInspectinfoListByAssetsId' // 资产--查询巡检记录 
+export const queryChangeListByAssetsId = baseUrl3 + 'assets/queryChangeListByAssetsId' // 资产--查询变更记录
+export const queryInspectinfoListByAssetsId = baseUrl3 + 'assets/queryInspectinfoListByAssetsId' // 资产--查询巡检记录
 export const queryMaintaininfoListByAssetsId = baseUrl3 + 'assets/queryMaintaininfoListByAssetsId' // 资产--查询维修记录
 export const updateMoreAssetsStatus = baseUrl3 + 'assets/updateMoreAssetsStatus' // 批量变更
 export const inspectMoreAssets = baseUrl3 + 'assets/inspectMoreAssets' // 批量巡检
@@ -417,7 +421,7 @@ export const queryIndex = baseUrl + 'goodsPrice/queryIndex' // 市场的点击�
 export const queryBizGoods = baseUrl + 'goodsPrice/queryBizGoods' // 市场点击按照商户查看queryGoodsForBiz
 export const queryGoodsForBiz = baseUrl + 'goodsPrice/queryGoodsForBiz' // 市场添加报价 点击商户 查看商户的商品
 export const insert = baseUrl + 'goodsPrice/insert' // 市场修改和新增报价单的内容
-export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看报价单  区域信息 
+export const queryRegion = baseUrl + 'tz/queryRegion' // 市场的点击查看报价单  区域信息
 export const autoIdentity = baseUrl + 'goodsPrice/autoIdentity' // 智能识别
 export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存
 export const queryGoodsForNode = baseUrl + 'goodsPrice/queryGoodsForNode' // 市场添加报价 商品
@@ -442,13 +446,13 @@ export const updateAssetsTaskAssignId = baseUrl + 'assetsTask/updateAssetsTaskAs
 export const insertAssetsTaskResult = baseUrl + 'assetsTask/insertAssetsTaskResult' // 关闭 没无设备 时  保存解决方案的图片 以及信息
 export const getAssetsTaskResult = baseUrl + 'assetsTask/getAssetsTaskResult' // 查看关闭任务 没无设备 时解决方案的图片 以及信息
 export const getAssetsTaskLog = baseUrl + 'assetsTask/getAssetsTaskLog' // 查看任务日志
-export const updateAssetsTaskScbj = baseUrl + 'assetsTask/updateAssetsTaskScbj' // 更新任务的 删除标记  1表示未删除，0表示回收站中 
+export const updateAssetsTaskScbj = baseUrl + 'assetsTask/updateAssetsTaskScbj' // 更新任务的 删除标记  1表示未删除，0表示回收站中
 export const deleteAssetsTask = baseUrl + 'assetsTask/deleteAssetsTask' // 彻底删除
 export const getAllGroup = baseUrl + 'assetsTask/getAllGroup' // 获取所有分组
 export const insertAssetsGroup = baseUrl + 'assetsTask/insertAssetsGroup' // 新增分组 和组员 组长 或者 修改分组
 export const deleteAssetsGroup = baseUrl + 'assetsTask/deleteAssetsGroup' // 删除分组 和组员 组长
-export const queryBusinessForMobile = baseUrl + 'assets/queryBusinessForMobile' // 查询商户分页加载 
-export const downAssetsTaskXsl = baseUrl + 'assetsTask/downAssetsTaskXsl' // 报修任务的导出  
+export const queryBusinessForMobile = baseUrl + 'assets/queryBusinessForMobile' // 查询商户分页加载
+export const downAssetsTaskXsl = baseUrl + 'assetsTask/downAssetsTaskXsl' // 报修任务的导出
 
 //pass平台
 // 数据源

@@ -21,6 +21,8 @@ import {getAllTzType,queryArea,updateTz,saveTzProperty,saveTzUserdefineProperty,
     deleteNodeZzrzForTrace,
     uploadZzrzInfoForTrace,
     updatePassword,
+    getScreenStyle,
+    updateScreenStyle
 } from '../address/url.js'
 
 // 进货台账 销售台账 进货 tz_type = 1 销售 tz_type = 2
@@ -137,4 +139,11 @@ export const UploadZzrzInfoForTrace = function(params){
 // 账户管理
 export const UpdatePassword = function(params) {
     return ajaxGet(updatePassword +'?'+ params)
+}
+//大屏设置
+export const urlGetScreenStyle = function(params){
+    return ajaxGet(getScreenStyle+'?'+ params)
+}
+export const urlUpdateScreenStyle = function(params){
+    return ajaxPost(updateScreenStyle,params)
 }
