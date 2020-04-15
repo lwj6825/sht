@@ -228,7 +228,7 @@
                                     <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
                                         <figure class="image">
                                             <p class="icon-delete" @click="removeFun(index)">-</p><!---->
-                                            <img :src="item.img_url">
+                                            <img :src="item.img_url" @click="bigImgFun(item)">
                                         </figure>
                                     </li>
                                 </ul>
@@ -268,10 +268,10 @@
                         <div class="msg-item">   
                             <div class="img-list">
                                 <ul>
-                                    <li v-for="(item,index) in imgArr" :key="index" @click="bigImgFun(item)">
+                                    <li v-for="(item,index) in imgArr" :key="index">
                                         <figure class="image">
                                             <!--<p class="icon-delete" @click="removeFun(1,item)">-</p>-->
-                                            <img :src="item" v-if="item">
+                                            <img :src="item" v-if="item" @click="bigImgFun(item)">
                                         </figure>
                                     </li>
                                 </ul>
@@ -422,7 +422,6 @@ export default {
                 }
                 this.imgArrs.push(obj)
             }
-            
         },
         clearFun(){
             this.btn = '修改'
@@ -440,7 +439,7 @@ export default {
             }
             QueryInspectId(obj)
                 .then(res => {
-                    // console.log(res)
+                    console.log(res)
                     let param = res.data.assetsBase[0]
                     this.param = param
                     this.ruleForm.node = param.node_code // 关联节点信息

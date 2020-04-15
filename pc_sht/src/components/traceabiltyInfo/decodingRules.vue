@@ -1,73 +1,72 @@
 <template>
     <div class="content">
-          <div class="search">
-                <el-form ref="form" :inline="true" :model="form" label-width="100px">
-                    <el-form-item label="码类型：">
-                        <el-select v-model="form.type" placeholder="请选择" clearable  style="width:230px" >
-                                <el-option v-for="item in options" :key="item.text" :label="item.text" :value="item.id">
-                                </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="节点查询：">
-                        <el-input v-model="form.input" placeholder="节点编码、节点名称" style="width:230px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="规则类型：">
-                        <el-select v-model="form.rule" placeholder="请选择" clearable  style="width:230px" >
-                                <el-option v-for="item in options1" :key="item.id" :label="item.text" :value="item.id">
-                                </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button class="btn" type="primary" @click="handleBtn">搜索</el-button>
-                        <!-- <el-button>导出</el-button> -->
-                        <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                    </el-form-item>    
-                    
-                </el-form>
-          </div>
-          <div class="tables" v-loading.body="fullscreenLoading">
-                <div class="title">
-                    <p class="tz-title">解码规则管理</p>
-                    <div>
-                         <el-button class="btn_data"  type="primary" @click="adddecodingRules()">+添加</el-button>
-                         <el-button class="btn_data" type="primary" plain @click="DownloadDecodeRuleFun">导出</el-button>
-                         <span class="submit">
-                            导入
-                            <form id="upload" enctype="multipart/form-data" method="post"> 
-                                <input type="file" class="file" ref="file" @change="fileFun($event)">
-                            </form>
-                        </span>
-                    </div>
+        <div class="search">
+            <el-form ref="form" :inline="true" :model="form" label-width="100px">
+                <el-form-item label="码类型：">
+                    <el-select v-model="form.type" placeholder="请选择" clearable  style="width:230px" >
+                            <el-option v-for="item in options" :key="item.text" :label="item.text" :value="item.id">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="节点查询：">
+                    <el-input v-model="form.input" clearable placeholder="节点编码、节点名称" style="width:230px"></el-input>
+                </el-form-item>
+                <el-form-item label="规则类型：">
+                    <el-select v-model="form.rule" placeholder="请选择" clearable  style="width:230px" >
+                        <el-option v-for="item in options1" :key="item.id" :label="item.text" :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button class="btn" type="primary" @click="handleBtn">搜索</el-button>
+                    <!-- <el-button>导出</el-button> -->
+                    <span class="clear-content" @click="clearFun">清空筛选条件</span>
+                </el-form-item>    
+                
+            </el-form>
+        </div>
+        <div class="tables" v-loading="fullscreenLoading">
+            <div class="title">
+                <p class="tz-title">解码规则管理</p>
+                <div>
+                    <el-button class="btn_data"  type="primary" @click="adddecodingRules()">+添加</el-button>
+                    <el-button class="btn_data" type="primary" plain @click="DownloadDecodeRuleFun">导出</el-button>
+                    <span class="submit">
+                        导入
+                        <form id="upload" enctype="multipart/form-data" method="post"> 
+                            <input type="file" class="file" ref="file" @change="fileFun($event)">
+                        </form>
+                    </span>
                 </div>
-                <div class="table-box">
-                    <el-table :data="tableData" :header-cell-style="rowClass" >
-                        <el-table-column prop="node_name" label="企业名称" align="left"> </el-table-column>
-                        <el-table-column prop="code_type" label="码类型" align="left"> </el-table-column>
-                        <el-table-column prop="rule_type" label="规则名称" align="left"> </el-table-column>
-                        <el-table-column prop="rule_name" label="开始截取位置" align="left"> </el-table-column>
-                        <el-table-column prop="start_intercept_position" label="截取长度" align="left"> </el-table-column>
-                        <el-table-column prop="" label="备注" align="center" ></el-table-column>
-                        <el-table-column label="操作" fixed="right" align="left">
-                            <template slot-scope="scope">
-                                <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-                                 <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-                <div class="pagination">
-                    <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                    :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
-                                    :total='total'>
-                    </el-pagination>
-                </div>
-          </div>
-          
+            </div>
+            <div class="table-box">
+                <el-table :data="tableData" :header-cell-style="rowClass" >
+                    <el-table-column prop="node_name" label="企业名称"></el-table-column>
+                    <el-table-column prop="code_type" label="码类型"></el-table-column>
+                    <el-table-column prop="rule_name" label="规则名称"></el-table-column>
+                    <el-table-column prop="start_intercept_position" label="开始截取位置"></el-table-column>
+                    <el-table-column prop="intercept_length" label="截取长度"> </el-table-column>
+                    <el-table-column prop="remarks" label="备注"></el-table-column>
+                    <el-table-column label="操作" fixed="right">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+                            <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="pagination">
+                <el-pagination v-if="total" background @current-change="handleCurrentChange" 
+                    :current-page="currentPage" :page-size="cols" layout="total, prev, pager, next, jumper" :total='total'>
+                </el-pagination>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import {QueryDecodeRule,QueryCodeTypeSelect,QueryNodeSelect,InsertDecodeRule,UpdateDecodeRule,DeleteDecodeRule,DownloadDecodeRule,ImportDecodeRule} from '../../js/traceabiltyInfo/traceabiltyInfo.js'
+import {QueryDecodeRule,QueryCodeTypeSelect,QueryNodeSelect,InsertDecodeRule,UpdateDecodeRule,DeleteDecodeRule,DownloadDecodeRule,
+    ImportDecodeRule,QueryRuleTypeSelect} from '../../js/traceabiltyInfo/traceabiltyInfo.js'
 import {baseUrl4} from '../../js/address/url.js'
 import axios from 'axios';
 function getNowFormatDate() {//获取当前时间
@@ -104,18 +103,16 @@ export default {
     },
     mounted() {
         this.QueryCodeTypeSelectFun();
-        this.QueryNodeSelectFun()
+        this.QueryRuleTypeSelectFun()
         this.QueryDecodeRuleFun()
     },
     methods: {
-
         // 跳转添加页
         adddecodingRules(){
             this.$router.push({name:"AdddecodingRules"})
         },
         //删除
         handleDelete(row){
-            console.log(row)
             this.$confirm('你确定要删除吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -128,6 +125,7 @@ export default {
                     .then(res => {
                         if (res.result == true) {
                             this.$message.success('删除成功');
+                            this.currentPage = 1
                             this.QueryDecodeRuleFun()
                         }else{
                             this.$message.error('删除失败');
@@ -146,72 +144,50 @@ export default {
         },
         // 跳转编辑页
         handleEdit(row){
-            console.log(row)
             this.$router.push({name:"AdddecodingRules",params:row})
-            
         },
-        // 表头颜色
-        rowClass({ row, rowIndex}) {  //表头背景颜色
+        rowClass({ row, rowIndex}) {
             return {
                 background: '#f2f2f2',
                 color: '#000'
             }
-        },
-        handleSizeChange(val) {   //每页
-            this.cols = val;
-            this.QueryDecodeRuleFun()
         },
         handleCurrentChange(val) { //当前页
             this.currentPage = val;
             this.QueryDecodeRuleFun()
         },
         handleBtn(){  //点击搜索
-            this.fullscreenLoading = true;
             this.QueryDecodeRuleFun()
-        },
-        selectType(val){  //选择企业类型
-            // if(val){
-            //     this.options.forEach(ele => {
-            //         if(val == ele.id){
-            //             this.companyType = ele.id
-            //             // console.log(this.companyType)
-            //         }
-            //     })
-            // }else{
-            //     this.companyType = ''
-            // }
         },
         clearFun(){ //清楚筛选条件
             this.form.input = ''
             this.form.type = ''
             this.currentPage = 1
             this.form.rule = ''
-            this.fullscreenLoading = true;
             this.QueryDecodeRuleFun()
 
         },
         QueryCodeTypeSelectFun(){  //码类型
             QueryCodeTypeSelect()
             .then(res => {
-                console.log(res,'码类型')
-                 this.options = res.data.dataList;
+                this.options = res.data.dataList;
             })
             .catch(res => {
-                 console.log(res)
+                console.log(res)
             })
         },
-        QueryNodeSelectFun(){  //企业类型
-            QueryNodeSelect()
+        QueryRuleTypeSelectFun(){ 
+            QueryRuleTypeSelect()
             .then(res => {
-                console.log(res,'企业类型')
-                 this.options1 = res.data.dataList;
+                this.options1 = res.data.dataList;
             })
             .catch(res => {
-                 console.log(res)
+                console.log(res)
             })
         },
         // 表格数据
         QueryDecodeRuleFun(){  //查询所有节点
+            this.fullscreenLoading = true;
             let params = {
                 page: this.currentPage,
                 cols:this.cols,
@@ -221,38 +197,37 @@ export default {
             }
             QueryDecodeRule(params)
             .then(res => {
-                console.log(res)
-                 this.fullscreenLoading = false;
-                 this.tableData = res.data.dataList;
-                 this.total = res.data.condition.total;
+                this.fullscreenLoading = false;
+                this.tableData = res.data.dataList;
+                this.total = res.data.condition.total;
 
             })
             .catch(res => {
-                 console.log(res)
+                console.log(res)
             })
         },
         // 下载节点
         DownloadDecodeRuleFun(){
             this.fullscreenLoading = true;
             let params = {
-                code_type: '',
-                node_name:'',
-                rule_type:''
+                code_type: this.form.type,
+                node_name: this.form.input,
+                rule_type: this.form.rule
             }
             DownloadDecodeRule(params,{})
                 .then(res => {
-                        let time = getNowFormatDate()
-                        this.fullscreenLoading = false;
-                        let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
-                        let url = window.URL.createObjectURL(blob);
-                        let aLink = document.createElement("a");
-                        aLink.style.display = "none";
-                        aLink.href = url;
-                        aLink.setAttribute("download", `解码规则` + time);
-                        document.body.appendChild(aLink);
-                        aLink.click();
-                        document.body.removeChild(aLink); 
-                        window.URL.revokeObjectURL(url); 
+                    let time = getNowFormatDate()
+                    this.fullscreenLoading = false;
+                    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
+                    let url = window.URL.createObjectURL(blob);
+                    let aLink = document.createElement("a");
+                    aLink.style.display = "none";
+                    aLink.href = url;
+                    aLink.setAttribute("download", `解码规则` + time);
+                    document.body.appendChild(aLink);
+                    aLink.click();
+                    document.body.removeChild(aLink); 
+                    window.URL.revokeObjectURL(url); 
                 })
                 .catch(function (res) {})
         },
@@ -261,7 +236,7 @@ export default {
             let param = this.$refs.file.files[0];
             this.file = event.target.files[0];
             let formData = new FormData();
-            formData.append('nodeInfo', this.file);
+            formData.append('decodeRule', this.file);
             let config = {
             headers:{'Content-Type':'multipart/form-data'}
             };
@@ -280,8 +255,14 @@ export default {
             let url = baseUrl4 + 'warning/importDecodeRule'
             ajaxPost(url,formData,config)
             .then(res => {
-                this.fileMsg = res.message
-                this.$refs.file.value = null
+                if (res.result == true) {
+                    this.$message.success('导入成功');
+                    this.currentPage = 1
+                    this.QueryDecodeRuleFun()
+                }else{
+                    this.$message.error(res.message);
+                }
+                this.file = null
             })
             .catch(res => {
                 this.$message.error("出错了");

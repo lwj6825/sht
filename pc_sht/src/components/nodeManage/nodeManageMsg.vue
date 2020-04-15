@@ -35,9 +35,9 @@
                 <div class="title">
                     <p class="tz-title">数据列表</p>
                     <div>
-                         <!-- <el-button class="btn_data"  type="primary" @click="addnodeManage()">+添加</el-button> -->
-                         <el-button class="btn_data" type="primary" plain @click="getDownloadNodeInfoFun">导出</el-button>
-                         <span class="submit">
+                        <el-button class="btn_data"  type="primary" @click="addnodeManage()">+添加</el-button> <!-- -->
+                        <el-button class="btn_data" type="primary" plain @click="getDownloadNodeInfoFun">导出</el-button>
+                        <span class="submit">
                             导入
                             <form id="upload" enctype="multipart/form-data" method="post"> 
                                 <input type="file" class="file" ref="file" @change="fileFun($event)">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="table-box">
                     <el-table :data="tableData" :header-cell-style="rowClass" >
-                        <el-table-column prop="type" label="企业类型" align="left"> 
+                        <el-table-column prop="type" label="企业类型"> 
                              <template slot-scope="{row: {type}}">
                                      <span v-if="+type == '0001'">屠宰厂</span>
                                      <span v-else-if="+type == '0002'">批发市场</span>
@@ -57,20 +57,20 @@
                                      <span v-else-if="+type == '0007'">团体</span>
                              </template>    
                         </el-table-column>
-                        <el-table-column prop="node_id" label="节点编码" align="left"> </el-table-column>
-                        <el-table-column prop="node_name" label="节点名称" align="left"> </el-table-column>
-                        <el-table-column prop="legal_represent" label="法人代表" align="left"> </el-table-column>
-                        <el-table-column prop="tel" label="联系电话" align="left"> </el-table-column>
-                        <el-table-column prop="addr" label="地址" align="left"> </el-table-column>
-                        <el-table-column prop="icon" label="状态" align="center" >
+                        <el-table-column prop="node_id" label="节点编码"> </el-table-column>
+                        <el-table-column prop="node_name" label="节点名称"> </el-table-column>
+                        <el-table-column prop="legal_represent" label="法人代表"> </el-table-column>
+                        <el-table-column prop="tel" label="联系电话"> </el-table-column>
+                        <el-table-column prop="addr" label="地址"> </el-table-column>
+                        <el-table-column prop="icon" label="状态" width="160">
                                 <template slot-scope="scope">
                                     <el-switch v-model="scope.row.icon" active-text="开启" inactive-text="关闭" 
                                         active-value="1" inactive-value="2" @change="changeFun(scope.row)">
                                     </el-switch>
                                 </template>    
                         </el-table-column>
-                        <!-- <el-table-column prop="" label="监控白名单" align="left"> </el-table-column> -->
-                        <el-table-column label="操作" fixed="right" align="left">
+                        <!-- <el-table-column prop="" label="监控白名单"> </el-table-column> -->
+                        <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
                                 <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
                             </template>
@@ -252,7 +252,6 @@ export default {
             }
             GetNodeInfo(params)
             .then(res => {
-                console.log(res)
                  this.fullscreenLoading = false;
                  this.tableData = res.data.dataList;
                  this.total = res.data.condition.total;
@@ -417,47 +416,47 @@ export default {
 }   
 </style>
 <style lang="less">
-.el-form--inline .el-form-item__content{
-    vertical-align: middle !important;
-}
-.el-switch__core{
-    width: 56px !important;
-}
-.el-switch__label--left{
-  position: relative;
-  left: 46px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label--right{
-  position: relative;
-  right: 46px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label.is-active{
-  z-index: 1111;
-  color: #fff;
-}
+    .el-form--inline .el-form-item__content{
+        vertical-align: middle !important;
+    }
+    .el-switch__core{
+        width: 56px !important;
+    }
+    .el-switch__label--left{
+    position: relative;
+    left: 46px;
+    color: #fff;
+    z-index: -1111;
+    }
+    .el-switch__label--right{
+    position: relative;
+    right: 46px;
+    color: #fff;
+    z-index: -1111;
+    }
+    .el-switch__label.is-active{
+    z-index: 1111;
+    color: #fff;
+    }
 
-.el-switch__label--left{
-  position: relative;
-  left: 59px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label--right{
-  position: relative;
-  right: 59px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label--right.is-active{
-  z-index: 1111;
-  color: #fff !important;
-}
-.el-switch__label--left.is-active{
-  z-index: 1111;
-  color: #9c9c9c !important;
-}
+    .el-switch__label--left{
+    position: relative;
+    left: 59px;
+    color: #fff;
+    z-index: -1111;
+    }
+    .el-switch__label--right{
+    position: relative;
+    right: 59px;
+    color: #fff;
+    z-index: -1111;
+    }
+    .el-switch__label--right.is-active{
+    z-index: 1111;
+    color: #fff !important;
+    }
+    .el-switch__label--left.is-active{
+    z-index: 1111;
+    color: #9c9c9c !important;
+    }
 </style>

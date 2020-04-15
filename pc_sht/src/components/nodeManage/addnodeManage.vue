@@ -162,7 +162,24 @@ export default {
             city_text:'',
             pro:[],
             rules:{
-                    node_id:[{required: true, message: '请输入企业编码', trigger: 'blur'}],
+                    node_id:[
+                        {required: true, message: '请输入企业编码', trigger: 'blur'},
+                        {validator:function(rule,value,callback){
+                            if(typeof(value) == 'number'){
+                                if(JSON.stringify(value).length != 9){
+                                    callback(new Error("请输入9位企业编码"));
+                                }else{
+                                    callback();
+                                }
+                            }else{
+                                if(value.length != 9){
+                                    callback(new Error("请输入9位企业编码"));
+                                }else{
+                                    callback();
+                                }
+                            }
+                        }, trigger: 'blur'},
+                    ],
                     node_name :[{required: true, message: '请输入企业名称', trigger: 'blur'}],
                     CompanyType :[{required: true, message: '请选择企业类型', trigger: 'blur'}],
                     des :[{required: true, message: '请输入企业密钥', trigger: 'blur'}],

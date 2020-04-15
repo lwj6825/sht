@@ -82,7 +82,7 @@
                                 <li v-for="(item,index) in imgArr1" :key="index">
                                     <figure class="image">
                                         <!--<p class="icon-delete" @click="removeFun(1,item)">-</p>-->
-                                        <img :src="item.img_url" v-if="item.img_url">
+                                        <img :src="item.img_url" v-if="item.img_url" @click="bigImgFun(item)">
                                     </figure>
                                 </li>
                             </ul>
@@ -103,6 +103,14 @@
                 <el-button @click="resetForm('ruleForm')">取消</el-button>
             </el-form-item>
         </el-form>
+        <div class="big-img" v-show="isBigImg" ref="boxsize">
+            <p class="close" @click="closeFun2">X</p>
+            <div class="imgBox">
+                <figure class="images" v-for="(item,index) in imgArrs" :key="index" v-if="imgArrs.length > 0">
+                    <img :style="sizeObj" :src="item.img_url" v-if="item.img_url">
+                </figure>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -218,6 +226,11 @@ export default {
             nameArr: [],
             zcggArr: [],
             sccjArr: [],
+            isBigImg: false,
+            sizeObj: {},
+            imgHeight: '',
+            imgArrs: [],
+            autoplay: false,
         }
     },
     mounted() {
@@ -230,6 +243,32 @@ export default {
         this.getQueryAssetsConf()
     },
     methods: {
+        closeFun2(){
+            this.imgArrs = []
+            this.isBigImg = false
+        },
+        bigImgFun(item){
+            this.isBigImg = true
+            this.$nextTick(()=>{            
+                this.imgHeight = this.$refs.boxsize.offsetHeight - 60
+                let sizeObj = {
+                    'max-height': this.$refs.boxsize.offsetHeight - 60 + 'px',
+                    'max-width': this.$refs.boxsize.offsetWidth - 60 + 'px',
+                    'margin-bottom': 10 + 'px'
+                }
+                this.sizeObj = sizeObj
+            })
+            let obj = {}
+            if(item.img_url){
+                this.imgArrs.push(item)
+            }else{
+                obj = {
+                    img_url: item
+                }
+                this.imgArrs.push(obj)
+            }
+            
+        },
         // 查询所有资产规格
         getQueryAssetsSpecifications(){
             QueryAssetsSpecifications('')
@@ -551,6 +590,58 @@ export default {
         .msg{
             height: 80px;
             color: #999;
+        }
+        .big-img{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            .close{
+                position: fixed;
+                top: 0;
+                right: 0;
+                z-index: 999;
+                width: 50px;
+                height: 50px;
+                text-align: center;
+                line-height: 50px;
+                color: #fff;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            .images{
+                text-align: center;
+            }
+            .imgBox{
+                margin: 50px 20px;
+                padding: 10px 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                .image{
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    img{
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                }
+            }
+            .el-carousel__container{
+                width: 100%;
+                height: 100%;
+            }
+            .el-carousel__item{
+                color: #475669;
+                font-size: 14px;
+                margin: 0;
+            }
         }
         .submit{
             margin: 0 30px;
