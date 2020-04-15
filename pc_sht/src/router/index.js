@@ -32,6 +32,7 @@ import differentSz from './differentSz'
 import assets from './assets'
 import retail from './retail'
 import repair from './repair'
+import quotation from './quotation'
 
 import control from './control'
 import analysis from './analysis'
@@ -80,6 +81,7 @@ export default new Router({
         ...tzSlaughter,
         ...retail,
         ...repair,
+        ...quotation,
         ...control,
         ...analysis,
         ...collect,
