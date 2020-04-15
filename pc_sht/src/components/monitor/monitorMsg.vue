@@ -109,8 +109,7 @@
         <div class="third">
             <p class="title">生活必需品价格走势</p>
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="猪肉走势" name="first">
-                </el-tab-pane>
+                <el-tab-pane label="猪肉走势" name="first"></el-tab-pane>
                 <el-tab-pane label="蔬菜走势" name="second"></el-tab-pane>
                 <el-tab-pane label="水果走势" name="third"></el-tab-pane>
                 <el-tab-pane label="牛肉走势" name="fourth"></el-tab-pane>

@@ -3,7 +3,8 @@ import {queryGoodsRankCurrentYear,queryGoodsRankCurrentMonth,queryGoodsRankCurre
     queryBizRankCurrentWeek,queryBizRankCurrentDay,queryBizRankCurrentMonth,queryBizRankCurrentYear,queryHasNoTzBizByNodeId,
     getTzInfoUploadDays,getTzInfoUploadBizNum,getBizOnlineTime,getGoodsWeightRankAndAvgPrice,queryMoneyAndWeightForBiz,
     computNode,computNodeNumWeek,computPluNumWeek,queryMoneyLittleTime,queryMoneyAndWeightForGoods,getBizNotOnlineTime,queryHasTzBizByNodeId,
-    queryMoneyCurrentWeek,queryMoneyCurrentMonth,queryMoneyCurrentDayHour,queryMoneyCurrentYear,queryMoneyAndWeightForMarket
+    queryMoneyCurrentWeek,queryMoneyCurrentMonth,queryMoneyCurrentDayHour,queryMoneyCurrentYear,queryMoneyAndWeightForMarket,
+    queryMoneyAndWeightForNode
 } from '../address/url.js';
 
 
@@ -110,4 +111,8 @@ export const QueryMoneyAndWeightForMarket = function(params){
 //查询未录入商户台账数
 export const QueryHasNoTzBizByNodeId = function(params){
     return ajaxGet(queryHasNoTzBizByNodeId + '?' + params)
+}
+// 查询全部区域商户交易额
+export const QueryMoneyAndWeightForNode = function(params){
+    return ajaxGet(queryMoneyAndWeightForNode + '?' + params)
 }

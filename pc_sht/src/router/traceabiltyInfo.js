@@ -8,7 +8,7 @@
 
 export default [
     { 
-        path: 'traceabiltyInfo/traceabiltyInfo', // 追溯信息管理
+        path: 'traceabiltyInfo/traceabiltyInfo',
         component: resolve => require(['@/components/traceabiltyInfo/traceabiltyInfo'],resolve),
         name:'TraceabiltyInfo',
         meta:{
@@ -18,7 +18,17 @@ export default [
         }
     },
     { 
-        path: 'traceabiltyInfo/decodingRules', // 解码规则管理
+        path: 'traceabiltyInfo/showreviewInfo',
+        component: resolve => require(['@/components/traceabiltyInfo/showreviewInfo'],resolve),
+        name:'ShowreviewInfo',
+        meta:{
+            id:'465',
+            node:'traceabiltyInfo',
+            url:'showreviewInfo',
+        }
+    },
+    { 
+        path: 'traceabiltyInfo/decodingRules',
         component: resolve => require(['@/components/traceabiltyInfo/decodingRules'],resolve),
         name:'DecodingRules',
         meta:{
@@ -28,7 +38,7 @@ export default [
         }
     },
     { 
-        path: 'traceabiltyInfo/reviewInfo', // 解码规则管理
+        path: 'traceabiltyInfo/reviewInfo',
         component: resolve => require(['@/components/traceabiltyInfo/reviewInfo'],resolve),
         name:'ReviewInfo',
         meta:{
@@ -38,7 +48,7 @@ export default [
         }
     },
     { 
-        path: 'traceabiltyInfo/itemCode', // 解码规则管理
+        path: 'traceabiltyInfo/itemCode', 
         component: resolve => require(['@/components/traceabiltyInfo/itemCode'],resolve),
         name:'ItemCode',
         meta:{
@@ -48,17 +58,17 @@ export default [
         }
     },
     { 
-        path: 'traceabiltyInfo/additemCode', // 新增物品码
+        path: 'traceabiltyInfo/additemCode',
         component: resolve => require(['@/components/traceabiltyInfo/additemCode'],resolve),
         name:'AdditemCode',
         meta:{
-            id:'459',
+            id:'461',
             node:'traceabiltyInfo',
             url:'additemCode',
         }
     },
     { 
-        path: 'traceabiltyInfo/addreviewInfo', // 新增企业信息
+        path: 'traceabiltyInfo/addreviewInfo',
         component: resolve => require(['@/components/traceabiltyInfo/addreviewInfo'],resolve),
         name:'AddreviewInfo',
         meta:{
@@ -68,7 +78,7 @@ export default [
         }
     },
     { 
-        path: 'traceabiltyInfo/adddecodingRules', // 新增解码规则
+        path: 'traceabiltyInfo/adddecodingRules',
         component: resolve => require(['@/components/traceabiltyInfo/adddecodingRules'],resolve),
         name:'AdddecodingRules',
         meta:{

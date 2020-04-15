@@ -834,6 +834,10 @@ export default {
                 width:135px;
             }
         }
+        .icon-traceabiltyInfo{
+            background: url('../../assets/images/assets.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
         .icon-retrieval{
             background: url('../../assets/images/tzFarming.svg') no-repeat center center;
             background-size: 100% 100%;
@@ -933,7 +937,7 @@ export default {
             background-size: 100% 100%;
         }
         .icon-collect{
-            background: url('../../assets/images/collection.svg') no-repeat center center;
+            background: url('../../assets/images/collect.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-warning{

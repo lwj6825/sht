@@ -228,7 +228,7 @@
                                     <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
                                         <figure class="image">
                                             <p class="icon-delete" @click="removeFun(index)">-</p><!---->
-                                            <img :src="item.img_url">
+                                            <img :src="item.img_url" @click="bigImgFun(item)">
                                         </figure>
                                     </li>
                                 </ul>

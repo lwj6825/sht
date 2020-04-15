@@ -134,10 +134,10 @@
                 <el-tab-pane label="商品交易额" name="first">
                     <div class="box">
                         <div class="list-title1">
-                                    <button class="list-tit" style="outline:none" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</button>
+                            <button class="list-tit" style="outline:none" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</button>
                         </div>
                         <div class="text" v-loading.body="fullscreenLoading1" style="margin-top:45px;">
-                            <div id="my-chart4" style="width:1000px;height:400px;"></div>
+                            <div id="my-chart4"></div>
                             <div class="list">
                                 <div class="list-item">
                                     <p class="item-title">商品销售排行</p>
@@ -159,10 +159,10 @@
                 <el-tab-pane label="商户交易额" name="second"> 
                     <div class="box">
                         <ul class="list-title1" style="z-index:99">
-                                <li class="list-tit" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</li>
+                            <li class="list-tit" v-for="(item,index) in titArr" :key="index" :class="{styles:item.userId == currId2}" @click="focusFun2(item,index)">{{item.name}}</li>
                         </ul>
                         <div class="text" v-loading.body="fullscreenLoading1" style="margin-top:45px;">
-                            <div id="my-chart7" style="width: 1000px;height:400px;"></div>
+                            <div id="my-chart7"></div>
                             <div class="list">
                                 <div class="list-item">
                                     <p class="item-title">商户交易额排行</p>
@@ -189,29 +189,31 @@
                 <div id="my-chart5" style="width: 500px;height:180px;margin-left:78px;"></div>
                 <!-- <p style="border-bottom:1px solid #ccc; padding-bottom:15px;font-size:14px;">未录入台账商户数</p> -->
                 <el-tabs v-model="activeName2" style="margin-top:-24px">
-                        <el-tab-pane label="未录入台账商户" name="second">
-                                    <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;" :cell-style="classStyle">
-                                        <el-table-column prop="booth_name" label="商户"></el-table-column>
-                                        <el-table-column  prop="stall_no" label="摊位号" ></el-table-column>
-                                        <el-table-column  prop="days" label="近30天连续未录入天数" >
-                                            <template slot-scope="scope">{{scope.row.days ? scope.row.days : '无数据'}}
-                                        </template>
-                                        </el-table-column>
-                                        
-                                    </el-table>
-                                    <el-pagination v-if="num4" background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
-                                    @current-change="handleCurrentChange4"></el-pagination>
-                        </el-tab-pane>
-                        <el-tab-pane label="当日已录入台账商户" name="first">
-                            <el-table :data="tableData" @sort-change="sortChange" style="width: 100%;" :cell-style="classStyle">
+                    <el-tab-pane label="未录入台账商户" name="second">
+                        <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;" :cell-style="classStyle">
+                            <el-table-column prop="booth_name" label="商户"></el-table-column>
+                            <el-table-column  prop="stall_no" label="摊位号" ></el-table-column>
+                            <el-table-column  prop="days" label="近30天连续未录入天数" >
+                                <template slot-scope="scope">{{scope.row.days ? scope.row.days : '无数据'}}
+                            </template>
+                            </el-table-column>
+                            
+                        </el-table>
+                        <el-pagination v-if="num4" background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
+                        @current-change="handleCurrentChange4"></el-pagination>
+                    </el-tab-pane>
+                    <el-tab-pane label="当日已录入台账商户" name="first">
+                        <el-table :data="tableData" @sort-change="sortChange" style="width: 100%;" :cell-style="classStyle">
                             <el-table-column prop="booth_name" label="商户"></el-table-column>
                             <el-table-column prop="stall_no" label="摊位号"></el-table-column>
                             <el-table-column prop="NUM" label="录入笔数" ></el-table-column>
                         </el-table>
                         <el-pagination background layout="prev, pager, next" :current-page.sync="page" :page-size="cols" :total="num"
                         @current-change="handleCurrentChange"></el-pagination> 
-                        </el-tab-pane>
+                    </el-tab-pane>
+                </el-tabs> 
                  </el-tabs> 
+                </el-tabs> 
             </div>
             <div class="right">
                 <p class="title">电子秤在线率</p>
@@ -355,7 +357,7 @@ export default {
             // userId:''
             // screenWidth: document.body.clientWidth,
             node_id: '',
-            show:false
+            show: false,
         }
     },
     mounted(){
@@ -562,7 +564,7 @@ export default {
                                 title.push(val.plu_name)
                                 priceArr.push(val.avg.toFixed(2))
                             })
-                            this.getGoodsWeightRankAndAvgPriceFun(val) 
+                            // this.getGoodsWeightRankAndAvgPriceFun(val) 
                             this.getChartFun4(title,numArr,priceArr)
                             this.goodArr = res.data.list.slice(0,10);
                             //  console.log(this.goodArr)
@@ -577,20 +579,21 @@ export default {
                     QueryMoneyAndWeightForBiz(str)
                         .then(res => {
                             this.fullscreenLoading1 = false;
-                            res.data.list.forEach(val => {
-                                val.num = val.score.toFixed(2)
-                            })
+                            // res.data.list.forEach(val => {
+                            //     val.num = val.score.toFixed(2)
+                            // })
                             let arr = res.data.list,
                                 numArr = [] ,
                                 title = [] ;
                             arr.forEach(val => {
-                                title.push(val.biz_name).slice(0,10)
-                                numArr.push(val.price.toFixed(2)).slice(0,10)
+                                title.push(val.biz_name)
+                                numArr.push(val.price.toFixed(2))
                             })
-                            this.getDayFun2(val)
+                            // this.getDayFun2(this.titArr[0])
+                            title = title.slice(0,10)
+                            numArr = numArr.slice(0,10)
                             this.getChartFun7(title,numArr)
                             this.merchantsArr = res.data.list.slice(0,10)
-                            
                         })
                         .catch(res => {
                             console.log(res);
@@ -827,7 +830,7 @@ export default {
         },
         getChartFun1(title,data){
             // 基于准备好的dom，初始化echarts实例
-         var myChart = this.$echarts.init(document.getElementById('my-chart'));
+            var myChart = this.$echarts.init(document.getElementById('my-chart'));
             // 绘制图表
             myChart.setOption({
                 title: {},
@@ -870,7 +873,7 @@ export default {
         },
         getChartFun2(data){
             // 基于准备好的dom，初始化echarts实例
-        var myChart = this.$echarts.init(document.getElementById('my-chart2'));
+            var myChart = this.$echarts.init(document.getElementById('my-chart2'));
             // 绘制图表
             myChart.setOption({
                 tooltip: {},
@@ -904,7 +907,7 @@ export default {
         },
         getChartFun3(title,data){
             // 基于准备好的dom，初始化echarts实例
-        var myChart = this.$echarts.init(document.getElementById('my-chart3'));
+            var myChart = this.$echarts.init(document.getElementById('my-chart3'));
             // 绘制图表
             myChart.setOption({
                 tooltip : {
@@ -947,7 +950,7 @@ export default {
         },
         getChartFun4(title,numArr,priceArr,mark,marklevel){
             // 基于准备好的dom，初始化echarts实例
-         var myChart = this.$echarts.init(document.getElementById('my-chart4'));
+            var myChart = this.$echarts.init(document.getElementById('my-chart4'));
             // // 绘制图表
                 myChart.setOption({
                     title:{
@@ -1059,7 +1062,7 @@ export default {
         },
         getChartFun5(title,data){
             // 基于准备好的dom，初始化echarts实例
-         var myChart = this.$echarts.init(document.getElementById('my-chart5'));
+            var myChart = this.$echarts.init(document.getElementById('my-chart5'));
             // 绘制图表
             myChart.setOption({
                 title: {
@@ -1100,7 +1103,7 @@ export default {
         },
         getChartFun7(title,data){
             // 基于准备好的dom，初始化echarts实例
-         var myChart = this.$echarts.init(document.getElementById('my-chart7'));
+            var myChart = this.$echarts.init(document.getElementById('my-chart7'));
             // 绘制图表
             myChart.setOption({
                 title: {
@@ -1218,10 +1221,13 @@ export default {
                         numArr = [] ,
                         title = [] ;
                     arr.forEach(val => {
-                          title.push(val.biz_name+'('+val.stall_no+')')
-                          numArr.push(val.price.toFixed(2))
+                        title.push(val.biz_name)
+                        // title.push(val.biz_name+'('+val.stall_no+')')
+                        numArr.push(val.price.toFixed(2))
                     })
-                    this.getChartFun7(title.slice(0,10),numArr.slice(0,10),)
+                    title = title.slice(0,10)
+                    numArr = numArr.slice(0,10)
+                    this.getChartFun7(title,numArr)
                 })
                 .catch(res => {
                     console.log(res);
@@ -1302,9 +1308,9 @@ export default {
                     this.tableData2 = res.data.list 
                     this.count = res.data.allBizNum  //电子秤总数
                     this.nums = res.data.total; //当前在线数
-                    this.list_3_num1 = (this.nums/this.count) *100;
-                    this.list_3_num1 = this.list_3_num1.toFixed(0);
-                    this.progress = Number(this.list_3_num1);
+                    // this.list_3_num1 = (this.nums/this.count) *100;
+                    // this.list_3_num1 = this.list_3_num1.toFixed(0);
+                    // this.progress = Number(this.list_3_num1);
                     this.num2 = res.data.total
                 })
                 .catch(res => {
@@ -1378,10 +1384,8 @@ export default {
             let str = 'node_id=' + this.loginId
             ComputNode(str)
                 .then(res => {
-                    console.log(res,"交易额")
                     if(res.data.总交易额){
                         this.list_1_num1 = res.data.总交易额.toFixed(2)
-                        console.log(this.list_1_num1)
                     }
                     if(res.data.交易额周环比){
                         this.list_1_num2 = res.data.交易额周环比.toFixed(2)
@@ -1392,20 +1396,21 @@ export default {
                     if(res.data.当月总交易额){
                         this.list_1_num4 = res.data.当月总交易额.toFixed(2)
                     }
-                    if(res.data.总支付笔数){
-                        this.list_2_num1 = res.data.总支付笔数
-                    }
+                    // if(res.data.总支付笔数){
+                    //     this.list_2_num1 = res.data.总支付笔数
+                    // }
                     if(res.data.支付笔数周环比){
                         this.list_2_num2 = res.data.支付笔数周环比.toFixed(2)
                     }
                     if(res.data.支付笔数日同比){
                         this.list_2_num3 = res.data.支付笔数日同比.toFixed(2)
                     }
-                    // if(res.data.商户活跃度){
-                    //     this.list_3_num1 = res.data.商户活跃度
-                    // }
-                    // let list_3_num1 = res.data.活跃商户数
-                    // this.nums = list_3_num1
+                    if(res.data.商户活跃度){
+                        this.list_3_num1 = res.data.商户活跃度
+                        this.progress = Number(this.list_3_num1);
+                    }
+                    let list_3_num1 = res.data.商户活跃度
+                    this.nums = list_3_num1
                     if(res.data.活跃商户周环比){
                         this.list_3_num2 = res.data.活跃商户周环比.toFixed(2)
                     }
@@ -1445,6 +1450,7 @@ export default {
                         arr.push(obj[key])
                         title.push(key)
                     }
+                    this.list_2_num1 = arr[arr.length - 1]
                     this.getChartFun1(title,arr)
                 })
                 .catch(res => {
@@ -1457,7 +1463,6 @@ export default {
             ComputPluNumWeek(str)
                 .then(res => {
                     let obj = res.data.zeroMap,
-                    
                         arr = [],
                         title = [];
                     for (var key in obj){
@@ -1734,7 +1739,7 @@ export default {
             }
             .box{
                 margin: 0 auto;
-                width: 1280px;
+                width: 100%;
                 .areaBox{
                     padding: 10px;
                     background: #fff;
@@ -1779,7 +1784,14 @@ export default {
             .text{
                 display: flex;
                 justify-content: space-between;
+                width: 100%;
                 margin-top: 11px;
+                #my-chart4, #my-chart7{
+                    margin: 0 auto;
+                    flex: 1;
+                    max-width: 1000px;
+                    height: 400px;
+                }
                 .list{
                     width: 300px;
                     margin-right: 20px;
@@ -1817,13 +1829,17 @@ export default {
                             .name{
                                 margin-left: 5px;
                                 width: 150px;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
                             }
                             .name:hover{
                                 cursor: pointer;
                                 color:#409EFF;
                             }
                             .number{
-                                width: 120px;
+                                margin-left: 20px;
+                                width: 100px;
                             }
                         }
                     }

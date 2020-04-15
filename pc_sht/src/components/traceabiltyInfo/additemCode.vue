@@ -1,202 +1,201 @@
-
 <template>
     <div class="content">
         <el-form ref="form" :model="form" label-width="180px" :rules="rules">
-            <el-form-item label="企业名称:" prop="nodeType">
-                <el-select class="label-width" v-model="form.nodeType" placeholder="请选择"  @change="selectGet"  >
-                            <el-option v-for="(item,index) in options1" :key="index" :label="item.text" :value="item.id">
-                            </el-option>
+            <el-form-item label="企业名称:" prop="node_id">
+                <el-select class="label-width" v-model="form.node_id" filterable clearable placeholder="请选择" @change="selectWorkFun">
+                    <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.text"
+                    :value="item.id">
+                    </el-option>
                 </el-select>
             </el-form-item> 
-            <el-form-item label="物品编码:" prop="dataName">
-                <el-input class="label-width" v-model="form.dataName"></el-input>
+            <el-form-item label="物品编码:" prop="good_code">
+                <el-input class="label-width" v-model="form.good_code" clearable></el-input>
             </el-form-item>
-            
-            <el-form-item label="物品名称:" prop="dataBank">
-                <el-input class="label-width" v-model="form.dataBank"></el-input>
+            <el-form-item label="物品名称:">
+                <el-input class="label-width" v-model="form.good_name" clearable></el-input>
             </el-form-item> 
-            <el-form-item label="标签编码:" prop="dataBank">
-                <el-input class="label-width" v-model="form.dataBank"></el-input>
+            <el-form-item label="标签编码:" prop="label_code">
+                <el-input class="label-width" v-model="form.label_code" clearable></el-input>
             </el-form-item> 
+            <el-form-item label="标签名称:" >
+                <el-input class="label-width" v-model="form.label_name" clearable></el-input>
+            </el-form-item>
             <el-form-item label="经营模式:">
-                <el-input class="label-width" v-model="form.IP"></el-input>
+                <el-input class="label-width" v-model="form.pattern" clearable></el-input>
             </el-form-item>     
             <el-form-item label="品牌:" >
-                <el-input class="label-width" v-model="form.port"></el-input>
+                <el-input class="label-width" v-model="form.brand" clearable></el-input>
             </el-form-item>     
             <el-form-item label="进货来源:" >
-                <el-input class="label-width" v-model="form.port"></el-input>
+                <el-input class="label-width" v-model="form.source" clearable></el-input>
             </el-form-item>          
             <el-form-item label="商品分类:" >
-                <el-input class="label-width" v-model="form.port"></el-input>
+                <el-input class="label-width" v-model="form.category" clearable></el-input>
             </el-form-item>    
-            <el-form-item label="标签名称:" >
-                <el-input class="label-width" v-model="form.port"></el-input>
-            </el-form-item>
             <el-form-item label="备注:" >
-                <el-input class="label-width" v-model="form.port"></el-input>
-            </el-form-item>           
+                <el-input class="label-width" v-model="form.remarke" clearable></el-input>
+            </el-form-item>  
+            <el-form-item>
+                <el-button class="save-btn" @click="clearFun">取消</el-button>
+                <el-button type="primary" @click="submitForm('form')">保存</el-button>
+            </el-form-item>                   
         </el-form>
-        <el-button class="save-btn" type="primary" @click="save(form)">取消</el-button>
-        <el-button class="save-btn" type="primary" @click="save(form)">保存</el-button>
     </div>
 </template>
 
 <script>
-import Bus from '../common/bus.js'
-import {GetAllDataSource,UpdateDataSource,QueryDataSourceType,InsertDataSource,QueryQuartzJob,QueryQuartzState,QuartzManagerNew} from '../../js/collect/collect.js'
-import {QueryNodeTypeInfo} from '../../js/warning/warning.js'
+import {QueryNodeSelect, InsertTraceabilityCode, UpdateTraceabilityCode} from '../../js/traceabiltyInfo/traceabiltyInfo.js'
 export default {
     name:'editFun',
     data(){
         return{
             isEdit:false,
             form:{
-                id:'',
-                dataName:'',
-                dataType:'',
-                dataBank:'',
-                nodeType:'',
-                IP:'',
-                port:'',
-                userName:'',
-                passWord:'',
-                initial_size:'',
-                max_active:'',
-                max_idle:'',
-                min_idle:'',
-                dataSou:''
+                node_id: '',
+                good_code: '',
+                good_name: '',
+                label_code: '',
+                label_name: '',
+                pattern: '',
+                brand: '',
+                source: '',
+                category: '',
+                remarke: '',
             },
-            options:[],
+            nodeArr: [],
             options1:[],
             rules:{
-	            	dataName :[{required: true, message: '请输入数据源名称', trigger: 'blur'}],
-                    dataSou :[{required: true, message: '请选择数据源类型', trigger: 'blur'}],
-                    dataBank :[{required: true, message: '请输入数据库名称', trigger: 'blur'}],
-                    nodeType :[{required: true, message: '请输入节点类型', trigger: 'blur'}],
-                    IP :[{required: true, message: '请输入IP地址'}],
-                    port :[{required: true, message: '请输入端口号'}],
-	             }
+                node_id: [
+                    { required: true, message: '请选择企业名称', trigger: 'change' }
+                ],
+                good_code:[
+                    {required: true, message: '请输入物品编码', trigger: 'blur'}
+                ],
+                label_code:[
+                    {required: true, message: '请输入标签编码', trigger: 'blur'}
+                ],
+            },
+            ids: '',
+            node_name: '',
         }
     },
     mounted(){
-        if(JSON.stringify(this.$route.params) != "{}"){
-                this.isEdit = true;
-                this.form.id = this.$route.params.id;
-                this.form.dataName = this.$route.params.source_name;
-                this.form.dataSou = this.$route.params.driver_class_name;
-                this.form.dataBank = this.$route.params.data_name;            
-                this.form.nodeType = this.$route.params.node_type;
-                this.form.IP = this.$route.params.ip;
-                this.form.port = this.$route.params.port;
-                this.form.userName = this.$route.params.user_name;
-                this.form.passWord = this.$route.params.password;
-                this.form.initial_size = this.$route.params.initial_size;
-                this.form.max_active = this.$route.params.max_active;
-                this.form.max_idle = this.$route.params.max_idle;
-                this.form.min_idle = this.$route.params.min_idle;
+        if(this.$route.params.id){
+            let param = this.$route.params
+            this.form = {
+                node_id: param.node_id,
+                good_code: param.traceability_code,
+                good_name: param.traceability_name,
+                label_code: param.association_name,
+                label_name: param.association_id,
+                pattern: param.managing_mode,
+                brand: param.brand,
+                source: param.supplier,
+                category: param.goods_type,
+                remarke: param.remarks,
+            }
+            this.node_name = param.node_name
+            this.ids = param.id
         }
-        this.getQueryDataSourceType();
-        this.getQueryNodeTypeInfo()
+        this.getQueryNodeSelect()
     },
     methods:{
-        selectGet(val){  //选择数据源类型
-            if(val){
-                this.options.forEach(ele => {
-                    if(val == ele.id){
-                        this.form.dataSou = ele.id
-                    }
-                })
-            }else{
-                this.form.dataSou = ''
-            }
-        },
-         selectGet1(val){  //节点类型
-            if(val){
-                this.options1.forEach(ele => {
-                    if(val == ele.id){
-                        this.form.nodeType = ele.id
-                    }
-                })
-            }else{
-                this.form.nodeType = ''
-            }
-        },
-        save(form){
-            this.$refs.form.validate((valid) => {
-                if (valid) {
-                    if(this.isEdit){
-                        let data = {
-                            id:this.form.id,
-                            source_name:this.form.dataName,
-                            driver_class_name:this.form.dataSou,
-                            data_name:this.form.dataBank,
-                            node_type:this.form.nodeType,
-                            ip:this.form.IP,
-                            port:this.form.port,
-                            user_name: this.form.userName,
-                            password: this.form.passWord,
-                            initial_size:this.form.initial_size,
-                            max_active:this.form.max_active,
-                            max_idle:this.form.max_idle,
-                            min_idle:this.form.min_idle
-                        };
-                        UpdateDataSource(data)
-                            .then( res =>{
-                                console.log(data)
-                                this.$message({
-                                    message: '恭喜，修改成功',
-                                    type: 'success'
-                                });
-                                this.$router.push({path:'dataSource'})
-                            })
-                            .catch(res=>{
-                                this.$message.error('出错了.');
-                            })
-                    }else{
-                        let data = {
-                            source_name:this.form.dataName,
-                            driver_class_name:this.form.dataSou,
-                            data_name:this.form.dataBank,
-                            node_type:this.form.nodeType,
-                            ip:this.form.IP,
-                            port:this.form.port,
-                            user_name: this.form.userName,
-                            password: this.form.passWord,
-                        };
-                        InsertDataSource(data)
-                            .then( res =>{
-                                this.$message({
-                                    message: '恭喜，添加成功',
-                                    type: 'success'
-                                });
-                                this.$router.push({path:'dataSource'})
-                            })
-                            .catch(res=>{
-                                this.$message.error('出错了.');
-                            })
-                    }
+        selectWorkFun(ele){
+            this.nodeArr.forEach(val => {
+                if(val.id == ele){
+                    this.node_name = val.text
                 }
             })
+        },
+        // 企业名称
+        getQueryNodeSelect(){
+            let str = ''
+            QueryNodeSelect(str)
+                .then(res => {
+                    this.nodeArr = res.data.dataList
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        clearFun(){
+            this.$router.push({name: 'ItemCode'})
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.saveFun()
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        saveFun(form){
+            if(this.ids){
+                let data = {
+                    id: this.ids,
+                    node_id: this.form.node_id,    
+                    traceability_code: this.form.good_code,
+                    traceability_name: this.form.good_name,
+                    node_name: this.node_name, 
+                    remarks: this.form.remarke,
+                    managing_mode: this.form.pattern,      
+                    brand: this.form.brand,            
+                    supplier: this.form.source,        
+                    goods_type: this.form.category,      
+                    association_name: this.form.label_name,
+                    association_id: this.form.label_code,   
+                };
+                UpdateTraceabilityCode(data)
+                    .then( res =>{
+                        if (res.result == true) {
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success',
+                                duration: 5000,
+                            });
+                            this.$router.push({name: 'ItemCode'})
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res=>{
+                        this.$message.error('出错了.');
+                    })
+            }else{
+                let data = {
+                    node_id: this.form.node_id,    
+                    traceability_code: this.form.good_code,
+                    traceability_name: this.form.good_name,
+                    node_name: this.node_name, 
+                    remarks: this.form.remarke,
+                    managing_mode: this.form.pattern,      
+                    brand: this.form.brand,            
+                    supplier: this.form.source,        
+                    goods_type: this.form.category,      
+                    association_name: this.form.label_name,
+                    association_id: this.form.label_code,   
+                };
+                InsertTraceabilityCode(data)
+                    .then( res =>{
+                        if (res.result == true) {
+                            this.$message({
+                                message: '保存成功',
+                                type: 'success',
+                                duration: 5000,
+                            });
+                            this.$router.push({name: 'ItemCode'})
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res=>{
+                        this.$message.error('出错了.');
+                    })
+            }
+                
         },  
-        getQueryDataSourceType(){  //数据源类型查询
-             QueryDataSourceType()
-                  .then(res=>{
-                      this.options = res.data.dataList;
-                  })
-                  .catch(res=>{
-                        console.log(res)
-                  })
-        },
-        getQueryNodeTypeInfo(){  //节点类型查询
-             QueryNodeTypeInfo()
-                  .then(res=>{
-                      this.options1 = res.data.dataList;
-                  })
-                  .catch(res=>{
-                        console.log(res)
-                  })
-        },
     }
 }
 </script>

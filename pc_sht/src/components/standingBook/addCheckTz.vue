@@ -162,7 +162,7 @@
         ruleForm: {},
         rules: {},
         isShowMerchant: true,
-        goodsType: '进货',
+        goodsType: '销售',
         file: '',
         check_goods_code: '',
         msg_id: '',
@@ -185,7 +185,7 @@
       this.local_region_name = this.$route.params.areaName;
       this.userId_local = localStorage.getItem('userId');
       this.local_node_id = localStorage.getItem('loginId');
-      this.getGoodsFun(1)
+      this.getGoodsFun(2)
       this.getMerchantsFun();
       if(this.$route.params.msg){
         let msg = this.$route.params.msg

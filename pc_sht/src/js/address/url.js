@@ -1,19 +1,18 @@
 // base url
-// export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.1.65:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.1.65:8081/order_sht/'; // 资产62
-// export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/';
+export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.1.14:8081/order_sht/';
+export const baseUrl3 = 'http://192.168.1.14:8081/order_sht/'; // 资产62
+export const baseUrl4 = 'http://192.168.1.65:8081/order_sht/'; // paas
 // export const baseUrl5 = 'https://mobile.zhdtech.com/order_sht/';
 
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
-
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl6 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?' 
 
@@ -306,7 +305,7 @@ export const queryMoneyCurrentWeek = baseUrl + 'redis/queryMoneyCurrentWeek' // 
 export const queryMoneyCurrentMonth = baseUrl + 'redis/queryMoneyCurrentMonth' // 查询本月交易额数据
 export const queryMoneyCurrentDayHour = baseUrl + 'redis/queryMoneyCurrentDayHour' // 查询当天24小时交易额数据
 export const queryMoneyCurrentYear = baseUrl + 'redis/queryMoneyCurrentYear' // 查询当年商户交易额排行
-
+export const queryMoneyAndWeightForNode = baseUrl + 'redis/queryMoneyAndWeightForNode' // 查询全部区域商户交易额
 
 // 供货单位
 export const querySupplier = baseUrl + 'supplier/querySupplier' // 供货单位管理查询（超管）
@@ -552,6 +551,7 @@ export const getNodeJgInfoType = baseUrl2 + 'cygl/getNodeJgInfoType' // 企业�
 //解码规则管理
 export const queryDecodeRule = baseUrl4 + 'warning/queryDecodeRule' //解码规则查询
 export const queryCodeTypeSelect = baseUrl4 + 'warning/queryCodeTypeSelect' //解码规则中码类型查询
+export const queryRuleTypeSelect = baseUrl4 + 'warning/queryRuleTypeSelect' //解码规则中规则类型
 export const queryNodeSelect = baseUrl4 + 'warning/queryNodeSelect' //所有企业查询
 export const insertDecodeRule = baseUrl4 + 'warning/insertDecodeRule' //添加解码规则
 export const updateDecodeRule = baseUrl4 + 'warning/updateDecodeRule'//修改解码规则
