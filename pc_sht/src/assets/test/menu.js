@@ -338,6 +338,35 @@ const menu = [
       ]
     }
   },
+    {
+      id:'11',
+      name:'报价',
+      url:'quotation',
+      node:'quotation',
+      icon:'icon-quotation',
+      level:1,
+      children:{
+          nav_title:'零售价填报',
+          id:'1100',
+          parentId:'11',
+          node:"quotation",
+          url:'quotationList',
+          level:2,
+          nodeList:[
+              {
+                  id:'110000',
+                  parentId:'1100',
+                  name:'按商户查看',
+                  node:'quotation',
+                  url:'viewQuotation',
+                  level:3,
+                  children:{
+                      nodeList:[]
+                  }
+              },
+          ]
+      }
+  },
   {
     id:'03',
     name:'订单',

@@ -5,7 +5,7 @@ export const baseUrl3 = 'http://192.168.1.14:8081/order_sht/'; // 资产62
 export const baseUrl4 = 'http://192.168.1.14:8081/order_sht/'; // paas
 // export const baseUrl5 = 'https://mobile.zhdtech.com/order_sht/';
 
-// export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/' 
+// export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/'
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 
@@ -14,7 +14,7 @@ export const baseUrl4 = 'http://192.168.1.14:8081/order_sht/'; // paas
 // export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 // export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl6 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?' 
+export const baseUrl6 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 
 // export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
 
@@ -444,6 +444,9 @@ export const insertList = baseUrl + 'goodsPrice/insertList' // 批量保存
 export const queryGoodsForNode = baseUrl + 'goodsPrice/queryGoodsForNode' // 市场添加报价 商品
 export const queryRegionForGoodsPrice = baseUrl2 + 'tz/queryRegionForGoodsPrice' // 市场添加报价 区域
 export const queryGoodsIndex = baseUrl + 'goodsPrice/queryGoodsIndex' //查看市场报价  商户录的报价信息
+export const queryIndexDate =  baseUrl + 'goodsPrice/queryIndexDate'//时间段查询报价记录
+export const queryNodeGoodsBiz = baseUrl + 'goodsPrice/queryNodeGoodsBiz';
+
 // 报修
 export const queryNodeBasePage = baseUrl + 'assets/queryNodeBasePage' // 查询节点
 export const getAssetsConfig = baseUrl + 'assetsTask/getAssetsConfig' // 查询用户组以及 报修类型 ，任务类型
@@ -561,21 +564,21 @@ export const queryNodeSelect = baseUrl4 + 'warning/queryNodeSelect' //所有企�
 export const insertDecodeRule = baseUrl4 + 'warning/insertDecodeRule' //添加解码规则
 export const updateDecodeRule = baseUrl4 + 'warning/updateDecodeRule'//修改解码规则
 export const deleteDecodeRule = baseUrl4 + 'warning/deleteDecodeRule'//删除解码规则
-export const downloadDecodeRule = baseUrl4 + 'warning/downloadDecodeRule'//下载解码规则 
+export const downloadDecodeRule = baseUrl4 + 'warning/downloadDecodeRule'//下载解码规则
 export const importDecodeRule = baseUrl4 + 'warning/importDecodeRule'//导入解码规则
 //物品码管理
 export const queryTraceabilityCode = baseUrl4 + 'warning/queryTraceabilityCode'//物品码查询
-export const insertTraceabilityCode = baseUrl4 + 'warning/insertTraceabilityCode'//添加物品码 
-export const updateTraceabilityCode = baseUrl4 + 'warning/updateTraceabilityCode'//修改物品码 
-export const deleteTraceabilityCode = baseUrl4 + 'warning/deleteTraceabilityCode'//删除物品码 
-export const downloadTraceabilityCode = baseUrl4 + 'warning/downloadTraceabilityCode'//物品码下载 
+export const insertTraceabilityCode = baseUrl4 + 'warning/insertTraceabilityCode'//添加物品码
+export const updateTraceabilityCode = baseUrl4 + 'warning/updateTraceabilityCode'//修改物品码
+export const deleteTraceabilityCode = baseUrl4 + 'warning/deleteTraceabilityCode'//删除物品码
+export const downloadTraceabilityCode = baseUrl4 + 'warning/downloadTraceabilityCode'//物品码下载
 export const importTraceabilityCode = baseUrl4 + 'warning/importTraceabilityCode'//导入物品码
-export const querySupplierSelect = baseUrl4 + 'warning/querySupplierSelect'//查询所有供货单位  
+export const querySupplierSelect = baseUrl4 + 'warning/querySupplierSelect'//查询所有供货单位
 //追溯信息管理
-export const queryTraceInfo = baseUrl4 + 'warning/queryTraceInfo'//查询所有供货单位 
-export const insertTraceInfo = baseUrl4 + 'warning/insertTraceInfo'//添加追溯信息 
-export const updateTraceInfo = baseUrl4 + 'warning/updateTraceInfo'//修改追溯信息 
-export const deleteTraceInfo = baseUrl4 + 'warning/deleteTraceInfo'//删除追溯信息 
+export const queryTraceInfo = baseUrl4 + 'warning/queryTraceInfo'//查询所有供货单位
+export const insertTraceInfo = baseUrl4 + 'warning/insertTraceInfo'//添加追溯信息
+export const updateTraceInfo = baseUrl4 + 'warning/updateTraceInfo'//修改追溯信息
+export const deleteTraceInfo = baseUrl4 + 'warning/deleteTraceInfo'//删除追溯信息
 export const downloadTraceInfo = baseUrl4 + 'warning/downloadTraceInfo'//下载追溯信息
 export const importTraceInfo = baseUrl4 + 'warning/importTraceInfo'//导入追溯信息
 export const queryEtraceLog = baseUrl4 + 'warning/queryEtraceLog' // 追溯查询日志

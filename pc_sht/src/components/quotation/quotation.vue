@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="top-title" v-if="isDefault">
-            <TopHead :title='titleArr'></TopHead>
+            <TopHead :title='titleArr'></TopHead>   
         </div>
         <div class="top-title" v-else>
             <NavHead :parent='parentOperation' :child='childOperation'></NavHead>
@@ -17,7 +17,7 @@ import TopHead from '../common/header';
 import NavHead from '../common/navHeader';
 import Bus from '../common/bus.js'
 export default {
-    name:"retail",
+    name:"quotation",
     data() {
         return {
             titleArr:'',
@@ -27,11 +27,10 @@ export default {
         }
     },
     mounted() {
-
         this.titleArr = this.$route.meta.title.join(",");
     },
     methods: {
-
+        
     },
     components:{
         TopHead,
@@ -52,3 +51,4 @@ export default {
     }
 
 </style>
+

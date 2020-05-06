@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <nav class="aside-nav">
+        <!-- <nav class="aside-nav">
             <div class='head-title'>设置中心</div>
             <div class="data">
                 <ul class="data-list">
@@ -8,7 +8,7 @@
                         @click='select(item.id,item.menuType)'>{{item.name}}</li>
                 </ul>
             </div>
-        </nav>
+        </nav> -->
         <div class="top-title" v-if="isDefault">
             <TopHead :title='titleArr' @turnPage='turnPage'></TopHead>
         </div>
