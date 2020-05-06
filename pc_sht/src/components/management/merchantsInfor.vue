@@ -316,9 +316,13 @@ export default {
       districtName: '',
       file: '',
       node_id: '',
+      inforMsg: {},
     }
   },
   mounted(){    
+    if(this.$route.query.inforMsg){
+      this.inforMsg = JSON.parse(this.$route.query.inforMsg)
+    }
     this.node_id = localStorage.getItem('loginId');
     this.getAddrList();//获取地区列表
     this.getMarketFun()
@@ -350,7 +354,7 @@ export default {
         .then(res => {
           this.districtArr = res.data.dataList
           this.districtArr.forEach(val => {
-            if(this.$route.params.inforMsg.bootList[0].region == val.bootList[0].shop_booth_id){
+            if(this.inforMsg.bootList[0].region == val.bootList[0].shop_booth_id){
               this.districtUserId = val.bootList[0].userId
               this.districtName = val.bootList[0].booth_name
             }
@@ -562,7 +566,7 @@ export default {
     },
     // 详情
     getShopMsg(){      
-      allBizs({userId:this.$route.params.inforMsg.bootList[0].userId})
+      allBizs({userId:this.inforMsg.bootList[0].userId})
         .then(res =>{
           let len = res.data.dataList.length;
           this.account = res.data.dataList[0].userName;

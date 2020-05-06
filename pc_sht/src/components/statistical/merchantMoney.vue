@@ -41,47 +41,47 @@
                 </div>
             </div>
             <el-table  :data="tableData" style="width: 100%;margin-left:20px;" :header-cell-style="{background:'#f5f5f5'}" fit
-                :row-style="{height:'40px'}">
+                :row-style="{height:'40px'}" @sort-change="sortChange">
                 <el-table-column prop="stall_no" label="摊位号" fit></el-table-column>
                 <el-table-column prop="biz_name" label="商户名称" fit></el-table-column>
                 <el-table-column prop="price"  label="总交易额(元)" :default-sort="{order: order}" sortable="custom"></el-table-column>
                 <el-table-column prop="weight" label="总交易量(公斤)" :default-sort="{order: order}" sortable="custom"></el-table-column>
-                <el-table-column prop="num" label="支付笔数" :default-sort="{order: order}" sortable="custom">
+                <el-table-column prop="num" label="支付笔数" width="100" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <el-tooltip class="item" effect="dark" content="注：支付笔数为客户累积支付订单数量" placement="top">
                             <p>{{parseFloat(scope.row.num)}}</p>
                         </el-tooltip>
                     </template>
                 </el-table-column>
-                <el-table-column prop="total_num" label="累计购买商品数量" :default-sort="{order: order}" sortable="custom">
+                <el-table-column prop="total_num" width="160" label="累计购买商品数量" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <el-tooltip class="item" effect="dark" content="注：累计购买商品数量为所有客户每笔订单包含的商品品种数量之和" placement="top">
                             <p>{{parseFloat(scope.row.total_num)}}</p>
                         </el-tooltip>
                     </template>
                 </el-table-column>
-                <el-table-column prop="kdj" label="客单价（元）">
+                <el-table-column prop="kdj" label="客单价(元)" width="90">
                     <template slot-scope="scope">
                         <el-tooltip class="item" effect="dark" content="注：客单价为人均交易金额客单价=总交易额/支付笔数" placement="top">
                             <p>{{scope.row.kdj}}</p>
                         </el-tooltip>
                     </template>
                 </el-table-column>
-                <el-table-column prop="total_num_num" label="客单量（种）">
+                <el-table-column prop="total_num_num" label="客单量(种)" width="90">
                     <template slot-scope="scope">
                         <el-tooltip class="item" effect="dark" content="注：客单量为人均购买商品数量客单量=累计购买商品数量/支付笔数" placement="top">
                             <p>{{scope.row.kdl}}</p>
                         </el-tooltip>
                     </template>
                 </el-table-column>
-                <el-table-column prop="weight_num" label="客均交易量（公斤）">
+                <el-table-column prop="weight_num" label="客均交易量(公斤)">
                     <template slot-scope="scope">
                         <el-tooltip class="item" effect="dark" content="注：客均交易量为人均交易商品重量客均交易量=总交易量/支付笔数" placement="top">
                             <p>{{scope.row.kjjyl}}</p>
                         </el-tooltip>
                     </template>
                 </el-table-column>
-                <el-table-column  label="操作" width="100">
+                <el-table-column  label="操作" width="60">
                     <template slot-scope="scope">
                         <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
                     </template>
@@ -146,12 +146,17 @@ export default {
             selectArea:'',
             isRegion: '',
             order: 'desc',
+            sortField: 'price',
+            types1: false,
+            types2: false,
         }
     },
     created(){
-        this.gooduserId = this.$route.params.gooduserId;
+        this.gooduserId = this.$route.query.gooduserId;
+        this.selectArea = this.$route.query.gooduserId;
     },
     mounted(){
+        console.log(this.$route.query)
         this.isRegion = localStorage.getItem('isRegion') 
         window.scrollTo(0,0)
         this.node_id = localStorage.getItem('loginId');
@@ -159,14 +164,25 @@ export default {
         this.loginId = localStorage.getItem('loginId');
         this.getTime();
         //   this.getQueryMoneyAndWeightForBizFun()
-        this.gooduserId = this.$route.params.gooduserId;
-        this.getTime1();
+        this.gooduserId = this.$route.query.gooduserId;
+        this.selectArea = this.$route.query.gooduserId;
         if(this.isRegion == 'true'){
             this.getAreaList();//获取区域列表  
+        }
+        if(this.$route.query.types){
+            if(this.selectArea == ''){
+                this.selectArrFun()
+            }else{
+                this.getTime1();
+            }
+        }else{
+            console.log(111)
+            this.getTime1();
         }
     },
     methods:{
         sortChange({column, prop, order}){
+            this.sortField = column.property
             if(order == 'descending'){
                 this.order = 'desc'
             }else if(order == 'ascending'){
@@ -174,7 +190,11 @@ export default {
             }else{
                 this.order = 'desc'
             }
-            // this.getDataFun()
+            if(this.selectArea == ''){
+                this.selectArrFun()
+            }else{
+                this.getQueryMoneyAndWeightForBizFun();
+            }
         },
         downloadFun(){
             window.location.href = importMoneyAndWeightForMarket + '?node_id=' + this.node_id +  '&start_date=' + this.start_time 
@@ -191,7 +211,8 @@ export default {
             this.tableData = []
             this.totol_price=''
             this.weight= ''
-            let str = 'node_id='+this.loginId+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page='+this.currentPage+'&cols='+this.pageSize+'&name='+this.input
+            let str = 'node_id='+this.loginId+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page='+this.currentPage
+                +'&cols='+this.pageSize+'&name='+this.input + '&sortField=' + this.sortField + '&order=' + this.order
             QueryMoneyAndWeightForNode(str)
                 .then(res=>{
                     var totol_price = res.data.price_sum;
@@ -227,10 +248,27 @@ export default {
             QueryArea(data)
                 .then(res =>{
                     this.areaList = res.data.dataList;
-                    if(this.gooduserId){
-                        // this.selectArea = this.gooduserId
+                    var arr = localStorage.getItem("Time").split(",")
+                    if(arr.length > 0){
+                        if(this.$route.query.types == 'types' || arr[arr.length - 1] == 'types'){
+                            this.selectArea = ''
+                        }else{
+                            if(this.gooduserId){
+                                this.selectArea = this.gooduserId
+                            }else{
+                                this.selectArea = this.areaList[0].userId;
+                            }
+                        }
                     }else{
-                        this.selectArea = this.areaList[0].userId;
+                        if(this.$route.query.types == 'types'){
+                            this.selectArea = ''
+                        }else{
+                            if(this.gooduserId){
+                                this.selectArea = this.gooduserId
+                            }else{
+                                this.selectArea = this.areaList[0].userId;
+                            }
+                        }
                     }
                 })
                 .catch(res =>{
@@ -248,15 +286,15 @@ export default {
             var day = start.getDate(); 
             this.start_time = year + "-"+formatTen(month) + "-" +formatTen(day-1)  
             this.end_time = year + "-"+formatTen(month) + "-" +formatTen(day)
-            this.start_time = this.$route.params.startTime; 
-            this.end_time  = this.$route.params.endTime;
+            this.start_time = this.$route.query.startTime; 
+            this.end_time  = this.$route.query.endTime;
             this.time = [this.start_time,this.end_time]
-            this.gooduserId = this.$route.params.gooduserId;
-            this.input = this.$route.params.merChant; 
+            this.gooduserId = this.$route.query.gooduserId;
+            this.input = this.$route.query.merChant; 
             if(!this.input){
                 this.input = ""
             }else{
-                this.input = this.$route.params.merChant;
+                this.input = this.$route.query.merChant;
             }
             // this.getQueryMoneyAndWeightForBizFun();  
             // this.getQueryMoneyAndWeightForMarketFun();
@@ -270,10 +308,15 @@ export default {
                 this.time = [this.start_time,this.end_time]
                 this.input = arr[5];
                 this.gooduserId = arr[3]
+                this.selectArea = arr[3]
                 this.bigAreaId = arr[3]
                 this.areaId = arr[4]
-                this.getQueryMoneyAndWeightForBizFun();  
-                this.getQueryMoneyAndWeightForMarketFun();
+                if(arr[arr.length - 1] == 'types'){
+                    this.selectArrFun()
+                }else{
+                    this.getQueryMoneyAndWeightForBizFun();  
+                    this.getQueryMoneyAndWeightForMarketFun();
+                }
                 localStorage.removeItem('Time')
             }else{
                 this.defaultTzFun();
@@ -282,6 +325,8 @@ export default {
         },
          //点击搜索
         handleBtnQuery() {
+            this.types1 = false
+            this.types2 = false
             this.fullscreenLoading2 = true;
             var start_time = this.time[0];
             var end_time = this.time[1];
@@ -319,15 +364,63 @@ export default {
             localStorage.setItem("Time", dataMore);
             this.input2 = this.input;
             this.input = row.biz_name
-            this.$router.push({path:'StatisticalTz',
-                query:{input:this.input2,
-                merChant:row.biz_name,   
-                startTime:this.start_time,  
-                endTime:this.end_time,
-                areaId:this.areaId,
-                gooduserId:this.bigAreaId
-                }
-            })
+            if(this.selectArea == ''){
+                let areaId = '',
+                    gooduserId = '';
+                this.areaList.forEach(ele => {
+                    if(row.region_name == ele.name){
+                        areaId = ele.bootList[0].shop_booth_id
+                        gooduserId = ele.bootList[0].userId
+                    }
+                })
+                this.$router.push({path:'StatisticalTz',
+                    query:{
+                        input:this.input2,
+                        merChant:row.biz_name,   
+                        startTime:this.start_time,  
+                        endTime:this.end_time,
+                        areaId:areaId,
+                        gooduserId: gooduserId,
+                        types: 'all',
+                    }
+                })
+                // let routeData = this.$router.resolve({
+                //     path: "/home/statistical/statisticalTz",
+                //     query: {
+                //         input:this.input2,
+                //         merChant:row.biz_name,   
+                //         startTime:this.start_time,  
+                //         endTime:this.end_time,
+                //         areaId:areaId,
+                //         gooduserId: gooduserId,
+                //         types: 'all',
+                //     }
+                // });
+                // window.open(routeData.href, '_blank');
+            }else{
+                this.$router.push({path:'StatisticalTz',
+                    query:{
+                        input:this.input2,
+                        merChant:row.biz_name,   
+                        startTime:this.start_time,  
+                        endTime:this.end_time,
+                        areaId:this.areaId,
+                        gooduserId:this.bigAreaId
+                    }
+                })
+                // let routeData = this.$router.resolve({
+                //     path: "/home/statistical/statisticalTz",
+                //     query: {
+                //         input:this.input2,
+                //         merChant:row.biz_name,   
+                //         startTime:this.start_time,  
+                //         endTime:this.end_time,
+                //         areaId:this.areaId,
+                //         gooduserId:this.bigAreaId
+                //     }
+                // });
+                // window.open(routeData.href, '_blank');
+            }
         },
         defaultTzFun(){
             let data = {
@@ -341,9 +434,9 @@ export default {
             }
             GetMarkets(data)
                 .then(res =>{
-                    if(this.$route.params.gooduserId){
+                    if(this.$route.query.gooduserId){
                         res.data.dataList.forEach(ele => {
-                            if(ele.userId == this.$route.params.gooduserId){
+                            if(ele.userId == this.$route.query.gooduserId){
                                 this.bigAreaId = ele.userId;
                                 this.areaId = ele.bootList[0].shop_booth_id;
                             }
@@ -361,6 +454,8 @@ export default {
                 })
         },
         selectId(id){//选择区域展示商户列表
+            this.types1 = false
+            this.types2 = false
             this.selectArea = id;
             this.fullscreenLoading2 = true;
             this.page = 1
@@ -397,9 +492,16 @@ export default {
             },
         // 获取表格数据
         getQueryMoneyAndWeightForBizFun(){  
-            let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page='+this.currentPage+'&cols='+this.pageSize+'&name='+this.input
+            this.fullscreenLoading2 = true;
+            let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time
+            +'&page='+this.currentPage+'&cols='+this.pageSize+'&name='+this.input + '&sortField=' + this.sortField 
+            + '&order=' + this.order
             QueryMoneyAndWeightForBiz(str)
                 .then(res=>{
+                    this.types1 = true
+                    if(this.types1 == true && this.types2 == true){
+                        this.fullscreenLoading2 = false;
+                    }
                     this.tableData = res.data.list
                     this.tableData.forEach(val=>{
                         val.kdj = (val.price/val.num).toFixed(2)
@@ -421,7 +523,10 @@ export default {
             let str = 'node_id='+this.loginId+'&region='+this.areaId+'&start_date='+this.start_time+'&end_date='+this.end_time
             QueryMoneyAndWeightForMarket(str)
                 .then(res=>{
-                    this.fullscreenLoading2 = false;
+                    this.types2 = true
+                    if(this.types1 == true && this.types2 == true){
+                        this.fullscreenLoading2 = false;
+                    }
                     var totol_price = res.data.price;
                     this.totol_price = Number(totol_price.toFixed(2));
                     var weight = res.data.weight;

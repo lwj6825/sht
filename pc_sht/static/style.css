@@ -54,3 +54,17 @@
     margin: 20px 0;
     text-align: center;
 }
+/* .location{
+    flex: 1;
+    margin-left: 20px;
+    font-size: 14px;
+}
+.location span{
+    cursor: pointer;
+}
+.location .spans{
+    color: #409EFF;
+}
+.location span:first-child{
+    color: #000;
+} */

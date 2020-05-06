@@ -108,6 +108,7 @@
                 <el-table-column label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button type="text" v-if="scope.row.task_state == 1" size="small" @click="viewFun(scope.row)">查看</el-button>
+                        <el-button type="text" v-if="scope.row.task_state == 1" size="small" @click="openFun(scope.row)">开启任务</el-button>
                         <div v-else>
                             <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
                             <el-button type="text" size="small" @click="stopFun(scope.row)">关闭</el-button>
@@ -297,7 +298,7 @@ import {QueryNodeBase2,QueryBusiness,QueryAssetsBase,QueryAssetsConf} from '../.
 import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
 import {QueryNodeBasePage,GetAssetsConfig,GetAssetsUser,InsertAssetsTask,GetAssetsTask,GetAssetsTaskImg,UpdateAssetsTask,
     DeleteAssetsTaskImg,GetAssetsTaskInfo,InsertAssetsImg,UpdateAssetsTaskInfo,DeleteAssetsInfo,UpdateAssetsTaskAssignId,
-    InsertAssetsTaskResult,UpdateAssetsTaskScbj,DownAssetsTaskXsl} from '../../js/repair/repair.js'
+    InsertAssetsTaskResult,UpdateAssetsTaskScbj,DownAssetsTaskXsl, UpdateAssetsTaskState} from '../../js/repair/repair.js'
 import {uploadImgTask} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
@@ -418,6 +419,27 @@ export default {
         this.getQueryAssetsConf()
     },
     methods: {
+        // 开启任务
+        openFun(ele){
+            let params = {
+                id: ele.id,
+                task_state: 0,
+                create_name: ele.create_name
+            }
+            UpdateAssetsTaskState(params)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message);
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+                .catch((res) => {
+                    this.$message.error("出错啦!");
+                    console.log(res)
+                })
+        },
         sortChange({column, prop, order}){
             if(order == 'descending'){
                 this.order = 'desc'

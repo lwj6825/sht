@@ -437,13 +437,38 @@
         this.getSales();
       },
       addSellGood(){ //添加销售商品
-        this.$router.push({name:'NewMarket',params: {'areaId':this.areaId,'bigAreaId':this.bigAreaId}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/goods/newMarket",
+        //   query: {
+        //     areaId: this.areaId,
+        //     bigAreaId: this.bigAreaId,
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'NewMarket',query: {'areaId':this.areaId,'bigAreaId':this.bigAreaId}})
       },
       check(index, row){//查看销售商品
-        this.$router.push({name:'ViewMarket',params:{'goodsMsg':row,'areaId':this.areaId}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/goods/viewMarket",
+        //   query: {
+        //     goodsMsg: JSON.stringify(row),
+        //     areaId: this.areaId
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'ViewMarket',query:{goodsMsg: JSON.stringify(row),'areaId':this.areaId}})
       },
       edit(index, row){//编辑销售商品
-        this.$router.push({name:'EditMarket',params:{'goodsMsg':row,'areaId':this.areaId,'bigAreaId':this.bigAreaId}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/goods/editMarket",
+        //   query: {
+        //     goodsMsg: JSON.stringify(row),
+        //     areaId: this.areaId,
+        //     bigAreaId: this.bigAreaId,
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'EditMarket',query:{goodsMsg: JSON.stringify(row),'areaId':this.areaId,'bigAreaId':this.bigAreaId}})
       },
       handleDelete(index, row) {//删除商品
         this.$confirm('是否要删除此条信息?', '提示', {

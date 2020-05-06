@@ -8,7 +8,8 @@ import {baseUrl,queryAssetsUser,queryAssetsConf,queryAssetsType,queryNodeBase,qu
     queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2,parseMonLog,queryTableName,getFileState,
     queryFtpMonLog,getParseType,analysisDataMon,setByFtpId,queryErrorData,downloadErrorData,deleteErrorLogData,queryErrorLogType,
     queryUploadFilesByFtpId,parseMonLogForRecently,downloadErrorLog,queryChangeLogList,downloadChangeLog,queryChangeItem,
-    deleteParseMonLogById,queryNodeDetailType,deleteAllErrorData,queryFilePath,addErrorDateRemark
+    deleteParseMonLogById,queryNodeDetailType,deleteAllErrorData,queryFilePath,addErrorDateRemark, 
+    // queryAssetsBaseByAssetsId
     } from "../address/url";
 export const QueryFilePath = function(){
     return ajaxGet(queryFilePath)
@@ -311,3 +312,7 @@ export const DeleteAllErrorData = function(params) {
 export const AddErrorDateRemark = function(params) {
     return ajaxPost(addErrorDateRemark,params)
 }
+//  
+// export const QueryAssetsBaseByAssetsId = function(params) {
+//     return ajaxPost(queryAssetsBaseByAssetsId,params)
+// }

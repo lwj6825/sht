@@ -95,7 +95,8 @@ export default {
             remember: '',
             roleId: '',
             user:'',
-            isShow : false
+            isShow : false,
+            // count: 1,
         }
     },
     created() {
@@ -112,12 +113,41 @@ export default {
                 this.isShow = false;
             }
         },200)
-        
+        // if(localStorage.getItem('count')){
+        //     this.count = localStorage.getItem('count')
+        // }
         if(localStorage.getItem('menuList')){
             this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
             // console.log(this.mainList)
-            this.levelOneCurrId = this.mainList[0].id;//选择第一项
-            this.changeMenu(this.levelOneCurrId);
+            // if(this.count == 1){
+                // localStorage.setItem("count", 2);
+                this.levelOneCurrId = this.mainList[0].id;//选择第一项
+                this.changeMenu(this.levelOneCurrId);
+            // }else{
+                // let str = this.$route.path
+                // let arr = []
+                // arr = str.split('/')
+                // console.log(arr)
+                // console.log(this.mainList)
+                // this.mainList.forEach(val => {
+                //     if(val.node == arr[2]){
+                //         if(val.children.id){
+                //             // 没有二级菜单
+                //         }else{
+                //             val.children.nodeList.forEach(val2 => {
+                //                 // 判断是否是3级菜单
+                //                 val2.children.nodeList.forEach(val3 => {
+                //                     if(val3.url == arr[3]){
+                //                         console.log(val3)
+                //                         this.levelOneCurrId = val3.id
+                //                     }
+                //                 })
+                //             })
+                //         }
+                //     }
+                // })
+                // this.changeMenu(this.levelOneCurrId);
+            // }
             // 查询品种列表
             getDefaultProductTypes()
                 .then(res => {
@@ -839,11 +869,11 @@ export default {
             background-size: 100% 100%;
         }
         .icon-retrieval{
-            background: url('../../assets/images/tzFarming.svg') no-repeat center center;
+            background: url('../../assets/images/retrieval.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-enterprise{
-            background: url('../../assets/images/standingBook.svg') no-repeat center center;
+            background: url('../../assets/images/enterprise.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-tzFarming{
@@ -949,11 +979,23 @@ export default {
             background-size: 100% 100%;
         }
         .icon-supervise{
-            background: url('../../assets/images/nodeManage.svg') no-repeat center center;
+            background: url('../../assets/images/supervise.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-monitor{
             background: url('../../assets/images/statistical.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-cropManagement{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-farmworkcommodity{
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-farmworkreview{
+            background: url('../../assets/images/management.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{

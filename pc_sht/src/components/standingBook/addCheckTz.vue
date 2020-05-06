@@ -39,16 +39,22 @@
           <el-input type="textarea" v-model="local_remark"></el-input>
         </el-form-item>
         <el-form-item label="上传图片" prop="desc">
-          <div class="img_group">
-          <img style="width: 50px;height: 50px; margin-right: 20px;" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+ img_url" v-if="img_url && file == ''">
-            <div class="img_box" v-if="allowAddImg">
-              <input type="file" accept="image/*" @change="changeImg($event)" ref="inputcheckimg">
-              <div class="filter"></div>
+          <div class="msg-item">   
+            <div class="img-list">
+              <ul>
+                <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                  <figure class="image">
+                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                  </figure>
+                </li>
+              </ul>
             </div>
-            <!--<div class="img_box" v-for="(item,index) in imgArr" :key="index">-->
-            <div v-for="(item,index) in imgArr" :key="index">
-              <div class="img_show_box">
-                <img style="width: 100%" :src="item" alt="">
+            <div>
+              <div class="submit">
+                添加图片
+                <form id="upload" enctype="multipart/form-data" method="post"> 
+                  <input type="file" class="file" ref="file" @change="fileFun($event)">
+                </form>
               </div>
             </div>
           </div>
@@ -112,9 +118,9 @@
 </template>
 
 <script>
-  import {addCheckItem,updateCheck} from '../../js/address/url.js';
+  import {addCheckItem, updateCheck, uploadImgJc} from '../../js/address/url.js';
   import {purchase, getDefaultProductTypes,} from "../../js/goods/goods.js";
-  import {GetSaleTz, GetAllBiz, Parse, jcpurchase,UpdateCheck} from '../../js/standingBook/standingBook.js'
+  import {GetSaleTz, GetAllBiz, Parse, jcpurchase,UpdateCheck, AddCheckItem} from '../../js/standingBook/standingBook.js'
   import axios from 'axios';
   export default {
     name: "saleTz",
@@ -170,6 +176,7 @@
         count: 1,
         booth_name: '',
         check_good: '',
+        imgArr1: [],
       }
     },
     mounted() {
@@ -207,6 +214,46 @@
       }
     },
     methods: {
+      fileFun(event){
+        let that = this;
+        this.file = event.target.files[0];
+        let formData = new FormData();
+        formData.append('img_url', this.file);   
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };
+        const ajaxPost = function (url, params,config) {
+          return new Promise((resolve, reject) => {
+            axios
+              .post(url, params,{config})
+              .then((res) => {
+                resolve(res.data)
+              })
+              .catch(() => {
+                reject('error')
+              })
+          })
+        }
+          let url = uploadImgJc;
+          ajaxPost(url,formData,config)
+            .then(res => {
+              if(res.result == true){
+                let obj = {
+                  img_url: res.data
+                }
+                let arr = []
+                arr.push(obj)
+                this.imgArr1.push(obj)
+                this.$message.success(res.message);
+              }else{
+                this.$message.error(res.message);
+              }
+              this.file = null
+            })
+            .catch(res => {
+              console.log(res)
+            })
+      },
       goodsTypesFun(ele){
         this.getGoodsFun(ele)
       },
@@ -261,6 +308,15 @@
       },
       //  表单提交数据
       submitFormLz() {
+        let img_url = '';
+        if(this.imgArr1.length > 0){
+          this.imgArr1.forEach(val => {
+            img_url += val.img_url + ','
+          })
+        }
+        if(img_url != ''){
+          img_url = img_url.substr(0, img_url.length - 1)
+        }
         if(this.msg_id){
           if (this.submit_goods_name == '') {
             return false;
@@ -293,20 +349,55 @@
               'Content-Type': 'multipart/form-data'
             }
           }
-          axios.post(updateCheck, formData, config).then((res) => {
-            if (res.status === 200) {
-              this.$message.success(res.data.message);
-              this.$router.go(-1);
-              this.submitclear();
-              this.isShowImg = true;
-              this.showBaseCode = '';
-            }
-          })
+          // axios.post(updateCheck, formData, config).then((res) => {
+          //   if (res.status === 200) {
+          //     this.$message.success(res.data.message);
+          //     this.$router.go(-1);
+          //     this.submitclear();
+          //     this.isShowImg = true;
+          //     this.showBaseCode = '';
+          //   }
+          // })
         }else{
           if (this.submit_goods_name == '') {
             return false;
           }
           this.getMerchantName();
+          // let params = {
+          //   node_id: this.local_node_id,
+          //   node_name: this.local_node_name,
+          //   region: this.local_region,
+          //   region_name: this.local_region_name,
+          //   biz_id: this.submit_biz_id,
+          //   shop_booth_id: this.submit_shop_booth_id,
+          //   booth_name: this.submit_booth_name,
+          //   stall_no: this.local_stall_no,
+          //   check_good: this.submit_goods_name,
+          //   check_result: this.local_check_result,
+          //   remark: this.local_remark,
+          //   img_url: img_url,
+          //   check_date: this.local_check_date,
+          //   check_project: this.check_project, // 检测项目
+          //   standard_value: this.standard_value, // 检测值
+          //   check_standard: this.check_standard, //检测标准
+          //   check_res: this.check_res, //检测结果值 
+          //   check_person: this.check_person, // 检测人
+          //   check_mechanism: this.check_mechanism, //检测机
+          //   check_goods_code: this.check_goods_code, //选择商品的goods_code
+          // }
+          // console.log(params)
+          // AddCheckItem(params)
+          //   .then(res => {
+          //     if (res.result == true) {
+          //       this.$message.success(res.message);
+          //       this.$router.push({name: 'CheckTz'})
+          //     }else{
+          //       this.$message.error(res.message);
+          //     }
+          //   })
+          //   .catch((res) => {
+          //     console.log(res)
+          //   })
           let formData = new FormData();
           formData.append('node_id', this.local_node_id);
           formData.append('node_name', this.local_node_name);
@@ -319,7 +410,7 @@
           formData.append('check_good', this.submit_goods_name);
           formData.append('check_result', this.local_check_result);
           formData.append('remark', this.local_remark);
-          formData.append('img', this.file);
+          formData.append('img_url', img_url);
           formData.append('check_date', this.local_check_date);
           formData.append('check_project', this.check_project); // 检测项目
           formData.append('standard_value', this.standard_value); // 检测值
@@ -337,9 +428,9 @@
             if (res.status === 200) {
               this.$message.success(res.data.message);
               this.$router.push({name: 'CheckTz'})
-              this.submitclear();
-              this.isShowImg = true;
-              this.showBaseCode = '';
+              // this.submitclear();
+              // this.isShowImg = true;
+              // this.showBaseCode = '';
             }
           })
         }
@@ -453,6 +544,76 @@
 </script>
 
 <style lang='less' scoped>
+  .msg-item{
+    width: 400px;
+    display: flex;
+    .img-list{
+      ul{
+        display: flex;
+        flex-wrap:wrap;
+        li{
+          position: relative;
+          top: 0;
+          left: 0;
+          margin: 0 10px;
+          .delete{
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            z-index: 66;
+            width: 12px;
+            height: 12px;
+            text-align: center;
+            line-height: 7px;
+            font-size: 24px;
+            background: #990000;
+            color: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+          }
+          .stop{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            border: none;
+          }
+          img{
+            width: 50px;
+            height: 50px;
+            border: 1px solid #eaeaea;
+          }
+        }
+      }
+    }
+    .submit{
+      margin: 10px auto;
+      position: relative;
+      left: 0;
+      display: inline-block;
+      width: 110px;
+      height: 30px;
+      line-height: 30px;
+      color: #409EFF;
+      background: #fff;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+      border: 1px solid #409EFF;
+      .file{
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 110px;
+        height: 30px;
+        opacity: 0;
+        background: rgba(0,0,0,0);
+      }
+    } 
+  }
   .img_group{
     display: flex;
   }

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { queryNodeBasePage,getAssetsConfig,getAssetsUser,insertAssetsTask,getAssetsTask,getAssetsTaskImg,updateAssetsTask,
     deleteAssetsTaskImg,getAssetsTaskInfo,insertAssetsImg,updateAssetsTaskInfo,deleteAssetsInfo,updateAssetsTaskAssignId,
     insertAssetsTaskResult,getAssetsTaskResult,getAssetsTaskLog,updateAssetsTaskScbj,deleteAssetsTask,getAllGroup,insertAssetsGroup,
-    queryBusinessForMobile,downAssetsTaskXsl,deleteAssetsGroup
+    queryBusinessForMobile,downAssetsTaskXsl,deleteAssetsGroup, updateAssetsTaskState
 } from '../address/url.js';
 
 // 查询节点
@@ -107,4 +107,8 @@ export const DownAssetsTaskXsl = function(form) {
             'Content-Type': 'application/json'
         }
     })
+}
+// 开启任务 
+export const  UpdateAssetsTaskState  = function(params) {
+    return ajaxPost(updateAssetsTaskState, params)
 }

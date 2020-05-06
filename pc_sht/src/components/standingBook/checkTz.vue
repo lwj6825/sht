@@ -107,7 +107,15 @@
     <!--显示图片-->
     <el-dialog :visible.sync="centerDialogVisible" :before-close="handleClose" :close-on-click-modal = "isclick">
       <div class="lz-dialog-content">
-        <img class="lz-checkimag" :src="BaseImgUrl+viewImgUrl" v-if="isImg"/>
+        <div class="imgBox" v-if="isImg">
+          <el-carousel trigger="click" :autoplay="autoplay" :initial-index="current" :height="imgHeight + 'px'">
+              <el-carousel-item  v-for="(item,index) in imgArr" :key="index" v-if="imgArr">
+                  <figure class="images" v-if="item.img_url">
+                      <img :style="sizeObj" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                  </figure>
+              </el-carousel-item>
+          </el-carousel>
+        </div>
         <iframe v-else :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + viewImgUrl" 
             scrolling="auto" width="100%" height="600" frameborder="0" id="contentIframe"></iframe>
       </div>
@@ -225,6 +233,12 @@ function getLastYearYestdy(date) {
         endTime: '',
         isImg: true,
         node_id: '',
+        isBigImg: false,
+        imgArr: [],
+        autoplay: false,
+        current: 0,
+        sizeObj: {},
+        imgHeight: '',
       }
     },
     mounted() {
@@ -253,7 +267,17 @@ function getLastYearYestdy(date) {
     },
     methods: {
       viewFun(ele){
-        this.$router.push({name:'ViewCheckTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name, msg: ele}})
+        this.$router.push({name:'ViewCheckTz',query: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name, msg: JSON.stringify(ele)}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/standingBook/viewCheckTz",
+        //   query: {
+        //     areaId: this.areaId,
+        //     bigAreaId: this.bigAreaId, 
+        //     areaName: this.local_area_booth_name, 
+        //     msg: JSON.stringify(ele)
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
       },
       getTime(){
         var start = new Date();
@@ -293,6 +317,8 @@ function getLastYearYestdy(date) {
       },
       // 关闭按钮
       handleClose(done) {
+        this.current = 0
+        this.imgArr = []
         done();
       },
       //点击搜索
@@ -381,14 +407,30 @@ function getLastYearYestdy(date) {
       },
       //显示表格中得图片
       viewImg(index, rows) {
-        if(index.img_url != ''){
+        let url = ''
+        if(index.img_url){
+          url = index.img_url.substring(1, index.img_url.length)
+        }
+        if(index.check_img.length > 0){
+          if(index.img_url){
+            index.check_img.push({img_url: url})
+          }
           if(index.img_url.substring(index.img_url.length-4) == '.pdf'){
             this.isImg = false
           }else{
             this.isImg = true
           }
+          this.current = 0
+          let imgArr = []
+          this.imgArr = index.check_img
           this.centerDialogVisible = true;
-          this.viewImgUrl = index.img_url;
+          // this.viewImgUrl = index.img_url;
+        }else if(index.img_url){
+          index.check_img.push({img_url: url})
+          this.current = 0
+          let imgArr = []
+          this.imgArr = index.check_img
+          this.centerDialogVisible = true;
         } else {
           this.$message({
             message: '没有上传附件',
@@ -398,7 +440,16 @@ function getLastYearYestdy(date) {
       },
       //去新增界面
       goAddCheck() {
-        this.$router.push({name:'AddCheckTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name }})
+        this.$router.push({name:'AddCheckTz',query: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name }})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/standingBook/addCheckTz",
+        //   query: {
+        //     areaId: this.areaId,
+        //     bigAreaId: this.bigAreaId, 
+        //     areaName: this.local_area_booth_name
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
       },
       //设置table表头
       rowClass({row, rowIndex}) {
@@ -515,7 +566,31 @@ function getLastYearYestdy(date) {
 <style lang='less' scoped>
 
   @lz-filter-name-width: 70px;
-  
+  .imgBox{
+    .el-carousel{
+      padding: 10px 0;
+      width: 100%;
+      height: 600px;
+      .images{
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        img{
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+    }
+    .el-carousel__container{
+      width: 100%;
+      height: 100%;
+    }
+    .el-carousel__item{
+      color: #475669;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
   /*筛选条件--*/
   .lz-search-condition {
     margin: 10px 0;

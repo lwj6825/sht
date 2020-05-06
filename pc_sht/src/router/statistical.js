@@ -3,6 +3,8 @@ import TotalTransaction from '@/components/statistical/totalTransaction'
 import CommodityMoney from '@/components/statistical/commodityMoney'
 import MerchantMoney from '@/components/statistical/merchantMoney'
 import statisticsMsg from '../components/statistical/statisticsMsg'
+import bizList from '../components/statistical/bizList.vue'
+import viewBizList from '../components/statistical/viewBizList.vue'
 
 export default [
     { 
@@ -64,5 +66,25 @@ export default [
             node:'statistical',
             url:'statisticalTz',
         } 
-    }
+    },
+    {
+        path: 'statistical/bizList',
+        component: resolve => require(['@/components/statistical/bizList'],resolve),
+        name:'BizList',
+        meta:{
+            id:'505',
+            node:'statistical',
+            url:'bizList',
+        } 
+    },
+    {
+        path: 'statistical/viewBizList', 
+        component: resolve => require(['@/components/statistical/viewBizList'],resolve),
+        name:'ViewBizList',
+        meta:{
+            id:'506',
+            node:'statistical',
+            url:'iewBizList',
+        } 
+    },
 ]

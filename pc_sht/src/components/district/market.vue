@@ -44,7 +44,7 @@
                             </el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="460">
+                    <el-table-column label="操作" width="160">
                         <template slot-scope="scope">
                             <!--<el-button type="text" size="small" @click="glMerchantsFun(scope.row)">管理商户&emsp;|</el-button>
                             <el-button type="text" size="small" @click="glSupplierFun(scope.row)">管理供应商&emsp;|</el-button>
@@ -167,29 +167,61 @@ export default {
         },
         addMarketFun(){//新增市场区域
             this.$router.push({name:'AddMarket'})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/district/addMarket",
+            //     query: {}
+            // });
+            // window.open(routeData.href, '_blank');
         },
         glMerchantsFun(ele){//管理商户
             let param = ele.bootList
             localStorage.setItem("dataList",JSON.stringify(param))
             this.$router.push({name:'GlMerchants'})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/district/glMerchants",
+            //     query: {}
+            // });
+            // window.open(routeData.href, '_blank');
         },
         glSupplierFun(ele){//管理供应商  
             let param = ele.bootList
             localStorage.setItem("dataList",JSON.stringify(param))
             this.$router.push({name:'GlSupplier'})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/district/glSupplier",
+            //     query: {}
+            // });
+            // window.open(routeData.href, '_blank');
         },
         glCommodityFun(ele){//管理商品 
             let param = ele.bootList
             localStorage.setItem("dataList",JSON.stringify(param))
             this.$router.push({name:'GlCommodity'})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/district/glCommodity",
+            //     query: {}
+            // });
+            // window.open(routeData.href, '_blank');
         },
         glStandingBookFun(ele){//管理台账 
             let param = ele.bootList
             localStorage.setItem("dataList",JSON.stringify(param))
             this.$router.push({name:'GlStandingBook'})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/district/glStandingBook",
+            //     query: {}
+            // });
+            // window.open(routeData.href, '_blank');
         },
         redactFun(ele){//修改
-            this.$router.push({name:'Redact',params: ele})
+            this.$router.push({name:'Redact',query: {msg: JSON.stringify(ele)}})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/district/redact",
+            //     query: { 
+            //         msg: JSON.stringify(ele)
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
         },
     }
 }

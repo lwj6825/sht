@@ -144,14 +144,18 @@ export default {
             areaId: '',
             loginId: '',
             loginName: '',
+            searchMsg: '',
         }
     },
     mounted(){
+        if(this.$route.query.searchMsg){
+            this.searchMsg = JSON.parse(this.$route.query.searchMsg)
+        }
         this.loginId = localStorage.getItem('loginId')
         this.loginName = localStorage.getItem('loginName')
-        this.userId = this.$route.params.searchMsg.userId
-        this.areaId = this.$route.params.searchMsg.region
-        this.getGoodsList(1,this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
+        this.userId = this.searchMsg.userId
+        this.areaId = this.searchMsg.region
+        this.getGoodsList(1,this.searchMsg,this.searchMsg.currShop_userId);
     },
     methods: {
         fileFun(event, ele){
@@ -302,10 +306,10 @@ export default {
             let msgData = {
                 page:this.page,
                 cols:"15",
-                userId:this.$route.params.searchMsg.currShop_userId,
-                region:this.$route.params.searchMsg.region,
-                shopBoothId:this.$route.params.searchMsg.shop_booth_id,
-                bindgys:this.$route.params.searchMsg.bindgys
+                userId:this.searchMsg.currShop_userId,
+                region:this.searchMsg.region,
+                shopBoothId:this.searchMsg.shop_booth_id,
+                bindgys:this.searchMsg.bindgys
             }
             EntryGoodsList(msgData)
                 .then(res => {
@@ -321,10 +325,10 @@ export default {
             let msgData = {
                 page: this.page,
                 cols:"15",
-                userId:this.$route.params.searchMsg.currShop_userId,
-                region:this.$route.params.searchMsg.region,
-                shopBoothId:this.$route.params.searchMsg.shop_booth_id,
-                bindgys:this.$route.params.searchMsg.bindgys
+                userId:this.searchMsg.currShop_userId,
+                region:this.searchMsg.region,
+                shopBoothId:this.searchMsg.shop_booth_id,
+                bindgys:this.searchMsg.bindgys
             }
             SellGoodsList(msgData)
                 .then(res => {
@@ -362,10 +366,10 @@ export default {
                 cols : "15",   
                 goods_name:this.searchGoodsName,             
                 goods_Type: this.addGoodsType,  
-                parent_userId:this.$route.params.searchMsg.parent_userId,//区域的userId
-                parent_shop_booth_id:this.$route.params.searchMsg.parent_shop_booth_id,//区域的shop_booth_id
-                shop_booth_id:this.$route.params.searchMsg.currShop_shop_booth_id,//当前商户的shop_booth_id
-                userId:this.$route.params.searchMsg.currShop_userId//当前商户的userId
+                parent_userId:this.searchMsg.parent_userId,//区域的userId
+                parent_shop_booth_id:this.searchMsg.parent_shop_booth_id,//区域的shop_booth_id
+                shop_booth_id:this.searchMsg.currShop_shop_booth_id,//当前商户的shop_booth_id
+                userId:this.searchMsg.currShop_userId//当前商户的userId
             }
             BindingGoods(data)
                 .then(res => {
@@ -407,7 +411,7 @@ export default {
                 deleteGood(row.ID)
                 .then(res => {                    
                     this.$message.success('删除成功');
-                    this.getGoodsList(this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId)
+                    this.getGoodsList(this.searchMsg,this.searchMsg.currShop_userId)
                 })
                 .catch(res => {
                     console.log(res);
@@ -459,7 +463,7 @@ export default {
                 let data = {
                     ids:this.checkGoodId.join(','),
                     goods_type:this.addGoodsType,
-                    shop_booth_id:this.$route.params.searchMsg.currShop_shop_booth_id,
+                    shop_booth_id:this.searchMsg.currShop_shop_booth_id,
                     key_number: numArr.join(','),
                 }
                 console.log(data)
@@ -471,7 +475,7 @@ export default {
                             this.checkGoodId = []
                             this.selectGoodsList = []
                             this.allGood = []
-                            this.getGoodsList(this.$route.params.searchMsg,this.$route.params.searchMsg.currShop_userId);
+                            this.getGoodsList(this.searchMsg,this.searchMsg.currShop_userId);
                             this.getBindingGoodsList() 
                             this.addNew = false;
                             this.page2 = 1

@@ -83,13 +83,10 @@
                 </div>
             </div>
             <div class="tables" >
-                <el-table :data="tableData" :header-cell-style="rowClass" @expand-change="detailTzFun" style="height:560px;"
-                :row-key='getRowKeys'>
+                <el-table :data="tableData" :header-cell-style="rowClass" @expand-change="detailTzFun" :row-key='getRowKeys'>
                     <el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
-                    
-                   
                     <el-table-column prop="in_date" label="销售日期"  width="180"> </el-table-column>
-                    <el-table-column label="商品信息">
+                    <el-table-column label="商品信息" width="400">
                         <template slot-scope="scope">
                             <p>{{scope.row.details}}</p>
                         </template>
@@ -109,7 +106,6 @@
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
                         </template> v-if="props.row.tz_id == goodMsg[0].tz_id"
                     </el-table-column>-->
-                    <el-table-column prop="buyer_booth_name" label="客户"></el-table-column>
                     <el-table-column type="expand">
                         <template slot-scope="scope">
                             <div class="list">
@@ -132,11 +128,10 @@
                             </div>
                         </template>
                     </el-table-column>
-                     
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
-            layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
+            layout="total, sizes, prev, pager, next, jumper" :total="num" @size-change="handleSizeChange" :page-sizes="[10, 20, 30, 40]"></el-pagination>
         </div>
     </div>
 </template>
@@ -181,7 +176,7 @@ export default {
             loading:true,
             // options:['电子秤','11','11','11'],
             page: 1,
-            cols: 15,
+            cols: 10,
             num: 0,
             userId: 2,
             total: '',
@@ -238,8 +233,8 @@ export default {
         }
     },
     created(){
-            this.gooduserId = this.$route.query.gooduserId;
-     },
+        this.gooduserId = this.$route.query.gooduserId;
+    },
     mounted() {
         window.scrollTo(0,0)
         this.node_id = localStorage.getItem('loginId');
@@ -338,6 +333,10 @@ export default {
         
     },
     methods: {
+        handleSizeChange(val){
+            this.cols = val
+            this.getSaleTzFun()
+        },
         disabledDate (value) {
             // if (Date.now() <= value) {
             //         return true
@@ -349,9 +348,12 @@ export default {
             return false
         },
         back(){
-            console.log(this.shopname1,this.merChant1)
-            let dataMore = [this.start_time1,this.end_time1,this.shopname1,this.gooduserId1,this.areaId1,this.merChant1]
-            console.log(dataMore)
+            let dataMore = []
+            if(this.$route.query.types == 'all'){
+                dataMore = [this.start_time1,this.end_time1,this.shopname1,'','',this.merChant1, 'types']
+            }else{
+                dataMore = [this.start_time1,this.end_time1,this.shopname1,this.gooduserId1,this.areaId1,this.merChant1]
+            }
             localStorage.setItem("Time",dataMore);
             window.history.go(-1);
         },
@@ -371,9 +373,9 @@ export default {
 
       },
         exportFun(){
-            window.location.href = baseUrl + 'tz/downloadXsTzDetail?region=' + this.areaId + '&seller_booth_id=' 
-                + '&seller_booth_name=' + this.buyerName + '&start_time=' + this.startTime + '&end_time=' + this.endTime + '&page=' 
-                + this.page + '&cols=' + this.cols
+            window.location.href = baseUrl + 'tz/downloadXsTzDetail?region=' + this.areaId + '&seller_booth_id=' + this.scShopId
+                + '&seller_booth_name=' + this.form.user + '&start_time=' + this.startTime + '&end_time=' + this.endTime
+                + '&tz_origin=' + this.form.source + '&details=' + this.form.GoodList + '&node_id=' + this.node_id
         },
         getTime(){
             var start = new Date();

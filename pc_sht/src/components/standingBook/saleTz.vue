@@ -115,7 +115,7 @@
                                 </ul>
                                 <ul class="item" v-for="(item,index) in scope.row.tz_detail_list" :key="index">
                                     <li>{{item.goods_name}}</li>
-                                    <li>{{item.price}}元/{{item.goods_unit}}</li>
+                                    <li>{{item.price}}元{{item.goods_unit ? ('/' + item.goods_unit) : ''}}</li>
                                     <li>{{item.number + item.goods_unit}}</li>
                                 </ul>
                                 <!--<ul class="item" v-for="(item,index) in scope.row.tz_detail_list" :key="index">
@@ -130,7 +130,7 @@
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
-            layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
+            layout="total, sizes, prev, pager, next, jumper" :total="num" @size-change="handleSizeChange" :page-sizes="[10, 20, 30, 40]"></el-pagination>
         </div>
     </div>
 </template>
@@ -173,7 +173,7 @@ export default {
         return {
             // options:['电子秤','11','11','11'],
             page: 1,
-            cols: 15,
+            cols: 10,
             num: 0,
             userId: 2,
             total: '',
@@ -249,6 +249,10 @@ export default {
         
     },
     methods: {
+        handleSizeChange(val){
+            this.cols = val
+            this.getSaleTzFun()
+        },
         downloadFun(){
             window.location.href = importMoneyAndWeightForMarket + '?node_id=' + this.node_id +  '&start_date=' + this.startTime 
             + '&end_date=' + this.endTime
@@ -271,9 +275,9 @@ export default {
 
       },
         exportFun(){
-            window.location.href = baseUrl + 'tz/downloadXsTzDetail?region=' + this.areaId + '&seller_booth_id=' 
-                + '&seller_booth_name=' + this.buyerName + '&start_time=' + this.startTime + '&end_time=' + this.endTime + '&page=' 
-                + this.page + '&cols=' + this.cols
+            window.location.href = baseUrl + 'tz/downloadXsTzDetail?region=' + this.areaId + '&seller_booth_id=' + this.scShopId
+                + '&seller_booth_name=' + this.form.user + '&start_time=' + this.startTime + '&end_time=' + this.endTime
+                + '&tz_origin=' + this.form.source + '&details=' + this.form.GoodList + '&node_id=' + this.node_id
         },
         getTime(){
             var start = new Date();
@@ -314,6 +318,7 @@ export default {
                 value1: '',
                 value2: '',
                 upload: '',
+                GoodList:'',//选中商品信息
             }
             this.getTime()
             let arr = []

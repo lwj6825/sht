@@ -146,6 +146,9 @@ export default {
                 this.check = false
             }
         }
+        if(localStorage.getItem('routerId')){        
+            localStorage.removeItem('routerId');
+        }
     },
     methods:{
         focusFun(ele){

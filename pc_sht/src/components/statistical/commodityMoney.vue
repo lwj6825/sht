@@ -27,7 +27,7 @@
             <div class="table_cell_title"  style="margin-left:20px;">
                     商品交易额明细&nbsp;&nbsp;&nbsp;【总交易额:{{this.totol_price}}元， 总交易量:{{this.weight}}公斤】
             </div>
-            <el-table :data="tableData"  style="width:100%;margin-left:20px;height:448px;" :header-cell-style="{background:'#f5f5f5'}" fit
+            <el-table :data="tableData"  style="width:100%;margin-left:20px;" :header-cell-style="{background:'#f5f5f5'}" fit
                    :row-style="{height:'40px'}"  >
                 <el-table-column prop="plu_name" label="商品名称" fit></el-table-column>
                 <el-table-column prop="price"  label="商品总交易额(元)"></el-table-column>
@@ -108,14 +108,14 @@ export default {
         }
      },
      created(){
-           this.gooduserId = this.$route.params.gooduserId;
+           this.gooduserId = this.$route.query.gooduserId;
      },
      mounted(){
           window.scrollTo(0,0)
           this.node_id = localStorage.getItem('loginId');
           this.userId = localStorage.getItem('userId');
           this.loginId = localStorage.getItem('loginId');
-          this.gooduserId = this.$route.params.gooduserId;
+          this.gooduserId = this.$route.query.gooduserId;
           function formatTen(num) { 
             return num > 9 ? (num + "") : ("0" + num); 
         }
@@ -143,15 +143,15 @@ export default {
             var day = start.getDate(); 
             this.start_time = year + "-"+formatTen(month) + "-" +formatTen(day-1)  
             this.end_time = year + "-"+formatTen(month) + "-" +formatTen(day)
-            this.start_time = this.$route.params.startTime; 
-            this.end_time  = this.$route.params.endTime;
+            this.start_time = this.$route.query.startTime; 
+            this.end_time  = this.$route.query.endTime;
             this.time = [this.start_time,this.end_time]
-            this.gooduserId = this.$route.params.gooduserId;
-            this.input = this.$route.params.shopname;  
+            this.gooduserId = this.$route.query.gooduserId;
+            this.input = this.$route.query.shopname;  
             if(!this.input){
                 this.input = ""
             }else{
-                this.input = this.$route.params.shopname;
+                this.input = this.$route.query.shopname;
             }
         },
         getTime1 () {
@@ -201,7 +201,6 @@ export default {
             let dataMore = [this.time,this.input,this.gooduserId]
             localStorage.setItem("Time", dataMore);
             this.input2 = this.input;
-       
             this.input = row.plu_name
             this.$router.push({name:'StatisticalTz',
                            query:{input:this.input2, 
@@ -212,6 +211,18 @@ export default {
                             gooduserId:this.bigAreaId
                            }
             })
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/statisticalTz",
+            //     query: {
+            //         input:this.input2, 
+            //         shopname:row.plu_name,
+            //         startTime:this.start_time,  
+            //         endTime:this.end_time,
+            //         areaId:this.areaId,
+            //         gooduserId:this.bigAreaId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
         },
         defaultTzFun(){
             let data = {
@@ -226,9 +237,9 @@ export default {
             GetMarkets(data)
                 .then(res =>{
                     // console.log(data,"更多post数据")
-                    if(this.$route.params.gooduserId){
+                    if(this.$route.query.gooduserId){
                         res.data.dataList.forEach(ele => {
-                            if(ele.userId == this.$route.params.gooduserId){
+                            if(ele.userId == this.$route.query.gooduserId){
                                 this.bigAreaId = ele.userId;
                                 this.areaId = ele.bootList[0].shop_booth_id;
                             }

@@ -347,6 +347,7 @@ export default {
                     loading.close();
                 })
                 .catch(res => {
+                    loading.close();
                     console.log(res);
                 })
 

@@ -346,13 +346,43 @@
         this.getPurchase()
       },
       newStocksMgm(){
-        this.$router.push({name:'NewStocks',params:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'scShopId': this.scShopId}})
+        // window.open('http://192.168.1.92:8088/#/home/goods/market'); 
+        // let routeData = this.$router.resolve({
+        //   path: "/home/goods/newStocks",
+        //   query: {
+        //     areaId: this.areaId,
+        //     bigAreaId: this.bigAreaId,
+        //     scShopId: this.scShopId
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'NewStocks',query:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'scShopId': this.scShopId}})
       },
       check(index, row){
-        this.$router.push({name:'ViewStocks',params:{'name':this.viewGoods,'goodsMsg':row,'scShopId': this.scShopId}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/goods/viewStocks",
+        //   query: {
+        //     name: this.viewGoods,
+        //     goodsMsg: JSON.stringify(row),
+        //     scShopId: this.scShopId
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'ViewStocks',query:{'name':this.viewGoods,goodsMsg: JSON.stringify(row),'scShopId': this.scShopId}})
       },
       edit(index, row){
-        this.$router.push({name:'EditStocks',params:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'name':this.viewGoods,'goodsMsg':row,'scShopId': this.scShopId}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/goods/editStocks",
+        //   query: {
+        //     name: this.viewGoods,
+        //     goodsMsg: JSON.stringify(row),
+        //     scShopId: this.scShopId,
+        //     areaId: this.areaId,
+        //     bigAreaId: this.bigAreaId,
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'EditStocks',query:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'name':this.viewGoods,goodsMsg: JSON.stringify(row),'scShopId': this.scShopId}})
       },
       handleDelete(index, row){ //删除列表信息
         this.$confirm('是否要删除此条信息?', '提示', {

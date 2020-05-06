@@ -2,7 +2,8 @@ import axios from 'axios';
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryDecodeRule,queryCodeTypeSelect,queryNodeSelect,insertDecodeRule,updateDecodeRule,deleteDecodeRule,downloadDecodeRule,importDecodeRule,
     queryTraceabilityCode,insertTraceabilityCode,updateTraceabilityCode,deleteTraceabilityCode,downloadTraceabilityCode,importTraceabilityCode,querySupplierSelect,
-    queryTraceInfo,insertTraceInfo,updateTraceInfo,deleteTraceInfo,downloadTraceInfo,importTraceInfo, queryRuleTypeSelect
+    queryTraceInfo,insertTraceInfo,updateTraceInfo,deleteTraceInfo,downloadTraceInfo,importTraceInfo, queryRuleTypeSelect, queryEtraceLog,
+    queryResultTypeSelect, downloadEtraceLog, queryTraceCode
 } from '../address/url.js';
 
 //解码规则管理
@@ -103,7 +104,7 @@ export const UpdateTraceInfo = function(params) {
 export const DeleteTraceInfo = function(params) {
     return ajaxPost(deleteTraceInfo, params)
 }
-// 下载
+// 下载追溯信息
 export const DownloadTraceInfo = function(form) {
     return axios({ // 用axios发送post请求
         method: 'post',
@@ -115,4 +116,29 @@ export const DownloadTraceInfo = function(form) {
             'Content-Type': 'application/json'
         }
     })
+}
+// 追溯查询日志
+export const QueryEtraceLog = function(params) {
+    return ajaxPost(queryEtraceLog, params)
+}
+// 查询结果  
+export const QueryResultTypeSelect = function(params) {
+    return ajaxGet(queryResultTypeSelect +'?'+ params)
+}
+// 下载追溯日志
+export const DownloadEtraceLog = function(form) {
+    return axios({ // 用axios发送post请求
+        method: 'post',
+        url: downloadEtraceLog, // 请求地址
+        data: form, // 参数
+        // responseType: 'blob', // 表明返回服务器返回的数据类型
+        responseType: 'arraybuffer',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+// 追溯查询日志
+export const QueryTraceCode = function(params) {
+    return ajaxPost(queryTraceCode, params)
 }

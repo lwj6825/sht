@@ -480,14 +480,41 @@ export default {
                 })
         },
         addEntryTzFun(){
-            this.$router.push({name:'AddEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId}})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/standingBook/addEntryTz",
+            //     query: {
+            //         areaId: this.areaId,
+            //         bigAreaId: this.bigAreaId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
+            this.$router.push({name:'AddEntryTz',query: {areaId: this.areaId,bigAreaId: this.bigAreaId}})
         },
         detailTzFun(ele){
             // console.log(ele)
-            this.$router.push({name:'ViewEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: ele}})
+            this.$router.push({name:'ViewEntryTz',query: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: JSON.stringify(ele)}})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/standingBook/viewEntryTz",
+            //     query: {
+            //         areaId: this.areaId,
+            //         bigAreaId: this.bigAreaId,
+            //         param: JSON.stringify(ele)
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
         },
         againFun(ele){
-            this.$router.push({name:'AddEntryTz',params: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: ele,types: 'again'}})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/standingBook/addEntryTz",
+            //     query: {
+            //         areaId: this.areaId,
+            //         bigAreaId: this.bigAreaId,
+            //         param: JSON.stringify(ele),
+            //         types: 'again'
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
+            this.$router.push({name:'AddEntryTz',query: {areaId: this.areaId,bigAreaId: this.bigAreaId,param: JSON.stringify(ele),types: 'again'}})
         }
     },
     components:{

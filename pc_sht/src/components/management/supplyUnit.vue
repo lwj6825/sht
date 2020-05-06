@@ -39,9 +39,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="tel" label="联系电话"> </el-table-column>
-                    <el-table-column label="操作" width="180">
+                    <el-table-column label="操作" width="200">
                         <template slot-scope="scope">
-                            <el-switch :width="widthNum" style="width: 150px;"
+                            <el-switch :width="widthNum" style="width: 160px;"
                                 v-model="scope.row.status" active-text="启用" inactive-text="停用"
                                 active-value="启用" inactive-value="停用" @change="changeFun(scope.row)">
                             </el-switch>

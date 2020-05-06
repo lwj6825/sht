@@ -256,11 +256,11 @@
             <div class="tab-list">
                 <div class="data">
                     <div class="title">巡检时间</div>
-                    <div class="msg">{{inspect_time}}</div>
+                    <div class="msg">{{inspect_time ? inspect_time : '无'}}</div>
                 </div>
                 <div class="data">
                     <div class="title">巡检人</div>
-                    <div class="msg">{{name}}</div>
+                    <div class="msg">{{name ? name : '无'}}</div>
                 </div>
                 <div class="data">
                     <div class="title">附件</div>
@@ -356,6 +356,7 @@ export default {
             remark: '',
             management2: '',
             ssNode_name2: '',
+            assets_id: '',
         }
     },
     mounted() {
@@ -369,6 +370,7 @@ export default {
         this.getQueryAssetsConf()
         let param = this.$route.params
         this.inspect_id = param.inspect_id
+        this.assets_id = param.assets_id
         this.getMsgFun()
     },
     methods: {
@@ -435,7 +437,8 @@ export default {
         },   
         getMsgFun(){
             let obj = {
-                inspect_id: this.inspect_id
+                inspect_id: this.inspect_id,
+                assets_id: this.assets_id
             }
             QueryInspectId(obj)
                 .then(res => {
@@ -477,7 +480,7 @@ export default {
                     this.creater = param.name
                     this.create_time = param.create_time.substring(0,18)
                     // this.inspect_time = param.inspect_time.substring(0,18)
-                    this.name = param.name
+                    // this.name = param.name
                     let img_url = param.image_url
                     let  imgArr = img_url.split(','),obj ={};
                     imgArr.forEach(val => {
@@ -504,11 +507,10 @@ export default {
                 .catch(res => {
                     console.log(res);
                 })
-
         },
         deleteFun(){
             let obj = {
-                inspect_id: this.inspect_id
+                inspect_id: this.inspect_id,
             }
             DeleteInspect(obj)
                 .then(res => {
