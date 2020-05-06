@@ -340,7 +340,7 @@ const menu = [
   },
     {
       id:'11',
-      name:'零售价填报',
+      name:'报价',
       url:'quotation',
       node:'quotation',
       icon:'icon-quotation',
@@ -357,7 +357,7 @@ const menu = [
                   id:'110000',
                   parentId:'1100',
                   name:'按商户查看',
-                  node:'retail',
+                  node:'quotation',
                   url:'viewQuotation',
                   level:3,
                   children:{

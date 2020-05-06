@@ -8,7 +8,7 @@ export default [
         component: resolve => require(['@/components/quotation/quotation'],resolve),
         name:"quotation",
         meta:{
-            id:'388',
+            id:'500',
             node:'quotation',
             url:'quotation',
         }
@@ -18,7 +18,7 @@ export default [
         component: resolve => require(['@/components/quotation/quotationList'],resolve),
         name:"quotationList",
         meta:{
-            id:'389',
+            id:'501',
             node:'quotation',
             url:'quotationList',
         }
@@ -26,9 +26,9 @@ export default [
     {
         path: 'quotation/viewQuotation',
         component: resolve => require(['@/components/quotation/viewQuotation'],resolve),
-        name:"Viewquotation",
+        name:"viewQuotation",
         meta:{
-            id:'390',
+            id:'502',
             node:'quotation',
             url:'viewQuotation',
         }

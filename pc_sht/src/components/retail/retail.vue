@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="top-title" v-if="isDefault">
-            <TopHead :title='titleArr'></TopHead>   
+            <TopHead :title='titleArr'></TopHead>
         </div>
         <div class="top-title" v-else>
             <NavHead :parent='parentOperation' :child='childOperation'></NavHead>
@@ -27,10 +27,11 @@ export default {
         }
     },
     mounted() {
+
         this.titleArr = this.$route.meta.title.join(",");
     },
     methods: {
-        
+
     },
     components:{
         TopHead,
@@ -51,4 +52,3 @@ export default {
     }
 
 </style>
-

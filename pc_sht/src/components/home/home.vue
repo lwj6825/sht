@@ -112,7 +112,7 @@ export default {
                 this.isShow = false;
             }
         },200)
-        
+
         if(localStorage.getItem('menuList')){
             this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
             // console.log(this.mainList)
@@ -339,6 +339,55 @@ export default {
                         }
                    }
                })
+            }else if(to.meta.node == 'quotation'){
+                // this.enterChildPage = false;
+                this.mainList.forEach(ele => {
+                   if(ele.node == 'quotation'){
+                        if(ele.children.id == toId){
+                            this.enterChildPage = false;
+                        }else{
+                            this.enterChildPage = true;
+                            this.mainList.forEach(ele => {
+                                if(ele.node == "quotation"){//market页操作
+                                    ele.children.nodeList.forEach(val=> {
+                                        if(val.id == toId){
+                                            this.parentName = ele.children.nav_title;
+                                            this.childrenName = val.text;
+                                        }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得子级名称
+                                if(ele.node == "quotation"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                       if(ele.children && ele.children.nodeList.length > 0){
+                                           ele.children.nodeList.forEach(val => {
+                                               if(val.id == toId ){
+                                                    parentId = val.parentId;
+                                                    if(to.params.name){
+                                                        this.childrenName = to.params.name;
+                                                    }else{
+                                                        this.childrenName = val.text;
+                                                    }
+
+                                                }
+                                           })
+                                       }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
+                                if(ele.node == "quotation"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                        if(ele.id == parentId){
+                                            this.parentName = ele.text;
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                   }
+               })
             }else if(to.meta.node == 'district'){
                 this.mainList.forEach(ele => {
                    if(ele.node == 'district'){
@@ -455,8 +504,8 @@ export default {
     },
     methods:{
         jumpFun(){
-            // window.open('http://shop.zhdtech.com/login/operation'); 
-            window.open('http://shop.zhdtech.com/login/operation?role_id=' + this.roleId); 
+            // window.open('http://shop.zhdtech.com/login/operation');
+            window.open('http://shop.zhdtech.com/login/operation?role_id=' + this.roleId);
         },
         changeMenu(tabTd){//菜单切换
             if(tabTd == '344'){//是统计页
@@ -499,6 +548,19 @@ export default {
                     }
                 })
             }else if(tabTd == '191'){//是角色2级菜单id
+                this.isShowLevelTwo = false;
+                this.isHasDistance = false;
+                this.levelOneCurrId = tabTd;
+                this.mainList.forEach(ele => {
+                    if(ele.id == tabTd){
+                        this.levelThreeMenu.push({
+                            id:ele.id,
+                            title:ele.children.nav_title
+                        })
+                        this.$router.push({path:`/home/${ele.node}/${ele.children.url}`});
+                    }
+                })
+            }else if(tabTd == '501'){//是报价
                 this.isShowLevelTwo = false;
                 this.isHasDistance = false;
                 this.levelOneCurrId = tabTd;
@@ -565,7 +627,7 @@ export default {
                                     })
                                 })
                                 if(ele.describe == "自定义图表"){
-                                    window.open('https://signin.aliyun.com/zhdtech.onaliyun.com/login.htm');      
+                                    window.open('https://signin.aliyun.com/zhdtech.onaliyun.com/login.htm');
                                     return
                                 }
                                 if(ele.children.nodeList && ele.children.nodeList.length >1){
@@ -612,6 +674,21 @@ export default {
                 if(this.parentName == name){
                     this.enterChildPage = false;
                     this.$router.push({name:'RetailList'})
+                }else{
+                    this.enterChildPage = true;
+                    this.$router.push({path:this.fromPrevPageMsg.url})
+                }
+            }else if(this.$route.meta.node == 'quotation'){
+                let name = '';
+                this.mainList.forEach(ele => {
+                    if(ele.node == 'quotation'){
+                        name = ele.children.nav_title
+                    }
+                })
+
+                if(this.parentName == name){
+                    this.enterChildPage = false;
+                    this.$router.push({name:'quotationList'})
                 }else{
                     this.enterChildPage = true;
                     this.$router.push({path:this.fromPrevPageMsg.url})
@@ -931,7 +1008,7 @@ export default {
             background: url('../../assets/images/control.svg') no-repeat center center;
             background-size: 100% 100%;
         }
-        
+
         .icon-analysis{
             background: url('../../assets/images/analysis.svg') no-repeat center center;
             background-size: 100% 100%;
@@ -1108,4 +1185,3 @@ export default {
         }
     }
 </style>
-

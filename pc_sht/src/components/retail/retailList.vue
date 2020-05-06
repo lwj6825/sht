@@ -88,12 +88,12 @@
                         <div>
                             <span class="submit">
                                 批量新增
-                                <form id="upload" enctype="multipart/form-data" method="post"> 
+                                <form id="upload" enctype="multipart/form-data" method="post">
                                     <input type="file" class="file" ref="file" @change="fileFun($event,1)">
                                 </form>
                             </span>
                         </div>
-                        
+
                     </div>
                     <div class="btn">
                         <el-button @click="closeFun3" style="margin-left: 230px;">取消</el-button>
@@ -162,7 +162,7 @@
                                     <el-option v-for="(item5,index5) in regionArr" :key="index5" :label="item5.BOOTH_NAME"
                                 :value="item5.SHOP_BOOTH_ID"></el-option>
                                 </el-select>
-                                    
+
                             </div>
                         </div>
                         <div class="data">
@@ -178,7 +178,7 @@
                         <div class="data">
                             <div class="tit">填报日期：</div>
                             <div class="msg">
-                                <el-date-picker style="width: 150px;" v-model="in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" 
+                                <el-date-picker style="width: 150px;" v-model="in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                                 placeholder="选择日期"></el-date-picker>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                             <el-tab-pane v-for="(item5,index5) in regionArr" :key="index5" :label="item5.BOOTH_NAME"
                                 :name="item5.BOOTH_NAME"></el-tab-pane>
                         </el-tabs>
-                            
+
                     </div>
                     <div class="search">
                         <p>
@@ -298,7 +298,7 @@
                     <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="全部" name="first"></el-tab-pane>
                         <el-tab-pane v-for="(item,index) in regionArr" :key="index"  :label="item.BOOTH_NAME"
-                            :name="item.BOOTH_NAME"></el-tab-pane> 
+                            :name="item.BOOTH_NAME"></el-tab-pane>
                     </el-tabs>
                     <div class="search">
                         <p>
@@ -396,18 +396,18 @@ function timestampToTime(timestamp) {
     return Y+M+D;
 }
 // 标准时间转日期格式
-function formatTen(num) { 
-    return num > 9 ? (num + "") : ("0" + num); 
-} 
-function formatDate(date) { 
-    var year = date.getFullYear(); 
-    var month = date.getMonth() + 1; 
-    var day = date.getDate(); 
-    var hour = date.getHours(); 
-    var minute = date.getMinutes(); 
-    var second = date.getSeconds(); 
-    return year + "-" + formatTen(month) + "-" + formatTen(day); 
-} 
+function formatTen(num) {
+    return num > 9 ? (num + "") : ("0" + num);
+}
+function formatDate(date) {
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
+    return year + "-" + formatTen(month) + "-" + formatTen(day);
+}
 function getNowFormatDate() {//获取当前时间
     var date = new Date();
     var seperator1 = "-";
@@ -473,7 +473,7 @@ export default {
             viewNodeId: '',
             istableAdd: false, // 点击列表操作添加报表
             allGood: [],
-            selectGood: [], 
+            selectGood: [],
             company: 0,
             isSearch: false, // 是否搜索报价商品
             unitName: '公斤',
@@ -489,6 +489,7 @@ export default {
             tbqy_name: '',
             startTime: '',
             endTime: '',
+            listTime: '',
         }
     },
     mounted() {
@@ -515,7 +516,7 @@ export default {
         goodMsgFun(ele){
             this.loading3 = true
             this.isGoodMsg = true
-            this.goodName = ele.goods_name + '均价￥' + ele.price 
+            this.goodName = ele.goods_name + '均价￥' + ele.price
             let obj = {
                 page: 1,
                 cols: 10000,
@@ -745,7 +746,7 @@ export default {
                 node_id: this.tbqy,
                 shop_booth_id: this.merchant ? this.merchant : '',
                 region: this.region ? this.region : this.tabRegion,
-                in_date: this.form.dataTime,
+                in_date: this.listTime,
                 goods_name: this.name,
             }
             QueryGoodsForNode(obj)
@@ -758,7 +759,7 @@ export default {
                             }
                         })
                     })
-                    
+
                 })
                 .catch(() => {
                     this.loading = false
@@ -783,7 +784,7 @@ export default {
                     this.biz_name = val.bootList[0].booth_name
                 }
             })
-            
+
             if(!ele){
                 this.biz_id = ''
                 this.biz_name = ''
@@ -810,7 +811,7 @@ export default {
             }, 1000)
         },
         // 获取区域
-        getMarketFun(){            
+        getMarketFun(){
             let obj = {
                 page: 1,
                 cols: 1000,
@@ -971,7 +972,7 @@ export default {
                         console.log(res)
                     })
             }
-            
+
         },
         // 智能录入保存
         allAddFun(){
@@ -982,7 +983,7 @@ export default {
             this.message = ''
             this.allGood = []
         },
-        // 
+        //
         searchGoodFun(){
             this.page2 = 1
             this.isSearch = true
@@ -1028,9 +1029,9 @@ export default {
                                 real_weight: val.real_weight ? val.real_weight : '',
                             }
                             arr.push(goodobj)
-                        }       
+                        }
                     })
-                }else{    
+                }else{
                     this.tableData2.forEach(val => {
                         if(val.price){
                             goodobj = {
@@ -1114,6 +1115,7 @@ export default {
             this.istableAdd = false
             var currentTime = new Date()
             this.in_date = formatDate(currentTime)
+            this.listTime = ''
             this.company = 0
             this.isSearch = false
             this.selectGood = []
@@ -1184,6 +1186,7 @@ export default {
             var currentTime = new Date()
             this.in_date = formatDate(currentTime)
             this.isAgain = true
+            this.listTime = ele.in_date
             if(ele.node_id){
                 this.istableAdd = true
                 this.tbqy = ele.node_id
@@ -1322,13 +1325,14 @@ export default {
                         console.log(res)
                     })
             }
-            
+
         },
         deleteFun(){
 
         },
         // 商户查看
         merchantFun(ele){
+          console.log(ele)
             this.$router.push({name: 'ViewRetail',params: ele})
         },
         isShowFun(){
@@ -1652,7 +1656,7 @@ export default {
                         opacity: 0;
                         background: rgba(0,0,0,0);
                     }
-                } 
+                }
                 .table{
                     margin-top: 0;
                     .price{
@@ -1699,7 +1703,7 @@ export default {
                 }
             }
         }
-        
+
     }
 </style>
 <style lang="less">

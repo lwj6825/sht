@@ -17,7 +17,7 @@ import TopHead from '../common/header';
 import NavHead from '../common/navHeader';
 import Bus from '../common/bus.js'
 export default {
-    name:"retail",
+    name:"quotation",
     data() {
         return {
             titleArr:'',
