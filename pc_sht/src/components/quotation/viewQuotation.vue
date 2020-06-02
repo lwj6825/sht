@@ -294,7 +294,7 @@ function getNowFormatDate() {//获取当前时间
         + " "  + date.getHours()  + seperator2  + date.getMinutes() + seperator2 + date.getSeconds();
     return currentdate
 }
-import {getQueryBizGoods,QueryGoodsForBiz,Insert,QueryRegion,AutoIdentity,InsertList} from '../../js/quotation/quotation.js'
+import {getQueryBizGoods,getQueryGoodsForBiz,getInsert,getQueryRegion,getAutoIdentity,getInsertList} from '../../js/quotation/quotation.js'
 import {allBizs} from "../../js/management/management.js";
 import {GetAllNode} from '../../js/user/user.js'
 export default {
@@ -524,7 +524,7 @@ export default {
                 }
                 console.log(arr)
                 let obj =  JSON.stringify(arr)
-                InsertList(obj)
+                getInsertList(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success('修改成功');
@@ -615,7 +615,7 @@ export default {
                 in_date: this.in_date,
                 goods_name: this.name,
             }
-            QueryGoodsForBiz(obj)
+            getQueryGoodsForBiz(obj)
                 .then(res => {
                     this.loading = false
                     let str = ''
@@ -669,7 +669,7 @@ export default {
                 in_date: this.form.dataTime,
                 goods_name: this.name,
             }
-            QueryGoodsForBiz(obj)
+            getQueryGoodsForBiz(obj)
                 .then(res => {
                     this.loading = false
                     res.data.list.forEach(val => {
@@ -843,7 +843,7 @@ export default {
                 }
                 console.log(arr)
                 let obj =  JSON.stringify(arr)
-                InsertList(obj)
+                getInsertList(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success(res.message);
@@ -937,7 +937,7 @@ export default {
                     region: this.region,
                     in_date: this.in_date,
                 }
-                AutoIdentity(obj)
+                getAutoIdentity(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success(res.message);
@@ -1131,7 +1131,7 @@ export default {
                 in_date: this.tbrqView,
                 goods_name: this.name,
             }
-            QueryGoodsForBiz(params)
+            getQueryGoodsForBiz(params)
                 .then(res => {
                     this.loading2 = false
                     let str = ''
@@ -1168,7 +1168,7 @@ export default {
             let obj = {
                 node_id: localStorage.getItem('loginId'),
             }
-            QueryRegion(obj)
+            getQueryRegion(obj)
                 .then(res => {
                     this.regionArr = res.data.regionList;
                     if(this.chooseMer){

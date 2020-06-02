@@ -9,7 +9,7 @@
         <div class="filemsg" v-html="fileMsg">
 
         </div>
-        
+
       </div>
     </div>
 
@@ -36,9 +36,9 @@
           <el-button type="primary" size="medium" class="new-add"  @click="newStocksMgm">{{addGoods}}</el-button>
           <div class="submit">
               批量导入
-            <form id="upload" enctype="multipart/form-data" method="post"> 
+            <form id="upload" enctype="multipart/form-data" method="post">
               <input type="file" class="file" ref="file" @change="fileFun($event)">
-            </form> 
+            </form>
           </div>
           <el-button type="primary" size="medium" class="import" @click="loadFun">下载</el-button>
         </div>
@@ -118,48 +118,22 @@
         node_id: '',
       }
     },
-    // beforeRouteEnter(to, from, next) {
-    //   if (from.path == "/home/goods/editStocks") {
-    //     console.log(11)
-    //     to.meta.isBack = true;
-    //   } else {
-    //     to.meta.isBack = false;
-    //   }
-    //   next();
-    // },
-    // activated() {
-    //   if (this.$route.meta.isBack = true) {
-    //     this.userId = localStorage.getItem('userId');          
-    //     this.isRegion = localStorage.getItem('isRegion')
-    //     this.scShopId = localStorage.getItem('scShopId');
-    //     this.loginId = localStorage.getItem('loginId')
-    //     this.loginName = localStorage.getItem('loginName')
-    //     this.node_id = localStorage.getItem('loginId');
-    //     this.queryNameData = JSON.parse(localStorage.getItem('queryNameData'))
-    //     if(this.isRegion == 'false'){
-    //       this.isShow = false
-    //       this.getPurchase()
-    //     }else{
-    //       this.queryLists();  
-    //     }
-    //   this.$route.meta.isBack = false;
-    //   }
-    // },
     created(){
-      this.userId = localStorage.getItem('userId');          
+      this.userId = localStorage.getItem('userId');
       this.isRegion = localStorage.getItem('isRegion')
       this.scShopId = localStorage.getItem('scShopId');
       this.loginId = localStorage.getItem('loginId')
       this.loginName = localStorage.getItem('loginName')
       this.node_id = localStorage.getItem('loginId');
     },
-    mounted() {  
+    mounted() {
+      this.$route.meta.keepAlive = true;
       this.queryNameData = JSON.parse(localStorage.getItem('queryNameData'))
       if(this.isRegion == 'false'){
         this.isShow = false
         this.getPurchase()
       }else{
-        this.queryLists();  
+        this.queryLists();
       }
     },
     methods: {
@@ -168,7 +142,7 @@
           background: '#f2f2f2',
           color: '#333'
         }
-      },  
+      },
       // 获取供应商
       getAllSuppliers(){
         if(this.isRegion == 'false'){
@@ -210,14 +184,14 @@
         }
       },
       selectSuppliers(val){//选择供应商
-        this.suppliersList.forEach((ele)=>{ 
+        this.suppliersList.forEach((ele)=>{
           if(ele.shop_concacts_id === val){
             this.gysName = ele.biz_name;
           }
         })
       },
       closeFun(){
-        this.boxShow = false;  
+        this.boxShow = false;
         this.getPurchase()
       },
       fileShowFun(){
@@ -232,11 +206,11 @@
         let param = this.$refs.file.files[0];
         this.file = event.target.files[0];
         let formData = new FormData();
-        formData.append('purchase', this.file);  
-        formData.append('userId', this.userId);  
-        formData.append('node_id',this.loginId); 
-        formData.append('region',this.areaId); 
-        formData.append('node_name',this.loginName); 
+        formData.append('purchase', this.file);
+        formData.append('userId', this.userId);
+        formData.append('node_id',this.loginId);
+        formData.append('region',this.areaId);
+        formData.append('node_name',this.loginName);
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };
@@ -251,7 +225,7 @@
                 reject('error')
               })
           })
-        }  
+        }
         let url = baseUrl2 + 'goods/importPurchase'
         ajaxPost(url,formData,config)
           .then(res => {
@@ -352,7 +326,7 @@
           }
         }
         return typeName;
-      },    
+      },
       handleSizeChange(val) { //pageSize 改变时会触发
         console.log(`每页 ${val} 条`);
       },
@@ -364,7 +338,7 @@
         }else{
           this.getPurchase()
         }
-      },  
+      },
       clearConditions(){
         this.goodsName = '';
         this.supplier = '';
@@ -432,7 +406,7 @@
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });          
+          });
         });
       },
       queryLists(){//查询进货商品列表
@@ -447,7 +421,7 @@
           node_id: this.node_id
         }
         QueryArea(data)
-          .then(res => {      
+          .then(res => {
             this.bigAreaId = res.data.dataList[0].userId;
             this.areaId = res.data.dataList[0].bootList[0].shop_booth_id;
             this.areaName = res.data.dataList[0].name

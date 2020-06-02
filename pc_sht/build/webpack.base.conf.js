@@ -15,6 +15,12 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
+  // externals: {
+  //   "BMap": "BMap"
+  //  },
+  externals: {
+   'AMap': 'AMap' // 高德地图配置
+  },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -77,6 +83,6 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    child_process: 'empty'
+    child_process: 'empty',
   }
 }

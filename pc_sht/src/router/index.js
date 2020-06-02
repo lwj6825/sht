@@ -44,6 +44,7 @@ import supervise from './supervise'
 import traceabiltyInfo from './traceabiltyInfo'
 import dataPort from './dataPort'
 import compare from './compare'
+import platform from './platform.js'
 Vue.use(Router)
 
 export default new Router({
@@ -95,7 +96,8 @@ export default new Router({
         ...supervise,
         ...traceabiltyInfo,
         ...dataPort,
-        ...compare
+        ...compare,
+        ...platform
       ]
     },
   ]

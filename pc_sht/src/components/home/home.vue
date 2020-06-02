@@ -47,11 +47,7 @@
             </div>
         </div>
         <div class="main"  :class="{'left-distance200':isHasDistance,'left-distance100':!isHasDistance}">
-            <keep-alive>
-                <router-view v-if="$route.meta.keepAlive" class="router-view">
-                </router-view>
-            </keep-alive>
-            <router-view v-if="!$route.meta.keepAlive" class="router-view" ></router-view>
+            <router-view/>
         </div>
     </div>
 </template>
@@ -510,8 +506,6 @@ export default {
             window.open('http://shop.zhdtech.com/login/operation?role_id=' + this.roleId);
         },
         changeMenu(tabTd){//菜单切换
-            // this.$route.meta.keepAlive = false;
-            // this.$route.meta.isBack = true
             if(localStorage.getItem('routeMsg1')){
                 localStorage.removeItem('routeMsg1')
             }
@@ -665,7 +659,6 @@ export default {
             this.changeMenu(id)
         },
         backPrev(){//三级菜单返回上页
-            // this.$router.go(-1)
             if(this.$route.meta.node == 'statistical'){
                 let name = '';
                 this.mainList.forEach(ele => {
@@ -1071,6 +1064,9 @@ export default {
         }
         .icon-compare{
             background: url('../../assets/images/management.svg') no-repeat center center;
+        }
+        .icon-platform{
+            background: url('../../assets/images/retail.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{
