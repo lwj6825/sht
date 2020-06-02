@@ -214,8 +214,8 @@
     },
     created() {
       this.form.userId = localStorage.getItem('userId')
-      this.region = this.$route.params.areaId
-      this.bigAreaId = this.$route.params.bigAreaId
+      this.region = this.$route.query.areaId
+      this.bigAreaId = this.$route.query.bigAreaId
       if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
         this.rules.userdefine_code_two = [
           { required: true, message: '请输入物品码', trigger: 'blur' }
@@ -228,48 +228,49 @@
       this.scShopId = localStorage.getItem('scShopId');
       this.getAddrList()
       this.initData();
-      if(JSON.stringify(this.$route.params.goodsMsg)){   
-        this.form.userdefineCategory = this.$route.params.goodsMsg.USERDEFINE_CATEGORY
-        this.form.bzq = this.$route.params.goodsMsg.BZQ
-        this.form.brand = this.$route.params.goodsMsg.BRAND
-        this.form.association_id = this.$route.params.goodsMsg.association_id
-        this.form.userdefine_code_one = this.$route.params.goodsMsg.userdefine_code_one
-        this.form.userdefine_code_two = this.$route.params.goodsMsg.userdefine_code_two 
+      if(this.$route.query.goodsMsg){
+        let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
+        this.form.userdefineCategory = goodsMsg.USERDEFINE_CATEGORY
+        this.form.bzq = goodsMsg.BZQ
+        this.form.brand = goodsMsg.BRAND
+        this.form.association_id = goodsMsg.association_id
+        this.form.userdefine_code_one = goodsMsg.userdefine_code_one
+        this.form.userdefine_code_two = goodsMsg.userdefine_code_two 
         this.showFile = true
-        this.form.goodsName = this.$route.params.goodsMsg.GOODS_NAME;
-        this.form.j_name = this.$route.params.goodsMsg.J_NAME
-        if(this.$route.params.goodsMsg.level_id){
-          let str = this.$route.params.goodsMsg.level_id;
+        this.form.goodsName = goodsMsg.GOODS_NAME;
+        this.form.j_name = goodsMsg.J_NAME
+        if(goodsMsg.level_id){
+          let str = goodsMsg.level_id;
           this.form.selectVarieties = [str.slice(0,2),str.slice(0,5),str.slice(0,8)];
           this.form.gbCode = str.slice(0,8);
         }
-        this.form.goodsCode = this.$route.params.goodsMsg.GOODS_CODE
-        this.form.price = this.$route.params.goodsMsg.PRICE;
-        this.form.specifications = this.$route.params.goodsMsg.GOODS_UNIT;
+        this.form.goodsCode = goodsMsg.GOODS_CODE
+        this.form.price = goodsMsg.PRICE;
+        this.form.specifications = goodsMsg.GOODS_UNIT;
         if(this.form.specifications == '斤' || this.form.specifications =='公斤'){
           this.isShow = false;
           this.form.input = '';
         }else{
           this.isShow = true;
-          this.form.input = this.$route.params.goodsMsg.COUNT;
-          this.form.unit = this.$route.params.goodsMsg.SPECIFICATIONS;          
+          this.form.input = goodsMsg.COUNT;
+          this.form.unit = goodsMsg.SPECIFICATIONS;          
         }
-        this.form.goodsUnit = this.$route.params.goodsMsg.GOODS_UNIT; 
-        this.form.suppliersId = this.$route.params.goodsMsg.SUPPLIERS_ID;
-        this.form.suppliersName = this.$route.params.goodsMsg.SUPPLIERS_NAME;
-        this.form.goodsID = this.$route.params.goodsMsg.ID;
-        this.imgUrl = this.$route.params.goodsMsg.IMG_URL
-        this.logoUrl = this.$route.params.goodsMsg.PRODUCT_IMG_URL
+        this.form.goodsUnit = goodsMsg.GOODS_UNIT; 
+        this.form.suppliersId = goodsMsg.SUPPLIERS_ID;
+        this.form.suppliersName = goodsMsg.SUPPLIERS_NAME;
+        this.form.goodsID = goodsMsg.ID;
+        this.imgUrl = goodsMsg.IMG_URL
+        this.logoUrl = goodsMsg.PRODUCT_IMG_URL
         let originArr = [];
-        if(this.$route.params.goodsMsg.areaOriginId){
-          if(this.$route.params.goodsMsg.areaOriginId.slice(4,6) != '00'){
-            originArr.unshift(this.$route.params.goodsMsg.areaOriginId);
+        if(goodsMsg.areaOriginId){
+          if(goodsMsg.areaOriginId.slice(4,6) != '00'){
+            originArr.unshift(goodsMsg.areaOriginId);
           }
-          if(this.$route.params.goodsMsg.areaOriginId.slice(2,4) != '00'){
-            originArr.unshift(this.$route.params.goodsMsg.areaOriginId.slice(0,4)+'00');
+          if(goodsMsg.areaOriginId.slice(2,4) != '00'){
+            originArr.unshift(goodsMsg.areaOriginId.slice(0,4)+'00');
           }
-          if(this.$route.params.goodsMsg.areaOriginId.slice(0,2) != '00'){
-            originArr.unshift(this.$route.params.goodsMsg.areaOriginId.slice(0,2)+'0000');
+          if(goodsMsg.areaOriginId.slice(0,2) != '00'){
+            originArr.unshift(goodsMsg.areaOriginId.slice(0,2)+'0000');
           }
           this.form.addr = originArr
         }
@@ -427,9 +428,10 @@
           .then(res => {
             this.addrOptions = res.data.dataList
             let addrArr = [];
-            if(this.$route.params.goodsMsg){
-              if(this.$route.params.goodsMsg.areaOriginNname){
-                let areaName = this.$route.params.goodsMsg.areaOriginNname
+            if(this.$route.query.goodsMsg){
+              let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
+              if(goodsMsg.areaOriginNname){
+                let areaName = goodsMsg.areaOriginNname
                 if(areaName.slice(0,3) == '北京市'){
                   this.addrOptions.forEach(ele => {
                     addrArr.push('110000')
@@ -529,7 +531,7 @@
                 })
               }
             })
-            if(!this.$route.params.goodsMsg){
+            if(!this.$route.query.goodsMsg){
               // 新增商品
               let params = {
                 id:'',
@@ -569,9 +571,10 @@
 
 
             }else{
+              let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
               // 编辑商品
               let params = {
-                id:this.$route.params.goodsMsg.ID,
+                id: goodsMsg.ID,
                 goodsName:this.form.goodsName,
                 j_name: this.form.j_name,
                 gbCode:this.form.gbCode,

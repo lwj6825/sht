@@ -159,7 +159,7 @@
       this.isRegion = localStorage.getItem('isRegion')
       this.scShopId = localStorage.getItem('scShopId');
       this.node_id = localStorage.getItem('loginId');
-      this.areaId = this.$route.params.areaId
+      this.areaId = this.$route.query.areaId
       this.getAddrList()//获取地区列表
       this.getGhdwFun()
     },

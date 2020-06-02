@@ -30,7 +30,7 @@
         </div>
         <div class="tables" v-loading.body="fullscreenLoading">
             <div class="title">
-                <p class="tz-title">物品码管理</p>
+                <p class="tz-title">追溯信息管理</p>
                 <div>
                     <el-button class="btn_data"  type="primary" @click="addnodeManage()">+添加</el-button>
                     <el-button class="btn_data" type="primary" plain @click="getDownloadNodeInfoFun">导出</el-button>
@@ -40,6 +40,7 @@
                             <input type="file" class="file" ref="file" @change="fileFun($event)">
                         </form>
                     </span>
+                    <el-button class="btn_data"  type="primary" @click="queryFun">追溯查询</el-button>
                 </div>
             </div>
             <div class="table-box">
@@ -65,11 +66,62 @@
                 </el-pagination>
             </div>
         </div>
+        <div class="password" v-if="isShow">
+            <div class="text">
+                <div class="box-title">
+                    <p class="tit">追溯查询</p>
+                    <p class="iconfont icon-close close" @click="closeFun"></p>
+                </div>
+                <div class="msg-box">
+                    <div class="data">
+                        <div class="tit"></div>
+                        <div class="msg">
+                            <el-select v-model="node" filterable clearable placeholder="请选择节点名称">
+                                <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.text" :value="item.id">
+                                </el-option>
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="data">
+                        <div class="tit"></div>
+                        <div class="msg">
+                            <el-select v-model="types" filterable clearable placeholder="请选择码类型">
+                                <el-option v-for="(item,index) in typesArr" :key="index" :label="item.text"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="data">
+                        <div class="tit"></div>
+                        <div class="msg">
+                            <el-input clearable v-model="code" type="text" placeholder="请输入查询码"></el-input>
+                        </div>
+                    </div>
+                    <div class="data">
+                        <el-button type="primary" @click="searchFun">查询</el-button>
+                    </div>
+                </div>
+                <div class="table">
+                    <p class="result" v-if="!isSearch">暂无数据</p>
+                    <p class="result" v-else>{{resultArr.length > 0 ? '查询成功' : '查询失败'}}</p>
+                    <div class="result-msg" v-for="(item, index) in resultArr" :key="index">
+                        <p>产地： {{item.area_origin_name}}</p>
+                        <p>产品名称： {{item.goods_name}}</p>
+                        <p>供货单位： {{item.ws_supplier_name}}</p>
+                    </div>
+                </div>
+                <div class="btn">
+                    <el-button @click="closeFun">关闭</el-button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import {QueryTraceInfo, QuerySupplierSelect, DeleteTraceInfo, DownloadTraceInfo} from '../../js/traceabiltyInfo/traceabiltyInfo.js'
+import {QueryTraceInfo, QuerySupplierSelect, DeleteTraceInfo, DownloadTraceInfo, QueryTraceCode, QueryCodeTypeSelect, QueryNodeSelect} from '../../js/traceabiltyInfo/traceabiltyInfo.js'
 import {baseUrl4} from '../../js/address/url.js'
 import axios from 'axios';
 // 时间戳转日期格式
@@ -128,6 +180,15 @@ export default {
             options:[],
             node_id:'',
             state:'',
+            tableData2: [],
+            isShow: false, // 追溯查询
+            node: '',
+            types: '',
+            code: '',
+            nodeArr: [],
+            typesArr: [],
+            resultArr: [],
+            isSearch: false,
         }
     },
     mounted() {
@@ -136,10 +197,77 @@ export default {
         arr.push(this.startTime)
         arr.push(this.endTime)
         this.form.dataTime = arr
+        this.QueryCodeTypeSelectFun()
+        this.getQueryNodeSelect()
         this.GetNodeInfoFun()
         this.getQuerySupplierSelectFun()
     },
     methods: {
+        // 企业名称
+        getQueryNodeSelect(){
+            let str = ''
+            QueryNodeSelect(str)
+                .then(res => {
+                    this.nodeArr = res.data.dataList
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        QueryCodeTypeSelectFun(){  //码类型
+            QueryCodeTypeSelect('')
+                .then(res => {
+                    this.typesArr = res.data.dataList;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
+        // 追溯查询
+        getQueryTraceCode(){
+            let params = {
+                trace_code: this.code,
+                node_id: this.node,
+                code_type: this.types,
+            }
+            QueryTraceCode(params)
+                .then(res => {
+                    this.isSearch = true
+                    if(res.data){
+                        this.resultArr.push(res.data)
+                    }
+                })
+                .catch((res) => {
+                    this.$message.error("出错啦!");
+                    console.log(res)
+                })
+        },
+        searchFun(){
+            if(this.node == ''){
+                this.$message.error('请选择节点名称');
+                return
+            }
+            if(this.types == ''){
+                this.$message.error('请选择码类型');
+                return
+            }
+            if(this.code == ''){
+                this.$message.error('请输入查询码');
+                return
+            }
+            this.getQueryTraceCode()
+        },
+        queryFun(){
+            this.isShow = true
+        },
+        closeFun(){
+            this.node = ''
+            this.types = ''
+            this.code = ''
+            this.isSearch = false
+            this.isShow = false
+            this.resultArr = []
+        },
         getQuerySupplierSelectFun(){
             let str = ''
             QuerySupplierSelect(str)
@@ -335,9 +463,119 @@ export default {
 </script>
 
 <style scoped lang='less'>
+@import '../../assets/css/common.css';
 .content{
     width: 100%;
     height: 100%;
+    .password{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 666;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.6);
+        .text{
+            position: relative;
+            top: 50%;
+            left: 50%;
+            margin-top: -315px;
+            margin-left: -300px;
+            width: 600px;
+            height: 630px;
+            background: #fff;
+            .box-title{
+                margin: 0 10px;
+                height: 40px;
+                border-bottom: 1px solid #ccc;
+                .tit{
+                    float: left;
+                    margin-left: 10px;
+                    line-height: 40px;
+                    font-size: 14px;
+                }
+                .close{
+                    float: right;
+                    width: 40px;
+                    height: 40px;
+                    text-align: center;
+                    line-height: 40px;
+                    font-size: 16px;
+                    cursor: pointer;
+                }
+            }
+            .msg-box{
+                clear: both;
+                margin: 15px 0 0;
+                display: flex;
+                justify-content: space-between;
+                font-size: 14px;
+                .data{
+                    flex: 1;
+                    margin: 0 10px 10px;
+                    .msg{
+                        line-height: 30px;
+                    }
+                    .el-select, .el-input{
+                        width: 156px;
+                    }
+                }
+            }
+            .btn{
+                text-align: center;
+            }
+            .download{
+                margin-top: 20px;
+                font-size: 14px;
+                text-align: center;
+            }
+            .submit{
+                margin: 50px auto;
+                position: relative;
+                left: 30%;
+                display: inline-block;
+                width: 200px;
+                height: 50px;
+                line-height: 50px;
+                color: #333;
+                background: #fff;
+                text-align: center;
+                overflow: hidden;
+                border-radius: 5px;
+                font-size: 14px;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                .file{
+                    position: absolute;
+                    left: 0px;
+                    top: 0px;
+                    width: 200px;
+                    height: 50px;
+                    opacity: 0;
+                    background: rgba(0,0,0,0);
+                }
+            } 
+            .table{
+                height: 470px;
+                overflow: auto;
+                margin: 10px;
+                border: 1px solid #dedede;
+                .result{
+                    text-align: center;
+                    color: #999;
+                }
+                p{
+                    line-height: 30px;
+                    font-size: 14px;
+                }
+                .result-msg{
+                    margin: 0 20px;
+                }
+            }
+        }
+    }
     .search{
         width: 100%;
         padding: 10px 0;
@@ -429,6 +667,9 @@ export default {
 </style>
 <style lang="less">
 .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
+    line-height: 24px;
+}
+.el-input__icon{
     line-height: 24px;
 }
 .el-form--inline .el-form-item__content{

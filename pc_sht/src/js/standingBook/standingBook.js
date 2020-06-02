@@ -60,7 +60,7 @@ export const QueryXsTzDetailByTzId  = function(params) {
 export const getCheckList  = function(params) {
   return ajaxPost(queryCheckList,params)
 }
-
+// 新增监检测
 export const AddCheckItem  = function(params) {
   return ajaxPost(addCheckItem,params)
 }

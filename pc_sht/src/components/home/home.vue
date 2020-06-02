@@ -98,7 +98,7 @@ export default {
             remember: '',
             roleId: '',
             user:'',
-            isShow : false
+            isShow : false,
         }
     },
     created() {
@@ -115,10 +115,8 @@ export default {
                 this.isShow = false;
             }
         },200)
-
         if(localStorage.getItem('menuList')){
             this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
-            // console.log(this.mainList)
             this.levelOneCurrId = this.mainList[0].id;//选择第一项
             this.changeMenu(this.levelOneCurrId);
             // 查询品种列表
@@ -921,11 +919,11 @@ export default {
             background-size: 100% 100%;
         }
         .icon-retrieval{
-            background: url('../../assets/images/tzFarming.svg') no-repeat center center;
+            background: url('../../assets/images/retrieval.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-enterprise{
-            background: url('../../assets/images/standingBook.svg') no-repeat center center;
+            background: url('../../assets/images/enterprise.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-tzFarming{
@@ -1031,12 +1029,23 @@ export default {
             background-size: 100% 100%;
         }
         .icon-supervise{
-            background: url('../../assets/images/nodeManage.svg') no-repeat center center;
+            background: url('../../assets/images/supervise.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .icon-monitor{
             background: url('../../assets/images/statistical.svg') no-repeat center center;
             background-size: 100% 100%;
+        }
+        .icon-cropManagement{
+            background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-farmworkcommodity{
+            background: url('../../assets/images/goods.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-farmworkreview{
+            background: url('../../assets/images/management.svg') no-repeat center center;
         }
         .icon-quotation{
             background: url('../../assets/images/retail.svg') no-repeat center center;

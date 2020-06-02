@@ -59,26 +59,35 @@
         }
       },
       mounted(){
-        if(JSON.stringify(this.$route.params.gysMsg)){
-          this.form.type = this.$route.params.gysMsg.type;
-          this.form.licenceNo = this.$route.params.gysMsg.licence_no;//营业执照
-          this.form.bizName = this.$route.params.gysMsg.biz_name;//供应商名称
-          this.form.regId = this.$route.params.gysMsg.regId;//身份证号
-          this.form.name = this.$route.params.gysMsg.concact_name;//联系人
-          this.form.callphone = this.$route.params.gysMsg.cellphone;//联系方式
-          this.form.addrId = this.$route.params.gysMsg.area_id;
-          this.form.addr = this.$route.params.gysMsg.area_name;//地址
-          this.form.infoAddr = this.$route.params.gysMsg.addr;//详细地址
-          this.form.origin_name = this.$route.params.gysMsg.area_origin_name;//产地
-          this.form.origin_id = this.$route.params.gysMsg.area_origin_id
-          this.form.shop_concacts_id = this.$route.params.gysMsg.shop_concacts_id;
-          this.form.ghdw = this.$route.params.gysMsg.ws_supplier;
+        if(this.$route.query.gysMsg){
+          let gysMsg = JSON.parse(this.$route.query.gysMsg)
+          this.form.type = gysMsg.type;
+          this.form.licenceNo = gysMsg.licence_no;//营业执照
+          this.form.bizName = gysMsg.biz_name;//供应商名称
+          this.form.regId = gysMsg.regId;//身份证号
+          this.form.name = gysMsg.concact_name;//联系人
+          this.form.callphone = gysMsg.cellphone;//联系方式
+          this.form.addrId = gysMsg.area_id;
+          this.form.addr = gysMsg.area_name;//地址
+          this.form.infoAddr = gysMsg.addr;//详细地址
+          this.form.origin_name = gysMsg.area_origin_name;//产地
+          this.form.origin_id = gysMsg.area_origin_id
+          this.form.shop_concacts_id = gysMsg.shop_concacts_id;
+          this.form.ghdw = gysMsg.ws_supplier;
         }
-        this.areaId = this.$route.params.areaId
+        this.areaId = this.$route.query.areaId
       },
       methods: {
         editForm(){
-          this.$router.push({name:'EditSupplier',params:{gysMsg:this.$route.params.gysMsg,areaId: this.areaId}})
+          // let routeData = this.$router.resolve({
+          //   path: "/home/management/editSupplier",
+          //   query: {
+          //     gysMsg: this.$route.query.gysMsg,
+          //     areaId: this.areaId
+          //   }
+          // });
+          // window.open(routeData.href, '_blank');
+          this.$router.push({name:'EditSupplier',query:{gysMsg:this.$route.query.gysMsg,areaId: this.areaId}})
         }
       }
     };

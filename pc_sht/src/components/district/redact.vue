@@ -59,12 +59,13 @@ export default {
         this.userId = localStorage.getItem('userId')
     },
     mounted() {
-        console.log(this.$route.params)
-        if(this.$route.params.userId){
-            this.form.name = this.$route.params.name
-            this.form.boothType = this.$route.params.bootList[0].booth_type
-            this.form.contacts = this.$route.params.contacts
-            this.form.telephone = this.$route.params.telephone
+        console.log(this.$route.query)
+        let msg = JSON.parse(this.$route.query.msg)
+        if(msg.userId){
+            this.form.name = msg.name
+            this.form.boothType = msg.bootList[0].booth_type
+            this.form.contacts = msg.contacts
+            this.form.telephone = msg.telephone
         }
     },
     methods: {

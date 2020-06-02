@@ -410,9 +410,9 @@ export default {
     },
     created() {
         this.userId = localStorage.getItem('userId')
-        this.areaId = this.$route.params.areaId
-        this.region = this.$route.params.areaId
-        this.bigAreaId = this.$route.params.bigAreaId
+        this.areaId = this.$route.query.areaId
+        this.region = this.$route.query.areaId
+        this.bigAreaId = this.$route.query.bigAreaId
         this.getMerchantsFun()
         // 查询品种列表
         getDefaultProductTypes()
@@ -436,11 +436,11 @@ export default {
         this.form.in_date = formatDate(currentTime)
         console.log(this.areaId)
         console.log(this.bigAreaId)
-        if(this.$route.params.types == 'again'){
+        if(this.$route.query.types == 'again'){
             this.types = 'again'
             this.add = true
             this.saveBtn = '保存'
-        }else if(this.$route.params.param){
+        }else if(this.$route.query.param){
             this.add = false
             this.saveBtn = '修改'
         }
@@ -780,7 +780,7 @@ export default {
         },
         selectSuppliers(val){//选择供应商
             this.form.suppliersName = val
-            if(!this.$route.params.types){
+            if(!this.$route.query.types){
                 this.suppliersId = 9999999999999
             }
             this.suppliersList.forEach((ele)=>{
@@ -1071,8 +1071,8 @@ export default {
                         }
 
                     })
-                    if(this.$route.params.param){
-                        let param = this.$route.params.param
+                    if(this.$route.query.param){
+                        let param = JSON.parse(this.$route.query.param)
                         this.tzId = param.tz_id
                         this.ids = param.id
                         this.getAllSuppliers()
@@ -1084,7 +1084,7 @@ export default {
                         this.form3.payWay = param.pay_way
                         this.form.suppliersName = param.seller_booth_name
                         this.form.in_date = param.in_date
-                        if(this.$route.params.types == 'again'){
+                        if(this.$route.query.types == 'again'){
                             this.tzId = ''
                         }else{
                             this.getImgFun()
@@ -1105,6 +1105,9 @@ export default {
         },
         // 获取商户
         getMerchantsFun(){
+            if(this.$route.query.param){
+                let param = JSON.parse(this.$route.query.param)
+            }
             let obj = {
                 page: '1',
                 cols: '',
@@ -1120,7 +1123,7 @@ export default {
                     this.options = res.data.dataList
                     if(this.states == 1){
                         this.options.forEach(ele => {
-                            if(this.$route.params.param.buyer_booth_id == ele.bootList[0].shop_booth_id){
+                            if(param.buyer_booth_id == ele.bootList[0].shop_booth_id){
                                 this.merchants = ele.bootList[0].booth_name
                                 this.bigAreaId = ele.userId
                                 this.areaIds = ele.bootList[0].shop_booth_id
@@ -1129,13 +1132,17 @@ export default {
                         this.states == 2
                     }
                 })
-                .catch(() => {
-                    this.$message.error("出错啦!");
+                .catch((res) => {
+                    console.log(res)
                 })
         },
         // 保存商品
         saveFieldFun(){
             console.log(this.ghdwId)
+            let param = {}
+            if(this.$route.query.param){
+                param = JSON.parse(this.$route.query.param)
+            }
             if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
                 if(this.form.in_date == ''){
                     this.$message.error('进货日期不能为空');
@@ -1351,8 +1358,8 @@ export default {
                 this.getGoodsFun()
                 this.getAllSuppliers()
                 let addrArr = [];
-                if(this.$route.params.param.area_origin_name){
-                    let areaName = this.$route.params.param.area_origin_name    
+                if(param.area_origin_name){
+                    let areaName = param.area_origin_name    
                     if(areaName.slice(0,3) == '北京市'){
                         this.addrOptions.forEach(ele => {
                             addrArr.push('110000')
@@ -1419,6 +1426,9 @@ export default {
         },
         // 详情
         detailTzFun(){
+            if(this.$route.query.param){
+                var param = JSON.parse(this.$route.query.param)
+            }
             let obj = {
                 tz_id: this.tzId,
                 id: this.ids,
@@ -1439,7 +1449,7 @@ export default {
                     }
                     this.tableData = detailsArr
                     this.userdefine = tzListArr[0].USERDEFINE
-                    if(this.$route.params.types == 'again'){
+                    if(this.$route.query.types == 'again'){
                         this.is_oc_upload = ''
                     }else{
                         this.isImgList = true
@@ -1451,8 +1461,8 @@ export default {
                     }
                     this.form.gys = tzListArr[0].SELLER_BOOTH_NAME
                     this.suppliersId = tzListArr[0].SELLER_BOOTH_ID
-                    this.form.ghdw = this.$route.params.param.suppiler_name
-                    this.form.transport = this.$route.params.param.transport
+                    this.form.ghdw = tzListArr[0].SUPPILER_NAME
+                    this.form.transport = param.transport
                     for(var a in arr){
                         this.form2.tzUserdefineList.forEach(val => {
                             if(a == val.TYPE_NAME){
@@ -1461,23 +1471,22 @@ export default {
                         })
                     }
                     let originArr = [];
-                    if(this.$route.params.param.area_origin_id){
-                        if(this.$route.params.param.area_origin_id.slice(4,6) != '00'){
-                            originArr.unshift(this.$route.params.param.area_origin_id);
+                    if(param.area_origin_id){
+                        if(param.area_origin_id.slice(4,6) != '00'){
+                            originArr.unshift(param.area_origin_id);
                         }
-                        if(this.$route.params.param.area_origin_id.slice(2,4) != '00'){
-                            originArr.unshift(this.$route.params.param.area_origin_id.slice(0,4)+'00');
+                        if(param.area_origin_id.slice(2,4) != '00'){
+                            originArr.unshift(param.area_origin_id.slice(0,4)+'00');
                         }
-                        if(this.$route.params.param.area_origin_id.slice(0,2) != '00'){
-                            originArr.unshift(this.$route.params.param.area_origin_id.slice(0,2)+'0000');
+                        if(param.area_origin_id.slice(0,2) != '00'){
+                            originArr.unshift(param.area_origin_id.slice(0,2)+'0000');
                         }
                     }
                     this.form.origin_name = originArr
-                    this.form.area_origin_name = this.$route.params.param.area_origin_name
+                    this.form.area_origin_name = param.area_origin_name
                 })
                 .catch(res => {
                     console.log(res)
-                    this.$message.error("出错了")
                 })
         },
         rowClass({ row, rowIndex}) {

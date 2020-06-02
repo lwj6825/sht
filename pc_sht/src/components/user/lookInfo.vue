@@ -73,7 +73,7 @@
         </el-dialog>
 
         <el-dialog title="修改营业执照号" :visible.sync="licenseCodeDialog"  class="edit-msg" >
-            <el-form :model="licenseCodeForm" label-width="80px">   
+            <el-form :model="licenseCodeForm" label-width="100px">   
                 <el-form-item label="营业执照号">
                     <el-input class="fill-input" v-model="licenseCodeForm.code" clearable auto-complete="off"></el-input>
                 </el-form-item>   

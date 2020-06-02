@@ -630,6 +630,10 @@ export default {
                     }
                     this.tableData2 = res.data.list
                     this.num2 = res.data.bean.total
+                    if(this.isAgain == true && this.isSearch == false){
+                        this.loading = true
+                        this.getGoodFun2()
+                    }
                 })
                 .catch(() => {
                     this.loading = false
@@ -638,7 +642,6 @@ export default {
         },
         // 获取列表搜索时间商品
         getGoodFun2(){
-            this.getGoodFun()
             let obj = {
                 page: 1,
                 cols: 10000,
@@ -785,7 +788,8 @@ export default {
                     }
                 })
             }
-            if(arr.length > 0){
+            console.log(this.viewGood)
+            if(arr.length > 0 || this.viewGood.length > 0){
                 if(this.viewGood.length > 0){
                     this.viewGood.forEach((val,index) => {
                         arr.forEach(val2 => {
@@ -999,7 +1003,7 @@ export default {
             }else{
                 // this.getRegionFun()
             }
-            this.getGoodFun2()
+            this.getGoodFun()
             this.isEdits = true
         },
         addFun(ele){
@@ -1013,7 +1017,7 @@ export default {
             }else{
                 // this.getRegionFun()
             }
-            this.getGoodFun2()
+            this.getGoodFun()
             this.isEdits = true
         },
         viewFun(ele){

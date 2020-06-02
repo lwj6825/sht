@@ -108,12 +108,12 @@ export default {
         }
     },
     created() {
-        if(this.$route.params.searchMsg){
-            this.searchMsg = this.$route.params.searchMsg
+        if(this.$route.query.searchMsg){
+            this.searchMsg = JSON.parse(this.$route.query.searchMsg)
         }
     },
     mounted(){
-        this.areaId = this.$route.params.areaId
+        this.areaId = this.$route.query.areaId
         this.getSupplierList(1,this.searchMsg,this.searchMsg.currShop_userId);
     },
     methods: {

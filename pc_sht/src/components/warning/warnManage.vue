@@ -29,20 +29,20 @@
                     </div>
                     <div class="table-box">
                         <el-table :data="tableData" :header-cell-style="rowClass" >
-                            <el-table-column prop="warn_name" label="预警名称" align="left" width="550px;"> </el-table-column>
-                            <el-table-column label="状态"  align="center">
+                            <el-table-column prop="warn_name" label="预警名称"> </el-table-column>
+                            <el-table-column label="状态" align="center" width="200">
                                 <template slot-scope="scope">
                                     <el-switch v-model="scope.row.state" active-text="开启" inactive-text="关闭" 
                                         active-value="1" inactive-value="0" @change="changeFun(scope.row)">
                                     </el-switch>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="执行" align="center" width="250px;">
+                            <el-table-column label="执行" align="center" width="250">
                                 <template slot-scope="scope">
                                     <el-button @click="handleBtn1(scope.row)">主动执行</el-button>
                                 </template>
                              </el-table-column>
-                            <el-table-column label="操作"  align="center">
+                            <el-table-column label="操作"  align="center" width="50">
                                 <template slot-scope="scope">
                                     <el-button type="text" size="small" @click="handleResult(scope.row)">编辑</el-button>
                                 </template>

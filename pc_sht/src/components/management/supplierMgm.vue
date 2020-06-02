@@ -252,10 +252,25 @@
         this.getAllGys()
       },
       newSupplierMgm(){//新增供应商
-        this.$router.push({name:'NewSupplier',params: {areaId: this.areaId}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/management/newSupplier",
+        //   query: {
+        //     areaId: this.areaId
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'NewSupplier',query: {areaId: this.areaId}})
       },
       look(index, row){//查看
-        this.$router.push({name:'ViewSupplier',params:{gysMsg:row,areaId: this.areaId}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/management/viewSupplier",
+        //   query: {
+        //     gysMsg: JSON.stringify(row),
+        //     areaId: this.areaId
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
+        this.$router.push({name:'ViewSupplier',query:{gysMsg:JSON.stringify(row),areaId: this.areaId}})
       },
       remove(index, row){//删除
         this.$confirm('确认删除此条信息?', '提示', {

@@ -489,7 +489,7 @@ export default {
             tbqy_name: '',
             startTime: '',
             endTime: '',
-            listTime: '',
+            listTime: '',
         }
     },
     mounted() {
@@ -539,13 +539,16 @@ export default {
             this.tableData3 =  []
         },
         inputFun(val){
+            if(val.id == null){
+                return
+            }
             let goodobj = {};
             if(this.viewGood.length == 0){
                     if(!val.price){
                         goodobj = {
                             node_id: val.node_id,
                             node_name: val.node_name,
-                            shop_booth_id: val.merchant,
+                            shop_booth_id: val.merchant ? val.merchant : '',
                             biz_id: val.biz_id,
                             biz_name: val.biz_name,
                             in_date: val.in_date,
@@ -571,7 +574,7 @@ export default {
                 goodobj = {
                     node_id: val.node_id,
                     node_name: val.node_name,
-                    shop_booth_id: this.merchant,
+                    shop_booth_id: this.merchant ? this.merchant : '',
                     biz_id: val.biz_id,
                     biz_name: val.biz_name,
                     in_date: val.in_date,
@@ -730,6 +733,10 @@ export default {
                         }
                         this.tableData2 = res.data.list
                         this.num2 = res.data.bean.total
+                        if(this.isAgain == true && this.isSearch == false){
+                            this.loading = true
+                            this.getGoodFun2()
+                        }
                     })
                     .catch(() => {
                         this.loading = false
@@ -739,7 +746,6 @@ export default {
         },
         // 获取列表搜索时间商品
         getGoodFun2(){
-            this.getGoodFun()
             let obj = {
                 page: 1,
                 cols: 10000,
@@ -1013,7 +1019,7 @@ export default {
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
-                                shop_booth_id: this.merchant,
+                                shop_booth_id: this.merchant ? this.merchant : '',
                                 biz_id: this.biz_id,
                                 biz_name: this.biz_name,
                                 in_date: this.in_date,
@@ -1031,13 +1037,14 @@ export default {
                             arr.push(goodobj)
                         }
                     })
-                }else{
+                    console.log(arr)
+                }else{    
                     this.tableData2.forEach(val => {
                         if(val.price){
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
-                                shop_booth_id: this.merchant,
+                                shop_booth_id: this.merchant ? this.merchant : '',
                                 biz_id: this.biz_id,
                                 biz_name: this.biz_name,
                                 in_date: this.in_date,
@@ -1056,12 +1063,13 @@ export default {
                         }
                     })
                 }
-            if(arr.length > 0){
+            if(arr.length > 0 || this.viewGood.length > 0){
+                console.log(this.viewGood)
                 if(this.viewGood.length > 0){
                     this.viewGood.forEach((val,index) => {
-                        arr.forEach(val2 => {
+                        arr.forEach((val2, index2) => {
                             if(val.goods_id == val2.goods_id){
-                                arr.splice(index,1)
+                                this.viewGood.splice(index,1)
                             }
                         })
                     })
@@ -1208,13 +1216,15 @@ export default {
                             console.log(res)
                         })
                 }
-                this.getGoodFun2()
+                this.getGoodFun()
             }else{
                 this.istableAdd = false
             }
             this.isEdits = true
         },
         addFun(ele){
+            var currentTime = new Date()
+            this.in_date = formatDate(currentTime)
             if(ele.node_id){
                 this.istableAdd = true
                 this.tbqy = ele.node_id

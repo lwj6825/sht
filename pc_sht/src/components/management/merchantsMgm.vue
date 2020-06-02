@@ -238,6 +238,11 @@ export default {
       },
       newCommodity(){//新增商户
         this.$router.push({name:'NewCommodity'})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/management/newCommodity",
+        //   query: {}
+        // });
+        // window.open(routeData.href, '_blank');
         localStorage.setItem('merchantsAreaId',this.areaId);
       },
       manageSuppliersHandle(index,row){//管理供应商
@@ -275,7 +280,15 @@ export default {
                   data.shop_booth_id = row.bootList[0].shop_booth_id;
                   data.bindgys = ele.bootList[0].bindgys;
                 }
-                this.$router.push({name:'ManageSuppliers',params:{searchMsg:data,areaId: this.areaId}})
+                this.$router.push({name:'ManageSuppliers',query:{searchMsg:JSON.stringify(data),areaId: this.areaId}})
+                // let routeData = this.$router.resolve({
+                //   path: "/home/management/manageSuppliers",
+                //   query: {
+                //     searchMsg: JSON.stringify(data),
+                //     areaId: this.areaId
+                //   }
+                // });
+                // window.open(routeData.href, '_blank');
               }
             })
           })
@@ -319,7 +332,14 @@ export default {
                   data.shop_booth_id = row.bootList[0].shop_booth_id;
                   data.bindgys = ele.bootList[0].bindgys;
                 }
-                this.$router.push({name:'ManageGoods',params:{searchMsg:data}})
+                this.$router.push({name:'ManageGoods',query:{searchMsg: JSON.stringify(data)}})
+                // let routeData = this.$router.resolve({
+                //   path: "/home/management/manageGoods",
+                //   query: {
+                //     searchMsg: JSON.stringify(data)
+                //   }
+                // });
+                // window.open(routeData.href, '_blank');
               }
             })
           })
@@ -329,7 +349,14 @@ export default {
         
       },
       inforHandle(index,row){//详情
-        this.$router.push({name:'MerchantsInfor',params:{inforMsg:row}})
+        this.$router.push({name:'MerchantsInfor',query:{inforMsg:JSON.stringify(row)}})
+        // let routeData = this.$router.resolve({
+        //   path: "/home/management/merchantsInfor",
+        //   query: {
+        //     inforMsg: JSON.stringify(row)
+        //   }
+        // });
+        // window.open(routeData.href, '_blank');
       },
       getList(){ //首页展示-获取商户列表
         let data = {

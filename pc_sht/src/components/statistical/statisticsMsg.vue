@@ -19,18 +19,27 @@
                     <li class="proportion proportion_1">
                         <div>
                             <p>周环比</p>
-                            <p>{{list_1_num2}}%</p>
+                            <p v-if="list_1_num2 == 0">持平</p>
+                            <p v-else>{{list_1_num2}}%</p>
                             <img v-if="list_1_num2 > 0" src="../../assets/images/u731.png">
                             <img v-if="list_1_num2 < 0" src="../../assets/images/u732.png">
                         </div>
                         <div>
                             <p>日环比</p>
-                            <p>{{list_1_num3}}%</p>
+                            <p v-if="list_1_num3 == 0">持平</p>
+                            <p v-else>{{list_1_num3}}%</p>
                             <img v-if="list_1_num3 > 0" src="../../assets/images/u731.png">
                             <img v-if="list_1_num3 < 0" src="../../assets/images/u732.png">
                         </div>
                     </li>
-                    <li class="total" @click="skip()">月总交易额&nbsp;￥{{list_1_num4}}</li>
+                    <li class="proportion proportion_2">
+                        <div>
+                            <p class="total" @click="skip()">月总交易额&nbsp;￥{{list_1_num4}}</p>
+                        </div>
+                        <div>
+                            <p class="total2">总交易量&nbsp;{{list_num1}}KG</p>
+                        </div>
+                    </li>
                 </ul>
                 <ul class="list list_2">
                     <li class="list-title">
@@ -45,6 +54,14 @@
                     </li> 
                     <li class="proportion proportion_2">
                         <div>
+                            <p class="total" @click="goodNumFun">累计购买商品数量&nbsp;{{list_num2}}</p>
+                        </div>
+                        <div>
+                            <p class="total" @click="payGoodFun">交易商品&nbsp;{{list_4_num1}}种</p>
+                        </div>
+                    </li>
+                    <!-- <li class="proportion proportion_2">
+                        <div>
                             <p>周环比</p>
                             <p>{{list_2_num2}}%</p>
                             <img v-if="list_2_num2 > 0" src="../../assets/images/u731.png">
@@ -56,7 +73,7 @@
                             <img v-if="list_2_num3 > 0" src="../../assets/images/u731.png">
                             <img v-if="list_2_num3 < 0" src="../../assets/images/u732.png">
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
                 <ul class="list list_3">
                     <li class="list-title">
@@ -64,28 +81,72 @@
                         <el-tooltip class="item" effect="dark" content="商户活跃度为当前在线的商户与全部商户的百分比" placement="top">
                             <img src="../../assets/images/u4155.png">
                         </el-tooltip>
-                    </li> 
-                    <li class="num num_3">{{list_3_num1}}%</li>   
+                    <li class="num">{{list_3_num1}}%</li>  
+                    <!--<li class="num">{{list_3_num1}}%<span style="float:right;font-size:14px;color:#999;">商户总数{{list_num6}}</span></li> -->  
+                    <li class="biz_num">
+                        <p class="ps" @click="bizJumpFun1">已上报{{list_num8}}</p>
+                        <p class="ps" @click="bizJumpFun2">商户总数{{list_num5}}</p>
+                    </li>
                     <li>
-                        <!-- <div id="my-chart2" class="echart"></div> -->
-                        <el-progress style="line-height:60px;height:28px;" class="echart" :text-inside="true" :stroke-width="18" :percentage="progress"></el-progress>
+                        <div style="height: 44px;" id="my-chart2" class="echart"></div>
+                        <!--<el-progress style="line-height:60px;height:28px;" class="echart" :text-inside="true" :stroke-width="18" 
+                            :format="format1" :percentage="progress">progress</el-progress> -->
                     </li>     
                     <li class="proportion proportion_3">
                         <div>
-                            <p>周环比</p>
-                            <p>{{list_3_num2}}%</p>
+                            <p>周环比&nbsp;</p>
+                            <p v-if="list_3_num2 == 0">持平</p>
+                            <p v-else>{{list_3_num2}}%</p>
                             <img v-if="list_3_num2 > 0" src="../../assets/images/u731.png">
                             <img v-if="list_3_num2 < 0" src="../../assets/images/u732.png">
                         </div>
                         <div>
-                            <p>日环比</p>
-                            <p>{{list_3_num3}}%</p>
+                            <p>日环比&nbsp;</p>
+                            <p v-if="list_3_num3 == '0'">持平</p>
+                            <p v-else>{{list_3_num3}}%</p>
                             <img v-if="list_3_num3 > 0" src="../../assets/images/u731.png">
                             <img v-if="list_3_num3 < 0" src="../../assets/images/u732.png">
                         </div>
                     </li>
                 </ul>
-                <ul class="list list_4">
+                <ul class="list list_3">
+                    <li class="proportion">
+                        <div>
+                            <p><span class="sign sign1"></span>客单价（元）</p>
+                        </div>
+                        <div>
+                            <p><span class="sign sign2"></span>客单量（种）</p>
+                        </div>
+                    </li>
+                    <li class="proportion num">
+                        <div>
+                            <p class="num">{{list_num6}}</p>
+                        </div>
+                        <div>
+                            <p class="num">{{list_num7}}</p>
+                        </div>
+                    </li> 
+                    <li>
+                        <div id="my-chart8" class="echart"></div>
+                    </li>     
+                    <li class="proportion proportion_3">
+                        <div>
+                            <p>客单价日环比&nbsp;</p>
+                            <p v-if="list_num3 == 0">持平</p>
+                            <p v-else>{{list_num3}}%</p>
+                            <img v-if="list_num3 > 0" src="../../assets/images/u731.png">
+                            <img v-if="list_num3 < 0" src="../../assets/images/u732.png">
+                        </div>
+                        <div>
+                            <p>客单量日环比&nbsp;</p>
+                            <p v-if="list_num4 == 0">持平</p>
+                            <p v-else>{{list_num4}}%</p>
+                            <img v-if="list_num4 > 0" src="../../assets/images/u731.png">
+                            <img v-if="list_num4 < 0" src="../../assets/images/u732.png">
+                        </div>
+                    </li>
+                </ul>
+                <!--<ul class="list list_4">
                     <li class="list-title">
                         <p>交易商品(种)</p>
                         <el-tooltip class="item" effect="dark" content="当日交易的商品品种总数，图表为近7天交易的商品品种情况" placement="top">
@@ -110,7 +171,7 @@
                             <img v-if="list_4_num3 < 0" src="../../assets/images/u732.png">
                         </div>
                     </li>
-                </ul>
+                </ul>-->
             </div>
         </div>
         <div class="second" v-loading="loading" >
@@ -168,8 +229,9 @@
                                     <p class="item-title">商户交易额排行</p>
                                     <ul>
                                         <li class="item" v-for="(item,index) in merchantsArr" :key="index" >
-                                            <p class="index" :class="{indexs:index < 5}">{{index + 1}}</p>
-                                            <p class="name" @click='getMerChantName(item.biz_name)'>{{item.biz_name}}({{item.stall_no}})</p>
+                                            <p class="index" :class="{indexs:index < 5}">{{index + 1}}</p><!--
+                                            <p class="name" @click='getMerChantName(item.biz_name)'>{{item.biz_name}}({{item.stall_no}})</p>-->
+                                            <p class="name" @click='getMerChantName(item.biz_name)'>{{item.biz_name}}</p>
                                             <p class="number">{{item.price.toFixed(2) + '元'}}</p>
                                         </li>
                                     </ul>
@@ -263,6 +325,42 @@
     </div>
 </template>
 <script>
+// 时间戳转日期格式
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    // var h = date.getHours() + ':';
+    // var m = date.getMinutes() + ':';
+    // var s = date.getSeconds();
+    // return Y+M+D+h+m+s;
+    return Y+M+D;
+}
+// 标准时间转日期格式
+function formatTen(num) { 
+    return num > 9 ? (num + "") : ("0" + num); 
+} 
+function formatDate(date) { 
+    var year = date.getFullYear(); 
+    var month = date.getMonth() + 1; 
+    var day = date.getDate(); 
+    var hour = date.getHours(); 
+    var minute = date.getMinutes(); 
+    var second = date.getSeconds(); 
+    return year + "-" + formatTen(month) + "-" + formatTen(day); 
+} 
+function getNowFormatDate() {//获取当前时间
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
+    var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
+    var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
+            + " "  + date.getHours()  + seperator2  + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate
+}
 import {GetMarkets} from '../../js/district/district';
 import TopHead from '../common/header'
 import {QueryArea} from '../../js/area/area.js';
@@ -270,7 +368,7 @@ import {QueryGoodsRankCurrentYear,QueryGoodsRankCurrentMonth,QueryGoodsRankCurre
     QueryBizRankCurrentWeek,QueryBizRankCurrentDay,QueryBizRankCurrentMonth,QueryBizRankCurrentYear,QueryHasNoTzBizByNodeId,
     GetTzInfoUploadDays,GetTzInfoUploadBizNum,GetBizOnlineTime,GetGoodsWeightRankAndAvgPrice,GetBizNotOnlineTime,
     ComputNode,ComputNodeNumWeek,ComputPluNumWeek,QueryMoneyAndWeightForGoods,QueryMoneyAndWeightForBiz,QueryHasTzBizByNodeId,
-    QueryMoneyCurrentWeek,QueryMoneyCurrentMonth,QueryMoneyCurrentDayHour,QueryMoneyCurrentYear
+    QueryMoneyCurrentWeek,QueryMoneyCurrentMonth,QueryMoneyCurrentDayHour,QueryMoneyCurrentYear, GetCustomerMoneyAndWeight
 } from '../../js/statistical/statistical.js'
 export default {
     name:"statistical",
@@ -358,12 +456,23 @@ export default {
             // screenWidth: document.body.clientWidth,
             node_id: '',
             show: false,
+            list_num1: '0',
+            list_num2: '0',
+            list_num3: '0',
+            list_num4: '0',
+            list_num5: '0',
+            list_num6: '0',
+            list_num7: '0',
+            list_num8: '0',
+            start_date: '', // 客单量客单价日期
+            end_date: '', // 客单量客单价日期
         }
     },
     mounted(){
         this.node_id = localStorage.getItem('loginId');
         this.userId = localStorage.getItem('userId');
         this.loginId = localStorage.getItem('loginId')
+        this.getTime()
         this.getComputNodeFun()
         this.getComputNodeNumWeekFun()
         this.getComputPluNumWeekFun()
@@ -395,12 +504,129 @@ export default {
         if(this.merchantsArr == ''){
             this.more1 = true;
         }
-        
         if(localStorage.getItem("Time")){
             localStorage.removeItem('Time')
         }
+        this.getGetCustomerMoneyAndWeightFun()
     },
     methods: {
+        // 累计购买商品数量
+        goodNumFun(){
+            let areaId = this.titArr[0].bootList[0].shop_booth_id,
+                userId = this.titArr[0].bootList[0].userId
+            this.$router.push({
+                name:'StatisticalTz',
+                query:{
+                    input: '',
+                    merChant: '',   
+                    startTime: this.start_time,  
+                    endTime: this.end_time,
+                    areaId: areaId,
+                    gooduserId: userId
+                }
+            })
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/statisticalTz",
+            //     query: {
+            //         input: '',
+            //         merChant: '',   
+            //         startTime: this.start_time,  
+            //         endTime: this.end_time,
+            //         areaId: areaId,
+            //         gooduserId: userId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
+        },
+        // 交易商品
+        payGoodFun(){
+            let areaId = this.titArr[0].bootList[0].shop_booth_id,
+                userId = this.titArr[0].bootList[0].userId
+            this.$router.push({
+                name:'CommodityMoney',
+                query:{
+                    shopname: '',
+                    startTime:this.start_time,  
+                    endTime:this.end_time,
+                    gooduserId:userId
+                }
+            })
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/commodityMoney",
+            //     query: {
+            //         shopname: '',
+            //         startTime:this.start_time,  
+            //         endTime:this.end_time,
+            //         gooduserId:userId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
+        },
+        // 已上报
+        bizJumpFun1(){
+            this.$router.push({
+                name:'MerchantMoney',
+                query:{
+                    merChant:this.merChant,
+                    startTime:this.start_time,  
+                    endTime:this.end_time,
+                    gooduserId: '',
+                    types: 'types'
+                }
+            })
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/merchantMoney",
+            //     query: {
+            //         merChant:this.merChant,
+            //         startTime:this.start_time,  
+            //         endTime:this.end_time,
+            //         gooduserId: '',
+            //         types: 'types'
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
+        },
+        // 商户总数
+        bizJumpFun2(){
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/bizList",
+            //     query: {}
+            // });
+            // window.open(routeData.href, '_blank');
+            this.$router.push({name: 'BizList'})
+        },
+        // 获取7天日期
+        getTime(){
+            var start = new Date();
+            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
+            this.start_date = timestampToTime(startTime)
+            var currentTime = new Date()
+            this.end_date = formatDate(currentTime)
+        },
+        // 查询客单价客单量
+        getGetCustomerMoneyAndWeightFun(){
+            let str = 'parent_node_id=' + this.loginId + '&start_date=' + this.start_date + '&end_date=' + this.end_date
+            GetCustomerMoneyAndWeight(str)
+                .then(res => {
+                    this.list_num3 = res.data.kdj_rate
+                    this.list_num4 = res.data.kdl_rate
+                    let data = res.data.list,
+                        title = [],
+                        arr1 = [],
+                        arr2 = [];
+                    data.forEach(val => {
+                        title.unshift(val.IN_DATE)
+                        arr1.unshift(val.c_m)
+                        arr2.unshift(val.kdl)
+                    })
+                    this.list_num6 = arr1[arr1.length - 1]
+                    this.list_num7 = arr2[arr2.length - 1]
+                    this.getChartFun8(title, arr1, arr2)
+                })
+                .catch(res => {
+                    console.log(res);
+                })
+        },
         active(){
             if(this.activeName1 == 'first'){
                 this.fullscreenLoading2 = true;
@@ -445,47 +671,90 @@ export default {
             this.shopname = val
             this.$router.push({
                 name:'CommodityMoney',
-                params:{shopname:this.shopname,
+                query:{shopname:this.shopname,
                         startTime:this.start_time,  
                         endTime:this.end_time,
                          gooduserId:this.gooduserId
                         }
             })
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/commodityMoney",
+            //     query: {
+            //         shopname:this.shopname,
+            //         startTime:this.start_time,  
+            //         endTime:this.end_time,
+            //         gooduserId:this.gooduserId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
         },
         getMerChantName(val){
             this.merChant = val
             this.$router.push({
                 name:'MerchantMoney',
-                params:{merChant:this.merChant,
+                query:{merChant:this.merChant,
                 startTime:this.start_time,  
                 endTime:this.end_time,
                 gooduserId:this.gooduserId
                 }
             })
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/merchantMoney",
+            //     query: {
+            //         merChant:this.merChant,
+            //         startTime:this.start_time,  
+            //         endTime:this.end_time,
+            //         gooduserId:this.gooduserId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
         },
         skip(){  //跳转商品交易额
            this.$router.push({path:'totalTransaction'})
+        //    let routeData = this.$router.resolve({
+        //         path: "/home/statistical/totalTransaction",
+        //         query: {}
+        //     });
+        //     window.open(routeData.href, '_blank');
         },
         More1(){  // 商品跳转商品交易额页面
              this.$router.push({
                 name:'CommodityMoney',
-                params:{shopname:this.shopname,   
+                query:{shopname:this.shopname,   
                         startTime:this.start_time,  
                         endTime:this.end_time,
                         gooduserId:this.gooduserId
                         } 
                 })
-                // console.log(this.gooduserId)
-                
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/commodityMoney",
+            //     query: {
+            //         shopname:this.shopname,   
+            //         startTime:this.start_time,  
+            //         endTime:this.end_time,
+            //         gooduserId:this.gooduserId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
         },
         More2(){ //商户跳转到商户交易额页面
-            //  this.merChant = " "
-             this.$router.push({name:'MerchantMoney',
-                 params:{merChant:this.merChant,
+             this.merChant = " "
+            this.$router.push({name:'MerchantMoney',
+                 query:{merChant:this.merChant,
                  startTime:this.start_time,
                  endTime:this.end_time,
                  gooduserId:this.gooduserId
                 }})
+            // let routeData = this.$router.resolve({
+            //     path: "/home/statistical/merchantMoney",
+            //     query: {
+            //         merChant:this.merChant,
+            //         startTime:this.start_time,
+            //         endTime:this.end_time,
+            //         gooduserId:this.gooduserId
+            //     }
+            // });
+            // window.open(routeData.href, '_blank');
         },
         sortChange(){
             if(this.order == 'desc'){
@@ -527,8 +796,13 @@ export default {
         },
         //跳转到生产
         goProducetable(){
-            alert('开始了...')
+            // alert('开始了...')
             this.$router.push({path:'lzproduce/producetable'});
+            // let routeData = this.$router.resolve({
+            //     path: "/home/lzproduce/producetable",
+            //     query: {}
+            // });
+            // window.open(routeData.href, '_blank');
         },
         handleClick(){
             this.fullscreenLoading1 = true;
@@ -871,13 +1145,13 @@ export default {
                 }]
             });
         },
-        getChartFun2(data){
+        getChartFun2(data1, data2){
             // 基于准备好的dom，初始化echarts实例
             var myChart = this.$echarts.init(document.getElementById('my-chart2'));
             // 绘制图表
             myChart.setOption({
                 tooltip: {},
-                xAxis:  {
+                xAxis: {
                     type: 'value',
                     show:false,
                     splitLine:{
@@ -893,60 +1167,70 @@ export default {
                 },
                 series: [
                     {
-                        name: '在线商户数',
+                        name: '已上报',
                         type: 'bar',
-                        data: data,
-                        itemStyle:{
-                            normal:{
-                                color:'#5156b8'
-                            }
+                        barWidth: '50%',
+                        stack: '总量',
+                        color: '#409EFF',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
                         },
+                        data: data1
+                    },
+                    {
+                        name: '商户总数',
+                        type: 'bar',
+                        stack: '总量',
+                        color: '#DCDCDC',
+                        barWidth: '50%',
+                        data: data2
                     }
                 ]
             });
         },
         getChartFun3(title,data){
             // 基于准备好的dom，初始化echarts实例
-            var myChart = this.$echarts.init(document.getElementById('my-chart3'));
-            // 绘制图表
-            myChart.setOption({
-                tooltip : {
-                    trigger: 'axis',
-                },
-                // legend: {},
-                xAxis:  {
-                    type : 'category',
-                    boundaryGap : false,
-                    data : title,
-                    show:false,
-                    splitLine:{
-                　　　　show:false
-                　　}
-                },
-                yAxis: {
-                    type : 'value',
-                    show:false,
-                    splitLine:{
-                　　　　show:false
-                　　}
-                },
-                series: [
-                    {
-                        name:'',
-                        type:'line',
-                        smooth:true,
-                        symbol:'none',
-                        stack: '总量',
-                        areaStyle: {},
-                        data:data,
-                        itemStyle:{
-                            normal:{
-                                color:'#13c2c2'
-                            }
-                        },
-                    }
-                ]
-            });
+            // var myChart = this.$echarts.init(document.getElementById('my-chart3'));
+            // // 绘制图表
+            // myChart.setOption({
+            //     tooltip : {
+            //         trigger: 'axis',
+            //     },
+            //     // legend: {},
+            //     xAxis:  {
+            //         type : 'category',
+            //         boundaryGap : false,
+            //         data : title,
+            //         show:false,
+            //         splitLine:{
+            //     　　　　show:false
+            //     　　}
+            //     },
+            //     yAxis: {
+            //         type : 'value',
+            //         show:false,
+            //         splitLine:{
+            //     　　　　show:false
+            //     　　}
+            //     },
+            //     series: [
+            //         {
+            //             name:'',
+            //             type:'line',
+            //             smooth:true,
+            //             symbol:'none',
+            //             stack: '总量',
+            //             areaStyle: {},
+            //             data:data,
+            //             itemStyle:{
+            //                 normal:{
+            //                     color:'#13c2c2'
+            //                 }
+            //             },
+            //         }
+            //     ]
+            // });
         },
         getChartFun4(title,numArr,priceArr,mark,marklevel){
             // 基于准备好的dom，初始化echarts实例
@@ -1153,6 +1437,73 @@ export default {
                 ]
             });
         },
+        getChartFun8(title, data1, data2){
+            let max1 = 0, max2 = 0;
+            if(data1){
+                max1 = Math.max(...data1);
+            }
+            if(data2){
+                max2 = Math.max(...data2);
+            }
+            // 基于准备好的dom，初始化echarts实例
+            var myChart8 = this.$echarts.init(document.getElementById('my-chart8'));
+            // 绘制图表
+            myChart8.setOption({
+                tooltip: {
+                    position: ['0', '0'],
+                    trigger: 'axis',
+                },
+                xAxis: {
+                    type: 'category',
+                    data: title
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        max: max1,
+                        show:false,
+                        splitLine:{
+                            show:false
+                        },
+                    },
+                    {
+                        type: 'value',
+                        max: max2*3,
+                        show:false,
+                        splitLine:{
+                            show:false
+                        },
+                    }
+                ],
+                series: [
+                    {
+                        name: '客单价',
+                        type:'bar',
+                        data: data1,
+                        barWidth: '30%',
+                        itemStyle:{
+                            normal:{
+                                color:'#409EFF'
+                            }
+                        },
+                        
+                    },
+                    {
+                        name: '客单量',
+                        type:'bar',
+                        data: data2,
+                        yAxisIndex: 1,
+                        barWidth: '30%',
+                        itemStyle:{
+                            normal:{
+                                color:'#FF9900'
+                            }
+                        },
+                        
+                    }
+                ]
+            });
+        },
         getDegFun(){
             let cfbl = 180 * (this.list_3_num1/100) - 180;
             let obj = {
@@ -1173,6 +1524,7 @@ export default {
             QueryArea(data)
                 .then(res =>{
                     this.titArr = res.data.dataList
+                    this.gooduserId = this.titArr[0].bootList[0].userId
                     this.currId2 = this.titArr[0].userId
                     // 最下图表
                     // this.getGoodsWeightRankAndAvgPriceFun();
@@ -1304,13 +1656,14 @@ export default {
             this.fullscreenLoading2=true;
             GetBizOnlineTime(str)
                 .then(res => {
+                    let num = ''
                     this.fullscreenLoading2=false;
                     this.tableData2 = res.data.list 
                     this.count = res.data.allBizNum  //电子秤总数
                     this.nums = res.data.total; //当前在线数
-                    // this.list_3_num1 = (this.nums/this.count) *100;
-                    // this.list_3_num1 = this.list_3_num1.toFixed(0);
-                    // this.progress = Number(this.list_3_num1);
+                    num = (res.data.total/res.data.allBizNum) *100;
+                    num = num.toFixed(0);
+                    this.progress = Number(num);
                     this.num2 = res.data.total
                 })
                 .catch(res => {
@@ -1405,12 +1758,30 @@ export default {
                     if(res.data.支付笔数日同比){
                         this.list_2_num3 = res.data.支付笔数日同比.toFixed(2)
                     }
+                    if(res.data.当月总交易重量){
+                        this.list_num1 = res.data.当月总交易重量.toFixed(2)
+                    }
+                    if(res.data.总支付笔数){
+                        this.list_num2 = res.data.总支付笔数
+                    }
+                    if(res.data.总活跃商户数){
+                        this.list_num5 = res.data.总活跃商户数
+                    }
+                    if(res.data.活跃商户数){
+                        var num = res.data.活跃商户数
+                        this.list_num8 = res.data.活跃商户数
+                    }
+                    var arr = []
+                    arr.push(num)
+                    var arr2 = []
+                    arr2.push(this.list_num5)
+                    this.getChartFun2(arr, arr2)
                     if(res.data.商户活跃度){
                         this.list_3_num1 = res.data.商户活跃度
-                        this.progress = Number(this.list_3_num1);
+                        // this.progress = Number(this.list_3_num1);
                     }
                     let list_3_num1 = res.data.商户活跃度
-                    this.nums = list_3_num1
+                    // this.nums = list_3_num1
                     if(res.data.活跃商户周环比){
                         this.list_3_num2 = res.data.活跃商户周环比.toFixed(2)
                     }
@@ -1429,10 +1800,10 @@ export default {
                     // if(res.data.总活跃商户数){
                     //     this.count = res.data.总活跃商户数
                     // }
-                    let arr = []
-                    this.arrPer = arr.push(this.nums)
-                    this.getChartFun2(arr)
-                    this.getDegFun()
+                    // let arr = []
+                    // this.arrPer = arr.push(this.nums)
+                    // this.getChartFun2(arr)
+                    // this.getDegFun()
                 })
                 .catch(res => {
                     console.log(res);
@@ -1640,7 +2011,6 @@ export default {
                 height: 170px;
                 background: #fff;
                 overflow: hidden;
-                // border: 1px solid #ccc;
                 .list-title{
                     display: flex;
                     line-height: 30px;
@@ -1660,7 +2030,7 @@ export default {
                 .proportion{
                     display: flex;
                     div{
-                        width: 140px;
+                        flex: 1;
                         height: 30px;
                         font-size: 12px;
                         line-height: 30px;
@@ -1676,23 +2046,24 @@ export default {
                         }
                     }
                 }
-            }
-            .list_1{
-                .total{
+                .total, .total2{
                     margin-top: 14px;
                     font-size: 12px;
                     color: #999;
+                }
+                .total{
                     cursor: pointer;
                 }
                 .total:hover{
-                    color:#409EFF;  //
+                    color:#409EFF;  
                     text-decoration: underline;
                 }
+            }
+            .list_1{
                 .num_1{
                     margin: 15px 0;
                 }
                 .proportion_1{
-                    padding-bottom: 2px;
                     padding-top:10px;
                     border-bottom: 1px solid #ccc;
                 }
@@ -1700,11 +2071,39 @@ export default {
             .list_2, .list_4{
                 .proportion_2, .proportion_4{
                     margin-top: 11px;
-                    padding-top: 6px;
                     border-top: 1px solid #ccc;
+                }
+                .proportion_4{
+                    padding-top: 6px;
                 }
             }
             .list_3{
+                .sign{
+                    margin-right: 6px;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    display: inline-block;
+                }
+                .sign1{
+                    background: #409EFF;
+                }
+                .sign2{
+                    background: #FF9900;
+                }
+                .biz_num{
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 12px;
+                    color: #999;
+                    .ps{
+                        cursor: pointer;
+                    }
+                    .ps:hover{
+                        color:#409EFF;  
+                        text-decoration: underline;
+                    }
+                }
                 .proportion_3, .proportion_4{
                     margin-top: 11px;
                     padding-top: 6px;
@@ -1793,7 +2192,7 @@ export default {
                     height: 400px;
                 }
                 .list{
-                    width: 300px;
+                    width: 360px;
                     margin-right: 20px;
                     .list-title{
                         display: flex;
@@ -1828,7 +2227,7 @@ export default {
                             }
                             .name{
                                 margin-left: 5px;
-                                width: 150px;
+                                width: 210px;
                                 overflow: hidden;
                                 white-space: nowrap;
                                 text-overflow: ellipsis;

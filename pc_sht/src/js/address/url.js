@@ -276,8 +276,10 @@ export const queryCheckList = baseUrl + 'check/getAllCheck' // 查询检测信�
 export const addCheckItem = baseUrl + 'check/insertCheck' // 新增检测信息
 export const deteleCheckItem = baseUrl + 'check/deleteCheck' // 删除检测信息
 export const BaseImgUrl = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' // 删除检测信息
+export const BaseImgUrl2 = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' // 删除检测信息
 export const jcqueryPurchase = baseUrl + 'check/queryCheckGoods';// 查询进货商品列表
 export const updateCheck = baseUrl + 'check/updateCheck';// 编辑检测
+export const uploadImgJc = baseUrl + 'comm/uploadImg';// 新增检查上传图片 多张
 
 // 统计
 export const queryMoneyAndWeightForMarket = baseUrl + 'redis/queryMoneyAndWeightForMarket' //查询商品商户总额
@@ -292,7 +294,7 @@ export const queryBizRankCurrentDay = baseUrl + 'redis/queryBizRankCurrentDay' /
 export const queryBizRankCurrentMonth = baseUrl + 'redis/queryBizRankCurrentMonth' // 查询当月商户交易额排行
 export const queryBizRankCurrentYear = baseUrl + 'redis/queryBizRankCurrentYear' // 查询当年商户交易额排行
 export const getTzInfoUploadDays = baseUrl + 'redis/getTzInfoUploadDays' // 该市场当月上传进货台账的商户信息（录入天数）
-export const queryHasTzBizByNodeId = baseUrl5 + 'redis/queryHasTzBizByNodeId' // 该市场当月上传进货台账的商户信息（录入笔数）
+export const queryHasTzBizByNodeId = baseUrl + 'redis/queryHasTzBizByNodeId' // 该市场当月上传进货台账的商户信息（录入笔数）
 export const getTzInfoUploadBizNum = baseUrl + 'redis/getTzInfoUploadBizNum' //  该市场当月上传进货台账的商户信息（商户数）
 export const getBizOnlineTime = baseUrl + 'redis/getBizOnlineTime' // 该市场当日电子秤最早在线时间
 export const getBizNotOnlineTime = baseUrl + 'redis/getBizNotOnlineTime' //该市场电子秤不在线天数
@@ -306,6 +308,7 @@ export const queryMoneyCurrentMonth = baseUrl + 'redis/queryMoneyCurrentMonth' /
 export const queryMoneyCurrentDayHour = baseUrl + 'redis/queryMoneyCurrentDayHour' // 查询当天24小时交易额数据
 export const queryMoneyCurrentYear = baseUrl + 'redis/queryMoneyCurrentYear' // 查询当年商户交易额排行
 export const queryMoneyAndWeightForNode = baseUrl + 'redis/queryMoneyAndWeightForNode' // 查询全部区域商户交易额
+export const getCustomerMoneyAndWeight = baseUrl + 'redis/getCustomerMoneyAndWeight' // 查询客单价客单量
 
 // 供货单位
 export const querySupplier = baseUrl + 'supplier/querySupplier' // 供货单位管理查询（超管）
@@ -402,6 +405,7 @@ export const deleteAllErrorData = baseUrl3 + 'MonLog/deleteAllErrorData' // 解�
 export const queryLoseDataNode = baseUrl3 + 'MonLog/queryLoseDataNode' // 缺失对照企业
 export const queryFilePath = baseUrl3 + 'MonLog/queryFilePath' // 文件路径
 export const addErrorDateRemark = baseUrl3 + 'MonLog/addErrorDateRemark' //添加备注
+// export const queryAssetsBaseByAssetsId = baseUrl3 + 'assets/queryAssetsBaseByAssetsId' // 巡检查看
 
 // 养殖场
 export const getAllYzcxx = baseUrl + 'farming/getAllYzcxx' // 养殖场管理查询
@@ -469,6 +473,7 @@ export const insertAssetsGroup = baseUrl + 'assetsTask/insertAssetsGroup' // 新
 export const deleteAssetsGroup = baseUrl + 'assetsTask/deleteAssetsGroup' // 删除分组 和组员 组长
 export const queryBusinessForMobile = baseUrl + 'assets/queryBusinessForMobile' // 查询商户分页加载
 export const downAssetsTaskXsl = baseUrl + 'assetsTask/downAssetsTaskXsl' // 报修任务的导出
+export const updateAssetsTaskState = baseUrl + 'assetsTask/updateAssetsTaskState' // 报修任务  开启任务
 
 //pass平台
 //重要产品追溯和监控
@@ -583,3 +588,7 @@ export const updateTraceInfo = baseUrl4 + 'warning/updateTraceInfo'//修改追�
 export const deleteTraceInfo = baseUrl4 + 'warning/deleteTraceInfo'//删除追溯信息
 export const downloadTraceInfo = baseUrl4 + 'warning/downloadTraceInfo'//下载追溯信息
 export const importTraceInfo = baseUrl4 + 'warning/importTraceInfo'//导入追溯信息
+export const queryEtraceLog = baseUrl4 + 'warning/queryEtraceLog' // 追溯查询日志
+export const queryResultTypeSelect = baseUrl4 + 'warning/queryResultTypeSelect' // 查询结果
+export const downloadEtraceLog = baseUrl4 + 'warning/downloadEtraceLog' // 下载追溯日志
+export const queryTraceCode = baseUrl4 + 'warning/queryTraceCode' // 追溯查询

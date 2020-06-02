@@ -377,13 +377,14 @@
         ]
       }
       this.form.userId = localStorage.getItem('userId')
-      this.region = this.$route.params.areaId
-      this.bigAreaId = this.$route.params.bigAreaId
+      this.region = this.$route.query.areaId
+      this.bigAreaId = this.$route.query.bigAreaId
     },
     watch: {
       'tableData': {
         handler: function(newVal,oldVal){
-          if(this.$route.params.goodsMsg){
+          if(this.$route.query.goodsMsg){
+            let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
             // 编辑新增原料
             let val = []
             this.selectArr2.forEach(ele => {
@@ -393,9 +394,9 @@
                 }
               })
             })
-            let stk_goods_code = this.$route.params.goodsMsg.GOODS_CODE ? this.$route.params.goodsMsg.GOODS_CODE : '',
-              stk_goods_name = this.$route.params.goodsMsg.GOODS_NAME,
-              stk_specification = this.$route.params.goodsMsg.GOODS_UNIT,
+            let stk_goods_code = goodsMsg.GOODS_CODE ? goodsMsg.GOODS_CODE : '',
+              stk_goods_name = goodsMsg.GOODS_NAME,
+              stk_specification = goodsMsg.GOODS_UNIT,
               stk_number = '';
             let str = "[", 
               goodCode = '',
@@ -488,54 +489,55 @@
       this.scShopId = localStorage.getItem('scShopId');
       this.initData();
       this.getAddrList()
-      if(JSON.stringify(this.$route.params.goodsMsg)){ 
-        if(this.$route.params.goodsMsg.DISGRANT == 0){
+      if(this.$route.query.goodsMsg){ 
+        let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
+        if(goodsMsg.DISGRANT == 0){
           this.disgrant = '未下发'
-        }else if(this.$route.params.goodsMsg.DISGRANT == 1){
+        }else if(goodsMsg.DISGRANT == 1){
           this.disgrant = '已下发'
         }
-        this.form.userdefineCategory = this.$route.params.goodsMsg.USERDEFINE_CATEGORY
-        this.form.bzq = this.$route.params.goodsMsg.BZQ
-        this.form.brand = this.$route.params.goodsMsg.BRAND
-        this.form.association_id = this.$route.params.goodsMsg.association_id
-        this.form.userdefine_code_one = this.$route.params.goodsMsg.userdefine_code_one
-        this.form.userdefine_code_two = this.$route.params.goodsMsg.userdefine_code_two
+        this.form.userdefineCategory = goodsMsg.USERDEFINE_CATEGORY
+        this.form.bzq = goodsMsg.BZQ
+        this.form.brand = goodsMsg.BRAND
+        this.form.association_id = goodsMsg.association_id
+        this.form.userdefine_code_one = goodsMsg.userdefine_code_one
+        this.form.userdefine_code_two = goodsMsg.userdefine_code_two
         this.amount = false
         this.showFile = true
-        this.form.goodsName = this.$route.params.goodsMsg.GOODS_NAME;
-        this.form.j_name = this.$route.params.goodsMsg.J_NAME
-        if(this.$route.params.goodsMsg.level_id){  
-          let str = this.$route.params.goodsMsg.level_id;
+        this.form.goodsName = goodsMsg.GOODS_NAME;
+        this.form.j_name = goodsMsg.J_NAME
+        if(goodsMsg.level_id){  
+          let str = goodsMsg.level_id;
           this.form.selectVarieties = [str.slice(0,2),str.slice(0,5),str.slice(0,8)];
           this.form.gbCode = str.slice(0,8);
         }
-        this.form.goodsCode = this.$route.params.goodsMsg.GOODS_CODE
-        this.form.price = this.$route.params.goodsMsg.PRICE;
-        this.form.specifications = this.$route.params.goodsMsg.GOODS_UNIT;
+        this.form.goodsCode = goodsMsg.GOODS_CODE
+        this.form.price = goodsMsg.PRICE;
+        this.form.specifications = goodsMsg.GOODS_UNIT;
         if(this.form.specifications == '斤' || this.form.specifications =='公斤'){
           this.isShow = false;
           this.form.input = '';
         }else{
           this.isShow = true;
-          this.form.input = this.$route.params.goodsMsg.COUNT;
-          this.form.unit = this.$route.params.goodsMsg.SPECIFICATIONS;          
+          this.form.input = goodsMsg.COUNT;
+          this.form.unit = goodsMsg.SPECIFICATIONS;          
         }
-        this.form.goodsUnit = this.$route.params.goodsMsg.GOODS_UNIT; 
-        this.form.suppliersId = this.$route.params.goodsMsg.SUPPLIERS_ID;
-        this.form.suppliersName = this.$route.params.goodsMsg.SUPPLIERS_NAME;
-        this.form.goodsID = this.$route.params.goodsMsg.ID;
-        this.logoUrl = this.$route.params.goodsMsg.PRODUCT_IMG_URL
-        this.imgUrl = this.$route.params.goodsMsg.IMG_URL
+        this.form.goodsUnit = goodsMsg.GOODS_UNIT; 
+        this.form.suppliersId = goodsMsg.SUPPLIERS_ID;
+        this.form.suppliersName = goodsMsg.SUPPLIERS_NAME;
+        this.form.goodsID = goodsMsg.ID;
+        this.logoUrl = goodsMsg.PRODUCT_IMG_URL
+        this.imgUrl = goodsMsg.IMG_URL
         let originArr = [];
-        if(this.$route.params.goodsMsg.areaOriginId){
-          if(this.$route.params.goodsMsg.areaOriginId.slice(4,6) != '00'){
-            originArr.unshift(this.$route.params.goodsMsg.areaOriginId);
+        if(goodsMsg.areaOriginId){
+          if(goodsMsg.areaOriginId.slice(4,6) != '00'){
+            originArr.unshift(goodsMsg.areaOriginId);
           }
-          if(this.$route.params.goodsMsg.areaOriginId.slice(2,4) != '00'){
-            originArr.unshift(this.$route.params.goodsMsg.areaOriginId.slice(0,4)+'00');
+          if(goodsMsg.areaOriginId.slice(2,4) != '00'){
+            originArr.unshift(goodsMsg.areaOriginId.slice(0,4)+'00');
           }
-          if(this.$route.params.goodsMsg.areaOriginId.slice(0,2) != '00'){
-            originArr.unshift(this.$route.params.goodsMsg.areaOriginId.slice(0,2)+'0000');
+          if(goodsMsg.areaOriginId.slice(0,2) != '00'){
+            originArr.unshift(goodsMsg.areaOriginId.slice(0,2)+'0000');
           }
         }
         this.form.addr = originArr
@@ -712,9 +714,13 @@
         }
       },
       onSubmit(){
-        let stk_goods_code = this.$route.params.goodsMsg.GOODS_CODE ? this.$route.params.goodsMsg.GOODS_CODE : '',
-          stk_goods_name = this.$route.params.goodsMsg.GOODS_NAME,
-          stk_specification = this.$route.params.goodsMsg.GOODS_UNIT,
+        let goodsMsg = {}
+        if(this.$route.query.goodsMsg){ 
+          goodsMsg = JSON.parse(this.$route.query.goodsMsg)
+        }
+        let stk_goods_code = goodsMsg.GOODS_CODE ? goodsMsg.GOODS_CODE : '',
+          stk_goods_name = goodsMsg.GOODS_NAME,
+          stk_specification = goodsMsg.GOODS_UNIT,
           stk_number = '';
         let str = "[", 
           goodCode = '',
@@ -761,9 +767,9 @@
         let obj = {
           // node_id: this.node_id,
           // node_name: this.node_name,
-          // stk_goods_code: this.$route.params.goodsMsg.GOODS_CODE ? this.$route.params.goodsMsg.GOODS_CODE : '',
-          // stk_goods_name: this.$route.params.goodsMsg.GOODS_NAME,
-          // stk_specification: this.$route.params.goodsMsg.GOODS_UNIT,
+          // stk_goods_code:goodsMsg.GOODS_CODE ? goodsMsg.GOODS_CODE : '',
+          // stk_goods_name: goodsMsg.GOODS_NAME,
+          // stk_specification: goodsMsg.GOODS_UNIT,
           // stk_number: this.form2.number,
           // or_goods_code: this.form2.goods_code,
           // or_goods_name: this.form2.goods_name,
@@ -844,9 +850,13 @@
           })
       },
       getStkFun(){
+        let goodsMsg = {}
+        if(this.$route.query.goodsMsg){ 
+          goodsMsg = JSON.parse(this.$route.query.goodsMsg)
+        }
         let obj = {
           node_id: this.node_id,
-          goodsName: this.$route.params.goodsMsg.GOODS_NAME,
+          goodsName: goodsMsg.GOODS_NAME,
           goodsCode:  this.form.goodsCode,
         }
         GeStkOrigin(obj)
@@ -1031,7 +1041,8 @@
             this.tableData = res.data.purchaseList;
             this.num = res.data.goodsinfo.total;
             this.$nextTick(()=>{          
-              if(this.$route.params.goodsMsg){
+              if(this.$route.query.goodsMsg){
+                let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
                 if(this.selectArr2.length != 0){
                   this.tableData.forEach((v,i) => {
                     this.selectArr2.forEach((val,ind) => {
@@ -1073,11 +1084,12 @@
       },
       handleSelectionChange(val) {
         console.log(val)
-        if(this.$route.params.goodsMsg){
+        if(this.$route.query.goodsMsg){
+          let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
           // 编辑新增原料
-          // let stk_goods_code = this.$route.params.goodsMsg.GOODS_CODE ? this.$route.params.goodsMsg.GOODS_CODE : '',
-          //   stk_goods_name = this.$route.params.goodsMsg.GOODS_NAME,
-          //   stk_specification = this.$route.params.goodsMsg.GOODS_UNIT,
+          // let stk_goods_code = goodsMsg.GOODS_CODE ? goodsMsg.GOODS_CODE : '',
+          //   stk_goods_name = goodsMsg.GOODS_NAME,
+          //   stk_specification = goodsMsg.GOODS_UNIT,
           //   stk_number = '';
           if(this.selectArr2.length == 0){
             this.selectArr2 = val
@@ -1171,7 +1183,7 @@
         }
       },
       saveMaterial(){
-        if(this.$route.params.goodsMsg){
+        if(this.$route.query.goodsMsg){
           this.onSubmit()
         }else{
           for(var i = 0; i < this.selectArr.length; i++){
@@ -1212,9 +1224,10 @@
           .then(res => {
             this.addrOptions = res.data.dataList
             let addrArr = [];
-            if(this.$route.params.goodsMsg){
-              if(this.$route.params.goodsMsg.areaOriginNname){
-                let areaName = this.$route.params.goodsMsg.areaOriginNname
+            if(this.$route.query.goodsMsg){
+              let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
+              if(goodsMsg.areaOriginNname){
+                let areaName = goodsMsg.areaOriginNname
                 if(areaName.slice(0,3) == '北京市'){
                   this.addrOptions.forEach(ele => {
                       addrArr.push('110000')
@@ -1321,11 +1334,11 @@
                 })
               }
             })
-            if(JSON.stringify(this.$route.params.goodsMsg)){
-
+            if(this.$route.query.goodsMsg){
+              let goodsMsg = JSON.parse(this.$route.query.goodsMsg)
               // 编辑商品
               let params = {
-                id:this.$route.params.goodsMsg.ID,
+                id: goodsMsg.ID,
                 goodsName:this.form.goodsName,
                 j_name: this.form.j_name,
                 gbCode:this.form.gbCode,

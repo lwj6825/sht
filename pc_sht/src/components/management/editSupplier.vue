@@ -108,48 +108,49 @@
         created() {
           this.form.userId = localStorage.getItem('userId')
           this.scShopId = localStorage.getItem('scShopId');
-          this.areaId = this.$route.params.areaId
+          this.areaId = this.$route.query.areaId
         },
         mounted(){
           this.isRegion = localStorage.getItem('isRegion')
           this.getAddrList()//获取地区列表     
           this.getGhdwFun()     
-          if(JSON.stringify(this.$route.params.gysMsg)){
-            this.form.type = this.$route.params.gysMsg.type;
-            this.form.licenceNo = this.$route.params.gysMsg.licence_no;//营业执照
-            this.form.bizName = this.$route.params.gysMsg.biz_name;//供应商名称
-            this.form.regId = this.$route.params.gysMsg.regId;//身份证号
-            this.form.name = this.$route.params.gysMsg.concact_name;//联系人
-            this.form.callphone = this.$route.params.gysMsg.cellphone;//联系方式
-            this.form.addrId = this.$route.params.gysMsg.area_id;
-            this.form.origin_id = this.$route.params.gysMsg.area_origin_id
-            this.form.ghdw = this.$route.params.gysMsg.ws_supplier
-            this.form.ghdw_id = this.$route.params.gysMsg.ws_supplier_id
+          if(this.$route.query.gysMsg){
+            let gysMsg = JSON.parse(this.$route.query.gysMsg)
+            this.form.type = gysMsg.type;
+            this.form.licenceNo = gysMsg.licence_no;//营业执照
+            this.form.bizName = gysMsg.biz_name;//供应商名称
+            this.form.regId = gysMsg.regId;//身份证号
+            this.form.name = gysMsg.concact_name;//联系人
+            this.form.callphone = gysMsg.cellphone;//联系方式
+            this.form.addrId = gysMsg.area_id;
+            this.form.origin_id = gysMsg.area_origin_id
+            this.form.ghdw = gysMsg.ws_supplier
+            this.form.ghdw_id = gysMsg.ws_supplier_id
             let arr = [];
-            if(this.$route.params.gysMsg.area_id){
-              if(this.$route.params.gysMsg.area_id.slice(4,6) != '00'){
-                arr.unshift(this.$route.params.gysMsg.area_id);
+            if(gysMsg.area_id){
+              if(gysMsg.area_id.slice(4,6) != '00'){
+                arr.unshift(gysMsg.area_id);
               }
-              if(this.$route.params.gysMsg.area_id.slice(2,4) != '00'){
-                arr.unshift(this.$route.params.gysMsg.area_id.slice(0,4)+'00');
+              if(gysMsg.area_id.slice(2,4) != '00'){
+                arr.unshift(gysMsg.area_id.slice(0,4)+'00');
               }
-              if(this.$route.params.gysMsg.area_id.slice(0,2) != '00'){
-                arr.unshift(this.$route.params.gysMsg.area_id.slice(0,2)+'0000');
+              if(gysMsg.area_id.slice(0,2) != '00'){
+                arr.unshift(gysMsg.area_id.slice(0,2)+'0000');
               }
             }
             this.form.addr = arr;
-            this.form.infoAddr = this.$route.params.gysMsg.addr;//详细地址
-            this.form.shop_concacts_id = this.$route.params.gysMsg.shop_concacts_id;
+            this.form.infoAddr =gysMsg.addr;//详细地址
+            this.form.shop_concacts_id = gysMsg.shop_concacts_id;
             let originArr = [];
-            if(this.$route.params.gysMsg.area_origin_id){
-              if(this.$route.params.gysMsg.area_origin_id.slice(4,6) != '00'){
-                originArr.unshift(this.$route.params.gysMsg.area_origin_id);
+            if(gysMsg.area_origin_id){
+              if(gysMsg.area_origin_id.slice(4,6) != '00'){
+                originArr.unshift(gysMsg.area_origin_id);
               }
-              if(this.$route.params.gysMsg.area_origin_id.slice(2,4) != '00'){
-                originArr.unshift(this.$route.params.gysMsg.area_origin_id.slice(0,4)+'00');
+              if(gysMsg.area_origin_id.slice(2,4) != '00'){
+                originArr.unshift(gysMsg.area_origin_id.slice(0,4)+'00');
               }
-              if(this.$route.params.gysMsg.area_origin_id.slice(0,2) != '00'){
-                originArr.unshift(this.$route.params.gysMsg.area_origin_id.slice(0,2)+'0000');
+              if(gysMsg.area_origin_id.slice(0,2) != '00'){
+                originArr.unshift(gysMsg.area_origin_id.slice(0,2)+'0000');
               }
             }
             this.form.origin_name = originArr
@@ -196,9 +197,10 @@
               .then(res => {
                 this.addrOptions = res.data.dataList;
                 let addrArr = [];
-                if(this.$route.params.gysMsg){
-                  if(this.$route.params.gysMsg.area_name){
-                    let areaName = this.$route.params.gysMsg.area_name
+                if(this.$route.query.gysMsg){
+                  let gysMsg = JSON.parse(this.$route.query.gysMsg)
+                  if(gysMsg.area_name){
+                    let areaName = gysMsg.area_name
                     if(areaName.slice(0,3) == '北京市'){
                       this.addrOptions.forEach(ele => {
                         addrArr.push('110000')
@@ -260,8 +262,8 @@
                     }
                     this.form.addr = addrArr.slice(0,3)
                   }
-                  if(this.$route.params.gysMsg.area_origin_name){
-                    let areaName = this.$route.params.gysMsg.area_origin_name, arr = [];
+                  if(gysMsg.area_origin_name){
+                    let areaName = gysMsg.area_origin_name, arr = [];
                     if(areaName.slice(0,3) == '北京市'){
                       this.addrOptions.forEach(ele => {
                         arr.push('110000')

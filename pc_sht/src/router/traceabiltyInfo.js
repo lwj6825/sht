@@ -5,6 +5,7 @@
 // import itemCode from '@/components/traceabiltyInfo/itemCode'
 // import reviewInfo from '@/components/traceabiltyInfo/reviewInfo'
 // import showreviewInfo from '@/components/traceabiltyInfo/showreviewInfo'
+// import reviewJournal from '../components/traceabiltyInfo/reviewJournal.vue'
 
 export default [
     { 
@@ -85,6 +86,16 @@ export default [
             id:'458',
             node:'traceabiltyInfo',
             url:'adddecodingRules',
+        }
+    },
+    { 
+        path: 'traceabiltyInfo/reviewJournal',
+        component: resolve => require(['@/components/traceabiltyInfo/reviewJournal'],resolve),
+        name:'ReviewJournal',
+        meta:{
+            id:'504',
+            node:'traceabiltyInfo',
+            url:'reviewJournal',
         }
     }
 ]
