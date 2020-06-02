@@ -101,13 +101,14 @@
                 <el-table-column prop="create_name" label="创建人" width="100"> </el-table-column>
                 <el-table-column prop="record_time" label="创建时间" width="170" 
                     :default-sort="{order: order}" sortable="custom"> </el-table-column>
-                <el-table-column label="操作" width="140">
+                <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-button type="text" v-if="scope.row.task_state == 1" size="small" @click="viewFun(scope.row)">查看</el-button>
                         <el-button type="text" v-if="scope.row.task_state == 1" size="small" @click="openFun(scope.row)">开启任务</el-button>
                         <div v-else>
                             <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
                             <el-button type="text" size="small" @click="stopFun(scope.row)">关闭</el-button>
+                            <el-button type="text" size="small" @click="journalFun(scope.row)">任务日志</el-button>
                             <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
                         </div>
                     </template>
@@ -395,6 +396,46 @@
                 </el-carousel>
             </div>
         </div>
+        <div class="passwrd" v-if="isShow">
+            <div class="text">
+                <div class="box-title">
+                    <p class="tit">任务日志</p>
+                    <p class="iconfont icon-close close" @click="closeFun4"></p>
+                </div>
+                <div class="clear"></div>
+                <el-timeline>
+                    <el-timeline-item placement="top" v-for="(item, index) in taskList" :key="index">
+                        <el-card>
+                            <div class="operation">
+                                <p>{{item.operation_time}}</p>
+                                <p class="method">{{item.operation_type}}</p>
+                                <p>操作人：{{item.operation_name}}</p>
+                            </div>
+                            <p class="msg">{{item.operation_text}}</p>
+                            <div class="data-msg">
+                                <div class="msg-item">   
+                                    <div class="img-list">
+                                        <ul>
+                                            <li v-for="(item2,index2) in item.img_list" :key="index2" @click="bigImgFun(item2,4,item)" v-if="item2.url">
+                                                <figure class="image">
+                                                    <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item2.url">
+                                                </figure>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-timeline-item>
+                    <el-timeline-item placement="top" v-if="taskList.length > 0">
+                        
+                    </el-timeline-item>
+                </el-timeline>
+                <div class="btn">
+                    <el-button type="primary" @click="closeFun4">关闭</el-button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -403,7 +444,7 @@ import {QueryNodeBase2,QueryBusiness,QueryAssetsBase,QueryAssetsConf} from '../.
 import {importAssets,importAssetsUpdate} from '../../js/address/url.js'
 import {QueryNodeBasePage,GetAssetsConfig,GetAssetsUser,InsertAssetsTask,GetAssetsTask,GetAssetsTaskImg,UpdateAssetsTask,
     DeleteAssetsTaskImg,GetAssetsTaskInfo,InsertAssetsImg,UpdateAssetsTaskInfo,DeleteAssetsInfo,UpdateAssetsTaskAssignId,
-    InsertAssetsTaskResult,UpdateAssetsTaskScbj,QueryBusinessForMobile,DownAssetsTaskXsl, UpdateAssetsTaskState} from '../../js/repair/repair.js'
+    InsertAssetsTaskResult,UpdateAssetsTaskScbj,QueryBusinessForMobile,DownAssetsTaskXsl, UpdateAssetsTaskState, GetAssetsTaskLog,} from '../../js/repair/repair.js'
 import {uploadImgTask,uploadVideo} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
@@ -514,6 +555,8 @@ export default {
             disabled2: false,
             disabled3: false,
             disabled4: false,
+            isShow: false,
+            taskList: [],
         }
     },
     mounted() {
@@ -528,6 +571,25 @@ export default {
         this.getQueryAssetsConf()
     },
     methods: {
+        // 任务日志
+        journalFun(ele){
+            this.getGetAssetsTaskLog(ele.id)
+            this.isShow = true
+        },
+        getGetAssetsTaskLog(id){
+            let str = 'id=' + id;
+            GetAssetsTaskLog(str)
+                .then(res => {
+                    this.taskList = res.data
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+        closeFun4(){
+            this.isShow = false
+            this.taskList = []
+        },
         // 开启任务
         openFun(ele){
             let params = {
@@ -2188,6 +2250,16 @@ export default {
                 .clear{
                     clear: both;
                 }
+                .operation{
+                    display: flex;
+                    p{
+                        flex: 1;
+                    }
+                    .method{
+                        text-align: center;
+                        font-weight: bolder;
+                    }
+                }
                 .form{
                     margin-top: 10px;
                     height: 520px;
@@ -2275,7 +2347,7 @@ export default {
                 }
                 .btn{
                     margin-top: 10px;
-                    margin-left: 330px;
+                    text-align: center;
                     span{
                         font-size: 14px;
                         color: #999;
@@ -2455,7 +2527,11 @@ export default {
             margin: 20px 0;
             text-align: center;
         }
-        
+        .el-timeline{
+            margin: 15px 20px;
+            height: 480px;
+            overflow: auto;
+        }
     }
 </style>
 <style lang="less">

@@ -1105,8 +1105,9 @@ export default {
         },
         // 获取商户
         getMerchantsFun(){
+            let param = ''
             if(this.$route.query.param){
-                let param = JSON.parse(this.$route.query.param)
+                param = JSON.parse(this.$route.query.param)
             }
             let obj = {
                 page: '1',
@@ -1124,6 +1125,7 @@ export default {
                     if(this.states == 1){
                         this.options.forEach(ele => {
                             if(param.buyer_booth_id == ele.bootList[0].shop_booth_id){
+                                console.log(ele)
                                 this.merchants = ele.bootList[0].booth_name
                                 this.bigAreaId = ele.userId
                                 this.areaIds = ele.bootList[0].shop_booth_id
@@ -1329,25 +1331,25 @@ export default {
                             is_oc_upload: this.is_oc_upload
                         }
                         console.log(obj)
-                        // TzUpdate(obj)
-                        //     .then(res => {
-                        //         // console.log(res)
-                        //         if(this.tzId != ''){
-                        //             if (res.result == true) {
-                        //                 this.$message.success('进货台账编辑成功');
-                        //                 this.$router.push('entryTz')
-                        //             }else{
-                        //                 this.$message.error('进货台账编辑失败');
-                        //             }
-                        //         }else{
-                        //             if (res.result == true) {
-                        //                 this.$message.success(res.message);
-                        //                 this.$router.push('entryTz')
-                        //             }else{
-                        //                 this.$message.error(res.message);
-                        //             }
-                        //         }
-                        //     })
+                        TzUpdate(obj)
+                            .then(res => {
+                                // console.log(res)
+                                if(this.tzId != ''){
+                                    if (res.result == true) {
+                                        this.$message.success('进货台账编辑成功');
+                                        this.$router.push('entryTz')
+                                    }else{
+                                        this.$message.error('进货台账编辑失败');
+                                    }
+                                }else{
+                                    if (res.result == true) {
+                                        this.$message.success(res.message);
+                                        this.$router.push('entryTz')
+                                    }else{
+                                        this.$message.error(res.message);
+                                    }
+                                }
+                            })
                     }
                 }
                 //TzUpdate

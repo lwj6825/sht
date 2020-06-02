@@ -202,7 +202,8 @@
                                 <template slot-scope="scope">
                                     <div class="num">
                                         <div>
-                                            <p class="price">{{scope.row.price}}</p>
+                                            <p class="price" v-if="scope.row.price">{{scope.row.goods_unit=='斤'?scope.row.price/2:scope.row.price}}</p>
+                                            <p class="price" v-else>{{scope.row.price}}</p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
                                             <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
                                         </div>
@@ -958,6 +959,12 @@ export default {
                     })
                     this.selectGood.forEach(val => {
                         if(val.price){
+                          let price = '';
+                          if(val.goods_unit=='斤'){
+                            price = val.price*2
+                          }else{
+                              price = val.price
+                          }
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
@@ -968,7 +975,7 @@ export default {
                                 goods_id: val.goods_id,
                                 goods_code: val.goods_code,
                                 goods_name: val.goods_name,
-                                price: val.price,
+                                price: price,
                                 yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                                 history_price: val.history_price ? val.history_price : '',
                                 area_id: val.area_id ? val.area_id : '',
@@ -982,6 +989,12 @@ export default {
                 }else{
                     this.tableData2.forEach(val => {
                         if(val.price){
+                          let price = '';
+                          if(val.goods_unit=='斤'){
+                            price = val.price*2
+                          }else{
+                              price = val.price
+                          }
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
@@ -1279,7 +1292,7 @@ export default {
             node_id: localStorage.getItem('loginId'),
             node_name: localStorage.getItem('loginName'),
           }
-          this.$router.push({name: 'viewQuotation',params: obj})
+          this.$router.push({name: 'ViewQuotation',params: obj})
         },
         isShowFun(){
             this.isfile = true

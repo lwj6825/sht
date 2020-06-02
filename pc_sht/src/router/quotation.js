@@ -1,12 +1,12 @@
 import quotation from '../components/quotation/quotation.vue'
 import quotationList from '../components/quotation/quotationList.vue'
-import viewquotation from '../components/quotation/viewquotation.vue'
+import viewquotation from '../components/quotation/viewQuotation.vue'
 
 export default [
     {
         path: 'quotation/quotation',
         component: resolve => require(['@/components/quotation/quotation'],resolve),
-        name:"quotation",
+        name:"Quotation",
         meta:{
             id:'500',
             node:'quotation',
@@ -16,7 +16,7 @@ export default [
     {
         path: 'quotation/quotationList',
         component: resolve => require(['@/components/quotation/quotationList'],resolve),
-        name:"quotationList",
+        name:"QuotationList",
         meta:{
             id:'501',
             node:'quotation',
@@ -26,7 +26,7 @@ export default [
     {
         path: 'quotation/viewQuotation',
         component: resolve => require(['@/components/quotation/viewQuotation'],resolve),
-        name:"viewQuotation",
+        name:"ViewQuotation",
         meta:{
             id:'502',
             node:'quotation',

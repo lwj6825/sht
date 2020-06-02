@@ -261,7 +261,7 @@ export default {
                 })
                 .catch(res => {
                     console.log(res)
-                    this.$message.error("出错了");
+                    loading.close();
                 })
         },
         bjFun(ele){

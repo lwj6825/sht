@@ -118,6 +118,33 @@
         node_id: '',
       }
     },
+    // beforeRouteEnter(to, from, next) {
+    //   if (from.path == "/home/goods/editStocks") {
+    //     console.log(11)
+    //     to.meta.isBack = true;
+    //   } else {
+    //     to.meta.isBack = false;
+    //   }
+    //   next();
+    // },
+    // activated() {
+    //   if (this.$route.meta.isBack = true) {
+    //     this.userId = localStorage.getItem('userId');          
+    //     this.isRegion = localStorage.getItem('isRegion')
+    //     this.scShopId = localStorage.getItem('scShopId');
+    //     this.loginId = localStorage.getItem('loginId')
+    //     this.loginName = localStorage.getItem('loginName')
+    //     this.node_id = localStorage.getItem('loginId');
+    //     this.queryNameData = JSON.parse(localStorage.getItem('queryNameData'))
+    //     if(this.isRegion == 'false'){
+    //       this.isShow = false
+    //       this.getPurchase()
+    //     }else{
+    //       this.queryLists();  
+    //     }
+    //   this.$route.meta.isBack = false;
+    //   }
+    // },
     created(){
       this.userId = localStorage.getItem('userId');          
       this.isRegion = localStorage.getItem('isRegion')
@@ -356,6 +383,7 @@
         //   }
         // });
         // window.open(routeData.href, '_blank');
+        // this.$route.meta.keepAlive = true;
         this.$router.push({name:'NewStocks',query:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'scShopId': this.scShopId}})
       },
       check(index, row){
@@ -368,6 +396,7 @@
         //   }
         // });
         // window.open(routeData.href, '_blank');
+        // this.$route.meta.keepAlive = true;
         this.$router.push({name:'ViewStocks',query:{'name':this.viewGoods,goodsMsg: JSON.stringify(row),'scShopId': this.scShopId}})
       },
       edit(index, row){
@@ -382,6 +411,7 @@
         //   }
         // });
         // window.open(routeData.href, '_blank');
+        // this.$route.meta.keepAlive = true;
         this.$router.push({name:'EditStocks',query:{'areaId':this.areaId,'bigAreaId':this.bigAreaId,'name':this.viewGoods,goodsMsg: JSON.stringify(row),'scShopId': this.scShopId}})
       },
       handleDelete(index, row){ //删除列表信息

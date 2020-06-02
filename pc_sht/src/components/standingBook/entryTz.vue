@@ -372,7 +372,7 @@ export default {
                     this.options = res.data.dataList
                 })
                 .catch(() => {
-                    this.$message.error("出错啦!");
+                    console.log(res)
                 })
         },
         rowClass({ row, rowIndex}) {

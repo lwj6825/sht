@@ -197,8 +197,8 @@
                 <div class="data">
                     <div class="title">经纬度</div>
                     <div class="msg">
-                        <el-input style="width: 86px" v-model="ruleForm.jd" clearable></el-input>
-                        <el-input style="width: 86px" v-model="ruleForm.wd" clearable></el-input>
+                        <el-input style="width: 44%" v-model="ruleForm.jd" clearable></el-input>
+                        <el-input style="width: 44%" v-model="ruleForm.wd" clearable></el-input>
                     </div>
                 </div>
                 <div class="data">
@@ -216,7 +216,7 @@
                 <div class="data">
                     <div class="title">备注</div>
                     <div class="msg">
-                        <el-input v-model="ruleForm.bz" clearable></el-input>
+                        <el-input type="textarea" v-model="ruleForm.bz" clearable style="max-height: 150px;"></el-input>
                     </div>
                 </div>
                 <div class="data">
@@ -664,7 +664,7 @@ export default {
                 })
                 .catch(res => {
                     console.log(res)
-                    this.$message.error("出错了");
+                    loading.close();
                 })
         },
         removeFun(ele){
@@ -684,8 +684,8 @@ export default {
                 imgStr = ''
             }
             let params = {
-                node_code: this.ruleForm.node, // 关联节点信息
-                node_name: this.ruleForm.node ? this.ssNode_name : '', // 节点名称
+                node_code: (this.ruleForm.node && this.ssNode_name) ? this.ruleForm.node : '', // 关联节点信息
+                node_name: this.ruleForm.node && this.ssNode_name ? this.ssNode_name : '', // 节点名称
                 assets_type: this.zcType_name, // 资产类型
                 assets_type_id: this.ruleForm.type[this.ruleForm.type.length - 1],
                 sub_period: this.ruleForm.ssq ? this.ssq_name : '', // 所属期
@@ -1006,6 +1006,9 @@ export default {
         }
         .view{
             margin-top: 10px;
+        }
+        .el-input, .el-select, .el-cascader, .el-textarea{
+            width: 90%;
         }
         .tab{
             margin: 10px 0;

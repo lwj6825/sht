@@ -456,13 +456,18 @@ export default {
             handler: function(newVal,oldVal){
                 let amount_money = 0
                 let total_price = 0
+                let str = ''
                 this.count = 0
                 newVal.forEach(v => {
-                    
                     if(v[0] != ''){
                         this.count++
+                        str = v[1].substring(v[1].length-1)
                     }
-                    let total_price = (v[2]*v[4])
+                    if(str == '头'){
+                        total_price = (v[2]*v[4]*(parseFloat(v[1]) ? parseFloat(v[1]) : 1))
+                    }else{
+                        total_price = (v[2]*v[4])
+                    }
                     amount_money += total_price
                     this.totalPrice = parseFloat(amount_money).toFixed(2)
                     this.payAmount = this.totalPrice
@@ -905,7 +910,11 @@ export default {
                     if(ele == val.GOODS_NAME){
                         this.tableData.forEach(val2 => {
                             if(ele == val2[0]){
-                                val2[1] = val.GOODS_UNIT
+                                if(val.GOODS_UNIT == '头'){
+                                    val2[1] = val.COUNT + val.SPECIFICATIONS + '/' + val.GOODS_UNIT
+                                }else{
+                                    val2[1] = val.GOODS_UNIT
+                                }
                                 val2[2] = val.PRICE
                                 val2.shopIds = val.ID
                                 val2[3] = ''
@@ -1217,6 +1226,8 @@ export default {
                 if(this.tableData.length > 0){
                     goodObj += '['
                     this.tableData.forEach(ele => {
+                        // 0 商品  1 规格  2 价格  3 生产日期  4  数量 5 保质期  6 规格是头，传  头数量*ount（75），其他传数量
+
                         // this.tableData2.forEach(val => {
                         //     if(ele[0] == val.GOODS_NAME){
                             if(ele[0] == ''){
@@ -1234,8 +1245,14 @@ export default {
                                 state = true
                                 return
                             }
-                            goodObj +=  '{"0":"' + ele[0] + '","1":"' + ele[1] + '","2":"' + (ele[2] ? ele[2] : 0) + '","3":"' + ele[3] 
-                                + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            let unitStr = ele[1].substring(ele[1].length-1)
+                            if(unitStr == '头'){
+                                goodObj +=  '{"0":"' + ele[0] + '","1":"' + unitStr + '","2":"' + (ele[2] ? ele[2] : 0) + '","3":"' + ele[3] 
+                                + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","6":"' + (ele[4]*(parseFloat(ele[1]) ? parseFloat(ele[1]) : 1)) + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            }else{
+                                goodObj +=  '{"0":"' + ele[0] + '","1":"' + ele[1] + '","2":"' + (ele[2] ? ele[2] : 0) + '","3":"' + ele[3] 
+                                    + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","6":"' + ele[4] + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            }
                             
                             // }
                         // })

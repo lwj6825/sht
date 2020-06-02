@@ -12,8 +12,13 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="填报日期">
-                        <el-date-picker style="width: 200px;" v-model="form.dataTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" 
-                            placeholder="选择日期"></el-date-picker>
+                        <el-date-picker clearable style="width: 300px"
+                            v-model="form.dataTime" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
                     </el-form-item>
                     <el-form-item label="填报企业">
                         <el-select v-model="form.tbqy" filterable clearable placeholder="请选择">
@@ -44,10 +49,18 @@
                     <el-table-column prop="node_type" label="报表类型"> </el-table-column>
                     <el-table-column prop="node_name" label="填报企业"> </el-table-column>
                     <el-table-column prop="in_date" label="日期"> </el-table-column>
-                    <el-table-column prop="state" label="状态"> </el-table-column>
+                    <el-table-column prop="state" label="状态"></el-table-column>
+                    <!--<el-table-column prop="data_source" label="数据来源">
+                        <template slot-scope="scope">
+                            <p v-if="scope.row.data_source == 1">中心各表抽取</p>
+                            <p v-if="scope.row.data_source == 2">查询机抽取</p>
+                            <p v-if="scope.row.data_source == 4">京东到家抽取</p>
+                            <p v-if="scope.row.data_source == 5">人工填报</p>
+                        </template>
+                    </el-table-column>-->
                     <el-table-column label="操作" width="100">
                         <template slot-scope="scope">
-                            <div v-if="scope.row.state == '已上报'">
+                            <div v-if="scope.row.data_source == 5 && scope.row.state == '已上报'">
                                 <el-button type="text" size="small" @click="viewFun(scope.row)">查看报价单</el-button>
                             </div>
                         </template>
@@ -150,8 +163,10 @@ export default {
                 dataTime: '',
                 enterprise: '',
                 tbqy: '',
-                states: '',
+                states: '1',
             },
+            startTime: '',
+            endTime: '',
             inline: true,
             page: 1,
             cols: 15,
@@ -212,7 +227,10 @@ export default {
         // this.userId = localStorage.getItem('userId')
         var currentTime = new Date()
         this.in_date = formatDate(currentTime)
-        this.form.dataTime = formatDate(currentTime)
+        let arr = []
+        arr.push(this.startTime)
+        arr.push(this.endTime)
+        this.form.dataTime = arr
         this.getDataFun()
         this.getNodeFun()
     },
@@ -337,7 +355,8 @@ export default {
             let params = {
                 node_id: this.form.tbqy,
                 state: this.form.states,
-                in_date: this.form.dataTime,
+                start_date: this.startTime,
+                end_date: this.endTime,
                 cols: this.cols,
                 page: this.page,
                 node_type: this.form.enterprise,
@@ -369,8 +388,10 @@ export default {
             }
             this.page = 1
             this.getTime()
-            var currentTime = new Date()
-            this.form.dataTime = formatDate(currentTime)
+            let arr = []
+            arr.push(this.startTime)
+            arr.push(this.endTime)
+            this.form.dataTime = arr
             this.getDataFun()
         },
         timeChange(ele){
@@ -378,15 +399,13 @@ export default {
                 this.startTime = this.form.dataTime[0]
                 this.endTime = this.form.dataTime[1]
             }else{
-                this.startTime = ''
-                this.endTime = ''
+                this.getTime()
             }
         },
         getTime(){
             var start = new Date();
-            // var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            // this.startTime = timestampToTime(startTime)
-            this.startTime = formatDate(start)
+            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
+            this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
         },

@@ -5,6 +5,7 @@ import MerchantMoney from '@/components/statistical/merchantMoney'
 import statisticsMsg from '../components/statistical/statisticsMsg'
 import bizList from '../components/statistical/bizList.vue'
 import viewBizList from '../components/statistical/viewBizList.vue'
+import viewGoodCommodity from '../components/statistical/viewGoodCommodity.vue'
 
 export default [
     { 
@@ -83,6 +84,16 @@ export default [
         name:'ViewBizList',
         meta:{
             id:'506',
+            node:'statistical',
+            url:'iewBizList',
+        } 
+    },
+    {
+        path: 'statistical/viewGoodCommodity', 
+        component: resolve => require(['@/components/statistical/viewGoodCommodity'],resolve),
+        name:'ViewGoodCommodity',
+        meta:{
+            // id:'506',
             node:'statistical',
             url:'iewBizList',
         } 

@@ -69,8 +69,8 @@
         <div class="table">
             <div class="title">
                 <p class="tz-title">全部销售台账</p>
-                <div>
-                    <el-button type="primary" class="addBtn blue-bth" @click="downloadFun">导出商户交易额</el-button><!---->
+                <div><!--
+                    <el-button type="primary" class="addBtn blue-bth" @click="downloadFun">导出商户交易额</el-button>-->
                     <span class="submit">
                         导入台账
                         <form id="upload" enctype="multipart/form-data" method="post"> 
@@ -98,9 +98,9 @@
                             <p v-if="scope.row.tz_origin == '4'">解析数据</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="buyer_booth_name" label="客户"> </el-table-column>
                     <el-table-column prop="seller_booth_name" label="商户名称"> </el-table-column>
                     <!--<el-table-column label="操作">
+                    <el-table-column prop="buyer_booth_name" label="客户"> </el-table-column>
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
                         </template> v-if="props.row.tz_id == goodMsg[0].tz_id"

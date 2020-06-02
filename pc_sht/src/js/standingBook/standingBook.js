@@ -1,7 +1,7 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryInTzDetailRegion,tzAdd,updatePc,getAllBiz,queryInTzDetailByTzId,queryXsTzDetailRegion,querySuppiler,ZhdTzParse,
   getAllTzGys,queryCheckList,addCheckItem,deteleCheckItem,jcqueryPurchase,deleteDoc,searchDoc,deleteTzByTzId,downloadXsTzDetail,tzUpdate,
-  queryXsTzDetailByTzId,updateCheck} from '../address/url.js';
+  queryXsTzDetailByTzId,updateCheck, queryXsTzDetailRegionForOneGoods} from '../address/url.js';
 import {baseUrl} from "../address/url";
 
 // ----获取供应商
@@ -85,4 +85,8 @@ export const SearchDoc = function(params){
 // 编辑检测
 export const UpdateCheck = function(params){
   return ajaxPost(updateCheck,params)
+}
+// 商品交易额明细 销售台账
+export const QueryXsTzDetailRegionForOneGoods = function(params){
+  return ajaxPost(queryXsTzDetailRegionForOneGoods,params)
 }

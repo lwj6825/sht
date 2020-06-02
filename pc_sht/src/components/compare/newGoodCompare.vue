@@ -1,0 +1,252 @@
+<template>
+    <div class="content newGoodCompare">
+        <el-form class="form" label-width="120px" :model="form" ref="form" :rules="rules">
+            <el-form-item label="节点名称：">
+                {{form.node_name}}
+            </el-form-item>
+            <el-form-item label="商品分类：" prop="good_types">
+                <el-cascader :options="typesArr" filterable @change="selectTypesFun" :props="props" change-on-select
+                    v-model="form.good_types">
+                </el-cascader>
+            </el-form-item>
+            <el-form-item label="国标名称：" prop="gb_name">
+                <el-input v-model="form.gb_name" disabled placeholder="根据商品分类自动带出"></el-input>
+            </el-form-item>
+            <el-form-item label="国标编码：" prop="gb_code">
+                <el-input v-model="form.gb_code" disabled placeholder="根据商品分类自动带出"></el-input>
+            </el-form-item>
+            <el-form-item label="自定义名称：" prop="custom_name">
+                <el-input v-model="form.custom_name"></el-input>
+            </el-form-item>
+            <el-form-item label="自定义编码：" prop="custom_code">
+                <el-input v-model="form.custom_code"></el-input>
+            </el-form-item>
+            <el-form-item label="自定义编码1：">
+                <el-input v-model="form.custom_code1"></el-input>
+            </el-form-item>
+            <el-form-item label="自定义编码2：">
+                <el-input v-model="form.custom_code2"></el-input>
+            </el-form-item>
+            <el-form-item label="标签编码：">
+                <el-input v-model="form.label_code"></el-input>
+            </el-form-item>
+            <el-form-item label="规格：">
+                <el-input v-model="form.specifications"></el-input>
+            </el-form-item>
+            <el-form-item label="全拼检索：">
+                <el-input v-model="form.all_retrieval"></el-input>
+            </el-form-item>
+            <el-form-item label="简拼检索：">
+                <el-input v-model="form.jp_retrieval"></el-input>
+            </el-form-item>
+            <el-form-item label="经营模式：">
+                <el-input v-model="form.pattern"></el-input>
+            </el-form-item>
+            <el-form-item label="品牌：">
+                <el-input v-model="form.brand"></el-input>
+            </el-form-item>
+            <el-form-item label="供货来源：">
+                <el-input v-model="form.source"></el-input>
+            </el-form-item>
+            <el-form-item label="供货单位名称：">
+                <el-select v-model="form.ghdw">
+                    <el-option  v-for="item in ghdwArr" :key="item.shop_concacts_id" :label="item.biz_name"  :value="item.shop_concacts_id" >
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="供货单位编码：">
+                <el-input v-model="form.ghdw_code" disabled placeholder="与供货单位关联自动带出"></el-input>
+            </el-form-item>
+            <el-form-item style="margin-left: 150px">
+                <el-button type="primary" class="new-add" @click="submitForm('form')" >保存</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+
+<script>
+import {InsertNodeUserdefine} from '../../js/compare/compare.js'
+import {QueryGyjd} from '../../js/user/user.js';
+import {getDefaultProductTypes} from '../../js/goods/goods.js'
+export default {
+    name:"newGoodCompare",
+    data() {
+        return {
+            form: {
+                node_name: '', // 节点名称
+                node_id: '',
+                good_types: [], // 商品分类
+                gb_name: "", // 国标名称
+                gb_code: "", // 国标编码
+                custom_name: "", // 自定义名称
+                custom_code: "", // 自定义编码
+                custom_code1: "", // 自定义编码1
+                custom_code2: "", // 自定义编码2
+                label_code: "", // 标签编码
+                specifications: "", // 规格
+                all_retrieval: "", // 全拼检索
+                jp_retrieval: "", // 简拼检索
+                pattern: '', // 经营模式
+                brand: '', // 品牌
+                source: "", // 供货来源
+                ghdw_name: "", // 供货单位名称
+                ghdw_code: '', // 供货单位编码
+            },
+            ghdwArr: [],
+            rules: {
+                good_types: [
+                    { required: true, message: '请选择商品分类', trigger: 'change' }
+                ],
+                gb_name: [
+                    { required: true, message: '请输入国标名称', trigger: 'blur' }
+                ],
+                gb_code: [
+                    { required: true, message: '请输入国标编码', trigger: 'blur' }
+                ],
+                custom_name: [
+                    { required: true, message: '请输入自定义名称', trigger: 'blur' }
+                ],
+                custom_code: [
+                    { required: true, message: '请输入自定义编码', trigger: 'blur' }
+                ],
+            },
+            typesArr: [],
+            props: {
+                value: 'level_id',
+                label: 'type_name',
+                children: 'systemDefaultTypeList'
+            },
+        }
+    },
+    mounted() {
+        let searchMsg2 = ''
+        if(localStorage.getItem('searchMsg2')){
+            searchMsg2 = JSON.parse(localStorage.getItem('searchMsg2'))
+        }
+        this.form.node_name = searchMsg2.node_name
+        this.form.node_id = searchMsg2.node_id
+        this.getGhdwFun()
+        this.getDefaultProductTypesFun()
+    },
+    methods: {
+        selectTypesFun(ele){
+            console.log(ele)
+            let num = ele[ele.length - 1]
+            this.typesArr.forEach(val => {
+                if(val.level_id == num){
+                    this.form.gb_code = val.code
+                    this.form.gb_name = val.type_name
+                }else{
+                    val.systemDefaultTypeList.forEach(val2 => {
+                        if(val2.level_id == num){
+                            this.form.gb_code = val2.code
+                            this.form.gb_name = val2.type_name
+                        }else{
+                            val2.systemDefaultTypeList.forEach(val3 => {
+                                if(val3.level_id == num){
+                                    this.form.gb_code = val3.code
+                                    this.form.gb_name = val3.type_name
+                                }else{
+                                    val3.systemDefaultTypeList.forEach(val4 => {
+                                        if(val4.level_id == num){
+                                            this.form.gb_code = val4.code
+                                            this.form.gb_name = val4.type_name
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        },
+        // 商品分类
+        getDefaultProductTypesFun(){
+            let str = ''
+            getDefaultProductTypes(str)
+                .then(res => {
+                    this.typesArr = res
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
+        getGhdwFun(){
+            let obj = {
+                node_id: this.form.node_id,
+                page: 10000,
+                cols: 1,
+                node_name: this.form.name,
+                status: '启用'
+            }
+            QueryGyjd(obj)
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
+        saveFun(){
+            let obj = {
+                node_name: this.form.node_name,
+                node_id: this.form.node_id,
+                userdefine_code: this.form.custom_code,
+                userdefine_name: this.form.custom_name,
+                before_code: this.form.gb_code,
+                before_name: this.form.gb_name,
+                association_id: this.form.label_code,
+                userdefine_type: 3, // 自定义类型1.商户对照2.节点对照3.商品对照4.产地对照
+                userdefine_code_one: this.form.custom_code1,
+                userdefine_code_two: this.form.custom_code2,
+                specifications: this.form.specifications,
+                janescreen_retrieve: this.form.jp_retrieval,
+                fullscreen_retrieve: this.form.all_retrieval, // 全拼检索
+                managing_mode: this.form.pattern, // 经营模式
+                brand: this.form.brand,
+                supplier: this.form.node_id, // 供货来源
+                supplier_id: this.form.node_id,
+                ws_supplier_id: this.form.node_id, // 供货单位
+                ws_supplier: this.form.node_id
+            }
+            console.log(obj)
+            // InsertNodeUserdefine(obj)
+            //     .then(res => {
+            //         if (res.result == true) {
+            //             this.$message.success(res.message);
+            //             this.$router.push({name: 'GoodCompare'})
+            //         }else{
+            //             this.$message.error(res.message);
+            //         }
+            //     })
+            //     .catch(res => {
+            //         console.log(res)
+            //     })
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.saveFun()
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+    },
+}
+</script>
+
+<style scoped lang='less'>
+    .content{
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        .form{
+            padding: 50px 0 0 150px;
+            .el-input, .el-select, .el-cascader{
+                width: 400px;
+            }
+        }
+    }
+</style>

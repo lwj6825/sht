@@ -188,14 +188,14 @@
         this.submit_shop_booth_id = localStorage.getItem('scShopId');
         this.submit_booth_name = this.local_node_name;
       }
-      this.local_region = this.$route.params.areaId;
-      this.local_region_name = this.$route.params.areaName;
+      this.local_region = this.$route.query.areaId;
+      this.local_region_name = this.$route.query.areaName;
       this.userId_local = localStorage.getItem('userId');
       this.local_node_id = localStorage.getItem('loginId');
       this.getGoodsFun(2)
       this.getMerchantsFun();
-      if(this.$route.params.msg){
-        let msg = this.$route.params.msg
+      if(this.$route.query.msg){
+        let msg = JSON.parse(this.$route.query.msg)
         this.local_check_date = msg.check_date // 日期
         this.local_stall_no = msg.stall_no // 摊位号
         this.local_check_result = msg.check_result // 检测结果
@@ -446,6 +446,10 @@
       * */
       //  获取商品列表
       getGoodsFun(goodsType) {
+        let msg = {}
+        if(this.$route.query.msg){
+          msg = JSON.parse(this.$route.query.msg)
+        }
         let boothData = {
           region: this.local_region,
           userId: this.userId_local,
@@ -455,9 +459,10 @@
         jcpurchase(boothData)
           .then(res => {
             this.local_check_good_options = res.data;
-            if(this.count == 1 && this.$route.params.msg.check_good){
+            
+            if(this.count == 1 && msg.check_good){
               let name = '',arr = [];
-              name = this.$route.params.msg.check_good
+              name = msg.check_good
               arr = name.split(',')
               this.local_check_good_options.forEach(val => {
                 arr.forEach(val2 => {
@@ -477,7 +482,7 @@
               }else{
                 this.check_goods_code = ''
               }
-              if(this.$route.params.msg.check_good && this.local_check_good.length == 0){
+              if(msg.check_good && this.local_check_good.length == 0){
                 this.goodsType = '销售'
                 this.getGoodsFun(2)
               }else{
@@ -500,6 +505,10 @@
       },
       // 获取商户
       getMerchantsFun() {
+        let msg = {}
+        if(this.$route.query.msg){
+          msg = JSON.parse(this.$route.query.msg)
+        }
         let obj = {
           page: '1',
           cols: '',
@@ -514,9 +523,9 @@
         GetAllBiz(obj)
           .then(res => {
             this.local_booth_name_options = res.data.dataList
-            if(this.$route.params.msg && this.count == 1){
+            if(msg && this.count == 1){
               this.local_booth_name_options.forEach(val => {
-                if(val.bootList[0].booth_name == this.$route.params.msg.booth_name){
+                if(val.bootList[0].booth_name == msg.booth_name){
                   this.local_booth_name = val.bootList[0].shop_booth_id
                 }
               })

@@ -234,7 +234,8 @@
                                 <template slot-scope="scope">
                                     <div class="num">
                                         <div>
-                                            <p class="price">{{scope.row.price}}</p>
+                                            <p class="price" v-if="scope.row.price">{{scope.row.goods_unit=='斤'?scope.row.price/2:scope.row.price}}</p>
+                                            <p class="price" v-else>{{scope.row.price}}</p>
                                             <!-- <p><el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价" @change="inputFun(scope.row)"></el-input></p> -->
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
                                             <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
@@ -764,6 +765,12 @@ export default {
                 })
                 this.selectGood.forEach(val => {
                     if(val.price){
+                      let price = '';
+                      if(val.goods_unit=='斤'){
+                        price = val.price*2
+                      }else{
+                          price = val.price
+                      }
                         goodobj = {
                             node_id: val.node_id,
                             node_name: val.node_name,
@@ -774,7 +781,7 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
-                            price: val.price,
+                            price: price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
                             area_id: val.area_id ? val.area_id : '',
@@ -788,6 +795,12 @@ export default {
             }else{
                 this.tableData2.forEach(val => {
                     if(val.price){
+                      let price = '';
+                      if(val.goods_unit=='斤'){
+                        price = val.price*2
+                      }else{
+                          price = val.price
+                      }
                         goodobj = {
                             node_id: val.node_id,
                             node_name: val.node_name,
@@ -798,7 +811,7 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
-                            price: val.price,
+                            price: price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
                             area_id: val.area_id ? val.area_id : '',
@@ -1356,9 +1369,9 @@ export default {
                     }
                 }
             }
-            .el-table{
+            /* .el-table{
               height: 433px !important;
-            }
+            } */
              .el-table .el-table__body-wrapper{
                height: 388px !important;
              }

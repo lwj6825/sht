@@ -1,18 +1,18 @@
 // base url
-export const baseUrl = 'http://192.168.1.14:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.1.14:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.1.14:8081/order_sht/'; // 资产62
-export const baseUrl4 = 'http://192.168.1.14:8081/order_sht/'; // paas
+// export const baseUrl = 'http://192.168.0.109:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.0.109:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.0.109:8081/order_sht/'; // 资产0.73
+// export const baseUrl4 = 'http://192.168.0.103:8081/order_sht/'; // paas 0.103
 // export const baseUrl5 = 'https://mobile.zhdtech.com/order_sht/';
 
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/'
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl6 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 
@@ -113,7 +113,7 @@ export const queryAllSuppliers = baseUrl + 'goods/queryAllSuppliers';// 查询�
 export const querySpecification = baseUrl + 'goods/querySpecification';// 查询规格列表
 export const queryPurchase = baseUrl + 'goods/queryPurchase ';// 查询进货商品列表
 export const purchaseAdd  = baseUrl + 'goods/purchaseAdd  ';// 新增进货商品
-export const getDefaultProductType = baseUrl + 'comm/getDefaultProductType';// 查询商品品种三级列表goods/GoodsCode
+export const getDefaultProductType = baseUrl4 + 'comm/getDefaultProductType';// 查询商品品种三级列表goods/GoodsCode
 export const goodsCode = baseUrl + 'goods/GoodsCode';// 商品编码
 export const updateGoodsImgForTrace = baseUrl + 'goods/updateGoodsImgForTrace';// 上传商品图片 + 上传追溯精选图片
 //销售商品
@@ -309,7 +309,8 @@ export const queryMoneyCurrentDayHour = baseUrl + 'redis/queryMoneyCurrentDayHou
 export const queryMoneyCurrentYear = baseUrl + 'redis/queryMoneyCurrentYear' // 查询当年商户交易额排行
 export const queryMoneyAndWeightForNode = baseUrl + 'redis/queryMoneyAndWeightForNode' // 查询全部区域商户交易额
 export const getCustomerMoneyAndWeight = baseUrl + 'redis/getCustomerMoneyAndWeight' // 查询客单价客单量
-
+export const queryMoneyAndWeightForOneBiz = baseUrl + 'redis/queryMoneyAndWeightForOneBiz' // 商户交易额查看--商品交易额明细
+export const queryXsTzDetailRegionForOneGoods = baseUrl + 'tz/queryXsTzDetailRegionForOneGoods' // 商品交易额查看--销售台账
 // 供货单位
 export const querySupplier = baseUrl + 'supplier/querySupplier' // 供货单位管理查询（超管）
 export const insertSupplier = baseUrl + 'supplier/insertSupplier' // 新增供货单位（超管）
@@ -585,3 +586,14 @@ export const queryEtraceLog = baseUrl4 + 'warning/queryEtraceLog' // 追溯查�
 export const queryResultTypeSelect = baseUrl4 + 'warning/queryResultTypeSelect' // 查询结果
 export const downloadEtraceLog = baseUrl4 + 'warning/downloadEtraceLog' // 下载追溯日志
 export const queryTraceCode = baseUrl4 + 'warning/queryTraceCode' // 追溯查询
+// 对照管理
+export const queryNodeTypeSelect = baseUrl4 + 'warning/queryNodeTypeSelect' // 节点类型查询
+export const queryNodeNameByType = baseUrl4 + 'warning/queryNodeNameByType' // 根据节点类型查询节点名称 ?type=0001
+export const queryNode = baseUrl4 + 'warning/queryNode' // 对照管理查询
+export const queryNodeUserdefine = baseUrl4 + 'warning/queryNodeUserdefine' // 商品,节点，产地，商户对照查询
+export const insertNodeUserdefine = baseUrl4 + 'warning/insertNodeUserdefine' // 添加对照（商品，产地，商户，节点）
+export const batchUpdateNodeUserdefine = baseUrl4 + 'warning/batchUpdateNodeUserdefine' // 对照批量修改（商品，产地，商户，节点）
+export const deleteUserdefine = baseUrl4 + 'warning/deleteUserdefine' // 删除对照（商品，产地，商户，节点）
+export const downloadNodeUserdefine = baseUrl4 + 'warning/downloadNodeUserdefine' // 下载对照（商品，产地，商户，节点）
+export const importNodeUserdefine = baseUrl4 + 'warning/importNodeUserdefine' // 导入对照商品
+export const queryReportNodeGoods = baseUrl4 + 'warning/queryReportNodeGoods' // 查看上报商品

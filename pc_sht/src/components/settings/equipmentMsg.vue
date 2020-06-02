@@ -103,8 +103,15 @@
                                 <span class="key-name text" v-else>{{item.name}}</span>
                             </li>
                         </ul>
-                         <ul class="key-list big-key" v-if="keyType == 2">
+                        <ul class="key-list big-key" v-if="keyType == 2">
                             <li class="item-key" v-for="(item,index) in bigKeyGroup" :key="index" :class='{current:item.id == currId}' @click='selectKey(item)'>
+                                <span class="key-number">{{item.number}}</span>
+                                <span class="key-name" v-if="item.name == ''">未绑定商品</span>
+                                <span class="key-name text" v-else>{{item.name}}</span>
+                            </li>
+                        </ul>
+                        <ul class="key-list big-key big-key2" v-if="keyType == 9">
+                            <li class="item-key" v-for="(item,index) in bigKeyGroup2" :key="index" :class='{current:item.id == currId}' @click='selectKey(item)'>
                                 <span class="key-number">{{item.number}}</span>
                                 <span class="key-name" v-if="item.name == ''">未绑定商品</span>
                                 <span class="key-name text" v-else>{{item.name}}</span>
@@ -296,6 +303,150 @@ export default {
                 {id:'key70',number:'70',name:''},
                 {id:'key71',number:'71',name:''},
                 {id:'key72',number:'72',name:''},
+            ],
+            bigKeyGroup2:[
+                {id:'key1',number:'1',name:''},
+                {id:'key2',number:'2',name:''},
+                {id:'key3',number:'3',name:''},
+                {id:'key4',number:'4',name:''},
+                {id:'key5',number:'5',name:''},
+                {id:'key6',number:'6',name:''},
+                {id:'key7',number:'7',name:''},
+                {id:'key8',number:'8',name:''},
+                {id:'key9',number:'9',name:''},
+                {id:'key10',number:'10',name:''},
+                {id:'key11',number:'11',name:''},
+                {id:'key12',number:'12',name:''},
+                {id:'key13',number:'13',name:''},
+                {id:'key14',number:'14',name:''},
+                {id:'key15',number:'15',name:''},
+                {id:'key16',number:'16',name:''},
+                {id:'key17',number:'17',name:''},
+                {id:'key18',number:'18',name:''},
+                {id:'key19',number:'19',name:''},
+                {id:'key20',number:'20',name:''},
+                {id:'key21',number:'21',name:''},
+                {id:'key22',number:'22',name:''},
+                {id:'key23',number:'23',name:''},
+                {id:'key24',number:'24',name:''},
+                {id:'key25',number:'25',name:''},
+                {id:'key26',number:'26',name:''},
+                {id:'key27',number:'27',name:''},
+                {id:'key28',number:'28',name:''},
+                {id:'key29',number:'29',name:''},
+                {id:'key30',number:'30',name:''},
+                {id:'key31',number:'31',name:''},
+                {id:'key32',number:'32',name:''},
+                {id:'key33',number:'33',name:''},
+                {id:'key34',number:'34',name:''},
+                {id:'key35',number:'35',name:''},
+                {id:'key36',number:'36',name:''},
+                {id:'key37',number:'37',name:''},
+                {id:'key38',number:'38',name:''},
+                {id:'key39',number:'39',name:''},
+                {id:'key40',number:'40',name:''},
+                {id:'key41',number:'41',name:''},
+                {id:'key42',number:'42',name:''},
+                {id:'key43',number:'43',name:''},
+                {id:'key44',number:'44',name:''},
+                {id:'key45',number:'45',name:''},
+                {id:'key46',number:'46',name:''},
+                {id:'key47',number:'47',name:''},
+                {id:'key48',number:'48',name:''},
+                {id:'key49',number:'49',name:''},
+                {id:'key50',number:'50',name:''},
+                {id:'key51',number:'51',name:''},
+                {id:'key52',number:'52',name:''},
+                {id:'key53',number:'53',name:''},
+                {id:'key54',number:'54',name:''},
+                {id:'key55',number:'55',name:''},
+                {id:'key56',number:'56',name:''},
+                {id:'key57',number:'57',name:''},
+                {id:'key58',number:'58',name:''},
+                {id:'key59',number:'59',name:''},
+                {id:'key60',number:'60',name:''},
+                {id:'key61',number:'61',name:''},
+                {id:'key62',number:'62',name:''},
+                {id:'key63',number:'63',name:''},
+                {id:'key64',number:'64',name:''},
+                {id:'key65',number:'65',name:''},
+                {id:'key66',number:'66',name:''},
+                {id:'key67',number:'67',name:''},
+                {id:'key68',number:'68',name:''},
+                {id:'key69',number:'69',name:''},
+                {id:'key70',number:'70',name:''},
+                {id:'key71',number:'71',name:''},
+                {id:'key72',number:'72',name:''},
+                {id:'key73',number:'73',name:''},
+                {id:'key74',number:'74',name:''},
+                {id:'key75',number:'75',name:''},
+                {id:'key76',number:'76',name:''},
+                {id:'key77',number:'77',name:''},
+                {id:'key78',number:'78',name:''},
+                {id:'key79',number:'79',name:''},
+                {id:'key80',number:'80',name:''},
+                {id:'key81',number:'81',name:''},
+                {id:'key82',number:'82',name:''},
+                {id:'key83',number:'83',name:''},
+                {id:'key84',number:'84',name:''},
+                {id:'key85',number:'85',name:''},
+                {id:'key86',number:'86',name:''},
+                {id:'key87',number:'87',name:''},
+                {id:'key88',number:'88',name:''},
+                {id:'key89',number:'89',name:''},
+                {id:'key90',number:'90',name:''},
+                {id:'key91',number:'91',name:''},
+                {id:'key92',number:'92',name:''},
+                {id:'key93',number:'93',name:''},
+                {id:'key94',number:'94',name:''},
+                {id:'key95',number:'95',name:''},
+                {id:'key96',number:'96',name:''},
+                {id:'key97',number:'97',name:''},
+                {id:'key98',number:'98',name:''},
+                {id:'key99',number:'99',name:''},
+                {id:'key100',number:'100',name:''},
+                {id:'key101',number:'101',name:''},
+                {id:'key102',number:'102',name:''},
+                {id:'key103',number:'103',ame:''},
+                {id:'key104',number:'104',name:''},
+                {id:'key105',number:'105',name:''},
+                {id:'key106',number:'106',name:''},
+                {id:'key107',number:'107',name:''},
+                {id:'key108',number:'108',name:''},
+                {id:'key109',number:'109',name:''},
+                {id:'key110',number:'110',name:''},
+                {id:'key111',number:'111',name:''},
+                {id:'key112',number:'112',name:''},
+                {id:'key113',number:'113',name:''},
+                {id:'key114',number:'114',name:''},
+                {id:'key115',number:'115',name:''},
+                {id:'key116',number:'116',name:''},
+                {id:'key117',number:'117',name:''},
+                {id:'key118',number:'118',name:''},
+                {id:'key119',number:'119',name:''},
+                {id:'key120',number:'120',name:''},
+                {id:'key121',number:'121',name:''},
+                {id:'key122',number:'122',name:''},
+                {id:'key123',number:'123',name:''},
+                {id:'key124',number:'124',name:''},
+                {id:'key125',number:'125',name:''},
+                {id:'key126',number:'126',name:''},
+                {id:'key127',number:'127',name:''},
+                {id:'key128',number:'128',name:''},
+                {id:'key129',number:'129',name:''},
+                {id:'key130',number:'130',name:''},
+                {id:'key131',number:'131',name:''},
+                {id:'key132',number:'132',name:''},
+                {id:'key133',number:'133',name:''},
+                {id:'key134',number:'134',name:''},
+                {id:'key135',number:'135',name:''},
+                {id:'key136',number:'136',name:''},
+                {id:'key137',number:'137',name:''},
+                {id:'key138',number:'138',name:''},
+                {id:'key139',number:'139',name:''},
+                {id:'key140',number:'140',name:''},
+                {id:'key141',number:'141',name:''},
+                {id:'key142',number:'142',name:''},
             ],
             currId:'',//设置快捷键 选择键ID
             setFastKey:false,//设置快捷键管理
@@ -598,14 +749,265 @@ export default {
         },
         closeSetFastKey(){//关闭快捷键管理
             this.setFastKey = false;
+            this.keyGroup = [
+                {id:'key1',number:'1',name:''},
+                {id:'key2',number:'2',name:''},
+                {id:'key3',number:'3',name:''},
+                {id:'key4',number:'4',name:''},
+                {id:'key5',number:'5',name:''},
+                {id:'key6',number:'6',name:''},
+                {id:'key7',number:'7',name:''},
+                {id:'key8',number:'8',name:''},
+                {id:'key9',number:'9',name:''},
+                {id:'key10',number:'10',name:''},
+                {id:'key11',number:'11',name:''},
+                {id:'key12',number:'12',name:''},
+                {id:'key13',number:'13',name:''},
+                {id:'key14',number:'14',name:''},
+                {id:'key15',number:'15',name:''},
+                {id:'key16',number:'16',name:''},
+                {id:'key17',number:'17',name:''},
+                {id:'key18',number:'18',name:''},
+                {id:'key19',number:'19',name:''},
+                {id:'key20',number:'20',name:''},
+                {id:'key21',number:'21',name:''},
+                {id:'key22',number:'22',name:''},
+                {id:'key23',number:'23',name:''},
+                {id:'key24',number:'24',name:''},
+                {id:'key25',number:'25',name:''},
+                {id:'key26',number:'26',name:''},
+                {id:'key27',number:'27',name:''},
+                {id:'key28',number:'28',name:''},
+                {id:'key29',number:'29',name:''},
+                {id:'key30',number:'30',name:''},
+            ]
+            this.bigKeyGroup = [
+                {id:'key1',number:'1',name:''},
+                {id:'key2',number:'2',name:''},
+                {id:'key3',number:'3',name:''},
+                {id:'key4',number:'4',name:''},
+                {id:'key5',number:'5',name:''},
+                {id:'key6',number:'6',name:''},
+                {id:'key7',number:'7',name:''},
+                {id:'key8',number:'8',name:''},
+                {id:'key9',number:'9',name:''},
+                {id:'key10',number:'10',name:''},
+                {id:'key11',number:'11',name:''},
+                {id:'key12',number:'12',name:''},
+                {id:'key13',number:'13',name:''},
+                {id:'key14',number:'14',name:''},
+                {id:'key15',number:'15',name:''},
+                {id:'key16',number:'16',name:''},
+                {id:'key17',number:'17',name:''},
+                {id:'key18',number:'18',name:''},
+                {id:'key19',number:'19',name:''},
+                {id:'key20',number:'20',name:''},
+                {id:'key21',number:'21',name:''},
+                {id:'key22',number:'22',name:''},
+                {id:'key23',number:'23',name:''},
+                {id:'key24',number:'24',name:''},
+                {id:'key25',number:'25',name:''},
+                {id:'key26',number:'26',name:''},
+                {id:'key27',number:'27',name:''},
+                {id:'key28',number:'28',name:''},
+                {id:'key29',number:'29',name:''},
+                {id:'key30',number:'30',name:''},
+                {id:'key31',number:'31',name:''},
+                {id:'key32',number:'32',name:''},
+                {id:'key33',number:'33',name:''},
+                {id:'key34',number:'34',name:''},
+                {id:'key35',number:'35',name:''},
+                {id:'key36',number:'36',name:''},
+                {id:'key37',number:'37',name:''},
+                {id:'key38',number:'38',name:''},
+                {id:'key39',number:'39',name:''},
+                {id:'key40',number:'40',name:''},
+                {id:'key41',number:'41',name:''},
+                {id:'key42',number:'42',name:''},
+                {id:'key43',number:'43',name:''},
+                {id:'key44',number:'44',name:''},
+                {id:'key45',number:'45',name:''},
+                {id:'key46',number:'46',name:''},
+                {id:'key47',number:'47',name:''},
+                {id:'key48',number:'48',name:''},
+                {id:'key49',number:'49',name:''},
+                {id:'key50',number:'50',name:''},
+                {id:'key51',number:'51',name:''},
+                {id:'key52',number:'52',name:''},
+                {id:'key53',number:'53',name:''},
+                {id:'key54',number:'54',name:''},
+                {id:'key55',number:'55',name:''},
+                {id:'key56',number:'56',name:''},
+                {id:'key57',number:'57',name:''},
+                {id:'key58',number:'58',name:''},
+                {id:'key59',number:'59',name:''},
+                {id:'key60',number:'60',name:''},
+                {id:'key61',number:'61',name:''},
+                {id:'key62',number:'62',name:''},
+                {id:'key63',number:'63',name:''},
+                {id:'key64',number:'64',name:''},
+                {id:'key65',number:'65',name:''},
+                {id:'key66',number:'66',name:''},
+                {id:'key67',number:'67',name:''},
+                {id:'key68',number:'68',name:''},
+                {id:'key69',number:'69',name:''},
+                {id:'key70',number:'70',name:''},
+                {id:'key71',number:'71',name:''},
+                {id:'key72',number:'72',name:''},
+            ]
+            this.bigKeyGroup2 = [
+                {id:'key1',number:'1',name:''},
+                {id:'key2',number:'2',name:''},
+                {id:'key3',number:'3',name:''},
+                {id:'key4',number:'4',name:''},
+                {id:'key5',number:'5',name:''},
+                {id:'key6',number:'6',name:''},
+                {id:'key7',number:'7',name:''},
+                {id:'key8',number:'8',name:''},
+                {id:'key9',number:'9',name:''},
+                {id:'key10',number:'10',name:''},
+                {id:'key11',number:'11',name:''},
+                {id:'key12',number:'12',name:''},
+                {id:'key13',number:'13',name:''},
+                {id:'key14',number:'14',name:''},
+                {id:'key15',number:'15',name:''},
+                {id:'key16',number:'16',name:''},
+                {id:'key17',number:'17',name:''},
+                {id:'key18',number:'18',name:''},
+                {id:'key19',number:'19',name:''},
+                {id:'key20',number:'20',name:''},
+                {id:'key21',number:'21',name:''},
+                {id:'key22',number:'22',name:''},
+                {id:'key23',number:'23',name:''},
+                {id:'key24',number:'24',name:''},
+                {id:'key25',number:'25',name:''},
+                {id:'key26',number:'26',name:''},
+                {id:'key27',number:'27',name:''},
+                {id:'key28',number:'28',name:''},
+                {id:'key29',number:'29',name:''},
+                {id:'key30',number:'30',name:''},
+                {id:'key31',number:'31',name:''},
+                {id:'key32',number:'32',name:''},
+                {id:'key33',number:'33',name:''},
+                {id:'key34',number:'34',name:''},
+                {id:'key35',number:'35',name:''},
+                {id:'key36',number:'36',name:''},
+                {id:'key37',number:'37',name:''},
+                {id:'key38',number:'38',name:''},
+                {id:'key39',number:'39',name:''},
+                {id:'key40',number:'40',name:''},
+                {id:'key41',number:'41',name:''},
+                {id:'key42',number:'42',name:''},
+                {id:'key43',number:'43',name:''},
+                {id:'key44',number:'44',name:''},
+                {id:'key45',number:'45',name:''},
+                {id:'key46',number:'46',name:''},
+                {id:'key47',number:'47',name:''},
+                {id:'key48',number:'48',name:''},
+                {id:'key49',number:'49',name:''},
+                {id:'key50',number:'50',name:''},
+                {id:'key51',number:'51',name:''},
+                {id:'key52',number:'52',name:''},
+                {id:'key53',number:'53',name:''},
+                {id:'key54',number:'54',name:''},
+                {id:'key55',number:'55',name:''},
+                {id:'key56',number:'56',name:''},
+                {id:'key57',number:'57',name:''},
+                {id:'key58',number:'58',name:''},
+                {id:'key59',number:'59',name:''},
+                {id:'key60',number:'60',name:''},
+                {id:'key61',number:'61',name:''},
+                {id:'key62',number:'62',name:''},
+                {id:'key63',number:'63',name:''},
+                {id:'key64',number:'64',name:''},
+                {id:'key65',number:'65',name:''},
+                {id:'key66',number:'66',name:''},
+                {id:'key67',number:'67',name:''},
+                {id:'key68',number:'68',name:''},
+                {id:'key69',number:'69',name:''},
+                {id:'key70',number:'70',name:''},
+                {id:'key71',number:'71',name:''},
+                {id:'key72',number:'72',name:''},
+                {id:'key73',number:'73',name:''},
+                {id:'key74',number:'74',name:''},
+                {id:'key75',number:'75',name:''},
+                {id:'key76',number:'76',name:''},
+                {id:'key77',number:'77',name:''},
+                {id:'key78',number:'78',name:''},
+                {id:'key79',number:'79',name:''},
+                {id:'key80',number:'80',name:''},
+                {id:'key81',number:'81',name:''},
+                {id:'key82',number:'82',name:''},
+                {id:'key83',number:'83',name:''},
+                {id:'key84',number:'84',name:''},
+                {id:'key85',number:'85',name:''},
+                {id:'key86',number:'86',name:''},
+                {id:'key87',number:'87',name:''},
+                {id:'key88',number:'88',name:''},
+                {id:'key89',number:'89',name:''},
+                {id:'key90',number:'90',name:''},
+                {id:'key91',number:'91',name:''},
+                {id:'key92',number:'92',name:''},
+                {id:'key93',number:'93',name:''},
+                {id:'key94',number:'94',name:''},
+                {id:'key95',number:'95',name:''},
+                {id:'key96',number:'96',name:''},
+                {id:'key97',number:'97',name:''},
+                {id:'key98',number:'98',name:''},
+                {id:'key99',number:'99',name:''},
+                {id:'key100',number:'100',name:''},
+                {id:'key101',number:'101',name:''},
+                {id:'key102',number:'102',name:''},
+                {id:'key103',number:'103',ame:''},
+                {id:'key104',number:'104',name:''},
+                {id:'key105',number:'105',name:''},
+                {id:'key106',number:'106',name:''},
+                {id:'key107',number:'107',name:''},
+                {id:'key108',number:'108',name:''},
+                {id:'key109',number:'109',name:''},
+                {id:'key110',number:'110',name:''},
+                {id:'key111',number:'111',name:''},
+                {id:'key112',number:'112',name:''},
+                {id:'key113',number:'113',name:''},
+                {id:'key114',number:'114',name:''},
+                {id:'key115',number:'115',name:''},
+                {id:'key116',number:'116',name:''},
+                {id:'key117',number:'117',name:''},
+                {id:'key118',number:'118',name:''},
+                {id:'key119',number:'119',name:''},
+                {id:'key120',number:'120',name:''},
+                {id:'key121',number:'121',name:''},
+                {id:'key122',number:'122',name:''},
+                {id:'key123',number:'123',name:''},
+                {id:'key124',number:'124',name:''},
+                {id:'key125',number:'125',name:''},
+                {id:'key126',number:'126',name:''},
+                {id:'key127',number:'127',name:''},
+                {id:'key128',number:'128',name:''},
+                {id:'key129',number:'129',name:''},
+                {id:'key130',number:'130',name:''},
+                {id:'key131',number:'131',name:''},
+                {id:'key132',number:'132',name:''},
+                {id:'key133',number:'133',name:''},
+                {id:'key134',number:'134',name:''},
+                {id:'key135',number:'135',name:''},
+                {id:'key136',number:'136',name:''},
+                {id:'key137',number:'137',name:''},
+                {id:'key138',number:'138',name:''},
+                {id:'key139',number:'139',name:''},
+                {id:'key140',number:'140',name:''},
+                {id:'key141',number:'141',name:''},
+                {id:'key142',number:'142',name:''},
+            ]
         },
         keyManagement(row){//快捷键管理
             this.currId = ''; 
-            this.mainKeyType = row.CODE;// 1是30键 2是72键
+            this.mainKeyType = row.CODE;// 1是30键 2是72键 9是142键
             this.deviceId = row.ID;//设备ID
             this.goodsName = '';
+            this.keyType = row.CODE;
             if(this.mainKeyType == 2){
-                this.keyType = 2;
+                // this.keyType = 2;
                 this.setFastKey = true;
                 QueryBindMsg({device_info_id:this.deviceId})
                     .then(res => {
@@ -628,8 +1030,32 @@ export default {
                     .catch(res => {
                         console.log(res)
                     })
+            }else if(this.mainKeyType == 9){
+                // this.keyType = 2;
+                this.setFastKey = true;
+                QueryBindMsg({device_info_id:this.deviceId})
+                    .then(res => {
+                        if(res.data.dataList.length>0){    
+                            this.bigKeyGroup2.forEach((ele,index) => {
+                                ele.id = 'key'+ index++
+                                ele.name = '';
+                                ele.number = index++;
+                            })                        
+                            for(let i =0;i<this.bigKeyGroup2.length;i++){
+                                for(let j=0;j<res.data.dataList.length;j++){
+                                    if(this.bigKeyGroup2[i].number == res.data.dataList[j].KEY_NUMBER){
+                                        this.bigKeyGroup2[i].name = res.data.dataList[j].GOODS_NAME;
+                                        this.bigKeyGroup2[i].id = res.data.dataList[j].ID;
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
             }else if(this.mainKeyType == 1){
-                this.keyType = 1;
+                // this.keyType = 1;
                 this.setFastKey = true;
                 QueryBindMsg({device_info_id:this.deviceId})
                     .then(res => {
@@ -764,9 +1190,36 @@ export default {
                                 this.$message.warning('绑定失败！')
                             })
                     }
-                    
+                    if(this.mainKeyType == 9){
+                        let keyNumber = '';
+                        this.bigKeyGroup2.forEach(ele => {
+                            if(ele.id == this.currId){
+                                keyNumber = ele.number                      
+                            }
+                        })
+                        let obj = {
+                            device_info_id:this.deviceId,
+                            goods_id:this.goodsId,
+                            goods_name:this.goodsName,
+                            key_number:keyNumber
+                        }
+                        BingKsys(obj)
+                            .then(res=>{
+                                this.$message.success('绑定成功！')
+                                this.bigKeyGroup2.forEach(ele => {
+                                    if(ele.number == keyNumber){
+                                        ele.name = this.goodsName; 
+                                        ele.id = res.data                
+                                    }
+                                })
+                                this.goodsId = '';
+                                this.goodsName = '';
+                            })
+                            .catch(res=>{
+                                this.$message.warning('绑定失败！')
+                            })
+                    }
                 }
-                
             }
         },
         unbindGoods(){//解绑商品
@@ -790,6 +1243,37 @@ export default {
                                     this.bigKeyGroup[currIndex-1].name = '';
                                     this.bigKeyGroup[currIndex-1].id = 'key' + currIndex;
                                     this.bigKeyGroup.forEach((ele,index) => {
+                                        if(ele.name == ''){
+                                            ele.id = 'key' + ele.number
+                                        }
+                                    })
+                                })
+                                .catch(res => {
+                                    console.log(res)
+                                    this.$message.success('删除失败！')
+                                })
+                        }else{
+                            this.$message.warning('此快捷键还未绑定商品！'); 
+                        }
+                    }
+                })
+            }      
+            if(this.mainKeyType == 9){
+                this.bigKeyGroup2.forEach((ele,index) => {
+                    if(ele.id ==  this.currId){
+                        if(ele.name){
+                            let data= {
+                                id:this.currId,
+                                goods_id:null,
+                                goods_name:null
+                            }
+                            var currIndex = ele.number;
+                            UnBindKeys(data)
+                                .then(res => {
+                                    this.$message.success('删除成功！');
+                                    this.bigKeyGroup2[currIndex-1].name = '';
+                                    this.bigKeyGroup2[currIndex-1].id = 'key' + currIndex;
+                                    this.bigKeyGroup2.forEach((ele,index) => {
                                         if(ele.name == ''){
                                             ele.id = 'key' + ele.number
                                         }
@@ -846,7 +1330,7 @@ export default {
         downLoad(row){//下载称文件   
             console.log(row)
             this.mainKeyType = row.CODE;// 1是30键 2是72键
-            if(this.mainKeyType == 2 || this.mainKeyType == 1){
+            if(this.mainKeyType == 2 || this.mainKeyType == 1 || this.mainKeyType == 9){
                 let obj = {
                     id : row.ID, // 设备id
                     shop_booth_id: row.SHOP_BOOTH_ID, // 店铺
@@ -901,7 +1385,7 @@ export default {
             
         },
         printFastKey(){            
-            if(this.mainKeyType == 2 || this.mainKeyType == 1){
+            if(this.mainKeyType == 2 || this.mainKeyType == 1 || this.mainKeyType == 9){
                 window.location.href= baseUrl + "sbgl/printSbGoods?device_info_id="+this.deviceId               
             }
         },
@@ -1239,11 +1723,13 @@ export default {
                 cursor: pointer;
             }
             .box{
-                height: 530px;
-                overflow: hidden;
+                height: 530px;/**
+                overflow: hidden; */
                 .key{
                     float: left;
-                    width: 630px;
+                    width: 642px;
+                    height: 530px;
+                    overflow: auto;
                 }
                 .key-list{
                     overflow: hidden;
@@ -1301,10 +1787,23 @@ export default {
                         line-height: 20px;
                     }
                 }
+                .big-key2{
+                    overflow:auto;
+                    .key-number{
+                        width: 71px;
+                        height: 26px;
+                        line-height: 26px;
+                    }
+                    .key-name{
+                        width: 71px;
+                        height: 20px;
+                        line-height: 20px;
+                    }
+                }
                 .search{
                     float: right;
                     padding: 10px;
-                    width: 240px;
+                    width: 238px;
                     height: 455px;
                     font-size: 14px;
                     box-sizing: border-box;
@@ -1338,7 +1837,7 @@ export default {
                     }
                 }
                 .input{
-                    width: 160px;
+                    width: 158px;
                     height: 32px;
                     line-height: 32px;
                 }

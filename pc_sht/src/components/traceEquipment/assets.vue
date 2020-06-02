@@ -102,7 +102,7 @@
                 <div>
                     <span class="submit">
                         批量修改
-                        <form id="upload" enctype="multipart/form-data" method="post"> 
+                        <form id="upload2" enctype="multipart/form-data" method="post"> 
                             <input type="file" class="file" ref="files" @change="fileFun($event,2)">
                         </form>
                     </span>
@@ -280,8 +280,10 @@ export default {
                         let url = importAssets + '?userid=' + this.userId
                         ajaxPost(url,formData,config)
                             .then(res => {
-                                console.log(res)
-                                let data = res.data[0].split('!,')
+                                let data = []
+                                for(let key in res.data){
+                                    data.push(res.data[key])
+                                }
                                 let newDatas = [];
                                 const h = this.$createElement;
                                 for(let i in data){
@@ -309,7 +311,7 @@ export default {
                             })
                             .catch(res => {
                                 console.log(res)
-                                this.$message.error("出错了");
+                                loading.close();
                             })
                     }else if(ele == 2){
                         this.file = event.target.files[0];
@@ -334,7 +336,10 @@ export default {
                         let url = importAssetsUpdate + '?userid=' + this.userId
                         ajaxPost(url,formData,config)
                             .then(res => {
-                                let data = res.data[0].split('!,')
+                                let data = []
+                                for(let key in res.data){
+                                    data.push(res.data[key])
+                                }
                                 let newDatas = [];
                                 const h = this.$createElement;
                                 for(let i in data){
@@ -364,7 +369,7 @@ export default {
                             })
                             .catch(res => {
                                 console.log(res)
-                                this.$message.error("出错了");
+                                loading.close();
                             })
                     }
                     // that.$refs.file.value = null
@@ -509,7 +514,9 @@ export default {
                     // document.body.removeChild(downloadElement); //下载完成移除元素
                     // window.URL.revokeObjectURL(href); //释放blob对象 
                 })
-                .catch(function (res) {});
+                .catch(function (res) {
+                    loading.close();
+                });
         },
         sureFun(){
             this.isFile = false

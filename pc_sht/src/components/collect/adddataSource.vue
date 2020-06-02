@@ -29,7 +29,7 @@
                 <el-input class="label-width" v-model="form.userName"></el-input>
             </el-form-item>  
             <el-form-item label="密码:" prop="passWord">
-                <el-input class="label-width" v-model="form.passWord"></el-input>
+                <el-input type="password" class="label-width" v-model="form.passWord"></el-input>
             </el-form-item>         
         </el-form>
         <el-button class="save-btn" type="primary" @click="save(form)">保存</el-button>

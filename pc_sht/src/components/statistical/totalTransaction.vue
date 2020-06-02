@@ -24,17 +24,17 @@
                     </div>
                  </div>
          </div>
-         <div class="totol"  v-loading.body="fullscreenLoading1">
-              <div class="title"><p style="float:left;font-size:15px;padding:9px 0;margin-left:12px;">交易额明细</p><p style="font-size:13px;float:left;padding:9px 0;">【总交易额:&nbsp;{{title_count}}元；</p></div>
-              <p style="margin-top:6px;font-size:13px;float:left;padding:9px 0;" v-for="(item,index) in count_price" :key="index" >
-                 &nbsp;&nbsp;{{item.name}}交易额：{{item.交易额}}元(占{{item.百分比}})；
-              </p>
+         <div class="totol" v-loading.body="fullscreenLoading1">
+            <div class="title"><p style="float:left;font-size:15px;padding:9px 0;margin-left:12px;">交易额明细</p><p style="font-size:13px;float:left;padding:9px 0;">【总交易额:&nbsp;{{title_count}}元；</p></div>
+            <p style="margin-top:6px;font-size:13px;float:left;padding:9px 0;" v-for="(item,index) in count_price" :key="index" >
+                &nbsp;&nbsp;{{item.name}}交易额：{{item.交易额}}元(占{{item.百分比}})；
+            </p>
               <p style="margin-top:14px;font-size:13px;float:left;">】</p>
-              <el-table :data="this.tableData"  style="width:100%;margin-left:20px;" :default-sort = "{prop: 'date', order: 'descending'}" fit :row-style="{height:'40px'}" :header-cell-style="{background:'#f5f5f5'}" >
+            <el-table :data="tableData"  style="clear: both;width:100%;padding: 0 10px;" :default-sort = "{prop: 'date', order: 'descending'}" fit :row-style="{height:'40px'}" :header-cell-style="{background:'#f5f5f5'}" >
                 <el-table-column v-for="(item,index) in headerList" :key='index' :label="item" fit :prop='item'>
-                 </el-table-column>  
-             </el-table>
-             <div class="block">
+                    </el-table-column>  
+            </el-table>
+            <div class="block">
                 <el-pagination v-if="totalCount"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
@@ -101,7 +101,7 @@ export default {
         this.getTime(); //先执行的这个函数
         this.handleBtnQuery();
         setTimeout(() => {
-                 this.loading = false
+                //  this.loading = false
         }, 2000);
     },
     methods: {
@@ -142,7 +142,7 @@ export default {
         handleBtnQuery() {
             this.fullscreenLoading1 = true;
             setTimeout(() => {
-                this.fullscreenLoading1 = false;
+                // this.fullscreenLoading1 = false;
             }, 2000);
             var start_time = this.time[0];
             var end_time = this.time[1];
@@ -170,6 +170,7 @@ export default {
                let str = 'node_id='+this.loginId+'&start_date='+this.start_time+'&end_date='+this.end_time+'&page='+this.currentPage+'&cols='+this.pageSize;
                QueryMoneyLittleTime(str)
                     .then(res => {
+                        this.fullscreenLoading1 = false;
                          let arr = res.data; // 获取数据 
                          this.headerList = res.data.headerList;  //存储动态表头
                         this.title = arr.zjMap;
@@ -280,7 +281,6 @@ export default {
         }
     }
     .totol{
-         width: 100%;
          background-color: #fff;
          .title{
             //  padding-top:10px;
@@ -292,6 +292,10 @@ export default {
              float: left;
          }
     } 
+    .el-table{
+        clear: both;
+        width: 100%;
+    }
 </style>
 <style lang="less">
     .TotalTransaction {

@@ -420,7 +420,7 @@ export default {
                         title.push(key)
                         arr.push(data[key].toFixed(2))
                     }
-                    this.lsPriceArr = arr
+                    this.lsPriceArr = arr.slice(0,arr.length - 1)
                     this.priceTit = title
                     this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
                 })
@@ -478,7 +478,7 @@ export default {
                         title.push(key)
                         arr.push(data[key].toFixed(2))
                     }
-                    this.pfPriceArr = arr
+                    this.pfPriceArr = arr.slice(0,arr.length - 1)
                     this.priceTit = title
                     this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
                 })
@@ -677,12 +677,12 @@ export default {
             }else if(this.activeName == 'third'){
                 this.categoryArr = [
                     {name: '水果'},
-                    {name: '橙子'},
+                    // {name: '橙子'},
                     // {name: '冬枣'},
                     {name: '富士苹果'},
                     {name: '国产香蕉'},
                     {name: '哈密瓜'},
-                    {name: '红心柚'},
+                    // {name: '红心柚'},
                     {name: '皇冠梨'},
                     {name: '火龙果'},
                     // {name: '巨峰葡萄'},

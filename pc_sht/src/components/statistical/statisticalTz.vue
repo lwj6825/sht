@@ -69,7 +69,7 @@
                 <p class="unfold" @click="unfoldFun">{{unfold}}筛选条件</p>
             </div>
         </div>
-        <div class="table" v-loading.body="fullscreenLoading1" style="height:100%" >
+        <div class="table" v-loading="fullscreenLoading1" style="height:100%" >
             <div class="title">
                 <p class="tz-title">全部销售台账</p>
                 <div>
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="tables" >
-                <el-table :data="tableData" :header-cell-style="rowClass" @expand-change="detailTzFun" :row-key='getRowKeys'>
+                <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="stall_no" label="摊位号" width="80"> </el-table-column>
                     <el-table-column prop="in_date" label="销售日期"  width="180"> </el-table-column>
                     <el-table-column label="商品信息" width="400">
@@ -105,7 +105,7 @@
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
                         </template> v-if="props.row.tz_id == goodMsg[0].tz_id"
-                    </el-table-column>-->
+                    </el-table-column>
                     <el-table-column type="expand">
                         <template slot-scope="scope">
                             <div class="list">
@@ -119,15 +119,10 @@
                                     <li>{{item.price}}元/公斤</li>
                                     <li>{{item.number}}公斤</li>
                                 </ul>
-                                <!--<ul class="item" v-for="(item,index) in scope.row.tz_detail_list" :key="index">
-                                    <li>{{item.goods_name}}</li>
-                                    <li>{{item.price}}元/公斤</li>
-                                    <li>{{item.number}}公斤</li>
-                                </ul>-->
                                 <p class="price">总金额：{{scope.row.actual_money}}元</p>
                             </div>
                         </template>
-                    </el-table-column>
+                    </el-table-column>-->
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
@@ -165,7 +160,7 @@ function timestampToTime(timestamp) {
 import AreaSelect from '../common/area';
 import Bus from '../common/bus.js';
 import {QueryArea} from '../../js/area/area.js';
-import {GetAllBiz,GetSaleTz,Parse,DownloadXsTzDetail,QueryXsTzDetailByTzId,jcpurchase} from '../../js/standingBook/standingBook.js'
+import {GetAllBiz,QueryXsTzDetailRegionForOneGoods,Parse,DownloadXsTzDetail,QueryXsTzDetailByTzId,jcpurchase} from '../../js/standingBook/standingBook.js'
 import axios from 'axios';
 import {baseUrl} from '../../js/address/url.js'
 export default {
@@ -293,24 +288,24 @@ export default {
         var weekStartDate =  formatDate(weekStartDate);
         let end = new Date(this.end_time).getTime()
         let scope = end - 3600 * 1000 * 24 * 7
-        if(this.start_time == time1 || new Date(this.start_time) > scope){
-                this.start_time  = this.$route.query.startTime;
-                this.end_time  = this.$route.query.endTime;
-        }else{
-                var date1 = new Date(),
-                time1=date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
-                var date2 = new Date(date1);
-                date2.setDate(date1.getDate()-6);
-                var time2 = date2.getFullYear()+"-"+(date2.getMonth()+1)+"-"+date2.getDate();
-                this.start_time = time2;
-                this.end_time = time1;
-                this.$message.warning('数据量过大，最多只能查询7天的数据');
-        }
+        // if(this.start_time == time1 || new Date(this.start_time) > scope){
+        //         this.start_time  = this.$route.query.startTime;
+        //         this.end_time  = this.$route.query.endTime;
+        // }else{
+        //         var date1 = new Date(),
+        //         time1=date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
+        //         var date2 = new Date(date1);
+        //         date2.setDate(date1.getDate()-6);
+        //         var time2 = date2.getFullYear()+"-"+(date2.getMonth()+1)+"-"+date2.getDate();
+        //         this.start_time = time2;
+        //         this.end_time = time1;
+        //         this.$message.warning('数据量过大，最多只能查询7天的数据');
+        // }
         this.form.value1 = [this.start_time,this.end_time]
         this.startTime = this.form.value1[0];
         this.endTime = this.form.value1[1];
         this.form.GoodList = this.$route.query.shopname;
-        this.form.user = this.$route.query.merChant;
+        this.form.user = this.$route.query.biz_name;
         this.isRegion = localStorage.getItem('isRegion')
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
@@ -335,6 +330,7 @@ export default {
     methods: {
         handleSizeChange(val){
             this.cols = val
+            this.page = 1
             this.getSaleTzFun()
         },
         disabledDate (value) {
@@ -434,10 +430,6 @@ export default {
             }
         },
         searchFun(){
-            this.fullscreenLoading1 = true;
-            setTimeout(() => {
-                this.fullscreenLoading1 = false;
-            }, 4000);
             this.page = 1
             this.getSaleTzFun()
         },
@@ -553,18 +545,8 @@ export default {
                 })
         },
         getSaleTzFun(){
-            let end = new Date(this.endTime).getTime()
-            let scope = end - 3600 * 1000 * 24 * 7
             let states = true;
-             if(new Date(this.startTime) < scope){
-                this.$message.warning('数据量过大，最多只能查询7天的数据');
-                states = false
-                this.startTime = scope;
-                return
-            }else{
-                states = true
-                this.loading = true
-            }
+            this.fullscreenLoading1= true
             if(states){
                 if(this.isRegion == 'false'){
                     let obj = {
@@ -579,8 +561,9 @@ export default {
                         cols: this.cols
                     }
 
-                    GetSaleTz(obj)
+                    QueryXsTzDetailRegionForOneGoods(obj)
                         .then(res => {
+                            this.fullscreenLoading1=false
                             // alert(res,"商品名字")
                             this.tableData = res.data.tzList
                             this.num = res.data.tzBean.total
@@ -600,8 +583,9 @@ export default {
                         cols: this.cols,
                     }
                     // console.log(this.form.GoodList,"goodlist")
-                    GetSaleTz(obj)
+                    QueryXsTzDetailRegionForOneGoods(obj)
                         .then(res => {
+                            this.fullscreenLoading1=false
                             this.tableData = res.data.tzList
                             this.num = res.data.tzBean.total
                         })

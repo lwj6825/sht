@@ -507,6 +507,9 @@ export default {
         if(localStorage.getItem("Time")){
             localStorage.removeItem('Time')
         }
+        if(localStorage.getItem('routeMsg2')){
+            localStorage.removeItem('routeMsg2')
+        }
         this.getGetCustomerMoneyAndWeightFun()
     },
     methods: {
@@ -740,7 +743,7 @@ export default {
         More2(){ //商户跳转到商户交易额页面
              this.merChant = " "
             this.$router.push({name:'MerchantMoney',
-                 query:{merChant:this.merChant,
+                 query:{merChant:(this.merChant ? this.merChant : ''),
                  startTime:this.start_time,
                  endTime:this.end_time,
                  gooduserId:this.gooduserId

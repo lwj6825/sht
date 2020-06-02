@@ -47,7 +47,11 @@
             </div>
         </div>
         <div class="main"  :class="{'left-distance200':isHasDistance,'left-distance100':!isHasDistance}">
-            <router-view></router-view>
+            <keep-alive>
+                <router-view v-if="$route.meta.keepAlive" class="router-view">
+                </router-view>
+            </keep-alive>
+            <router-view v-if="!$route.meta.keepAlive" class="router-view" ></router-view>
         </div>
     </div>
 </template>
@@ -506,6 +510,20 @@ export default {
             window.open('http://shop.zhdtech.com/login/operation?role_id=' + this.roleId);
         },
         changeMenu(tabTd){//菜单切换
+            // this.$route.meta.keepAlive = false;
+            // this.$route.meta.isBack = true
+            if(localStorage.getItem('routeMsg1')){
+                localStorage.removeItem('routeMsg1')
+            }
+            if(localStorage.getItem('searchMsg1')){
+                localStorage.removeItem('searchMsg1')
+            }
+            if(localStorage.getItem('routeMsg2')){
+                localStorage.removeItem('routeMsg2')
+            }
+            if(localStorage.getItem('searchMsg2')){
+                localStorage.removeItem('searchMsg2')
+            }
             if(tabTd == '344'){//是统计页
                 this.isShowLevelTwo = false;
                 this.isHasDistance = false;
@@ -647,6 +665,7 @@ export default {
             this.changeMenu(id)
         },
         backPrev(){//三级菜单返回上页
+            // this.$router.go(-1)
             if(this.$route.meta.node == 'statistical'){
                 let name = '';
                 this.mainList.forEach(ele => {
@@ -686,7 +705,7 @@ export default {
 
                 if(this.parentName == name){
                     this.enterChildPage = false;
-                    this.$router.push({name:'quotationList'})
+                    this.$router.push({name:'QuotationList'})
                 }else{
                     this.enterChildPage = true;
                     this.$router.push({path:this.fromPrevPageMsg.url})
@@ -1044,6 +1063,14 @@ export default {
         }
         .icon-quotation{
             background: url('../../assets/images/retail.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-dataPort{
+            background: url('../../assets/images/collect.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-compare{
+            background: url('../../assets/images/management.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{
