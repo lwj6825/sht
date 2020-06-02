@@ -47,7 +47,10 @@
             </div>
         </div>
         <div class="main"  :class="{'left-distance200':isHasDistance,'left-distance100':!isHasDistance}">
-            <router-view></router-view>
+          <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+          </keep-alive>
+          <router-view v-if="!$route.meta.keepAlive"></router-view>
         </div>
     </div>
 </template>
@@ -508,6 +511,7 @@ export default {
             window.open('http://shop.zhdtech.com/login/operation?role_id=' + this.roleId);
         },
         changeMenu(tabTd){//菜单切换
+        // this.$route.meta.keepAlive = false;
             if(tabTd == '344'){//是统计页
                 this.isShowLevelTwo = false;
                 this.isHasDistance = false;
@@ -649,6 +653,7 @@ export default {
             this.changeMenu(id)
         },
         backPrev(){//三级菜单返回上页
+          // this.$router.go(-1);
             if(this.$route.meta.node == 'statistical'){
                 let name = '';
                 this.mainList.forEach(ele => {
@@ -688,7 +693,7 @@ export default {
 
                 if(this.parentName == name){
                     this.enterChildPage = false;
-                    this.$router.push({name:'quotationList'})
+                    this.$router.push({name:'QuotationList'})
                 }else{
                     this.enterChildPage = true;
                     this.$router.push({path:this.fromPrevPageMsg.url})
@@ -1034,6 +1039,10 @@ export default {
             background-size: 100% 100%;
         }
         .icon-quotation{
+            background: url('../../assets/images/retail.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-platform{
             background: url('../../assets/images/retail.svg') no-repeat center center;
             background-size: 100% 100%;
         }

@@ -17,6 +17,8 @@ export default [
       id:'96',
       node:'goods',
       url:'stocks',
+      keepAlive: false,
+      isBack:false,
     }
   },
   {

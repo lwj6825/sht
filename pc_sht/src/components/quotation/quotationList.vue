@@ -202,7 +202,8 @@
                                 <template slot-scope="scope">
                                     <div class="num">
                                         <div>
-                                            <p class="price">{{scope.row.price}}</p>
+                                            <p class="price" v-if="scope.row.price">{{scope.row.goods_unit=='斤'?scope.row.price/2:scope.row.price}}</p>
+                                            <p class="price" v-else>{{scope.row.price}}</p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
                                             <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
                                         </div>
@@ -291,8 +292,8 @@ function getNowFormatDate() {//获取当前时间
             + seperator2 + date.getSeconds();
     return currentdate
 }
-import {QueryNodeInfoIndex,getQueryIndex,QueryGoodsForBiz,Insert,QueryRegion,AutoIdentity,InsertList,QueryGoodsForNode,
-    QueryRegionForGoodsPrice,QueryGoodsIndex,QueryIndexDate,getQueryNodeGoodsBiz} from '../../js/quotation/quotation.js'
+import {getQueryNodeInfoIndex,getQueryIndex,getQueryGoodsForBiz,getInsert,getQueryRegion,AutoIdentity,getInsertList,getQueryGoodsForNode,
+    getQueryRegionForGoodsPrice,getQueryGoodsIndex,getQueryIndexDate,getQueryNodeGoodsBiz} from '../../js/quotation/quotation.js'
 import {allBizs} from "../../js/management/management.js";
 import {GetAllNode} from '../../js/user/user.js'
 import {GetMarkets} from '../../js/district/district.js';
@@ -401,7 +402,7 @@ export default {
                 in_date: ele.in_date,
                 goods_name: ele.goods_name,
             }
-            QueryGoodsIndex(obj)
+            getQueryGoodsIndex(obj)
                 .then(res => {
                     this.loading3 = false
                     this.tableData3 = res.data.list
@@ -488,7 +489,7 @@ export default {
                 }
                 console.log(arr)
                 let obj =  JSON.stringify(arr)
-                InsertList(obj)
+                getInsertList(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success('修改成功');
@@ -531,7 +532,7 @@ export default {
                     in_date: this.in_date,
                     goods_name: this.name,
                 }
-                QueryGoodsForBiz(obj)
+                getQueryGoodsForBiz(obj)
                     .then(res => {
                         this.loading = false
                         let str = ''
@@ -583,7 +584,7 @@ export default {
                     in_date: this.in_date,
                     goods_name: this.name,
                 }
-                QueryGoodsForNode(obj)
+                getQueryGoodsForNode(obj)
                     .then(res => {
                         this.loading = false
                         let str = ''
@@ -639,7 +640,7 @@ export default {
                   in_date: this.listTime,
                   goods_name: this.name,
               }
-              QueryGoodsForBiz(obj)
+              getQueryGoodsForBiz(obj)
                   .then(res => {
                       this.loading = false
                       res.data.list.forEach(val => {
@@ -664,7 +665,7 @@ export default {
                   in_date: this.listTime,
                   goods_name: this.name,
               }
-              QueryGoodsForNode(obj)
+              getQueryGoodsForNode(obj)
                   .then(res => {
                       this.loading = false
                       res.data.list.forEach(val => {
@@ -737,7 +738,7 @@ export default {
                 nodeName: '',
                 node_id: this.tbqy,
             }
-            QueryRegionForGoodsPrice(obj)
+            getQueryRegionForGoodsPrice(obj)
                 .then(res => {
                     this.regionArr = res.data.regionList
                 })
@@ -893,7 +894,7 @@ export default {
                     region: this.region ? this.region : this.tabRegion,
                     in_date: this.in_date,
                 }
-                AutoIdentity(obj)
+                getAutoIdentity(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success(res.message);
@@ -958,6 +959,12 @@ export default {
                     })
                     this.selectGood.forEach(val => {
                         if(val.price){
+                          let price = '';
+                          if(val.goods_unit=='斤'){
+                            price = val.price*2
+                          }else{
+                              price = val.price
+                          }
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
@@ -968,7 +975,7 @@ export default {
                                 goods_id: val.goods_id,
                                 goods_code: val.goods_code,
                                 goods_name: val.goods_name,
-                                price: val.price,
+                                price: price,
                                 yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                                 history_price: val.history_price ? val.history_price : '',
                                 area_id: val.area_id ? val.area_id : '',
@@ -982,6 +989,12 @@ export default {
                 }else{
                     this.tableData2.forEach(val => {
                         if(val.price){
+                          let price = '';
+                          if(val.goods_unit=='斤'){
+                            price = val.price*2
+                          }else{
+                              price = val.price
+                          }
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
@@ -1024,7 +1037,7 @@ export default {
                 }
                 console.log(arr)
                 let obj =  JSON.stringify(arr)
-                InsertList(obj)
+                getInsertList(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success(res.message);
@@ -1170,7 +1183,7 @@ export default {
             //         let obj = {
             //             node_id: ele.node_id,
             //         }
-            //         QueryRegionForGoodsPrice(obj)
+            //         getQueryRegionForGoodsPrice(obj)
             //             .then(res => {
             //                 this.regionArr = res.data.regionList
             //             })
@@ -1259,7 +1272,7 @@ export default {
                 let obj = {
                     node_id: node_id,
                 }
-                QueryRegionForGoodsPrice(obj)
+                getQueryRegionForGoodsPrice(obj)
                     .then(res => {
                         this.regionArr = res.data.regionList
                     })
@@ -1279,7 +1292,7 @@ export default {
             node_id: localStorage.getItem('loginId'),
             node_name: localStorage.getItem('loginName'),
           }
-          this.$router.push({name: 'viewQuotation',params: obj})
+          this.$router.push({name: 'ViewQuotation',params: obj})
         },
         isShowFun(){
             this.isfile = true
@@ -1331,7 +1344,7 @@ export default {
                 region: this.tabRegion,
                 goods_name: this.name,
             }
-            QueryIndexDate(params)
+            getQueryIndexDate(params)
                 .then(res => {
                   this.Dataloading = false;
                     this.tableData = res.data.date
