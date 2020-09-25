@@ -1,18 +1,18 @@
 // base url
-export const baseUrl = 'http://192.168.0.109:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.0.109:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.0.109:8081/order_sht/'; // 资产0.73
-export const baseUrl4 = 'http://192.168.0.103:8081/order_sht/'; // paas 0.103
+// export const baseUrl = 'http://192.168.0.109:8088/order_sht/';
+// export const baseUrl2 = 'http://192.168.0.109:8088/order_sht/';
+// export const baseUrl3 = 'http://192.168.0.109:8088/order_sht/'; // 资产0.73
+// export const baseUrl4 = 'http://192.168.0.103:8088/order_sht/'; // paas 0.103
 // export const baseUrl5 = 'https://mobile.zhdtech.com/order_sht/';
 
 // export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/'
 // export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
 // export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
 
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl6 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 
@@ -484,6 +484,8 @@ export const queryModeInfo = baseUrl4 + 'paas/queryModeInfo';//查询建设模�
 export const queryTraceNode = baseUrl4 + 'paas/queryTraceNode' // 追溯企业/环节覆盖分析总数据
 export const traceEnterpriseType =  baseUrl4 + 'paas/traceEnterpriseType';//全部筛选条件
 export const queryNodeTypeInfoTwo = baseUrl4 + 'paas/queryNodeTypeInfo'
+export const queryQuantityReported = baseUrl4 + 'paas/queryQuantityReported';//数据量上报走势
+export const queryBizNotReportedMonitor = baseUrl4 + 'paas/queryBizNotReportedMonitor';
 // 数据源
 export const getAllDataSource = baseUrl4 + 'warning/getAllDataSource' // 数据源接入查询
 export const queryDataSourceType = baseUrl4 + 'warning/queryDataSourceType' //数据源类型查询

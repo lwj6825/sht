@@ -46,6 +46,7 @@
                         <el-date-picker clearable style="width: 300px"
                             v-model="form.dataTime" value-format="yyyy-MM-dd"
                             type="daterange" @change="timeChange"
+                            :picker-options="startDateDisabled"
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
@@ -557,8 +558,18 @@ export default {
             disabled4: false,
             isShow: false,
             taskList: [],
+            startDateDisabled: {},
+            endDateDisabled: {}
         }
     },
+    created () {　　// 限制开始日期不能超过当前日期
+        this.startDateDisabled.disabledDate = function (time) {
+          return (time.getTime() + 24 * 3600 * 1000) > Date.now()
+        }　　// 限制结束日期：当前日期往后的日期都不能选取
+        this.endDateDisabled.disabledDate = function (time) {
+          return time.getTime() > Date.now()
+        }
+      },
     mounted() {
         this.userId = localStorage.getItem('userId')
         this.userName = localStorage.getItem('loginName')
@@ -571,6 +582,9 @@ export default {
         this.getQueryAssetsConf()
     },
     methods: {
+      EndDateOptions(){
+        
+      },
         // 任务日志
         journalFun(ele){
             this.getGetAssetsTaskLog(ele.id)

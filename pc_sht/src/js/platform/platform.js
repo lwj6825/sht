@@ -1,5 +1,7 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
-import {queryRegionNodeTypeInfo,queryNodeTypeInfoTwo,queryNodeTypeDetailInfo,queryTraceNode,queryModeInfo,traceEnterpriseType} from '../address/url.js';
+import {queryRegionNodeTypeInfo,queryNodeTypeInfoTwo,queryNodeTypeDetailInfo,queryTraceNode,queryModeInfo,traceEnterpriseType,
+queryQuantityReported,queryBizNotReportedMonitor
+} from '../address/url.js';
 // 大区和区县条件查询
 export const  getQueryRegionNodeTypeInfo  = function() {
   return ajaxGet(queryRegionNodeTypeInfo)
@@ -23,4 +25,12 @@ export const  getQueryTraceNode  = function(params) {
 
 export const getTraceEnterpriseType = function(params) {
   return ajaxGet(traceEnterpriseType)
+}
+//数据量上报走势
+export const getQueryQuantityReported = function(params) {
+  return ajaxPost(queryQuantityReported,params)
+}
+//数据量上报走势
+export const getQueryBizNotReportedMonitor = function(params) {
+  return ajaxPost(queryBizNotReportedMonitor,params)
 }

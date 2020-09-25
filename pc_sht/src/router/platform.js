@@ -9,7 +9,8 @@ import runAssessment from '../components/platform/runAssessment.vue';
 import singleNode from '../components/platform/singleNode.vue';
 import transactionPrice from '../components/platform/transactionPrice.vue';
 import transactionVolume from '../components/platform/transactionVolume.vue';
-
+import new_file from '../components/platform/new_file.vue';
+import hahaha from '../components/platform/hahaha.vue';
 export default [
     {
         path: 'platform/enterprise',
@@ -17,7 +18,7 @@ export default [
         name:"Enterprise",
         meta:{
             id:'549',
-            node:'enterprise',
+            node:'platform',
             url:'enterprise',
         }
     },
@@ -27,7 +28,7 @@ export default [
         name:"DataVolume",
         meta:{
             id:'551',
-            node:'DataVolume',
+            node:'platform',
             url:'DataVolume',
         }
     },
@@ -37,7 +38,7 @@ export default [
         name:"NodeReport",
         meta:{
             id:'552',
-            node:'nodeReport',
+            node:'platform',
             url:'nodeReport',
         }
     },
@@ -47,7 +48,7 @@ export default [
         name:"MerchantReport",
         meta:{
             id:'553',
-            node:'merchantReport',
+            node:'platform',
             url:'merchantReport',
         }
     },
@@ -57,7 +58,7 @@ export default [
         name:"MerchantReport",
         meta:{
             id:'554',
-            node:'query',
+            node:'platform',
             url:'query',
         }
     },
@@ -67,7 +68,7 @@ export default [
         name:"RunAssessment",
         meta:{
             id:'556',
-            node:'runAssessment',
+            node:'platform',
             url:'runAssessment',
         }
     },
@@ -77,7 +78,7 @@ export default [
         name:"SingleNode",
         meta:{
             id:'557',
-            node:'singleNode',
+            node:'platform',
             url:'singleNode',
         }
     },
@@ -87,7 +88,7 @@ export default [
         name:"MoreMerchant",
         meta:{
             id:'558',
-            node:'moreMerchant',
+            node:'platform',
             url:'moreMerchant',
         }
     },
@@ -97,7 +98,7 @@ export default [
         name:"MoreStore",
         meta:{
             id:'558',
-            node:'moreStore',
+            node:'platform',
             url:'moreStore',
         }
     },
@@ -107,7 +108,7 @@ export default [
         name:"TransactionPrice",
         meta:{
             id:'561',
-            node:'transactionPrice',
+            node:'platform',
             url:'transactionPrice',
         }
     },
@@ -117,8 +118,29 @@ export default [
         name:"TransactionVolume",
         meta:{
             id:'562',
-            node:'transactionVolume',
+            node:'platform',
             url:'transactionVolume',
         }
+    },
+    {
+        path: 'platform/new_file',
+        component: resolve => require(['@/components/platform/new_file'],resolve),
+        name:"New_file",
+        meta:{
+            id:'562',
+            node:'platform',
+            url:'new_file',
+        }
+    },
+    {
+        path: 'platform/hahaha',
+        component: resolve => require(['@/components/platform/hahaha'],resolve),
+        name:"Hahaha",
+        meta:{
+            id:'562',
+            node:'platform',
+            url:'hahaha',
+        }
     }
+    
 ]
