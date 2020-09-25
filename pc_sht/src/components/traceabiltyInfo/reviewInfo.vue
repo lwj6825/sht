@@ -1,5 +1,5 @@
 <template>
-    <div class="content">
+    <div class="content reviewInfo">
         <div class="search">
             <el-form ref="form" :inline="true" :model="form" label-width="100px">
                 <el-form-item label="起始日期：">
@@ -45,6 +45,7 @@
             </div>
             <div class="table-box">
                 <el-table :data="tableData" :header-cell-style="rowClass" >
+                    <el-table-column type="index" label="序号" width="50"></el-table-column>
                     <el-table-column prop="node_name" label="企业名称"></el-table-column>
                     <el-table-column prop="ws_supplier_name" label="供货单位名称"></el-table-column>
                     <el-table-column prop="area_origin_name" label="产地名称"></el-table-column>
@@ -161,7 +162,7 @@ function getNowFormatDate() {//获取当前时间
     return currentdate
 }
 export default {
-    name:"district",
+    name:"reviewInfo",
     data() {
         return {
             fileMsg:'',
@@ -666,53 +667,55 @@ export default {
 }   
 </style>
 <style lang="less">
-.el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
-    line-height: 24px;
-}
-.el-input__icon{
-    line-height: 24px;
-}
-.el-form--inline .el-form-item__content{
-    vertical-align: middle !important;
-}
-.el-switch__core{
-    width: 56px !important;
-}
-.el-switch__label--left{
-  position: relative;
-  left: 46px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label--right{
-  position: relative;
-  right: 46px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label.is-active{
-  z-index: 1111;
-  color: #fff;
-}
+    .reviewInfo{
+        .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
+            line-height: 24px;
+        }
+        .el-input__icon{
+            line-height: 24px;
+        }
+        .el-form--inline .el-form-item__content{
+            vertical-align: middle !important;
+        }
+        .el-switch__core{
+            width: 56px !important;
+        }
+        .el-switch__label--left{
+        position: relative;
+        left: 46px;
+        color: #fff;
+        z-index: -1111;
+        }
+        .el-switch__label--right{
+        position: relative;
+        right: 46px;
+        color: #fff;
+        z-index: -1111;
+        }
+        .el-switch__label.is-active{
+        z-index: 1111;
+        color: #fff;
+        }
 
-.el-switch__label--left{
-  position: relative;
-  left: 59px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label--right{
-  position: relative;
-  right: 59px;
-  color: #fff;
-  z-index: -1111;
-}
-.el-switch__label--right.is-active{
-  z-index: 1111;
-  color: #fff !important;
-}
-.el-switch__label--left.is-active{
-  z-index: 1111;
-  color: #9c9c9c !important;
-}
+        .el-switch__label--left{
+        position: relative;
+        left: 59px;
+        color: #fff;
+        z-index: -1111;
+        }
+        .el-switch__label--right{
+        position: relative;
+        right: 59px;
+        color: #fff;
+        z-index: -1111;
+        }
+        .el-switch__label--right.is-active{
+        z-index: 1111;
+        color: #fff !important;
+        }
+        .el-switch__label--left.is-active{
+        z-index: 1111;
+        color: #9c9c9c !important;
+        }
+    }
 </style>

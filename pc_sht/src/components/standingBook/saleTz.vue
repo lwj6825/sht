@@ -10,7 +10,7 @@
                     <el-form-item label="商户信息" v-if="isShow2">
                         <el-select clearable filterable v-model="form.user" @change="selectGet" placeholder="请选择">
                             <el-option v-for="item in options" :key="item.userId" :label="item.bootList[0].booth_name"
-                            :value="item.bootList[0].booth_name">
+                            :value="item.bootList[0].shop_booth_id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -25,7 +25,7 @@
                     <el-form-item label="商户信息" v-if="isShow2">
                         <el-select clearable filterable v-model="form.user" @change="selectGet" placeholder="请选择">
                             <el-option v-for="item in options" :key="item.NAME" :label="item.bootList[0].booth_name"
-                            :value="item.bootList[0].booth_name">
+                            :value="item.bootList[0].shop_booth_id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -70,13 +70,13 @@
             <div class="title">
                 <p class="tz-title">全部销售台账</p>
                 <div><!--
-                    <el-button type="primary" class="addBtn blue-bth" @click="downloadFun">导出商户交易额</el-button>-->
+                    <el-button type="primary" class="addBtn blue-bth" @click="downloadFun">导出商户交易额</el-button>
                     <span class="submit">
                         导入台账
                         <form id="upload" enctype="multipart/form-data" method="post"> 
                             <input type="file" class="file" ref="file" @change="fileFun($event)">
                         </form>
-                    </span>
+                    </span>-->
                 </div>
             </div>
             <div class="tables">
@@ -467,18 +467,17 @@ export default {
                         region:  this.areaId,
                         tz_origin:this.form.source,
                         details:this.form.GoodList,
-                        seller_booth_id: this.scShopId,
-                        seller_booth_name: this.form.user,
+                        seller_booth_id: this.form.user,
+                        // seller_booth_name: this.form.user,
                         start_time: this.startTime,
                         end_time: this.endTime,
                         page: this.page,
                         cols: this.cols,
-                        node_id: this.node_id
-                    }
+                        node_id: this.node_id,
 
+                    }
                     GetSaleTz(obj)
                         .then(res => {
-                            // alert(res,"商品名字")
                             this.loading = false
                             this.tableData = res.data.tzList
                             this.num = res.data.tzBean.total
@@ -492,7 +491,8 @@ export default {
                         region: this.areaId,
                         tz_origin:this.form.source,
                         details:this.form.GoodList,
-                        seller_booth_name: this.form.user,
+                        seller_booth_id: this.form.user,
+                        // seller_booth_id: this.scShopId,
                         start_time: this.startTime,
                         end_time: this.endTime,
                         page: this.page,

@@ -275,10 +275,16 @@ export default {
             this.getqueryMoneyAndWeightForGoodsFun()
         },
         handleClick(row) {
-            let dataMore = [this.time,this.input,this.gooduserId]
+            let dataMore = [this.time,this.input,this.gooduserId];
+            let biz_shop_booth_id = '';
             localStorage.setItem("Time", dataMore);
             this.input2 = this.input;
-            this.input = row.plu_name
+            this.input = row.plu_name;
+            this.options.forEach(val => {
+                if(val.bootList[0].booth_name == this.biz_name){
+                    biz_shop_booth_id = val.bootList[0].shop_booth_id
+                }
+            })
             this.$router.push({name:'StatisticalTz',
                            query:{input:this.input2, 
                            shopname:row.plu_name,
@@ -286,7 +292,8 @@ export default {
                            endTime:this.end_time,
                            areaId:this.areaId,
                             gooduserId:this.bigAreaId,
-                            biz_name: this.biz_name
+                            biz_name: this.biz_name,
+                            biz_shop_booth_id: biz_shop_booth_id,
 
                            }
             })
@@ -412,6 +419,10 @@ export default {
                         this.loading = false;
                         this.fullscreenLoading1 = false;
                         this.tableData = res.data.list 
+                        this.tableData.forEach(val=>{
+                            val.sumprice = val.sumprice.toFixed(2);
+                            val.sumweight = val.sumweight.toFixed(2);
+                        })
                         this.totalCount = res.data.totalCount
                         this.totol_price = res.data.price_sum.toFixed(2)
                         this.weight = res.data.wight_sum.toFixed(2)

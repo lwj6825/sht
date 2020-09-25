@@ -11,7 +11,7 @@
                     <el-form-item label="商户信息" v-if="isShow2">
                         <el-select clearable filterable v-model="form.user" @change="selectGet" placeholder="请选择">
                             <el-option v-for="item in options" :key="item.userId" :label="item.bootList[0].booth_name"
-                            :value="item.bootList[0].booth_name">
+                            :value="item.bootList[0].shop_booth_id">
                             </el-option>
                         </el-select>
                       
@@ -27,7 +27,7 @@
                     <el-form-item label="商户信息" v-if="isShow2">
                         <el-select clearable filterable v-model="form.user" @change="selectGet" placeholder="请选择">
                             <el-option v-for="item in options" :key="item.NAME" :label="item.bootList[0].booth_name"
-                            :value="item.bootList[0].booth_name">
+                            :value="item.bootList[0].shop_booth_id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -74,12 +74,12 @@
                 <p class="tz-title">全部销售台账</p>
                 <div>
                     <el-button type="primary" class="addBtn blue-bth">新增销售台账</el-button>
-                    <span class="submit">
+                    <!--<span class="submit">
                         导入台账
                         <form id="upload" enctype="multipart/form-data" method="post"> 
                             <input type="file" class="file" ref="file" @change="fileFun($event)">
                         </form>
-                    </span>
+                    </span>-->
                 </div>
             </div>
             <div class="tables" >
@@ -305,7 +305,7 @@ export default {
         this.startTime = this.form.value1[0];
         this.endTime = this.form.value1[1];
         this.form.GoodList = this.$route.query.shopname;
-        this.form.user = this.$route.query.biz_name;
+        this.form.user = this.$route.query.biz_shop_booth_id;
         this.isRegion = localStorage.getItem('isRegion')
         this.scShopId = localStorage.getItem('scShopId');
         this.userId = localStorage.getItem('userId')
@@ -553,8 +553,8 @@ export default {
                         region:  this.areaId,
                         tz_origin:this.form.source,
                         details:this.form.GoodList,
-                        seller_booth_id: this.scShopId,
-                        seller_booth_name: '',
+                        seller_booth_id: this.form.user,
+                        // seller_booth_name: '',
                         start_time: this.startTime,
                         end_time: this.endTime,
                         page: this.page,
@@ -576,7 +576,8 @@ export default {
                         region: this.areaId,
                         tz_origin:this.form.source,
                         details:this.form.GoodList,
-                        seller_booth_name: this.form.user,
+                        seller_booth_id: this.form.user,
+                        // seller_booth_name: this.form.user,
                         start_time: this.startTime,
                         end_time: this.endTime,
                         page: this.page,

@@ -1,49 +1,49 @@
 <template>
     <div class="content jxsjMonitor">
         <div class="searchs" ref="searchs">
-                <el-form ref="form" :inline="true" :model="form" label-width="100px">
-                        <el-form-item label="节点信息">
-                            <el-input v-model="form.node_name" style="width:230px" clearable placeholder="节点编码、节点名称" ></el-input>
-                        </el-form-item>
-                        <el-form-item label="无数据天数" style="margin-left:15px;">
-                            <el-input class="placeholder" v-model="form.minNum" clearable></el-input>
-                            - <el-input class="placeholder" v-model="form.maxNum" clearable></el-input>
-                        </el-form-item>
-                        <el-form-item label="节点类型">
-                            <el-select v-model="form.node_detail_type" placeholder="请选择" clearable style="width:230px"  @change="selectNode" >
-                                <el-option v-for="(item,index) in nodeType" :key="index" :label="item.node_detail_type" :value="item.node_detail_type">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="所属集团">
-                            <el-select v-model="form.group_name" placeholder="请选择" clearable   style="width:230px">
-                                <el-option v-for="(item,index) in groupName" :key="index" :label="item.group_name" :value="item.group_name">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="信息类型">
-                            <el-select v-model="form.info_type" multiple collapse-tags  placeholder="请选择" clearable  style="width:230px" @change="selectType" >
-                                <el-option v-for="(item,index) in InfoType" :key="index" :label="item.info_type" :value="item.info_type">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="数据来源">
-                            <el-select v-model="form.data_collection_way" placeholder="请选择" clearable style="width:230px" >
-                                <el-option v-for="(item,index) in dataWay" :key="index" :label="item.data_collection_way" :value="item.data_collection_way">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="所属大区">
-                            <el-select v-model="form.district_name" placeholder="请选择" clearable style="width:230px" >
-                                <el-option v-for="(item,index) in districtName" :key="index" :label="item.text" :value="item.text">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                         <el-form-item>
-                            <el-button type="primary" plain @click="searchFun" style="margin-left: 32px;">查询</el-button>
-                            <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                        </el-form-item>
-                </el-form>
+            <el-form ref="form" :inline="true" :model="form" label-width="100px">
+                <el-form-item label="节点信息">
+                    <el-input v-model="form.node_name" style="width:230px" clearable placeholder="节点编码、节点名称" ></el-input>
+                </el-form-item>
+                <el-form-item label="无数据天数" style="margin-left:15px;">
+                    <el-input class="placeholder" v-model="form.minNum" clearable></el-input>
+                    - <el-input class="placeholder" v-model="form.maxNum" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="节点类型">
+                    <el-select v-model="form.node_detail_type" placeholder="请选择" clearable style="width:230px"  @change="selectNode" >
+                        <el-option v-for="(item,index) in nodeType" :key="index" :label="item.node_detail_type" :value="item.node_detail_type">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属集团">
+                    <el-select v-model="form.group_name" placeholder="请选择" clearable   style="width:230px">
+                        <el-option v-for="(item,index) in groupName" :key="index" :label="item.group_name" :value="item.group_name">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="信息类型">
+                    <el-select v-model="form.info_type" multiple collapse-tags  placeholder="请选择" clearable  style="width:230px" @change="selectType" >
+                        <el-option v-for="(item,index) in InfoType" :key="index" :label="item.info_type" :value="item.info_type">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="数据来源">
+                    <el-select v-model="form.data_collection_way" placeholder="请选择" clearable style="width:230px" >
+                        <el-option v-for="(item,index) in dataWay" :key="index" :label="item.data_collection_way" :value="item.data_collection_way">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属大区">
+                    <el-select v-model="form.district_name" placeholder="请选择" clearable style="width:230px" >
+                        <el-option v-for="(item,index) in districtName" :key="index" :label="item.text" :value="item.text">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                    <el-form-item>
+                    <el-button type="primary" plain @click="searchFun" style="margin-left: 32px;">查询</el-button>
+                    <span class="clear-content" @click="clearFun">清空筛选条件</span>
+                </el-form-item>
+            </el-form>
         </div>
         <div class="table" v-loading.body="fullscreenLoading">
             <div class="title">
@@ -69,85 +69,81 @@
                 </el-table>
             </div>
             <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                       :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
-                                       :total="total">
+                :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
             </el-pagination>
         </div>
         <div class="box" v-if="isShow">
-             <div class="form1">
-                  <div class="title">
+            <div class="form1">
+                <div class="title">
                     <p class="tit">查看记录</p>
                     <p class="iconfont close icon-close" @click="closeForm"></p>
-                  </div>
-                  <div class="container">
-                       <div class="title_note">
-                           <span>记录详情</span>
-                            <el-button style="float:right;margin-top:-28px;margin-left:30px;" @click="addRecord" >+添加沟通记录</el-button>
-                       </div>
-                       <div class="no_data" v-if="recordList == ''" >
-                            <p style="font-size:20px;line-height:300px;text-align:center;color:#ccc">暂无数据</p>
-                       </div>
-                       <div class="container_note" v-for="(item,index) in recordList" :key="index" v-else >
-                             <p>{{item.record_time}}</p>
-                             <span></span>
-                             <div>
-                                <div>{{item.content}}</div>
-                                
-                                 <img v-if="item.img_url != ''" style="height:50px;width:130px;margin-left:20px;margin-top:15px;" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
-                                 <div v-else></div>
-
-                             </div>
-                       </div>
-                       
-                  </div>
-                  <div class="btn1">
-                            <el-button type="primary" @click="closeBtn()">关闭</el-button>
-                  </div>
+                </div>
+                <div class="container">
+                    <div class="title_note">
+                        <span>记录详情</span>
+                        <el-button style="float:right;margin-top:-28px;margin-left:30px;" @click="addRecord" >+添加沟通记录</el-button>
+                    </div>
+                    <div class="no_data" v-if="recordList == ''" >
+                        <p style="font-size:20px;line-height:300px;text-align:center;color:#ccc">暂无数据</p>
+                    </div>
+                    <div class="container_note" v-for="(item,index) in recordList" :key="index" v-else >
+                        <p>{{item.record_time}}</p>
+                        <span></span>
+                        <div>
+                        <div>{{item.content}}</div>
+                            <img v-if="item.img_url != ''" style="height:50px;width:130px;margin-left:20px;margin-top:15px;" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item.img_url">
+                            <div v-else></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn1">
+                    <el-button type="primary" @click="closeBtn()">关闭</el-button>
+                </div>
             </div>
         </div>
         <div class="box1" v-if="isShow1">
-             <div class="form1">
-                  <div class="title">
+            <div class="form1">
+                <div class="title">
                     <p class="tit">添加沟通记录</p>
                     <p class="iconfont close icon-close" @click="closeForm"></p>
-                  </div>
-                  <el-form  :inline="true" :model="form" label-width="120px" style="margin-top:10px;">
-                       <el-form-item label="添加沟通记录：" style="width:100%">
-                             <el-input type="textarea" style="width:300px;" :autosize="{ minRows: 2, maxRows: 3}"  
-                                  placeholder="请输入内容"  v-model="textarea">
-                             </el-input>
-                       </el-form-item>
-                       <el-form-item label="添加图片" style="width:100%">
-                             <el-upload  ref="img_form"  action=""  list-type="picture-card" :on-remove="handleRemove"
-                                :on-success="handleSuccess" :on-change="handleChange" :on-exceed="handleExceed" :limit="1" :auto-upload="false"
-                                :http-request="uploadSuccess" :on-preview="handlePictureCardPreview">
-                                <i class="el-icon-plus"></i>
-                            </el-upload>
-                            <el-dialog :visible.sync="dialogVisible">
-                                <img width="60px" height="60px" :src="dialogImageUrl" alt="">
-                            </el-dialog>
-                       </el-form-item>
-                       <el-form-item style="position:absolute;right:20px;bottom:10px">
-                            <el-button @click="closeForm">取消</el-button>
-                            <el-button type="primary" @click="handlesubmit()">确认</el-button>
-                       </el-form-item>
-                  </el-form>
-                  
+                </div>
+                <el-form  :inline="true" :model="form" label-width="120px" style="margin-top:10px;">
+                    <el-form-item label="添加沟通记录：" style="width:100%">
+                        <el-input type="textarea" style="width:300px;" :autosize="{ minRows: 2, maxRows: 3}"  
+                            placeholder="请输入内容"  v-model="textarea">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="添加图片" style="width:100%">
+                        <el-upload  ref="img_form"  action=""  list-type="picture-card" :on-remove="handleRemove"
+                            :on-success="handleSuccess" :on-change="handleChange" :on-exceed="handleExceed" :limit="1" :auto-upload="false"
+                            :http-request="uploadSuccess" :on-preview="handlePictureCardPreview">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                        <el-dialog :visible.sync="dialogVisible">
+                            <img width="60px" height="60px" :src="dialogImageUrl" alt="">
+                        </el-dialog>
+                    </el-form-item>
+                    <el-form-item style="position:absolute;right:20px;bottom:10px">
+                        <el-button @click="closeForm">取消</el-button>
+                        <el-button type="primary" @click="handlesubmit()">确认</el-button>
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
         <div class="box2" v-if="isShow2">
-             <div class="form1">
-                  <div class="title">
+            <div class="form1">
+                <div class="title">
                     <p class="tit">查看</p>
                     <p class="iconfont close icon-close" @click="closeForm"></p>
-                  </div>
-                  <div class="table" v-loading.body="fullscreenLoading1">
-                        <el-table :data="mon_list" :header-cell-style="rowClass" style="width:92%;margin:0 auto" >
-                            <el-table-column prop="file_name" label="文件名称" align="center"> </el-table-column>
-                            <el-table-column prop="down_path" label="上传路径" align="center"> </el-table-column>
-                            <el-table-column prop="upload_time" label="最后有效上传时间" align="center"> </el-table-column>
-                        </el-table>
-                  </div>
+                </div>
+                <div class="table" v-loading.body="fullscreenLoading1">
+                    <el-table :data="mon_list" :header-cell-style="rowClass" style="width:92%;margin:0 auto" >
+                        <el-table-column prop="file_name" label="文件名称"></el-table-column>
+                        <el-table-column prop="down_path" label="上传路径"></el-table-column>
+                        <el-table-column prop="upload_time" label="最后有效上传时间"></el-table-column>
+                    </el-table>
+                </div>
             </div>
         </div>
     </div>
@@ -212,107 +208,98 @@ export default {
     },
     methods: {
         selectNode(val){
-            // console.log(val)
             this.form.group_name = ''
             this.QuerygroupNameFun(val)
         },
          selectType(val){
-             this.QueryNodeDetailTypeFun(val)
+            this.QueryNodeDetailTypeFun(val)
          },
          QueryNodeDetailTypeFun(val){  //可多选
-                let params = {
-                    info_type:this.form.info_type.toString()
-                }
-                QueryNodeDetailType(params)
-                    .then(res => {
-                        this.nodeType = res.data.nodeDetailTypeList;
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+            let params = {
+                info_type:this.form.info_type.toString()
+            }
+            QueryNodeDetailType(params)
+                .then(res => {
+                    this.nodeType = res.data.nodeDetailTypeList;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
        
         QuerygroupNameFun(val){
-                let params = {
-                    "node_detail_type":val
-                }
-                QuerygroupName(params)
-                    .then(res => {
-                        this.groupName = res.data.groupNameList;
-                        // console.log(this.nodeType)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+            let params = {
+                "node_detail_type":val
+            }
+            QuerygroupName(params)
+                .then(res => {
+                    this.groupName = res.data.groupNameList;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
 
         QuerygroupNameFun1(){
-                this.fullscreenLoading = true;
-                let params = {
-                    "node_detail_type":'包装菜企业'
-                }
-                QuerygroupName(params)
-                    .then(res => {
-                        this.fullscreenLoading = false;
-                        this.groupName = res.data.groupNameList;
-                        // console.log(this.nodeType)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+            this.fullscreenLoading = true;
+            let params = {
+                "node_detail_type":'包装菜企业'
+            }
+            QuerygroupName(params)
+                .then(res => {
+                    this.fullscreenLoading = false;
+                    this.groupName = res.data.groupNameList;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
-         sortChange(column){
-              var fieldName = column.prop;
-              var sortingType = column.order;
-            //   console.log(fieldName)
-              if(fieldName == "date"){
-                    if(sortingType == 'descending'){
-                        this.fullscreenLoading = true;
-                        this.getSort="按最后上报日期倒叙"
-                        this.NotReportedMonitoringFun()
-                    }else{
-                        this.fullscreenLoading = true;
-                        this.getSort="按最后上报日期正序"
-                        this.NotReportedMonitoringFun()
-                    }
-              }
-              if(fieldName=="days"){
-                    if(sortingType == 'descending'){
-                        this.fullscreenLoading = true;
-                        this.getSort="按天数倒叙"
-                        this.NotReportedMonitoringFun()
-                    }else{
-                        this.fullscreenLoading = true;
-                        this.getSort="按天数正序"
-                        this.NotReportedMonitoringFun()
-                    }
-              }
-         },
-         handlePictureCardPreview(file) {
+        sortChange(column){
+            var fieldName = column.prop;
+            var sortingType = column.order;
+            if(fieldName == "date"){
+                if(sortingType == 'descending'){
+                    this.fullscreenLoading = true;
+                    this.getSort="按最后上报日期倒叙"
+                    this.NotReportedMonitoringFun()
+                }else{
+                    this.fullscreenLoading = true;
+                    this.getSort="按最后上报日期正序"
+                    this.NotReportedMonitoringFun()
+                }
+            }
+            if(fieldName=="days"){
+                if(sortingType == 'descending'){
+                    this.fullscreenLoading = true;
+                    this.getSort="按天数倒叙"
+                    this.NotReportedMonitoringFun()
+                }else{
+                    this.fullscreenLoading = true;
+                    this.getSort="按天数正序"
+                    this.NotReportedMonitoringFun()
+                }
+            }
+        },
+        handlePictureCardPreview(file) {
             this.dialogImageUrl = file;
-            // console.log(file)
-            // console.log(this.dialogImageUrl)
             this.dialogVisible = true;
         },
         uploadSuccess(item){
             this.img_url1 = item.file;
             let formData = new FormData()
-            // console.log(item)
-            // console.log(this.img_url1)
             formData.append('img_url',this.img_url1)
             formData.append('content',this.textarea)
             formData.append('node_id',this.node_id)
             formData.append('info_type',this.info_type)
             InsertCommunicationRecord(formData)
                 .then(res => {
-                    //   console.log(formData)
-                      this.$message({
+                    this.$message({
                         message: '添加沟通记录成功',
                         type: 'success'
-                      });
+                    });
                 })
                 .catch(res => {
-                      this.$message({
+                    this.$message({
                         message: '添加沟通记录失败',
                         type: 'warning'
                     });
@@ -403,8 +390,8 @@ export default {
             this.node_id = row.node_id
             this.info_type = row.info_type
             let params = {
-                 node_id:row.node_id,
-                 info_type:row.info_type
+                node_id:row.node_id,
+                info_type:row.info_type
             }
             QueryCommunicationRecord(params)
                 .then(res => {
@@ -417,34 +404,27 @@ export default {
         },
         NotReportedMonitoringFun(){ // 表格数据
             let params = {
-                  page : this.currentPage,
-                  cols : this.cols,
-                  sort:this.getSort,
-                  group_name : this.form.group_name,
-                  district_name : this.form.district_name,
-                  node_id:this.form.node_name,
-                  start_day:this.form.minNum,
-                  end_day:this.form.maxNum,
-                  info_type:this.form.info_type.toString(),
-                  node_detail_type:this.form.node_detail_type,
-                  data_collection_way:this.form.data_collection_way
+                page : this.currentPage,
+                cols : this.cols,
+                sort:this.getSort,
+                group_name : this.form.group_name,
+                district_name : this.form.district_name,
+                node_id:this.form.node_name,
+                start_day:this.form.minNum,
+                end_day:this.form.maxNum,
+                info_type:this.form.info_type.toString(),
+                node_detail_type:this.form.node_detail_type,
+                data_collection_way:this.form.data_collection_way
             }
             NotReportedMonitoring(params)
                 .then(res => {
-                    // console.log(params,"params")
-                    // console.log(res,'table')
                     this.fullscreenLoading = false;
                     this.tableData = res.data.dataList;
-                    // console.log( this.tableData)
                     this.total  = res.data.condition.total;
-                    // this.tableData.map(item => {
-                    //     item.date = this.$moment(item.date).format("YYYY-MM-DD HH:mm:ss");
-                    // });
                 })
                 .catch(error => {
                     console.log(error)
                 })
-            
         },
         QueryInfoTypeFun(){ //条件筛选
             let params = {
@@ -456,12 +436,8 @@ export default {
             }
             QueryInfoType(params)
                 .then(res => {
-                    // console.log(res,"各种条件")
-                    // this.districtName = res.data.districtNameList;
                     this.InfoType = res.data.infoTypeList;
-                    // this.groupName = res.data.groupNameList;
                     this.dataWay = res.data.dataCollectionWayList;
-                    // this.nodeType = res.data.nodeDetailTypeList;
                 })
                 .catch(error => {
                     console.log(error)

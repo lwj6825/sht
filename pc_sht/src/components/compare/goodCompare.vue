@@ -6,14 +6,14 @@
                     <el-form-item label="节点名称">
                         <el-input class="placeholder" v-model="form.node_name" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="国标编码：">
+                    <el-form-item label="国标编码">
                         <el-input v-model="form.gb_code" clearable></el-input>
                     </el-form-item>
-                    <el-form-item label="国标名称：">
+                    <el-form-item label="国标名称">
                         <el-input v-model="form.gb_name" clearable></el-input>
                     </el-form-item>
-                    <el-form-item label="商品分类：">
-                        <el-select v-model="form.types">
+                    <el-form-item label="商品分类">
+                        <el-select v-model="form.types" filterable clearable>
                             <el-option v-for="(item, index) in typesArr" :key="index" :label="item.type_name" :value="item.level_id">
                             </el-option>
                         </el-select>
@@ -38,17 +38,19 @@
             <div class="title">
                 <p class="tz-title">数据列表</p>
                 <div>
-                    <el-button type="primary" @click="addFun"> + 添加</el-button>
-                    <div class="submit">
+                    <el-button v-if="editAllBtn == '批量修改'" type="primary" @click="addFun"> + 添加</el-button>
+                    <el-button v-if="editAllBtn == '批量修改'" @click="downloadFun">导出</el-button>
+                    <div class="submit" v-if="editAllBtn == '批量修改'">
                         批量导入
                         <form id="upload" enctype="multipart/form-data" method="post"> 
                             <input type="file" class="file" ref="file" @change="fileFun($event)">
                         </form> 
                     </div>
-                    <el-button plain @click="editAll">批量编辑</el-button>
+                    <el-button v-if="editAllBtn == '完成'" @click="cancelFun">取消</el-button>
+                    <el-button plain @click="editAllFun">{{editAllBtn}}</el-button>
                 </div>
             </div>
-            <el-table :data="tableData" :header-cell-style="rowClass">
+            <el-table :data="tableData" :header-cell-style="rowClass" :style="editAllBtn == '批量修改' ? {'display': 'block'} : {'display': 'none'}">
                 <el-table-column prop="before_code" label="国标编码"></el-table-column>
                 <el-table-column prop="before_name" label="国标名称"></el-table-column>
                 <el-table-column prop="type_name" label="商品分类"></el-table-column><!---->
@@ -64,6 +66,56 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-table :data="tableData" :header-cell-style="rowClass" :style="editAllBtn == '批量修改' ? {'display': 'none'} : {'display': 'block'}">
+                <el-table-column prop="type_name" label="商品分类">
+                    <template slot-scope="scope">
+                        <el-cascader :options="typesList" filterable @change="selectTypesFun(scope.row)" :props="props" change-on-select
+                            v-model="scope.row.good_types">
+                        </el-cascader>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="before_code" label="国标编码">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.before_code" readonly></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="before_name" label="国标名称">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.before_name" readonly></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="userdefine_code" label="自定义编码">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.userdefine_code" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="userdefine_name" label="自定义名称">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.userdefine_name" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="userdefine_code_one" label="自定义编码1">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.userdefine_code_one" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="userdefine_code_two" label="自定义编码2">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.userdefine_code_two" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="association_id" label="标签编码">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.association_id" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
+                        <el-button type="text" size="small" @click="deleteFun(scope.row, scope.$index)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
             <el-pagination v-if="total" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
                 layout="total, sizes, prev, pager, next, jumper" :total="total" :page-sizes="[10, 20, 30, 40]"
                 @size-change="handleSizeChange"></el-pagination>
@@ -72,8 +124,21 @@
 </template>
 
 <script>
-import {QueryNodeUserdefine} from '../../js/compare/compare.js'
+function getNowFormatDate() {//获取当前时间
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
+    var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
+    var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
+            + " "  + date.getHours()  + seperator2  + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate
+}
+import {QueryNodeUserdefine, DeleteUserdefine, DownloadNodeUserdefine, BatchUpdateNodeUserdefine} from '../../js/compare/compare.js'
 import {getDefaultProductTypes} from '../../js/goods/goods.js'
+import {importNodeUserdefine} from '../../js/address/url.js'
+import axios from 'axios';
 export default {
     name:"goodCompare",
     data() {
@@ -98,6 +163,15 @@ export default {
             bizArr: [],
             nodeArr: [],
             loading: true,
+            file: '',
+            editAllBtn: '批量修改',
+            editArr: [],
+            typesList: [],
+            props: {
+                value: 'level_id',
+                label: 'type_name',
+                children: 'systemDefaultTypeList'
+            },
         }
     },
     mounted() {
@@ -115,11 +189,67 @@ export default {
         this.getDataFun()
     },
     methods: {
+        selectTypesFun(ele){
+            let num = ''
+            this.tableData.forEach(ele => {
+                num = ele.good_types[ele.good_types.length - 1]
+                this.typesList.forEach(val => {
+                    if(val.level_id == num){
+                        ele.before_code = val.code
+                        ele.before_name = val.type_name
+                    }else{
+                        val.systemDefaultTypeList.forEach(val2 => {
+                            if(val2.level_id == num){
+                                ele.before_code = val2.code
+                                ele.before_name = val2.type_name
+                            }else{
+                                val2.systemDefaultTypeList.forEach(val3 => {
+                                    if(val3.level_id == num){
+                                        ele.before_code = val3.code
+                                        ele.before_name = val3.type_name
+                                    }else{
+                                        val3.systemDefaultTypeList.forEach(val4 => {
+                                            if(val4.level_id == num){
+                                                ele.before_code = val4.code
+                                                ele.before_name = val4.type_name
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            })
+            if(this.editArr.length == 0){
+                this.editArr.push(ele)
+            }else{
+                this.editArr.forEach((val,index) => {
+                    if(val.id == ele.id){
+                        this.editArr.splice(index,1)
+                    }
+                })
+                this.editArr.push(ele)
+            }
+        },
+        inputFun(ele){
+            if(this.editArr.length == 0){
+                this.editArr.push(ele)
+            }else{
+                this.editArr.forEach((val,index) => {
+                    if(val.id == ele.id){
+                        this.editArr.splice(index,1)
+                    }
+                })
+                this.editArr.push(ele)
+            }
+        },
         // 商品分类
         getDefaultProductTypesFun(){
             let str = ''
             getDefaultProductTypes(str)
                 .then(res => {
+                    this.typesList = res
                     this.typesArr = res[0].systemDefaultTypeList
                 })
                 .catch(res => {
@@ -131,24 +261,124 @@ export default {
             this.$router.push({name: 'NewGoodCompare'})
         },
         editFun(ele){
+            localStorage.setItem('searchMsg2', JSON.stringify(this.form))
             this.$router.push({name: 'EditGoodCompare', params: ele})
         },
-        deleteFun(ele){
-
+        deleteFun(ele, index){
+            let str = 'id=' + ele.id
+            DeleteUserdefine(str)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success('删除成功');
+                        this.page = 1
+                        if(this.editAllBtn == '批量修改'){
+                            this.getDataFun()
+                        }else if(this.editAllBtn == '完成'){
+                            this.tableData.splice(index,1)
+                        }
+                    }else{
+                        this.$message.error('删除失败');
+                    }
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
-        editAll(){
-
+        editAllFun(){
+            if(this.editAllBtn == '批量修改'){
+                this.editAllBtn = '完成'
+            }else if(this.editAllBtn == '完成'){
+                let arr = [], itemObj = {};
+                if(this.editArr.length > 0){
+                    this.editArr.forEach((val,index) => {
+                        itemObj = {
+                            id: val.id,
+                            node_name: val.node_name,
+                            node_id: val.node_id,
+                            userdefine_code: val.userdefine_code,
+                            userdefine_name: val.userdefine_name,
+                            before_code: val.before_code,
+                            before_name: val.before_name,
+                            association_id: val.association_id,
+                            userdefine_type: 3,
+                            userdefine_code_one: val.userdefine_code_one,
+                            userdefine_code_two: val.userdefine_code_two,
+                            specifications: val.specifications,
+                            janescreen_retrieve: val.janescreen_retrieve,
+                            fullscreen_retrieve: val.fullscreen_retrieve,
+                            managing_mode: val.managing_mode,
+                            brand: val.brand,
+                            supplier: val.supplier,
+                            supplier_id: val.supplier_id,
+                            ws_supplier_id: val.ws_supplier_id,
+                            ws_supplier: val.ws_supplier
+                        }
+                        arr.push(itemObj)
+                    })
+                    let obj = "{" + '"data"' + ":" + JSON.stringify(arr) + "}"
+                    BatchUpdateNodeUserdefine(obj)
+                        .then(res => {
+                            if (res.result == true) {
+                                this.$message.success('修改成功');
+                                this.editAllBtn = '批量修改'
+                                this.editArr = []
+                                this.getDataFun()
+                            }else{
+                                this.$message.error('修改失败');
+                            }
+                        })
+                        .catch(res => {
+                            this.loading = false
+                            console.log(res)
+                        })
+                }else{
+                    this.editAllBtn = '批量修改'
+                    this.editArr = []
+                    this.getDataFun()
+                }
+            }
+        },
+        cancelFun(){
+            this.editAllBtn = '批量修改'
+            this.editArr = []
+            this.getDataFun()
+        },
+        downloadFun(){
+            let params = {
+                node_id: this.form.node_id, // 节点编码
+                userdefine_code: this.form.custom_code, // 自定义编码
+                userdefine_name: this.form.custom_name, // 自定义名称
+                before_code: this.form.gb_code, // 国标编码
+                before_name: this.form.gb_name, // 国标名称
+                association_id: this.form.label_code, // 标签编码
+                userdefine_type: 3, // 自定义类型1.商户对照2.节点对照3.商品对照4.产地对照
+                level_id: this.form.types, // 商品分类
+            }
+            DownloadNodeUserdefine( params, {})
+                .then((res) => {
+                    let time = getNowFormatDate()
+                    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
+                    let url = window.URL.createObjectURL(blob);
+                    let aLink = document.createElement("a");
+                    aLink.style.display = "none";
+                    aLink.href = url;
+                    aLink.setAttribute("download", `商品对照` + time);
+                    document.body.appendChild(aLink);
+                    aLink.click();
+                    document.body.removeChild(aLink); 
+                    window.URL.revokeObjectURL(url); 
+                })
+                .catch(function (res) {});
         },
         // 上传
         fileFun(event){
             let param = this.$refs.file.files[0];
             this.file = event.target.files[0];
             let formData = new FormData();
-            formData.append('purchase', this.file);  
-            formData.append('userId', this.userId);  
-            formData.append('node_id',this.loginId); 
-            formData.append('region',this.areaId); 
-            formData.append('node_name',this.loginName); 
+            formData.append('node_userdefine', this.file);  
+            formData.append('userdefine_type', 3);  
+            formData.append('node_id', this.form.node_id); 
+            formData.append('node_name', this.form.node_name); 
             let config = {
                 headers:{'Content-Type':'multipart/form-data'}
             };
@@ -164,14 +394,20 @@ export default {
                     })
                 })
             }  
-            // let url = baseUrl2 + 'goods/importPurchase'
-            // ajaxPost(url,formData,config)
-            //     .then(res => {
-                    
-            //     })
-            //     .catch(res => {
-            //         console.log(res)
-            //     })
+            let url = importNodeUserdefine
+            ajaxPost(url,formData,config)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message ? res.message : '导入成功');
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                    this.file = ''
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         getDataFun(){
             this.loading = true
@@ -190,8 +426,39 @@ export default {
             QueryNodeUserdefine(obj)
                 .then(res => {
                     this.loading = false
-                    this.tableData = res.data.dataList 
                     this.total = res.data.condition.total
+                    res.data.dataList.forEach(ele => {
+                        let arr = [], num = '';
+                        num = ele.before_name;
+                        this.typesList.forEach(val => {
+                            if(val.type_name == num){
+                                arr.push(val.level_id)
+                            }else{
+                                val.systemDefaultTypeList.forEach(val2 => {
+                                    if(val2.type_name == num){
+                                        arr.push(val.level_id, val2.level_id)
+                                    }else{
+                                        val2.systemDefaultTypeList.forEach(val3 => {
+                                            if(val3.type_name == num){
+                                                arr.push(val.level_id, val2.level_id, val3.level_id)
+                                            }else{
+                                                val3.systemDefaultTypeList.forEach(val4 => {
+                                                    if(val4.type_name == num){
+                                                        arr.push(val.level_id, val2.level_id, val3.level_id, val4.level_id)
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                        if(arr.length > 4){
+                            arr.splice(0, 4)
+                        }
+                        ele.good_types = arr
+                    })
+                    this.tableData = res.data.dataList 
                 })
                 .catch(res => {
                     this.loading = false
@@ -200,6 +467,7 @@ export default {
         },
         handleSizeChange(val){
             this.cols = val
+            this.getDataFun()
         },
         handleCurrentChange(val) {
             this.page = val
@@ -222,6 +490,7 @@ export default {
             }
             this.form.node_name = routeMsg1.node_name
             this.form.node_id = routeMsg1.node_id
+            this.page = 1
             this.getDataFun()
         },
         rowClass({ row, rowIndex}) {
@@ -346,6 +615,12 @@ export default {
         .el-pagination{
             margin: 20px 0;
             text-align: center;
+        }
+        .block{
+            display: block;
+        }
+        .none{
+            display: none;
         }
     }
 </style>

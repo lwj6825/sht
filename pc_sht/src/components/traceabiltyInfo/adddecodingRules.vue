@@ -3,8 +3,7 @@
         <el-form ref="form" :model="form" label-width="180px" :rules="rules">
             <el-form-item label="企业名称:" prop="node_id">
                 <el-select class="label-width" v-model="form.node_id" filterable clearable placeholder="请选择" @change="selectWorkFun">
-                    <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.text"
-                    :value="item.id">
+                    <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.text" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item> 

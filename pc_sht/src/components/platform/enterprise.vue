@@ -32,7 +32,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                           <el-dropdown-item :command="{value:'全部',flag:2,index:0}" :class="nodeIndex == 0 ? 'active':''">全部</el-dropdown-item>
-                          <el-dropdown-item :command="{value:item.text,flag:2,index:index4+1}" :class="nodeIndex == index4+1 ? 'active':''" v-for="(item,index4) in nodeList" :key="index4">{{item.node_type}}</el-dropdown-item>
+                          <el-dropdown-item :command="{value:item.node_type,flag:2,index:index4+1}" :class="nodeIndex == index4+1 ? 'active':''" v-for="(item,index4) in nodeList" :key="index4">{{item.node_type}}</el-dropdown-item>
                         </el-dropdown-menu>
                       </el-dropdown>
                       <span class="choose" @click="handlerChoose(2)">多选</span>
@@ -68,7 +68,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                           <!-- <el-dropdown-item :command="{value:'全部',flag:4,index:0}" :class="modeIndex == 0 ? 'active':''">全部</el-dropdown-item> -->
-                          <el-dropdown-item :command="{value:item.group_name,flag:5,index:index7}" :class="groupIndex == index7 ? 'active':''" v-for="(item,index7) in groupList" :key="index7">{{item.group_name}}</el-dropdown-item>
+                          <el-dropdown-item :command="{value:item.group_name,flag:5,index:index7+1}" :class="groupIndex == index7+1 ? 'active':''" v-for="(item,index7) in groupList" :key="index7">{{item.group_name}}</el-dropdown-item>
                         </el-dropdown-menu>
                       </el-dropdown>
                       <span class="choose" @click="handlerChoose(5)">多选</span>
@@ -79,11 +79,11 @@
         <div class="table">
           <div class="subject">
             <div class="subAll" style="border-bottom: 3px solid #E8EBED;">
-              <div class="sub-item sub-item1">
+              <div class="sub-item sub-item1" @click="handlesubmit">
                 <p class="myp">主体备案</p>
                 <p class="num">{{node_count}}<span>家</span></p>
               </div>
-              <div class="sub-item">
+              <div class="sub-item"  @click="handlesubmit1">
                 <p class="myp">屠宰企业</p>
                 <p class="num">{{type1}}<span>家</span></p>
               </div>
@@ -149,7 +149,7 @@
 
                  <bm-point-collection :points="postionMap" shape="BMAP_POINT_SHAPE_CIRCLE" color="red" size="BMAP_POINT_SIZE_SMALL"></bm-point-collection>
                 </baidu-map> -->
-                <div id="map_canvas" class="map" tabindex="0" style="width:500排序; height:300px;"></div>
+                <div id="map_canvas" class="map" tabindex="0" style="width:100%; height:300px;"></div>
             </div>
           </div>
 
@@ -178,10 +178,10 @@
               <div class="left-head">所属大区</div>
               <div class="left-con">
                 <div class="all-item">
-                  <div class="left-item" @mouseenter="enter(index2)" @mouseleave="leave(index2)" v-for="(item,index2) in multiData" :key="index2">{{item.name}}
-                  <span v-if="item.Addshow" @click="handlerAdd(item,index2)">添加</span></div>
+                  <div class="left-item" @mouseenter="enter(index2)" @mouseleave="leave(index2)" v-for="(item,index2) in multiData" :key="index2">
+                    <span class="mytext">{{item.name}}</span>
+                    <span v-if="item.Addshow" class="myadd"  @click="handlerAdd(item,index2)">添加</span></div>
                 </div>
-
                 <div class="ng-scope" @click="handlerAllAdd"><span>全部添加</span></div>
               </div>
             </div>
@@ -190,8 +190,9 @@
               <div class="left-con">
                 <div class="tooltip" v-if="AddData.length==0">请从左侧列表选择添加</div>
                 <div class="all-item">
-                  <div class="left-item" :class="item.Deleteshow?'hover':''" @mouseenter="enter1(index3)" @mouseleave="leave1(index3)" v-for="(item,index3) in AddData" :key="index3">{{item.name}}
-                  <span v-if="item.Deleteshow" @click="handlerDelete(item,index3)">删除</span></div>
+                  <div class="left-item" :class="item.Deleteshow?'hover':''" @mouseenter="enter1(index3)" @mouseleave="leave1(index3)" v-for="(item,index3) in AddData" :key="index3">
+                  <span class="mytext">{{item.name}}</span>
+                  <span class="myadd" v-if="item.Deleteshow" @click="handlerDelete(item,index3)">删除</span></div>
                 </div>
                 <div class="ng-scope" v-if="AddData.length>0">已添加{{AddData.length}}条<span @click="handlerAllDelete">清空</span></div>
               </div>
@@ -214,23 +215,7 @@ import BmMarkerClusterer from  'vue-baidu-map/components/extra/MarkerClusterer';
 import BmMarker from 'vue-baidu-map/components/overlays/Marker';
 import BmInfoWindow from 'vue-baidu-map/components/overlays/InfoWindow';
 import BmPointCollection from 'vue-baidu-map/components/overlays/PointCollection';
-import fangshan from '../../../static/fangshan.png';
-import chaoyang from '../../../static/chaoyang.png';
-import xicheng from '../../../static/xicheng.png';
-import dongcheng from '../../../static/dongcheng.png';
-import haidian from '../../../static/haidian.png';
-import changping from '../../../static/changping.png';
-import daxing from '../../../static/daxing.png';
-import pinggu from '../../../static/pinggu.png';
-import miyun from '../../../static/miyun.png';
-import mentougou from '../../../static/mentougou.png';
-import tongzhou from '../../../static/tongzhou.png';
-import shijingshan from '../../../static/shijingshan.png';
-import huairou from '../../../static/huairou.png';
-import fengtai from '../../../static/fengtai.png';
-import shunyi from '../../../static/shunyi.png';
-import yanqing from '../../../static/yanqing.png';
-import '../../../node_modules/_echarts@4.8.0@echarts/map/js/province/beijing.js' // 引入北京地图数据
+import '../../../node_modules/echarts/map/js/province/beijing.js' // 引入北京地图数据
 import axios from 'axios';
 import {getQueryRegionNodeTypeInfo,getQueryNodeTypeInfo,getQueryNodeTypeDetailInfo,getQueryTraceNode,getQueryModeInfo,getTraceEnterpriseType} from '../../js/platform/platform.js';
 import '../../assets/css/common.css';
@@ -327,9 +312,11 @@ export default {
             node_list:[],
             Dataloading:false,
             first:true,
-            cols:30,
+            cols:300,
             page:1,
+            page1:1,
             map:'',
+            node_count1:0,
         }
     },
     // directives: {
@@ -359,11 +346,21 @@ export default {
         this.$nextTick(function() {
            this.drawMap1();
         });
+        this.getQueryTraceNodeFun1();
          // this.drawMap1();
     },
     methods: {
+      handlesubmit(){
+        this.$router.push({name: "New_file"})
+      },
+      handlesubmit1(){
+        this.$router.push({name: "Hahaha"})
+      },
       handleload() {
+        if(this.node_count1>this.node_list.length){
+          this.page1 = this.page1 + 1;
           this.getQueryTraceNodeFun1();
+        }
       },
       rowClass({ row, rowIndex}) {
           return {
@@ -374,82 +371,82 @@ export default {
       markerFun1(list){
          var style = [
            {
-            url:'../../../static/fangshan.png',
+            url:'static/image/fangshan.png',
             anchor:new AMap.Pixel(6, 6),
             size:new AMap.Size(20, 20)
           },
           {
-           url:'../../../static/chaoyang.png',
+           url:'static/image/chaoyang.png',
            anchor:new AMap.Pixel(4, 4),
            size:new AMap.Size(20, 20)
           },
-          {         //疾病red01
-            url:'../../../static/xicheng.png',
+          {
+            url:'static/image/xicheng.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/dongcheng.png',
+           url:'static/image/dongcheng.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
           },
           {
-           url:'../../../static/haidian.png',
+           url:'static/image/haidian.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/changping.png',
+           url:'static/image/changping.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/daxing.png',
+           url:'static/image/daxing.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/pinggu.png',
+           url:'static/image/pinggu.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/miyun.png',
+           url:'static/image/miyun.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/mentougou.png',
+           url:'static/image/mentougou.png',
            anchor:new AMap.Pixel(3, 3),
           size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/tongzhou.png',
+           url:'static/image/tongzhou.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/shijingshan.png',
+           url:'static/image/shijingshan.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/huairou.png',
+           url:'static/image/huairou.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/fengtai.png',
+           url:'static/image/fengtai.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/hoairou.png',
+           url:'static/image/hoairou.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          },
          {
-           url:'../../../static/yanqing.png',
+           url:'static/image/yanqing.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
          }
@@ -543,8 +540,12 @@ export default {
         if(command.flag==0){
           this.dataIndex = command.index;
           this.selectTwo = '归属区县';
+          this.selectThree = '节点类型';
+          this.selectFour = '节点详细类型';
           this.districtIndex = 0,
           this.AddDataTwo = [];
+          this.AddDataFour = [];
+          this.AddDataThree = [];
           if(command.value=='全部'){
             this.selectOne = '所属大区';
             this.getQueryRegionNodeTypeInfoFun();
@@ -560,8 +561,11 @@ export default {
             this.selectTwo = command.value;
           }
           this.nodeList = [];
+          this.AddDataFour = [];
+          this.AddDataThree = [];
           this.nodeIndex = 0;
           this.selectThree = '节点类型';
+          this.selectFour = '节点详细类型';
           this.getQueryNodeTypeInfoFun();
 
         }else if(command.flag==2){
@@ -574,9 +578,11 @@ export default {
           this.nodeTypeList = [];
           this.nodeTypeIndex = 0;
           this.selectFour = '节点详细类型';
+          this.AddDataFour = [];
           this.getQueryNodeTypeDetailInfoFun();
         }else if(command.flag==3){
           this.nodeTypeIndex = command.index;
+          this.AddDataFour = [];
           if(command.value=='全部'){
             this.selectFour = '节点详细类型';
           }else{
@@ -599,6 +605,9 @@ export default {
         }
         // this.getQueryTraceNodeFun();
         this.drawMap1();
+        this.node_list = [];
+        this.page1 = 1;
+        this.getQueryTraceNodeFun1();
       },
       leave(index){
         this.multiData[index].Addshow = false;
@@ -630,22 +639,21 @@ export default {
         }else{
           this.$message('该筛选项已存在');
         }
-
       },
       //删除
       handlerDelete(item,index){
          this.AddData.splice(index,1);
          this.AddName.splice(index,1);
          if(this.Index==0){
-           this.AddDataOne.splice(index,1);
+           this.AddDataOne =  this.AddData;
          }else if(this.Index==1){
-           this.AddDataTwo.splice(index,1);
+           this.AddDataTwo =  this.AddData;
          }else if(this.Index==2){
-           this.AddDataThree.splice(index,1);
+           this.AddDataThree =  this.AddData;
          }else if(this.Index==3){
-           this.AddDataFour.splice(index,1);
+           this.AddDataFour =  this.AddData;
          }else if(this.Index==4){
-           this.AddDataFive.splice(index,1);
+           this.AddDataFive =  this.AddData;
          }
       },
       //全部添加
@@ -676,6 +684,7 @@ export default {
       //清空
       handlerAllDelete(){
         this.AddData = [];
+        this.AddName = [];
         if(this.Index==0){
           this.AddDataOne = [];
         }else if(this.Index==1){
@@ -692,6 +701,7 @@ export default {
       handlerChoose(type){
         this.Index = type;
         this.mymask = true;
+        this.AddName = [];
         let arr = [];
         if(type==0){
           this.dataList.forEach(ele=>{
@@ -705,6 +715,9 @@ export default {
           })
           this.multiData = arr.reverse();
           this.AddData = this.AddDataOne;
+          this.AddDataOne.forEach(ele=>{
+            this.AddName.push(ele.name)
+          })
         }else if(type==1){
           this.district_name.forEach(ele=>{
             if(ele.district_name!='全部'){
@@ -717,6 +730,9 @@ export default {
           })
           this.multiData = arr;
           this.AddData = this.AddDataTwo;
+          this.AddDataTwo.forEach(ele=>{
+            this.AddName.push(ele.name)
+          })
         }else if(type==2){
           this.nodeList.forEach(ele=>{
               let obj = {
@@ -728,6 +744,9 @@ export default {
           })
           this.multiData = arr;
           this.AddData = this.AddDataThree;
+          this.AddDataThree.forEach(ele=>{
+            this.AddName.push(ele.name)
+          })
         }else if(type==3){
           this.nodeTypeList.forEach(ele=>{
               let obj = {
@@ -739,6 +758,9 @@ export default {
           })
           this.multiData = arr;
           this.AddData = this.AddDataFour;
+          this.AddDataFour.forEach(ele=>{
+            this.AddName.push(ele.name)
+          })
         }else if(type==4){
           this.modeList.forEach(ele=>{
               let obj = {
@@ -750,6 +772,9 @@ export default {
           })
           this.multiData = arr;
           this.AddData = this.AddDataFive;
+          this.AddDataFive.forEach(ele=>{
+            this.AddName.push(ele.name)
+          })
         }else if(type==5){
           this.groupList.forEach(ele=>{
               let obj = {
@@ -761,6 +786,9 @@ export default {
           })
           this.multiData = arr;
           this.AddData = this.AddDataSix;
+          this.AddDataSix.forEach(ele=>{
+            this.AddName.push(ele.name)
+          })
         }
         document.body.style.overflow = 'hidden';
         document.addEventListener('touchmove', preD, {passive: false}); // 禁止页面滑动
@@ -817,7 +845,7 @@ export default {
               this.selectFour = arr. join(',');
             }else if(this.Index==4){
               this.selectFive = arr. join(',');
-            }else if(this.Index==4){
+            }else if(this.Index==5){
               this.selectSix = arr. join(',');
             }
           }
@@ -863,7 +891,9 @@ export default {
           this.AddDataFive = this.AddData;
         }
         this.handlerClose();
-        // this.getQueryTraceNodeFun();
+        this.node_list = [];
+        this.page1 = 1;
+        this.getQueryTraceNodeFun1();
         this.drawMap1();
       },
       getTraceEnterpriseTypeFun(){
@@ -1171,7 +1201,7 @@ export default {
           this.Dataloading = false;
           document.body.style.overflow = '' // 出现滚动条
           document.removeEventListener('touchmove', preD, {passive: false})
-          console.log(res)
+          // console.log(res)
           this.node_count = this.ormat_number(res.data.node_count);
           this.business_count = this.ormat_number(res.data.business_count);
           res.data.node_detail_type_count.forEach(ele=>{
@@ -1355,7 +1385,7 @@ export default {
           }
         }
         let obj = {
-            "page": this.page,
+            "page": this.page1,
             "cols": this.cols,
             "region":selectOne,
             "district_name":selectTwo,
@@ -1366,6 +1396,7 @@ export default {
         }
         getQueryTraceNode(obj)
         .then(res=>{
+          this.node_count1 = res.data.node_count;
           this.node_list = this.node_list.concat(res.data.node_list);
         })
         .catch(res=>{
@@ -1378,11 +1409,15 @@ export default {
             window.addEventListener('resize', function () {
               mychart.resize()
             })
-            mychart.setOption({
+            let option = {
               title: {
                   text: '主体备案-按类型',
                   subtext: '',
-                  left: 'center'
+                  top: 15,
+                  left: 'center',
+                  textStyle:{
+                  	fontSize:18
+                  }
               },
               tooltip: {
                   trigger: 'item',
@@ -1414,7 +1449,8 @@ export default {
                       }
                   }
               ]
-            })
+            };
+            mychart.setOption(option);
         },
         regionFun(lineName,lineValue){
             let mychart = this.$echarts.init(document.getElementById('echartsTwo'))
@@ -1423,14 +1459,13 @@ export default {
                 mychart.resize()
               })
               mychart.setOption({
-
                 	title: {
                 		text: '主体备案-按地区',
                 		subtext: '',
                 		left: 'center',
-                		top:0,
+                		top:15,
                 		textStyle:{
-                			fontSize:20
+                			fontSize:18
                 		}
                 	},
                   dataZoom : {//实现缩放功能
@@ -1486,20 +1521,15 @@ export default {
                 mychart.setOption({
                   // 图表主标题
                   title: {
-                    // 文本
                     text: '主体备案-按地区',
                     // 值: 'top', 'middle', 'bottom' 也可以是具体的值或者百分比
-                    top: 25,
+                    top: 15,
                     // 值: 'left', 'center', 'right' 同上
                     left: 'center',
-                    // 文本样式
                     textStyle: {
-                      // 字体大小
-                      fontSize: 25,
-                      // 字体粗细
-                      fontWeight: 650,
-                      // 字体颜色
-                      color: '#333'
+                      fontSize: 18,
+                      // fontWeight: 650,
+                      // color: '#333'
                     }
                   },
                   // 提示框组件
@@ -1511,6 +1541,7 @@ export default {
                       return val.data.name + ': ' + val.data.value
                     }
                   },
+
                   // 视觉映射组件
                   visualMap: {
                     // continuous 类型为连续型
@@ -1554,7 +1585,7 @@ export default {
                       },
                       mapType: 'province',
                       // 定位 值: 'top', 'middle', 'bottom' 也可以是具体的值或者百分比
-                      top: 70,
+                      top: 60,
                       // 图形上的文本标签
                       label: {
                         show: false // 是否显示对应地名
@@ -1716,6 +1747,11 @@ export default {
                     line-height: 30px;
                     display: inline-block;
                     font-size: 14px;
+                    width: 100px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    text-align: center;
                   }
                   .choose{
                     cursor: pointer;
@@ -1723,6 +1759,8 @@ export default {
                     height: 30px;
                     line-height: 30px;
                     border-bottom:  1px solid #666;
+                    position: relative;
+                    top: -12px;
                   }
                 }
 
@@ -1867,13 +1905,19 @@ export default {
                           padding-left: 16px;
                           color:rgba(10,18,32,.64);
                           font-size: 13px;
-                          span{
+                          display: flex;
+                          align-items: center;
+                          .mytext{
+                            width: 80%;
+                            display: inline-block;
+                          }
+                          .myadd{
                             color: #2EA7E0;
                             cursor: pointer;
                             float: right;
-                            margin-right: 15px;
+                            /* margin-right: 10px; */
                           }
-                          span:hover{
+                          .myadd:hover{
                             text-decoration: underline;
                           }
                       }
@@ -1920,10 +1964,16 @@ export default {
         	background: rgba(213,217,220,.94);
         	opacity: 0.94;
         }
+        
     }
 
 </style>
 <style lang="less">
+.enterprise{
+  .active{
+    color:#2EA7E0;
+  }
+}
 .el-upload--picture-card{
     height: 60px !important;
     width: 60px !important;
@@ -1942,9 +1992,6 @@ export default {
 .anchorBL {
    display: none;
 }
-.active{
-   color:#2EA7E0;
-}
 .el-dropdown-menu{
   height: 240px;
   overflow: auto;
@@ -1953,4 +2000,5 @@ export default {
 .mytables .el-table .cell{
   font-size: 12px;
 }
+.amap-logo,.amap-copyright {display:none !important;}
 </style>

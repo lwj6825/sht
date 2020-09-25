@@ -5,11 +5,8 @@
                 <!--展开-->
                 <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}">
                     <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
+                        <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
@@ -40,11 +37,8 @@
                 <!--收起-->
                 <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'none'} : {display: 'block'}" v-if="isShow">
                     <el-form-item label="执行时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
+                        <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
@@ -89,18 +83,18 @@
             <div class="tables" v-loading.body="fullscreenLoading">
                 <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
                     <el-table-column type="selection" width="50"></el-table-column>
-                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="table_name" label="存入表名"> </el-table-column>
-                    <el-table-column prop="start_time" label="执行时间"> </el-table-column>
-                    <el-table-column prop="execute_time" label="执行用时"> </el-table-column>
-                    <el-table-column prop="data_date" label="数据时间"> </el-table-column>
-                    <el-table-column prop="execute_num" label="表存入数"> </el-table-column>
-                    <el-table-column prop="save_total_num" label="总存入数"> </el-table-column>
-                    <el-table-column prop="file_total_num" label="文件总数"> </el-table-column>
-                    <el-table-column prop="execute_result" label="文件名称"> </el-table-column>
-                    <el-table-column prop="result" label="执行消息"> </el-table-column>
-                    <el-table-column prop="job_result" label="执行信息"> </el-table-column>
+                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="table_name" label="存入表名"></el-table-column>
+                    <el-table-column prop="start_time" label="执行时间"></el-table-column>
+                    <el-table-column prop="execute_time" label="执行用时"></el-table-column>
+                    <el-table-column prop="data_date" label="数据时间"></el-table-column>
+                    <el-table-column prop="execute_num" label="表存入数"></el-table-column>
+                    <el-table-column prop="save_total_num" label="总存入数"></el-table-column>
+                    <el-table-column prop="file_total_num" label="文件总数"></el-table-column>
+                    <el-table-column prop="execute_result" label="文件名称"></el-table-column>
+                    <el-table-column prop="result" label="执行消息"></el-table-column>
+                    <el-table-column prop="job_result" label="执行信息"></el-table-column>
                     <!--<el-table-column prop="merchant_name" label="所属商户" >
                         <template slot-scope="scope">{{scope.row.merchant_name ? scope.row.merchant_name : '- - -'}}</template>
                     </el-table-column>-->
@@ -277,14 +271,12 @@ export default {
         },
         downFile (data) {
             let time = getNowFormatDate()
-            console.log(time)
             if (!data) { return }
             let url = window.URL.createObjectURL(new Blob([data]))
             let link = document.createElement('a')
             link.style.display = 'none';
             link.href = url
             link.setAttribute('download', 'errorLog' + time + '.txt')
-            
             document.body.appendChild(link)
             link.click()
         },
@@ -296,7 +288,6 @@ export default {
                 .catch(res => {
                     console.log(res);
                 })
-
         },
         getDataFun(){
             // const loading = this.$loading({

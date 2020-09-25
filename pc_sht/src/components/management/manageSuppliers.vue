@@ -18,7 +18,7 @@
         </div>
         <div class="msg-box" v-if="addNew">
             <div class="container">
-                <header class="title">绑定供应商<i class="icon-close" @click="closeMsgBox">x</i></header>
+                <header class="title">绑定供应商<span class="iconfont icon-close close" @click="closeMsgBox"></span></header>
                 <div class="search">
                     <el-input class="search-input" v-model="inputValue" placeholder="请输入供应商名称" clearable></el-input>
                     <el-button class="search-button" type="primary" @click='searchSupplier'>搜索</el-button>
@@ -252,6 +252,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+    @import '../../assets/css/common.css';
     .content{
         padding: 20px;
         width: 100%;
@@ -292,16 +293,13 @@ export default {
                     .btn{
                         margin-bottom: 10px;
                     } 
-                    .icon-close{
+                    .close{
                         float: right;
-                        display: block;
-                        padding: 5px;
-                        width: 10px;
-                        height: 10px;
+                        width: 40px;
+                        height: 40px;
                         text-align: center;
-                        line-height: 10px;
+                        line-height: 40px;
                         font-size: 16px;
-                        font-style: normal;
                         cursor: pointer;
                     }  
                 }

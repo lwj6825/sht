@@ -6,7 +6,7 @@
                 <ul class="list">
                     <li class="list-item" v-for="(item,index) in imgList" :key="index">    
                         <figure class="image">
-                            <p class="icon-delete" @click="deleteFun(item)">-</p>
+                            <p class="icon-deletes" @click="deleteFun(item)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.IMG_URL">
                             <div class="submit-btn">
                                 更换图片
@@ -73,7 +73,7 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr5" :key="index">
                                     <figure class="image">
-                                        <p class="icon-delete" @click="removeFun(5,item)">-</p>
+                                        <p class="icon-deletes" @click="removeFun(5,item)">-</p>
                                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="viewFun(5,item)">
                                     </figure>
                                 </li>
@@ -111,7 +111,7 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr1" :key="index">
                                     <figure class="image">
-                                        <p class="icon-delete" @click="removeFun(1,item)">-</p>
+                                        <p class="icon-deletes" @click="removeFun(1,item)">-</p>
                                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="viewFun(1,item)">
                                     </figure>
                                 </li>
@@ -149,7 +149,7 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr2" :key="index">
                                     <figure class="image">
-                                        <p class="icon-delete" @click="removeFun(2,item)">-</p>
+                                        <p class="icon-deletes" @click="removeFun(2,item)">-</p>
                                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="viewFun(2,item)">
                                     </figure>
                                 </li>
@@ -187,7 +187,7 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr3" :key="index">
                                     <figure class="image">
-                                        <p class="icon-delete" @click="removeFun(3,item)">-</p>
+                                        <p class="icon-deletes" @click="removeFun(3,item)">-</p>
                                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="viewFun(3,item)">
                                     </figure>
                                 </li>
@@ -213,7 +213,7 @@
                             <ul>
                                 <li v-for="(item,index) in imgArr4" :key="index">
                                     <figure class="image">
-                                        <p class="icon-delete" @click="removeFun(4,item)">-</p>
+                                        <p class="icon-deletes" @click="removeFun(4,item)">-</p>
                                         <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="viewFun(4,item)">
                                     </figure>
                                 </li>
@@ -1007,7 +1007,7 @@ export default {
                         height: 100px;
                         box-sizing: border-box;
                         border: 1px dashed #ccc;
-                        .icon-delete{
+                        .icon-deletes{
                             position: absolute;
                             top: -6px;
                             right: -6px;
@@ -1157,7 +1157,7 @@ export default {
                                 top: 0;
                                 left: 0;
                                 margin: 10px;
-                                .icon-delete{
+                                .icon-deletes{
                                     position: absolute;
                                     top: -6px;
                                     right: -6px;

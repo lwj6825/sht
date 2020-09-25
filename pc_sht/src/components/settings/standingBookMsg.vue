@@ -1,8 +1,8 @@
 <template>
     <div class="content standingBookMsg" ref='content'>
         <el-tabs v-model="activeName" type="card">
-            <el-tab-pane label="进货台账" name="first">
-                <el-button type="primary" class="shop" @click="addEntryTzFun">新增进货台账类型</el-button>
+            <el-tab-pane label="进货台账" name="first"><!--
+                <el-button type="primary" class="shop" @click="addEntryTzFun">新增进货台账类型</el-button>-->
                 <div>
                     <el-table :data="tableData" border  :header-cell-style="rowClass">
                         <el-table-column
@@ -26,8 +26,8 @@
                     </el-table>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="销售台账" name="second">
-                <el-button type="primary" class="shop">新增销售台账类型</el-button>
+            <el-tab-pane label="销售台账" name="second"><!--
+                <el-button type="primary" class="shop">新增销售台账类型</el-button>-->
                 <el-table :data="tableData2" border :header-cell-style="rowClass">
                     <el-table-column
                     prop="tz_name"
@@ -138,6 +138,9 @@ export default {
         box-sizing: border-box;
         .shop{
             margin: 10px 0;
+        }
+        .el-table{
+            margin-top: 10px;
         }
     }
 </style>

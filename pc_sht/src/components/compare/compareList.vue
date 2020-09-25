@@ -3,13 +3,17 @@
         <div class="searchs" ref="searchs">
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
-                    <el-form-item label="节点信息">
-                        <el-input class="placeholder" v-model="form.msg" clearable placeholder="节点编码、节点名称"></el-input>
-                    </el-form-item>
                     <el-form-item label="企业类型">
-                        <el-select v-model="form.types" filterable clearable placeholder="请选择">
+                        <el-select v-model="form.types" filterable clearable placeholder="请选择" @change="selectTypesFun">
                             <el-option v-for="(item,index) in typesArr" :key="index" :label="item.text"
                             :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="节点信息">
+                        <el-select v-model="form.msg" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.text"
+                            :value="item.text">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -46,42 +50,42 @@
                     <el-button plain @click="downloadFun">导出</el-button>-->
                 </div>
             </div>
-            <el-table :data="tableData" :header-cell-style="rowClass">
-                <el-table-column prop="typename" label="企业类型"></el-table-column>
+            <el-table :data="tableData" :header-cell-style="rowClass" @sort-change="sortChange">
+                <el-table-column prop="node_type" label="企业类型"></el-table-column>
                 <el-table-column prop="node_id" label="节点编码"></el-table-column>
                 <el-table-column prop="node_name" label="节点名称"></el-table-column>
-                <el-table-column prop="goods" label="对照商品数量">
+                <el-table-column prop="goods" label="对照商品" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <div @click="jumpFun1(scope.row)" class="link_btns">{{scope.row.goods ? scope.row.goods : 0}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="goods_count" label="缺失对照商品数量">
+                <el-table-column prop="goods_count" width="130" label="缺失对照商品" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <div @click="jumpFun2(scope.row)" class="link_btns">{{scope.row.goods_count ? scope.row.goods_count : 0}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="price_count" label="价格抽取商品数量">
+                <el-table-column prop="price_count" width="130" label="价格抽取商品" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <div @click="jumpFun3(scope.row)" class="link_btns">{{scope.row.price_count ? scope.row.price_count : 0}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="bussiness" label="商户对照数量">
+                <el-table-column prop="bussiness" label="商户对照" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <div @click="jumpFun4(scope.row)" class="link_btns">{{scope.row.bussiness ? scope.row.bussiness : 0}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="node" label="节点对照数量">
+                <el-table-column prop="node" label="节点对照" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <div @click="jumpFun5(scope.row)" class="link_btns">{{scope.row.node ? scope.row.node : 0}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="origin" label="省市区县对照">
+                <el-table-column prop="origin" label="产地对照" :default-sort="{order: order}" sortable="custom">
                     <template slot-scope="scope">
                         <div @click="jumpFun6(scope.row)" class="link_btns">{{scope.row.origin ? scope.row.origin : 0}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="remark" label="备注"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="80">
                     <template slot-scope="scope">
                             <el-button type="text" size="small" @click="addRemarkFun(scope.row)">添加备注</el-button>
                     </template>
@@ -114,7 +118,7 @@
 </template>
 
 <script>
-import {QueryNode, QueryNodeTypeSelect} from '../../js/compare/compare.js'
+import {QueryNode, QueryNodeTypeSelect, QueryNodeSelectNew} from '../../js/compare/compare.js'
 import {AddErrorDateRemark} from '../../js/traceEquipment/traceEquipment.js';
 export default {
     name:"compareList",
@@ -142,9 +146,12 @@ export default {
             },
             node_id: '',
             node_name: '',
+            order: 'desc', 
+            sortField: 'goods',
         }
     },
     mounted() {
+        window.scrollTo(0,0)
         if(localStorage.getItem('routeMsg1')){
             localStorage.removeItem('routeMsg1')
         }
@@ -159,9 +166,34 @@ export default {
             localStorage.removeItem('searchMsg2')
         }
         this.queryNodeTypeSelectFun()
+        this.getQueryNodeSelectNewFun()
         this.getDataFun()
     },
     methods: {
+        sortChange({column, prop, order}){
+            this.page = 1
+            this.sortField = column.property
+            if(order == 'descending'){
+                this.order = 'desc'
+            }else if(order == 'ascending'){
+                this.order = 'asc'
+            }
+            this.getDataFun()
+        },
+        selectTypesFun(ele){
+            this.getQueryNodeSelectNewFun()
+        },
+        // 获取节点
+        getQueryNodeSelectNewFun(){
+            let str = 'node_type=' + (this.form.types ? this.form.types : '') + '&node_name='
+            QueryNodeSelectNew(str)
+                .then(res => {
+                    this.nodeArr = res.data.dataList
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         addRemarkFun(ele){
             this.node_id = ele.node_id
             this.node_name = ele.node_name
@@ -215,26 +247,42 @@ export default {
         },
         // 缺失对照商品数量
         jumpFun2(ele){
+            localStorage.setItem('routeMsg1', JSON.stringify(ele))
+            localStorage.setItem('searchMsg1', JSON.stringify(this.form))
             this.$router.push({name: 'DefectCompare', params: ele})
         },
         // 价格抽取商品数量
         jumpFun3(ele){
+            localStorage.setItem('routeMsg1', JSON.stringify(ele))
+            localStorage.setItem('searchMsg1', JSON.stringify(this.form))
             this.$router.push({name: 'NodeGood', params: ele})
         },
         // 商户对照数量
         jumpFun4(ele){
+            localStorage.setItem('routeMsg1', JSON.stringify(ele))
+            localStorage.setItem('searchMsg1', JSON.stringify(this.form))
             this.$router.push({name: 'BizCompare', params: ele})
         },
         // 节点对照数量
         jumpFun5(ele){
+            localStorage.setItem('routeMsg1', JSON.stringify(ele))
+            localStorage.setItem('searchMsg1', JSON.stringify(this.form))
             this.$router.push({name: 'NodeCompare', params: ele})
         },
         // 省市区县对照
         jumpFun6(ele){
+            localStorage.setItem('routeMsg1', JSON.stringify(ele))
+            localStorage.setItem('searchMsg1', JSON.stringify(this.form))
             this.$router.push({name: 'AddrCompare', params: ele})
         },
         getDataFun(){
             this.loading = true
+            let sort = ''
+            if(this.order == 'desc'){
+                sort = 0
+            }else{
+                sort = 1
+            }
             let obj = {
                 page: this.page,
                 cols: this.cols,
@@ -242,7 +290,13 @@ export default {
                 type: this.form.types,
                 goods_userdefine: this.form.good, // 有数据1无数据0
                 biz_userdefine: this.form.biz, // 有数据1无数据0
-                node_uerdefine: this.form.node // 有数据1无数据0
+                node_uerdefine: this.form.node, // 有数据1无数据0
+                bussiness: this.sortField == 'bussiness' ? sort : '',
+                goods: this.sortField == 'goods' ? sort : '',
+                node: this.sortField == 'node' ? sort : '',
+                origin: this.sortField == 'origin' ? sort : '',
+                goods_count: this.sortField == 'goods_count' ? sort : '',
+                price_count: this.sortField == 'price_count' ? sort : '' 
             }
             QueryNode(obj)
                 .then(res => {
@@ -257,6 +311,7 @@ export default {
         },
         handleSizeChange(val){
             this.cols = val
+            this.getDataFun()
         },
         handleCurrentChange(val) {
             this.page = val
@@ -274,6 +329,7 @@ export default {
                 biz: '',
                 node: '',
             }
+            this.page = 1
             this.getDataFun()
         },
         rowClass({ row, rowIndex}) {

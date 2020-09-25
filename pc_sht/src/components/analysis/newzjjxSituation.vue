@@ -29,18 +29,18 @@
             </div>-->
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="node_id" label="节点ID"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="table_name" label="存入表名"> </el-table-column>
-                    <el-table-column prop="start_time" label="执行时间"> </el-table-column>
-                    <el-table-column prop="execute_time" label="执行用时"> </el-table-column>
-                    <el-table-column prop="data_date" label="数据时间"> </el-table-column>
-                    <el-table-column prop="execute_num" label="表存入数"> </el-table-column>
-                    <el-table-column prop="save_total_num" label="总存入数"> </el-table-column>
-                    <el-table-column prop="file_total_num" label="文件总数"> </el-table-column>
-                    <el-table-column prop="execute_result" label="文件名称"> </el-table-column>
-                    <el-table-column prop="result" label="执行消息"> </el-table-column>
-                    <el-table-column prop="job_result" label="执行信息"> </el-table-column>
+                    <el-table-column prop="node_id" label="节点ID"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="table_name" label="存入表名"></el-table-column>
+                    <el-table-column prop="start_time" label="执行时间"></el-table-column>
+                    <el-table-column prop="execute_time" label="执行用时"></el-table-column>
+                    <el-table-column prop="data_date" label="数据时间"></el-table-column>
+                    <el-table-column prop="execute_num" label="表存入数"></el-table-column>
+                    <el-table-column prop="save_total_num" label="总存入数"></el-table-column>
+                    <el-table-column prop="file_total_num" label="文件总数"></el-table-column>
+                    <el-table-column prop="execute_result" label="文件名称"></el-table-column>
+                    <el-table-column prop="result" label="执行消息"></el-table-column>
+                    <el-table-column prop="job_result" label="执行信息"></el-table-column>
                     <el-table-column label="操作" width="100">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>

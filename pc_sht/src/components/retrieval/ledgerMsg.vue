@@ -17,12 +17,16 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="企业名称" class="qymcselect">
-                        <el-select v-if="form.types == '超市'" size="mini" v-model="cs_name" filterable multiple clearable placeholder="请选择">
-                            <el-option v-for="(item2, index2) in csNodeArr" :key="index2" :label="item2.node_name" :value="item2.node_id"></el-option>
-                        </el-select>
-                        <el-select v-else v-model="form.name" style="height: 28px" size="mini" filterable clearable placeholder="请选择" @change="nodeChangeFun">
-                            <el-option v-for="(item, index) in nodeArr" :key="index" :label="item.node_name" :value="item.node_id"></el-option>
-                        </el-select>
+                        <div v-show="form.types == '超市'">
+                            <el-select size="mini" v-model="form.cs_name" filterable multiple clearable placeholder="请选择">
+                                <el-option v-for="(item2, index2) in csNodeArr" :key="index2" :label="item2.node_name" :value="item2.node_id"></el-option>
+                            </el-select>
+                        </div>
+                        <div v-show="form.types != '超市'">
+                            <el-select v-model="form.name" style="height: 28px" size="mini" filterable clearable placeholder="请选择" @change="nodeChangeFun">
+                                <el-option v-for="(item, index) in nodeArr" :key="index" :label="item.node_name" :value="item.node_id"></el-option>
+                            </el-select>
+                        </div>
                     </el-form-item>
                     <el-form-item label="商品名称" v-if="form.types == '餐饮'">
                         <el-input class="label-width" v-model="form.good_name" clearable placeholder="请输入"></el-input>
@@ -37,7 +41,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="所属街道" v-if="form.types == '餐饮'">
-                        <el-select v-model="form.supervise" filterable clearable placeholder="请选择">
+                        <el-select v-model="form.supervise" filterable clearable placeholder="请选择" :disabled="roleId == 40">
                             <el-option v-for="(item, index) in superviseArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
                         </el-select>
                     </el-form-item>
@@ -60,7 +64,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="所属街道" v-if="form.types == '零售市场'">
-                        <el-select v-model="form.supervise" filterable clearable placeholder="请选择">
+                        <el-select v-model="form.supervise" filterable clearable placeholder="请选择" :disabled="roleId == 40">
                             <el-option v-for="(item, index) in superviseArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
                         </el-select>
                     </el-form-item>
@@ -227,8 +231,8 @@ export default {
                 supervise: '',
                 region: '',
                 sh_name: '',
+                cs_name: [],
             },
-            cs_name: [],
             startTime: '',
             endTime: '', 
             page: 1,
@@ -262,19 +266,30 @@ export default {
             current: 0,
             imgHeight: '',
             sizeObj: {},
+            roleId: '',
         }
     },
     mounted() {
         this.userId = localStorage.getItem('userId')
         this.node_id = localStorage.getItem('loginId')
         this.userType = localStorage.getItem('userType')
+        this.roleId = localStorage.getItem('roleId')
         this.getTime()
         let arr = []
         arr.push(this.startTime)
         arr.push(this.endTime)
         this.form.dataTime = arr
         this.getNodeTotalFun()
-        this.getGetJgjgByNodeid()
+        if(this.roleId == 40){
+            let arr = JSON.parse(localStorage.getItem('booth_List'))
+            let obj = {
+                jgjg: arr[0].BOOTH_NAME
+            }
+            this.superviseArr.push(obj)
+            this.form.supervise = this.superviseArr[0].jgjg
+        }else{
+            this.getGetJgjgByNodeid()
+        }
         this.getQueryAllWsSupplierName()
         this.getGetNodeJgInfoGroupForJg('餐饮')
         let params = {
@@ -482,11 +497,10 @@ export default {
         // 选择企业类型
         typesChangeFun(ele){
             this.form.name = '' 
-            this.cs_name = []
+            this.form.cs_name = []
             this.form.good_name = '' 
             this.form.gys_name = '' 
             this.form.market_name = '' 
-            this.form.supervise = '' 
             this.form.region = '' 
             this.form.sh_name = '' 
             this.node_name = ''
@@ -494,6 +508,7 @@ export default {
             this.shArr = []
             this.form.region = ''
             this.form.sh_name = ''
+            this.form.supervise = this.superviseArr[0].jgjg
             this.getGetNodeJgInfoGroupForJg(ele)
         },
         // 企业活跃度
@@ -598,7 +613,7 @@ export default {
         // 超市
         getDataFun3(){
             let strs = ''
-            this.cs_name.forEach(val => {
+            this.form.cs_name.forEach(val => {
                 strs += val + ','
             })
             strs = strs.substr(0, strs.length-1)
@@ -634,7 +649,7 @@ export default {
                 this.isCs = false
                 this.getDataFun2()
             }else if(this.form.types == '超市'){
-                if(this.cs_name.length == 0){
+                if(this.form.cs_name.length == 0){
                     this.$message.warning('请选择企业名称');
                     return
                 }
@@ -671,7 +686,8 @@ export default {
                 region: '',
                 sh_name: '',
             }
-            this.cs_name = []
+            this.form.supervise = this.superviseArr[0].jgjg
+            this.form.cs_name = []
             this.startTime = ''
             this.endTime = ''
             this.getTime()

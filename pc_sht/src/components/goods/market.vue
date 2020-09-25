@@ -18,7 +18,7 @@
             <span class="option-title">商品简称</span>
             <el-input class="fill-input" v-model="j_name" clearable placeholder="请输入内容"></el-input>
           </div>
-          <div>
+          <div v-if="goods_types != '1'">
             <span class="option-title">是否为报价商品</span>
             <el-select v-model="isNeed" filterable clearable placeholder="请选择">
               <el-option  label="是" value="1"></el-option>
@@ -61,14 +61,19 @@
           <el-table-column prop="J_NAME" label="商品简称"> </el-table-column>
           <el-table-column prop="GB_NAME" label="品种" :formatter="formatter"> </el-table-column>
           <el-table-column prop="PRICE" label="价格"> </el-table-column>
-          <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
+          <el-table-column prop="GOODS_UNIT" label="规格">
+            <template slot-scope="scope">
+              <p v-if="scope.row.SPECIFICATIONS">{{scope.row.COUNT + scope.row.SPECIFICATIONS + '/' + scope.row.GOODS_UNIT}}</p>
+              <p v-else>{{scope.row.GOODS_UNIT}}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="SUPPLIERS_NAME" label="供应商"> </el-table-column>
           <el-table-column label="原料"> 
             <template slot-scope="scope">
               <p v-for="(item,index) in scope.row.stk_list" :key="index">{{item.or_goods_name}}</p>
             </template>
           </el-table-column>
-          <el-table-column label="是否为报价商品" width="140">
+          <el-table-column label="是否为报价商品" width="140" v-if="goods_types != '1'">
             <template slot-scope="scope">
               <el-switch v-model="scope.row.IS_NEED" active-text="是" inactive-text="否"
               active-value="1" inactive-value="0" @change="isNeedFun(scope.row)">
@@ -101,7 +106,7 @@
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area';
   import {GetSupplier} from '../../js/district/district.js'
-  import {baseUrl,baseUrl2} from '../../js/address/url.js'
+  import {baseUrl} from '../../js/address/url.js'
   export default {
     name: "market",
     data() {
@@ -137,6 +142,7 @@
         j_name: '',
         node_id: '',
         isNeed: '',
+        goods_types: '',
       }
     },
     created() {
@@ -203,15 +209,35 @@
               })
           })
         }  
-        let url = baseUrl2 + 'goods/importSaleAndOrigin'
+        let url = baseUrl + 'goods/importSaleAndOrigin'
         ajaxPost(url,formData,config)
           .then(res => {
-            this.boxShow = true;
-            this.fileMsg = res.message
+            // this.boxShow = true;
+            // this.fileMsg = res.message
+            if (res.result == true) {
+              this.$alert(res.message ? res.message : '导入成功', '提示', {
+                  confirmButtonText: '确定',
+                  type: 'success',
+                  callback: action => {
+                      
+                  }
+              });
+              this.page = 1
+              this.currentPage = 1
+              this.getSales()
+            }else{
+              this.$alert(res.message ? res.message : '导入失败', '提示', {
+                  confirmButtonText: '确定',
+                  type: 'error',
+                  callback: action => {
+                      
+                  }
+              });
+            }
+            this.file = ''
           })
           .catch(res => {
             console.log(res)
-            this.$message.error("出错了");
           })
       },
       rowClass({ row, rowIndex}) {
@@ -349,6 +375,7 @@
           .then(res => {
             this.dataTotal = res.data.goodsinfo.total;
             this.dataList = res.data.salesList;
+            this.goods_types = res.data.salesList[0].GOODS_TYPE
           })
           .catch(res => {
             console.log(res)

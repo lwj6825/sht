@@ -245,7 +245,7 @@
   import {saleAdd,purchase,DeleteStkOr,GeStkOrigin,UpdateStkOr,InsertStkOr,GetGoodsJdImg,
     DeleteGoodsJdImg} from "../../js/goods/goods.js";
   import {getAddr} from '../../js/user/user.js';
-  import {baseUrl,baseUrl2,updateGoodsJdImg} from '../../js/address/url.js'
+  import {baseUrl,updateGoodsJdImg} from '../../js/address/url.js'
   import axios from 'axios';
   export default {
     name: "",    

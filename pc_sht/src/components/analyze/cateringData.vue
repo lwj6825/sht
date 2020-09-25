@@ -1,38 +1,26 @@
 <template>
     <div class="content">
-        cateringData
-餐饮数据运行概况
+        <div class="iframe">
+            <iframe src="https://shop.zhdtech.com/priceIndex/" 
+            scrolling="auto" width="100%" height="100%" frameborder="0" id="contentIframe"></iframe>
+        </div>
     </div>
 </template>
 
 <script>
 import {GetAllDash} from '../../js/analyze/analyze.js'
 export default {
-    name:"cateringData",
+    name:"priceDaily",
     data() {
         return {
-            urlId: '',
-            functionid: '231'
+            
         }
     },
     mounted() {
-        // this.getAllDashFun()
+        
     },
     methods: {
-        getAllDashFun(){
-            let obj = {
-            	status: "1",
-	            functionid: this.functionid
-            }
-            GetAllDash(obj)
-                .then(res => {
-                    console.log(res)
-                    this.urlId = res.data.dataList[0].dashid
-                })
-            .catch(res => {
-                console.log(res)
-            })
-        }
+        
     },
 }
 </script>

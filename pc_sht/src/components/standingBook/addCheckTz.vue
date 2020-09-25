@@ -458,6 +458,17 @@
         }
         jcpurchase(boothData)
           .then(res => {
+            if(goodsType == 1){
+              this.$message({
+                message: '请增加进货商品',
+                type: 'warning'
+              });
+            }else if(goodsType == 2){
+              this.$message({
+                message: '请增加销售商品',
+                type: 'warning'
+              });
+            }
             this.local_check_good_options = res.data;
             
             if(this.count == 1 && msg.check_good){

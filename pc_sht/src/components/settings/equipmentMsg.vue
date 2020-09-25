@@ -82,7 +82,7 @@
         </div>
         <div class="alert-box" v-if="boxShow">
             <div class="select">
-                <p class="close" @click="closeFun">X</p>
+                <p class="iconfont icon-close close" @click="closeFun"></p>
                 <div class="filemsg">
                 {{fileMsg}}
                 </div>
@@ -92,7 +92,7 @@
         <div class="panal" v-show='setFastKey'>
             <div class="panal-content">
                 <header class="panal-header">
-                    <span class="title">快捷键管理</span><i class="close" @click='closeSetFastKey()'>x</i>
+                    <span class="title">快捷键管理</span><span class="iconfont icon-close close" @click='closeSetFastKey()'></span>
                 </header>
                 <div class="box">
                     <div class="key">
@@ -1409,6 +1409,7 @@ export default {
 </script>
 
 <style lang='less' rel='stylesheet/less' scoped>
+    @import '../../assets/css/common.css';
     .content{        
         height: 100%;       
         box-sizing: border-box;
@@ -1531,9 +1532,11 @@ export default {
                 width: 400px;
                 height: 300px;
                 .close{
-                    text-align: right;
-                    margin-right: 20px;
-                    padding-top: 10px;
+                    width: 40px;
+                    height: 40px;
+                    text-align: center;
+                    line-height: 40px;
+                    font-size: 16px;
                     cursor: pointer;
                 }
             }
@@ -1655,14 +1658,12 @@ export default {
                 }
                 .close{
                     float: right;
-                    display: block;
-                    margin-top: 6px;
-                    width: 20px;
-                    height: 20px;
-                    line-height: 20px;
+                    width: 40px;
+                    height: 40px;
                     text-align: center;
-                    font-style: normal;
-                    cursor: pointer;                    
+                    line-height: 40px;
+                    font-size: 16px;
+                    cursor: pointer;          
                 }
                 .pagination{
                     padding-top: 10px;
@@ -1702,13 +1703,11 @@ export default {
                 border-bottom:1px solid #ddd;
                 .close{
                     float: right;
-                    display: block;
-                    margin-top: 6px;
-                    width: 20px;
-                    height: 20px;
-                    line-height: 20px;
+                    width: 40px;
+                    height: 40px;
                     text-align: center;
-                    font-style: normal;
+                    line-height: 40px;
+                    font-size: 16px;
                     cursor: pointer;
                 }
             }

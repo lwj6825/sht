@@ -1,6 +1,6 @@
 <template>
     <div class="content monitorMsg">
-        <div class="conditions">
+        <div class="conditions" v-if="roleId != '80'">
             <ul>
                 <li v-for="(item,index) in keyGroup" :key="index" :class="{checked_style:index == currId}" @click="focusFun(index,item)">{{item.name}}</li>
             </ul>
@@ -37,8 +37,8 @@
                 <div class="list">
                     <ul class="list_2">
                         <li>
-                            <p class="list-title">已上报企业</p>
-                            <p class="num num_1">{{list_num2}}<span style="font-size: 14px;">（占{{list_num11}}）</span></p>          
+                            <p class="list-title"><span v-if="roleId == '80'">昨日</span>已上报企业</p>
+                            <p class="num num_1">{{list_num2}}<span style="font-size: 14px;">（占{{list_num11 + (roleId == '80' ? '%' : '')}}）</span></p>          
                         </li> 
                     </ul>
                     <!--<div class="proportion proportion_2">
@@ -59,7 +59,7 @@
                 <div class="list">
                     <ul class="list_2">
                         <li>
-                            <p class="list-title">上报数据量(条)</p>
+                            <p class="list-title"><span v-if="roleId == '80'">昨日</span>上报数据量(条)</p>
                             <p class="num num_1">{{parseFloat(list_num4)}}</p>          
                         </li> 
                     </ul>
@@ -81,7 +81,7 @@
                 <div class="list">
                     <ul class="list_2">
                         <li>
-                            <p class="list-title">上报商品种类</p>
+                            <p class="list-title"><span v-if="roleId == '80'">昨日</span>上报商品种类</p>
                             <p class="num num_1">{{list_num6}}</p>          
                         </li> 
                     </ul>
@@ -102,10 +102,10 @@
                 </div>
             </div>
         </div>
-        <div class="second" v-loading="loading">
+        <div class="second" v-loading="loading3" v-if="roleId != '80'">
             <p class="title">各类型企业上报数据量</p>
             <div id="my-chart5" class="echart"></div>
-        </div>
+        </div><!---->
         <div class="third">
             <p class="title">生活必需品价格走势</p>
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -131,11 +131,11 @@
             <div id="my-chart6" class="echart"></div>
         </div>
         <div class="fourth">
-            <div>
+            <div v-loading="loading">
                 <p>猪肉来源省份</p>
                 <div id="my-chart7" class="echart"></div>
             </div>
-            <div>
+            <div v-loading="loading2">
                 <p>蔬菜来源省份</p>
                 <div id="my-chart8" class="echart"></div>
             </div>
@@ -170,7 +170,7 @@ function formatDate(date) {
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
 import {GetNodeCount, GetJdhydPc, QuantityReportedNew, GetGoodsAvgPc, GetWsPriceIndexPc, VegMeatProvince, VegetableProvince,
-    GetGoodsType, GetNodeJgInfoType} from '../../js/monitor/monitor.js'
+    GetGoodsType, GetNodeJgInfoType, GetPriceNode} from '../../js/monitor/monitor.js'
 export default {
     name:"monitorMsg",
     data() {
@@ -220,15 +220,22 @@ export default {
             arr2: [],
             arr3: [],
             loading: true,
-            qy_num1: '',
-            qy_num2: '',
-            qy_num3: '',
-            qy_num4: '',
+            loading2: true,
+            loading3: true,
+            qy_num1: '0',
+            qy_num2: '0',
+            qy_num3: '0',
+            qy_num4: '0',
             qy_num5: '',
+            node_id: '',
+            roleId: '',
         }
     },
     mounted() {
-        this.node_id = localStorage.getItem('loginId')
+        this.roleId = localStorage.getItem('roleId')
+        if(localStorage.getItem('loginId') != 'undefined'){
+            this.node_id = localStorage.getItem('loginId')
+        }
         this.getTime()
         let arr = []
         arr.push(this.startTime)
@@ -239,17 +246,101 @@ export default {
         var zt = new Date();
         var zttime = zt.setTime(zt.getTime() - 3600 * 1000 * 24);
         this.yesterday = timestampToTime(zttime)
-        this.getGetJdhydPc()
-        this.getQuantityReportedNew()
+        if(this.roleId == '80'){
+            this.getGetPriceNode()
+        }else{
+            this.getGetJdhydPc()
+            this.getQuantityReportedNew()
+            this.getGetGoodsType()
+        }
         this.getGetGoodsAvgPc1()
         this.getGetGoodsAvgPc2()
         this.getGetGoodsAvgPc3()
         this.getGetWsPriceIndexPc()
         this.getVegMeatProvince()
         this.getVegetableProvince()
-        this.getGetGoodsType()
     },
     methods: {
+        // 首页查询节点数量接口
+        getGetPriceNode(){
+            let str = 'type=' + this.types
+            GetPriceNode(str)
+                .then(res => {
+                    let dataNumList = res.data.dataNumList, // 各个环节数据的数量
+                        goodsNumList = res.data.goodsNumList, // 商品
+                        numList = res.data.numList, // 各个环节节点数量
+                        onLineList = res.data.onLineList, // 各个环节在线节点的数量
+                        title1 = [], title2 = [];
+                    this.list_num6 = goodsNumList[0].today_num
+                    this.list_num1 = res.data.total_num
+                    if(this.types == 'day'){
+                        title1 = ['昨日', '今日', '日环比']
+                        this.arr3 = title1
+                    }else if(this.types == 'week'){
+                        title1 = ['上周', '本周', '周环比']
+                        this.arr3 = title1
+                    }else if(this.types == 'month'){
+                        title1 = ['上月', '本月', '月环比']
+                        this.arr3 = title1
+                    }else if(this.types == 'year'){
+                        title1 = ['上年', '本年', '年环比']
+                        this.arr3 = title1
+                    }
+                    this.list_num7 = parseFloat(goodsNumList[0].rate)
+                    let num = 0, num2 = 0;
+                    let title = [], data = []
+                    numList.forEach(val => {
+                        title.push(val.node_type)
+                        data.push(val.node_count)
+                        if(val.node_type == '超市'){
+                            this.qy_num4 = val.node_count
+                        }else if(val.node_type == '零售市场'){
+                            this.qy_num3 = val.node_count
+                        }else if(val.node_type == '批发市场'){
+                            this.qy_num2 = val.node_count
+                        }else if(val.node_type == '生鲜配送'){
+                            num = val.node_count
+                        }else if(val.node_type == '团体消费单位'){
+                            num2 = val.node_count
+                        }
+                    })
+                    this.qy_num1 = num + num2
+                    this.list_num4 = dataNumList[0].today_num
+                    this.list_num5 = parseFloat(dataNumList[0].rate)
+                    if(this.types == 'day'){
+                        this.arr2 = ['昨日', '当前', '日环比']
+                    }else if(this.types == 'week'){
+                        title2 = ['上周', '本周', '周环比']
+                        this.arr2 = title2
+                        // this.getChartFun2(title2, arr2, arr3)
+                    }else if(this.types == 'month'){
+                        title2 = ['上月', '本月', '月环比']
+                        this.arr2 = title2
+                    }else if(this.types == 'year'){
+                        title2 = ['上年', '本年', '年环比']
+                        this.arr2 = title2
+                    }
+                    this.list_num2 = onLineList[0].today_num
+                    this.list_num3 = parseFloat(onLineList[0].rate)
+                    this.list_num11 = onLineList[0].numRate
+                    if(this.types == 'day'){
+                        this.arr1 = ['昨日', '当前', '日环比']
+                    }else if(this.types == 'week'){
+                        title2 = ['上周', '本周', '周环比']
+                        this.arr1 = title2
+                        // this.getChartFun2(title2, arr2, arr3)
+                    }else if(this.types == 'month'){
+                        title2 = ['上月', '本月', '月环比']
+                        this.arr1 = title2
+                    }else if(this.types == 'year'){
+                        title2 = ['上年', '本年', '年环比']
+                        this.arr1 = title2
+                    }
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
         // 上报商品种类
         getGetGoodsType(){
             let str = 'node_id=' + this.node_id + '&type=' + this.types
@@ -310,6 +401,7 @@ export default {
         },
         // 蔬菜省份来源
         getVegetableProvince(){
+            this.loading2 = true
             let str = 'date=' + this.currentTime + '&node_id=' + this.node_id + '&type=month'
             VegetableProvince(str)
                 .then(res => {
@@ -334,11 +426,13 @@ export default {
                     this.getChartFun8(onlineData)
                 })
                 .catch((res) => {
+                    this.loading2 = false
                     console.log(res)
                 })
         },
         // 猪肉来源省份
         getVegMeatProvince(){
+            this.loading = true
             let str = 'date=' + this.currentTime + '&node_id=' + this.node_id + '&type=month'
             VegMeatProvince(str)
                 .then(res => {
@@ -364,6 +458,7 @@ export default {
                 })
                 .catch((res) => {
                     console.log(res)
+                    this.loading = false
                 })
         },
         // 生活必需品价格走势文字内容
@@ -374,30 +469,30 @@ export default {
             // }else if(this.goods_type == '猪肉类'){
             //     goods_type = '猪肉'
             // }
-            let str = '';
-            str = 'goods_type=' + this.goods_type + '&node_id=' + this.node_id
-            GetWsPriceIndexPc(str)
-                .then(res => {
-                    let data = res.data
-                    if(data.MonthPrice != 0){
-                        this.list_num8 = data.MonthPrice.toFixed(2)
-                    }else{
-                        this.list_num8 = 0
-                    }
-                    // if(data.today_rate){
-                    //     this.list_num9 = data.today_rate
-                    // }else{
-                    //     this.list_num9 = ''
-                    // }
-                    if(parseFloat(data.rate) != 0){
-                        this.list_num10 = data.rate.toFixed(2)
-                    }else{
-                        this.list_num10 = 0
-                    }
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            // let str = '';
+            // str = 'goods_type=' + this.goods_type + '&node_id=' + this.node_id
+            // GetWsPriceIndexPc(str)
+            //     .then(res => {
+            //         let data = res.data
+            //         if(data.MonthPrice != 0){
+            //             this.list_num8 = data.MonthPrice.toFixed(2)
+            //         }else{
+            //             this.list_num8 = 0
+            //         }
+            //         // if(data.today_rate){
+            //         //     this.list_num9 = data.today_rate
+            //         // }else{
+            //         //     this.list_num9 = ''
+            //         // }
+            //         if(parseFloat(data.rate) != 0){
+            //             this.list_num10 = data.rate.toFixed(2)
+            //         }else{
+            //             this.list_num10 = 0
+            //         }
+            //     })
+            //     .catch((res) => {
+            //         console.log(res)
+            //     })
         },
         // 零售市场价格走势
         getGetGoodsAvgPc1(){
@@ -563,7 +658,7 @@ export default {
                     }
                     this.qyNum = arr4
                     this.qyTypes = title3
-                    this.loading = false
+                    this.loading3 = false
                     this.getChartFun5(this.qyTypes, this.qyNum, this.qySjlNum)
                 })
                 .catch((res) => {
@@ -624,6 +719,7 @@ export default {
                         arr3.push(msg2[key])
                     }
                     this.qySjlNum = arr3
+                    this.loading3 = false
                     this.getChartFun5(this.qyTypes, this.qyNum, this.qySjlNum)
                 })
                 .catch((res) => {
@@ -871,6 +967,7 @@ export default {
             });
         },
         getChartFun5(title, data1, data2){
+            this.loading3 = false
             let max1 = 0, max2 = 0;
             if(data1){
                 max1 = Math.max(...data1);
@@ -965,7 +1062,11 @@ export default {
                 data3 = []
             }
             if(data1.length != 0){
-                legend.unshift('批发价格走势')
+                if(this.activeName == 'first' || this.roleId != '80'){
+                    legend.unshift('批发价格走势')
+                }else{
+                    legend.unshift('商超价格走势')
+                }
             } 
             if(data2.length != 0){
                 legend.unshift('超市价格走势')
@@ -995,7 +1096,7 @@ export default {
                 },
                 series: [
                     {
-                        name: '批发价格走势',
+                        name: (this.activeName == 'first' || this.roleId != '80') ? '批发价格走势' : '商超价格走势',
                         type: 'line',
                         data: data1,
                         markPoint: {
@@ -1005,7 +1106,7 @@ export default {
                         },
                         itemStyle:{
                             normal:{
-                                color:'#199ED8'
+                                color: (this.activeName == 'first' || this.roleId != '80') ? '#199ED8' : '#19A96E'
                             }
                         },
                     },
@@ -1043,6 +1144,7 @@ export default {
             });
         },
         getChartFun7(data){
+            this.loading = false
             // 基于准备好的dom，初始化echarts实例
             var myChart7 = this.$echarts.init(document.getElementById('my-chart7'));
             // 绘制图表
@@ -1069,6 +1171,7 @@ export default {
             });
         },
         getChartFun8(data){
+            this.loading2 = false
             // 基于准备好的dom，初始化echarts实例
             var myChart8 = this.$echarts.init(document.getElementById('my-chart8'));
             // 绘制图表
@@ -1099,7 +1202,6 @@ export default {
         },
         // 切换日月周年
         focusFun(item){
-            this.loading = true
             if(this.currId){
                 if(this.currId !== item){
                     this.currId = item
@@ -1116,12 +1218,20 @@ export default {
             }else if(item == 3){
                 this.types = 'year'
             }
-            this.getGetJdhydPc()
-            this.getQuantityReportedNew()
+            if(this.roleId == '80'){
+                this.getGetPriceNode()
+            }else{
+                this.loading3 = true
+                this.getGetJdhydPc()
+                this.getQuantityReportedNew()
+                this.getGetGoodsType()
+            }
+            // this.getGetJdhydPc()
+            // this.getQuantityReportedNew()
             // this.getGetGoodsAvgPc1()
             // this.getGetGoodsAvgPc2()
             // this.getGetGoodsAvgPc3()
-            this.getGetGoodsType()
+            // this.getGetGoodsType()
         },
         getTime(){
             var start = new Date();
@@ -1147,6 +1257,7 @@ export default {
         width: 100;
         height: 100%; 
         .conditions{
+            margin-bottom: 10px;
             padding: 10px 0;
             display: flex;
             justify-content: center;
@@ -1185,7 +1296,6 @@ export default {
                 flex: 1;
                 margin-right: 10px;
                 padding: 10px 10px 3px;
-                margin-top: 10px;
                 background: #fff;
                 overflow: hidden;
                 .list-title{

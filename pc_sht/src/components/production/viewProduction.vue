@@ -46,25 +46,24 @@
           layout="total, prev, pager, next, jumper" :total='total'>
         </el-pagination>
         <div class="big-img" v-show="isBigImg" ref="boxsize">
-            <p class="close" @click="closeFun2">X</p>
+            <p class="iconfont icon-close close" @click="closeFun2"></p>
             <div class="imgBox">
                 <iframe :src="url" class="iframe" scrolling="auto" width="96%" height="100%" frameborder="0" id="contentIframe"></iframe>
             </div>
         </div>
         <div class="passwrd" v-if="isShow">
-                <div class="text">
-                    <div class="box-title">
-                        <p class="tit">查看进货商品信息</p>
-                        <p class="iconfont icon-close close" @click="closeFun"></p>
-                    </div>
-                    <div class="table">
-                        <el-table :data="tableData" :header-cell-style="rowClass">
-                            <el-table-column prop="or_goods_name" label="进货商品"> </el-table-column>
-                            <el-table-column prop="or_unit" label="规格"> </el-table-column>
-                            <el-table-column prop="or_number" label="数量"> </el-table-column>
-                            <el-table-column prop="or_batch_id" label="进货批次号"> </el-table-column>
-                        </el-table>
-                    </div>
+            <div class="text">
+                <div class="box-title">
+                    <p class="tit">查看进货商品信息</p>
+                    <p class="iconfont icon-close close" @click="closeFun"></p>
+                </div>
+                <div class="table">
+                    <el-table :data="tableData" :header-cell-style="rowClass">
+                        <el-table-column prop="or_goods_name" label="进货商品"></el-table-column>
+                        <el-table-column prop="or_unit" label="规格"></el-table-column>
+                        <el-table-column prop="or_number" label="数量"></el-table-column>
+                        <el-table-column prop="or_batch_id" label="进货批次号"></el-table-column>
+                    </el-table>
                 </div>
             </div>
         </div>

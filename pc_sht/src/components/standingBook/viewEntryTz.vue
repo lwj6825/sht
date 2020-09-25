@@ -324,6 +324,9 @@ export default {
                 remark: false, //备注
                 print: false, // 打印
             },
+            need: {
+                gys: '',
+            },
             form2: {
                 tzUserdefineList: [],
             },
@@ -456,13 +459,18 @@ export default {
             handler: function(newVal,oldVal){
                 let amount_money = 0
                 let total_price = 0
+                let str = ''
                 this.count = 0
                 newVal.forEach(v => {
-                    
                     if(v[0] != ''){
                         this.count++
+                        str = v[1].substring(v[1].length-1)
                     }
-                    let total_price = (v[2]*v[4])
+                    if(str == '头'){
+                        total_price = (v[2]*v[4]*(parseFloat(v[1]) ? parseFloat(v[1]) : 1))
+                    }else{
+                        total_price = (v[2]*v[4])
+                    }
                     amount_money += total_price
                     this.totalPrice = parseFloat(amount_money).toFixed(2)
                     this.payAmount = this.totalPrice
@@ -791,6 +799,7 @@ export default {
         },
         // 选择商户
         selectGet(val){
+            this.tableData2 = []
             this.options.forEach(ele => {
                 if(val == ele.bootList[0].shop_booth_id){
                     this.merchants = ele.bootList[0].booth_name
@@ -1032,6 +1041,7 @@ export default {
                     tzList.forEach(val => {
                         if(val.NAME === 'gys' && val.IS_SHOW === '1'){
                             this.show.gys = true
+                            this.need.gys = val.IS_NEED
                         }
                         if(val.NAME === 'in_date' && val.IS_SHOW === '1'){
                             this.show.in_date = true
@@ -1145,42 +1155,44 @@ export default {
             if(this.$route.query.param){
                 param = JSON.parse(this.$route.query.param)
             }
-            if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
-                if(this.form.in_date == ''){
-                    this.$message.error('进货日期不能为空');
-                    return
-                }
-            }
-            // if(this.form.value == ''){
-            //     this.$message.error('商户信息不能为空');
-            //     return
-            // }
-            if(this.form.gys == ''){
-                this.$message.error('供应商不能为空');
-                return
-            }
             // if(this.form.ghdw == ''){
             //     this.$message.error('生产单位不能为空');
             //     return
             // }
             // console.log(this.form2)
             let addrArr = [], originArr = [];
-                this.addrOptions.forEach(ele => {
-                    if(ele.szm == this.form.origin_name[0]){
-                        originArr.push(ele.caption)
-                        ele.list.forEach(ele => {
-                            if(ele.szm == this.form.origin_name[1]){
-                                originArr.push(ele.caption)
-                                ele.list.forEach(ele => {
-                                    if(ele.szm == this.form.origin_name[2]){
-                                        originArr.push(ele.caption)                              
-                                    }
-                                })
-                            }
-                        })
-                    }
-                })
+            this.addrOptions.forEach(ele => {
+                if(ele.szm == this.form.origin_name[0]){
+                    originArr.push(ele.caption)
+                    ele.list.forEach(ele => {
+                        if(ele.szm == this.form.origin_name[1]){
+                            originArr.push(ele.caption)
+                            ele.list.forEach(ele => {
+                                if(ele.szm == this.form.origin_name[2]){
+                                    originArr.push(ele.caption)                              
+                                }
+                            })
+                        }
+                    })
+                }
+            })
             if(this.saveBtn == '保存'){
+                if(localStorage.getItem('roleId') == "79" || localStorage.getItem('roleId') == "77"){
+                    if(this.form.in_date == ''){
+                        this.$message.error('进货日期不能为空');
+                        return
+                    }
+                }
+                // if(this.form.value == ''){
+                //     this.$message.error('商户信息不能为空');
+                //     return
+                // }
+                if(this.need.gys == 1){
+                    if(this.form.gys == ''){
+                        this.$message.error('供应商不能为空');
+                        return
+                    }
+                }
                 let in_date = '',
                     noteMsg = '',
                     gys = '',
@@ -1223,6 +1235,8 @@ export default {
                 if(this.tableData.length > 0){
                     goodObj += '['
                     this.tableData.forEach(ele => {
+                        // 0 商品  1 规格  2 价格  3 生产日期  4  数量 5 保质期  6 规格是头，传  头数量*ount（75），其他传数量
+
                         // this.tableData2.forEach(val => {
                         //     if(ele[0] == val.GOODS_NAME){
                             if(ele[0] == ''){
@@ -1240,8 +1254,14 @@ export default {
                                 state = true
                                 return
                             }
-                            goodObj +=  '{"0":"' + ele[0] + '","1":"' + ele[1] + '","2":"' + (ele[2] ? ele[2] : 0) + '","3":"' + ele[3] 
-                                + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            let unitStr = ele[1].substring(ele[1].length-1)
+                            if(unitStr == '头'){
+                                goodObj +=  '{"0":"' + ele[0] + '","1":"' + unitStr + '","2":"' + (ele[2] ? ele[2] : 0) + '","3":"' + ele[3] 
+                                + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","6":"' + (ele[4]*(parseFloat(ele[1]) ? parseFloat(ele[1]) : 1)) + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            }else{
+                                goodObj +=  '{"0":"' + ele[0] + '","1":"' + ele[1] + '","2":"' + (ele[2] ? ele[2] : 0) + '","3":"' + ele[3] 
+                                    + '","4":"'+ ele[4] + '","5":"'+ ele[5] + '","6":"' + ele[4] + '","shopId":"'+ (ele.shopIds ? ele.shopIds : ele.goods_id) + '"},'
+                            }
                             
                             // }
                         // })
@@ -1442,10 +1462,14 @@ export default {
                         arr = [];
                     for(var i in detailsArr){
                         detailsArr[i][0] = detailsArr[i].goods_name
-                        detailsArr[i][1] = detailsArr[i].goods_unit
+                        if(detailsArr[i].count && detailsArr[i].specifications){
+                            detailsArr[i][1] = detailsArr[i].count + detailsArr[i].specifications + '/' + detailsArr[i].goods_unit
+                        }else{
+                            detailsArr[i][1] = detailsArr[i].goods_unit
+                        }
                         detailsArr[i][2] = detailsArr[i].price
                         detailsArr[i][3] = detailsArr[i].scrq
-                        detailsArr[i][4] = detailsArr[i].number
+                        detailsArr[i][4] = detailsArr[i].real_number
                         detailsArr[i][5] = detailsArr[i].bzq
                         detailsArr[i].shopId = detailsArr[i].shop_booth_id
                     }

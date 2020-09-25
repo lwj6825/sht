@@ -83,7 +83,7 @@
             <div class="section">
               <span class="item-name">营业执照：</span>
               <span class="item-msg">
-                <div class="box-fileimg" v-if="item.img_url">
+                <div class="box-fileimg" v-if="item.img_url" @click="bigImgFun(item.img_url)">
                   <figure class="image">
                     <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url">
                   </figure>
@@ -94,7 +94,7 @@
             <div class="section">
               <span class="item-name">个人照：</span>
               <span class="item-msg">
-                <div class="box-fileimg" v-if="item.logo">
+                <div class="box-fileimg" v-if="item.logo" @click="bigImgFun(item.logo)">
                   <figure class="image">
                     <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.logo">
                   </figure> 
@@ -144,14 +144,14 @@
             <el-input v-model="editForm.addrInfo" placeholder="请输入详细地址"></el-input>
           </el-form-item>
           <el-form-item label="摊位号：">
-            <el-input v-model="editForm.stallNo" ></el-input>
+            <el-input v-model="editForm.stallNo"></el-input>
           </el-form-item>
           <el-form-item label="工行支付账户：">
-            <el-input v-model="editForm.shop_mer_id" ></el-input>
+            <el-input v-model="editForm.shop_mer_id"></el-input>
           </el-form-item>
           <el-form-item label="营业执照：">
             <div class="box-fileimg">
-              <figure class="image" v-if="imgUrl">
+              <figure class="image" v-if="imgUrl" @click="bigImgFun(imgUrl)">
                 <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + imgUrl">
               </figure>
               <span class="submit">
@@ -164,7 +164,7 @@
           </el-form-item>
           <el-form-item label="个人照：">
             <div class="box-fileimg">
-              <figure class="image" v-if="logoUrl">
+              <figure class="image" v-if="logoUrl" @click="bigImgFun(logoUrl)">
                 <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + logoUrl">
               </figure>
               <span class="submit">
@@ -183,7 +183,7 @@
       <!-- 新增商户 -->
       <div class="form-content" v-show="selectAddShop">
         <el-form :model="form" class="form" label-width="120px">
-          <el-form-item label="营业执照号："  prop="licenceNo">
+          <el-form-item label="营业执照号：" prop="licenceNo">
             <el-input v-model="form.licenceNo" clearable></el-input>
           </el-form-item>
           <el-form-item label="身份证号：" prop="regId">
@@ -193,7 +193,7 @@
             <el-input v-model="form.nodeName" clearable></el-input>
           </el-form-item>
           <el-tooltip class="item" effect="dark" content="营业执照上的名称" placement="top-start">
-            <el-form-item label="企业名称：" prop="corporate_name" >
+            <el-form-item label="企业名称：" prop="corporate_name">
               <el-input v-model="form.corporate_name" clearable style="width: 340px"></el-input>
             </el-form-item>
           </el-tooltip>
@@ -234,6 +234,14 @@
             <el-button type="primary" @click="sureNumFun">确认修改</el-button>
           </el-form-item>
         </el-form>
+      </div>
+    </div>
+    <div class="big-img" v-show="isBigImg" ref="boxsize">
+      <p class="iconfont icon-close close" @click="closeFun2"></p>
+      <div class="imgBox">
+        <figure class="images">
+          <img :style="sizeObj" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + img_url" v-if="img_url">
+        </figure>
       </div>
     </div>
   </div>
@@ -317,6 +325,8 @@ export default {
       file: '',
       node_id: '',
       inforMsg: {},
+      isBigImg: '',
+      img_url: '',
     }
   },
   mounted(){    
@@ -332,6 +342,23 @@ export default {
     this.userId = localStorage.getItem('userId')
   },
   methods:{
+    bigImgFun(item){
+      this.isBigImg = true
+      this.$nextTick(()=>{            
+        this.imgHeight = this.$refs.boxsize.offsetHeight - 60
+        let sizeObj = {
+          'max-height': this.$refs.boxsize.offsetHeight - 60 + 'px',
+          'max-width': this.$refs.boxsize.offsetWidth - 60 + 'px',
+          'margin-bottom': 10 + 'px'
+        }
+        this.sizeObj = sizeObj
+      })
+      this.img_url = item
+    },
+    closeFun2(){
+      this.img_url = ''
+      this.isBigImg = false
+    },
     selectFun(ele){
       this.districtArr.forEach(val => {
         if(ele == val.bootList[0].shop_booth_id){
@@ -344,7 +371,7 @@ export default {
       let obj = {
         page: 1,
         cols: 1000,
-        total:"",
+        total: "",
         userId: this.userId,
         contacts: '',
         nodeName: '',
@@ -360,8 +387,8 @@ export default {
             }
           })
         })
-        .catch(() => {
-          this.$message.error("出错啦!");
+        .catch(res => {
+          console.log(res)
         })
     },
     sureNumFun(){
@@ -431,7 +458,6 @@ export default {
         })
         .catch(res => {
           console.log(res)
-          this.$message.error("出错了");
         })
     },
     // 个人照
@@ -466,7 +492,6 @@ export default {
         })
         .catch(res => {
           console.log(res)
-          this.$message.error("出错了");
         })
     },
     imgFun(path,quality,callback){
@@ -872,6 +897,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+  @import '../../assets/css/common.css';
   @color:#409EFF;
   .content{
     padding: 10px;
@@ -880,6 +906,46 @@ export default {
     box-sizing: border-box;
     .password{
       width: 40% !important;
+    }
+    .big-img{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.6);
+      .close{
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 999;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      .imgBox{
+        margin: 50px 20px;
+        padding: 10px 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        .images{
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          img{
+            max-width: 100%;
+            max-height: 100%;
+          }
+        }
+      }
     }
     .passwrd{
       position: fixed;

@@ -221,7 +221,7 @@ export default {
         this.isRegion = localStorage.getItem('isRegion')
         this.scShopId = localStorage.getItem('scShopId');
         this.node_id = localStorage.getItem('loginId')
-        
+
         this.getTime()
         if(this.isRegion == 'false'){
             this.isShow = false
@@ -342,12 +342,18 @@ export default {
                 user: '',
                 source: '',
                 upload: '',
+                dataTime: [],
             }
             this.buyerName = ''
             // this.getTime()
             this.startTime = ''
             this.endTime = ''
             this.page = 1
+            this.getTime()
+            let arr = []
+            arr.push(this.startTime)
+            arr.push(this.endTime)
+            this.form.dataTime = arr
             this.getEntryTzFun()
         },
         searchFun(){
@@ -416,7 +422,7 @@ export default {
                     end_time: this.endTime,
                     page: this.page,
                     cols: this.cols,
-                    buyer_booth_name: this.buyerName,
+                    buyer_booth_name: '',
                     is_oc_upload: this.form.upload
                 }
                 GetEntryTz(obj)
@@ -435,7 +441,7 @@ export default {
                     end_time: this.endTime,
                     page: this.page,
                     cols: this.cols,
-                    buyer_booth_name: this.buyerName,
+                    buyer_booth_name: '',
                     is_oc_upload: this.form.upload
                 }
                 GetEntryTz(obj)

@@ -3,41 +3,39 @@
         <div class="searchs" ref="searchs">
             <div class="search">
                 <!--展开-->
-            
-                    <el-form ref="form" :inline="true" :model="form" label-width="80px">
-                        <div>
-                            <el-form-item label="节点信息">
-                                <el-input class="placeholder" :disabled="true" v-model="form.msg" clearable placeholder="ID、节点编码、节点名称"></el-input>
-                            </el-form-item>
-                            <el-form-item label="日志类型">
-                                <el-select v-model="form.types" filterable clearable placeholder="请选择">
-                                    <el-option v-for="(item,index) in typesArr" :key="index" :label="item.LOG_TYPE"
-                                    :value="item.LOG_TYPE">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                            <!-- <el-form-item label="节点类型">
-                                <el-select v-model="form.node" filterable clearable placeholder="请选择">
-                                    <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_DETAIL_TYPE"
-                                    :value="item.NODE_DETAIL_TYPE">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item> -->
-                            <el-form-item label="数据说明">
-                                <el-input class="placeholder" v-model="form.sjsm" clearable placeholder=""></el-input>
-                            </el-form-item>
-                        </div>
-                        <div>
-                            <el-form-item label="备注信息">
-                                <el-input class="placeholder" v-model="form.byxx" clearable placeholder=""></el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
-                                <!-- <el-button @click="clearFun">重置</el-button>-->
-                                <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                            </el-form-item>
-                        </div>
-                    
+                <el-form ref="form" :inline="true" :model="form" label-width="80px">
+                    <div>
+                        <el-form-item label="节点信息">
+                            <el-input class="placeholder" :disabled="true" v-model="form.msg" clearable placeholder="ID、节点编码、节点名称"></el-input>
+                        </el-form-item>
+                        <el-form-item label="日志类型">
+                            <el-select v-model="form.types" filterable clearable placeholder="请选择">
+                                <el-option v-for="(item,index) in typesArr" :key="index" :label="item.LOG_TYPE"
+                                :value="item.LOG_TYPE">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <!-- <el-form-item label="节点类型">
+                            <el-select v-model="form.node" filterable clearable placeholder="请选择">
+                                <el-option v-for="(item,index) in nodeArr" :key="index" :label="item.NODE_DETAIL_TYPE"
+                                :value="item.NODE_DETAIL_TYPE">
+                                </el-option>
+                            </el-select>
+                        </el-form-item> -->
+                        <el-form-item label="数据说明">
+                            <el-input class="placeholder" v-model="form.sjsm" clearable placeholder=""></el-input>
+                        </el-form-item>
+                    </div>
+                    <div>
+                        <el-form-item label="备注信息">
+                            <el-input class="placeholder" v-model="form.byxx" clearable placeholder=""></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" plain @click="searchFun" style="margin-left: 10px;">查询</el-button>
+                            <!-- <el-button @click="clearFun">重置</el-button>-->
+                            <span class="clear-content" @click="clearFun">清空筛选条件</span>
+                        </el-form-item>
+                    </div>
                 </el-form>
                 <!--收起-->
             </div>
@@ -73,21 +71,20 @@
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
                     <el-table-column type="selection" width="50"></el-table-column>
-                    <el-table-column prop="id" label="ID"> </el-table-column>
-                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="log_type" label="日志类型"> </el-table-column>
-                    <el-table-column prop="error_code" label="缺对照编码"> </el-table-column>
-                    <el-table-column prop="error_name" label="取对照名称"> </el-table-column>
-                    <el-table-column prop="error_data" label="备用信息" > </el-table-column>
-                    <el-table-column prop="message" label="数据说明" > </el-table-column>
-                    <el-table-column prop="record_date" label="最后时间" > </el-table-column>
-                    <!--<el-table-column prop="SCBJ" label="删除标记" > </el-table-column>-->
+                    <el-table-column prop="id" label="ID"></el-table-column>
+                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="log_type" label="日志类型"></el-table-column>
+                    <el-table-column prop="error_code" label="缺对照编码"></el-table-column>
+                    <el-table-column prop="error_name" label="取对照名称"></el-table-column>
+                    <el-table-column prop="error_data" label="备用信息"></el-table-column>
+                    <el-table-column prop="message" label="数据说明"></el-table-column>
+                    <el-table-column prop="record_date" label="最后时间"></el-table-column>
+                    <!--<el-table-column prop="SCBJ" label="删除标记"></el-table-column>-->
                     <el-table-column label="操作" width="160">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="signFun(scope.row)">标记不需要做对照的数据</el-button>
                             <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
-                            
                         </template>
                     </el-table-column>
                 </el-table>
@@ -110,9 +107,7 @@
                 </div>
             </div>
         </div>
-        
     </div>
-    
 </template>
 
 <script>
@@ -187,7 +182,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$route.params)
         this.userId = localStorage.getItem('userId')
         this.form.node_name = this.$route.params.node_name
         // if(this.$route.params.node_name){
@@ -200,7 +194,6 @@ export default {
         this.getTypesFun()
     },
     methods: {
-        
         // 当前条件结果全部删除，最少有一个条件   全部删除
         deleteAllDataFun(ele){
             if(this.form.types == '' && this.form.node == '' && this.form.sjsm == ''){
@@ -244,7 +237,6 @@ export default {
         getNodeFun(){
             QueryNodeDetailType('')
                 .then(res => {
-                    // console.log(res)
                     this.nodeArr = res.data.node_detail_type_list
                 })
                 .catch(res => {
@@ -411,11 +403,9 @@ export default {
                 .catch(res => {
                     console.log(res);
                 })
-            
         },
         changeFun(item){
             this.ids = []
-            console.log(item)
             item.forEach(ele => {
                 this.ids.push(ele.id)
             })
@@ -454,7 +444,6 @@ export default {
             }
             QueryErrorData(params)
                 .then(res => {
-                    console.log(res)
                     this.tableData = res.data.error_data_list
                     this.num = res.data.error_bean.total
                     loading.close();

@@ -97,5 +97,25 @@ export default [
             node:'traceabiltyInfo',
             url:'reviewJournal',
         }
+    },
+    { 
+        path: 'traceabiltyInfo/retroactiveNode',
+        component: resolve => require(['@/components/traceabiltyInfo/retroactiveNode'],resolve),
+        name:'RetroactiveNode',
+        meta:{
+            id:'587',
+            node:'traceabiltyInfo',
+            url:'retroactiveNode',
+        }
+    },
+    { 
+        path: 'traceabiltyInfo/editRetroactiveNode',
+        component: resolve => require(['@/components/traceabiltyInfo/editRetroactiveNode'],resolve),
+        name:'EditRetroactiveNode',
+        meta:{
+            id:'588',
+            node:'traceabiltyInfo',
+            url:'editRetroactiveNode',
+        }
     }
 ]

@@ -57,6 +57,7 @@
             </div>
             <div class="table-box">
                 <el-table :data="tableData" :header-cell-style="rowClass" >
+                    <el-table-column type="index" label="序号" width="50"></el-table-column>
                     <el-table-column prop="node_name" label="企业名称"></el-table-column>
                     <el-table-column prop="traceability_code" label="物品编码"></el-table-column>
                     <el-table-column prop="traceability_name" label="物品名称"></el-table-column>

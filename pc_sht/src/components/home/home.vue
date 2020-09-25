@@ -818,6 +818,7 @@ export default {
         backLogin(){//退出
             localStorage.clear();
             sessionStorage.clear();
+            console.log(this.remember)
             if(this.remember == 'true'){
                 localStorage.setItem('account',this.account)
                 localStorage.setItem('password',this.password);
@@ -918,7 +919,7 @@ export default {
         .level-one-menu1{
             &:hover{
                 // width: 100px;
-                width:135px;
+                width:150px;
             }
         }
         .icon-traceabiltyInfo{
@@ -1053,6 +1054,7 @@ export default {
         }
         .icon-farmworkreview{
             background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
         .icon-quotation{
             background: url('../../assets/images/retail.svg') no-repeat center center;
@@ -1064,9 +1066,30 @@ export default {
         }
         .icon-compare{
             background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
         .icon-platform{
             background: url('../../assets/images/retail.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-establishment{
+            background: url('../../assets/images/enterprise.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-survey{
+            background: url('../../assets/images/supervise.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-report{
+            background: url('../../assets/images/supervise.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-approach{
+            background: url('../../assets/images/statistical.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-standingBookCq{
+            background: url('../../assets/images/standingBook.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{

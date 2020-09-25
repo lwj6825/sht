@@ -1,38 +1,25 @@
 <template>
     <div class="content">
-        ftqMonitoring
- 丰台区餐饮监控 
+        <div class="iframe">
+            <iframe src="https://shop.zhdtech.com/priceIndex/weekly.html" 
+            scrolling="auto" width="100%" height="100%" frameborder="0" id="contentIframe"></iframe>
+        </div>
     </div>
 </template>
 
 <script>
-import {GetAllDash} from '../../js/analyze/analyze.js'
 export default {
     name:"getsTo",
     data() {
         return {
-            urlId: '',
-            functionid: '231'
+            
         }
     },
     mounted() {
-        // this.getAllDashFun()
+        
     },
     methods: {
-        getAllDashFun(){
-            let obj = {
-            	status: "1",
-	            functionid: this.functionid
-            }
-            GetAllDash(obj)
-                .then(res => {
-                    console.log(res)
-                    this.urlId = res.data.dataList[0].dashid
-                })
-            .catch(res => {
-                console.log(res)
-            })
-        }
+        
     },
 }
 </script>

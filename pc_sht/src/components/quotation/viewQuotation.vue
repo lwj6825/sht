@@ -137,7 +137,7 @@
                                     <div class="name">
                                         <div v-if="!isAgain">
                                             <p>{{scope.row.goods_name}}</p>
-                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + scope.row.yesterday_price}}</p>
+                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + (scope.row.goods_unit=='斤'?scope.row.yesterday_price/2:scope.row.yesterday_price)}}</p>
                                             <p class="name-p" v-if="scope.row.history_price && !scope.row.yesterday_price">{{'历史价格' + '￥' + scope.row.history_price}}</p>
                                         </div>
                                         <div v-else>
@@ -152,7 +152,8 @@
                                         <div v-if="!isAgain">
                                             <p><el-input @change="inputFun(scope.row)" size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input></p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
-                                            <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else></p>
                                         </div>
                                         <div v-else>
                                             <p><el-input @change="inputFun(scope.row)" size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input></p>
@@ -160,7 +161,12 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="goods_unit" label="规格" width="60"></el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100">
+                                <template slot-scope="scope">
+                                    <p v-if="scope.row.specifications && scope.row.count">{{Number(scope.row.count).toFixed(0) + scope.row.specifications + '/' + scope.row.goods_unit}}</p>
+                                    <p v-else>{{scope.row.goods_unit}}</p>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -224,7 +230,7 @@
                                     <div class="name">
                                         <div>
                                             <p>{{scope.row.goods_name}}</p>
-                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + scope.row.yesterday_price}}</p>
+                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + (scope.row.goods_unit=='斤'?scope.row.yesterday_price/2:scope.row.yesterday_price)}}</p>
                                             <p class="name-p" v-if="scope.row.history_price && !scope.row.yesterday_price">{{'历史价格' + '￥' + scope.row.history_price}}</p>
                                         </div>
                                     </div>
@@ -238,12 +244,18 @@
                                             <p class="price" v-else>{{scope.row.price}}</p>
                                             <!-- <p><el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价" @change="inputFun(scope.row)"></el-input></p> -->
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
-                                            <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else></p>
                                         </div>
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="goods_unit" label="规格" width="60"></el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100">
+                                <template slot-scope="scope">
+                                    <p v-if="scope.row.specifications && scope.row.count">{{Number(scope.row.count).toFixed(0) + scope.row.specifications + '/' + scope.row.goods_unit}}</p>
+                                    <p v-else>{{scope.row.goods_unit}}</p>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -411,6 +423,9 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
                             price: val.price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
@@ -436,6 +451,9 @@ export default {
                                 goods_id: val.goods_id,
                                 goods_code: val.goods_code,
                                 goods_name: val.goods_name,
+                                goods_unit: val.goods_unit,
+                                count: val.count,
+                                specifications: val.specifications,
                                 price: val.price,
                                 yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                                 history_price: val.history_price ? val.history_price : '',
@@ -473,6 +491,9 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
                             price: val.price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
@@ -497,6 +518,9 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
                             price: val.price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
@@ -614,6 +638,7 @@ export default {
                 region: this.region,
                 in_date: this.in_date,
                 goods_name: this.name,
+                unit_type: 1,
             }
             getQueryGoodsForBiz(obj)
                 .then(res => {
@@ -668,6 +693,7 @@ export default {
                 region: this.region,
                 in_date: this.form.dataTime,
                 goods_name: this.name,
+                unit_type: 1,
             }
             getQueryGoodsForBiz(obj)
                 .then(res => {
@@ -675,7 +701,41 @@ export default {
                     res.data.list.forEach(val => {
                         this.tableData2.forEach(val2 => {
                             if(val.goods_code == val2.goods_code){
-                                val2.price = val.price
+                                // val2.price = val.price
+                                val.area_id = val2.area_id
+                                val.area_name = val2.area_name
+                                val.biz_id = val2.biz_id
+                                val.biz_name = val2.biz_name
+                                val.cols = val2.cols
+                                val.count = val2.count
+                                val.end_date = val2.end_date
+                                val.goods_code = val2.goods_code
+                                val.goods_id = val2.goods_id
+                                val.goods_name = val2.goods_name
+                                val.goods_unit = val2.goods_unit
+                                val.history_price = val2.history_price
+                                val.history_rate = val2.history_rate
+                                val.id = val2.id
+                                val.in_date = val2.in_date
+                                val.node_id = val2.node_id
+                                val.node_name = val2.node_name
+                                val.num = val2.num
+                                val.page = val2.page
+                                val.rate = val2.rate
+                                val.real_weight = val2.real_weight
+                                val.region = val2.region
+                                val.region_name = val2.region_name
+                                val.shop_booth_id = val2.shop_booth_id
+                                val.specifications = val2.specifications
+                                val.start_date = val2.start_date
+                                val.state = val2.state
+                                val.total = val2.total
+                                val.uid = val2.uid
+                                val.unit_type = val2.unit_type
+                                val.user_id = val2.user_id
+                                val.weight = val2.weight
+                                val.yesterday = val2.yesterday
+                                val.yesterday_price = val2.yesterday_price
                             }
                         })
                     })
@@ -781,6 +841,9 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
                             price: price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
@@ -811,6 +874,9 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
                             price: price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
@@ -936,6 +1002,7 @@ export default {
                     node_id: this.form.enterprise,
                     region: this.region,
                     in_date: this.in_date,
+                    unit_type: 1,
                 }
                 getAutoIdentity(obj)
                     .then(res => {
@@ -1273,8 +1340,10 @@ export default {
             div{
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 font-size: 14px;
                 .num-p{
+                    width: 100px;
                     color: red;
                     font-size: 12px;
                     text-align: right;

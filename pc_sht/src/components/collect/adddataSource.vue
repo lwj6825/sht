@@ -6,8 +6,8 @@
             </el-form-item>
             <el-form-item label="数据源类型：" prop="dataSou">
                 <el-select v-model="form.dataSou" placeholder="请选择"  @change="selectGet"  >
-                            <el-option v-for="(item,index) in options" :key="index" :label="item.text" :value="item.id">
-                            </el-option>
+                    <el-option v-for="(item,index) in options" :key="index" :label="item.text" :value="item.id">
+                    </el-option>
                 </el-select>
             </el-form-item> 
             <el-form-item label="数据库名称:" prop="dataBank">
@@ -15,8 +15,8 @@
             </el-form-item> 
             <el-form-item label="节点类型" prop="nodeType">
                 <el-select v-model="form.nodeType" placeholder="请选择"  @change="selectGet"  >
-                            <el-option v-for="(item,index) in options1" :key="index" :label="item.text" :value="item.id">
-                            </el-option>
+                    <el-option v-for="(item,index) in options1" :key="index" :label="item.text" :value="item.id">
+                    </el-option>
                 </el-select>
             </el-form-item> 
             <el-form-item label="IP地址:" prop="IP">
@@ -64,33 +64,33 @@ export default {
             options:[],
             options1:[],
             rules:{
-	            	dataName :[{required: true, message: '请输入数据源名称', trigger: 'blur'}],
-                    dataSou :[{required: true, message: '请选择数据源类型', trigger: 'blur'}],
-                    dataBank :[{required: true, message: '请输入数据库名称', trigger: 'blur'}],
-                    nodeType :[{required: true, message: '请输入节点类型', trigger: 'blur'}],
-                    IP :[{required: true, message: '请输入IP地址', trigger: 'blur'}],
-                    port :[{required: true, message: '请输入端口号', trigger: 'blur'}],
-                    userName :[{required: true, message: '请输入用户名', trigger: 'blur'}],
-                    passWord :[{required: true, message: '请输入密码', trigger: 'blur'}]
-	             }
+                dataName :[{required: true, message: '请输入数据源名称', trigger: 'blur'}],
+                dataSou :[{required: true, message: '请选择数据源类型', trigger: 'blur'}],
+                dataBank :[{required: true, message: '请输入数据库名称', trigger: 'blur'}],
+                nodeType :[{required: true, message: '请输入节点类型', trigger: 'blur'}],
+                IP :[{required: true, message: '请输入IP地址', trigger: 'blur'}],
+                port :[{required: true, message: '请输入端口号', trigger: 'blur'}],
+                userName :[{required: true, message: '请输入用户名', trigger: 'blur'}],
+                passWord :[{required: true, message: '请输入密码', trigger: 'blur'}]
+            }
         }
     },
     mounted(){
         if(JSON.stringify(this.$route.params) != "{}"){
-                this.isEdit = true;
-                this.form.id = this.$route.params.id;
-                this.form.dataName = this.$route.params.source_name;
-                this.form.dataSou = this.$route.params.driver_class_name;
-                this.form.dataBank = this.$route.params.data_name;            
-                this.form.nodeType = this.$route.params.node_type;
-                this.form.IP = this.$route.params.ip;
-                this.form.port = this.$route.params.port;
-                this.form.userName = this.$route.params.user_name;
-                this.form.passWord = this.$route.params.password;
-                this.form.initial_size = this.$route.params.initial_size;
-                this.form.max_active = this.$route.params.max_active;
-                this.form.max_idle = this.$route.params.max_idle;
-                this.form.min_idle = this.$route.params.min_idle;
+            this.isEdit = true;
+            this.form.id = this.$route.params.id;
+            this.form.dataName = this.$route.params.source_name;
+            this.form.dataSou = this.$route.params.driver_class_name;
+            this.form.dataBank = this.$route.params.data_name;            
+            this.form.nodeType = this.$route.params.node_type;
+            this.form.IP = this.$route.params.ip;
+            this.form.port = this.$route.params.port;
+            this.form.userName = this.$route.params.user_name;
+            this.form.passWord = this.$route.params.password;
+            this.form.initial_size = this.$route.params.initial_size;
+            this.form.max_active = this.$route.params.max_active;
+            this.form.max_idle = this.$route.params.max_idle;
+            this.form.min_idle = this.$route.params.min_idle;
         }
         this.getQueryDataSourceType();
         this.getQueryNodeTypeInfo()
@@ -139,7 +139,6 @@ export default {
                         };
                         UpdateDataSource(data)
                             .then( res =>{
-                                console.log(data)
                                 this.$message({
                                     message: '恭喜，修改成功',
                                     type: 'success'
@@ -176,22 +175,22 @@ export default {
             })
         },  
         getQueryDataSourceType(){  //数据源类型查询
-             QueryDataSourceType()
-                  .then(res=>{
-                      this.options = res.data.dataList;
-                  })
-                  .catch(res=>{
-                        console.log(res)
-                  })
+            QueryDataSourceType()
+                .then(res=>{
+                    this.options = res.data.dataList;
+                })
+                .catch(res=>{
+                    console.log(res)
+                })
         },
         getQueryNodeTypeInfo(){  //节点类型查询
-             QueryNodeTypeInfo()
-                  .then(res=>{
-                      this.options1 = res.data.dataList;
-                  })
-                  .catch(res=>{
-                        console.log(res)
-                  })
+            QueryNodeTypeInfo()
+                .then(res=>{
+                    this.options1 = res.data.dataList;
+                })
+                .catch(res=>{
+                    console.log(res)
+                })
         },
     }
 }

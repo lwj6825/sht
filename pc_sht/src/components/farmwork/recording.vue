@@ -238,7 +238,7 @@
   } from "../../js/farmthings/farmworkget.js";
   import { nsGoodsQueryPOST, } from "../../js/farmthings/farmworkgoods.js";
   import {PlotBean} from './PlotBean';
-  import {baseUrl,baseUrl2} from '../../js/address/url.js'
+  import {baseUrl} from '../../js/address/url.js'
   import axios from 'axios';
   // 时间戳转日期格式
   function timestampToTime(timestamp) {

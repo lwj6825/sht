@@ -5,11 +5,8 @@
                 <!--展开-->
                 <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'block'} : {display: 'none'}">
                     <el-form-item label="上传时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
+                        <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
@@ -18,8 +15,7 @@
                     </el-form-item>
                     <el-form-item label="任务环节">
                         <el-select v-model="form.rwhj" filterable clearable placeholder="请选择" style="width:230px;">
-                            <el-option v-for="(item,index) in rwhjArr" :key="index" :label="item.text"
-                            :value="item.id">
+                            <el-option v-for="(item,index) in rwhjArr" :key="index" :label="item.text" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -28,15 +24,13 @@
                     </el-form-item>
                     <el-form-item label="状态" style="margin-left:70px">
                         <el-select v-model="form.state" filterable clearable placeholder="请选择" style="width:230px;">
-                            <el-option v-for="(item,index) in stateArr" :key="index" :label="item.text"
-                            :value="item.id">
+                            <el-option v-for="(item,index) in stateArr" :key="index" :label="item.text" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="文件路径">
                         <el-select v-model="form.way" filterable clearable placeholder="请选择" style="width:230px;">
-                            <el-option v-for="(item,index) in wayArr" :key="index" :label="item.FOLDER"
-                            :value="item.FOLDER">
+                            <el-option v-for="(item,index) in wayArr" :key="index" :label="item.FOLDER" :value="item.FOLDER">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -48,11 +42,8 @@
                 <!--收起-->
                 <el-form ref="form" :inline="true" :model="form" label-width="80px" :style="show ? {display: 'none'} : {display: 'block'}" v-if="isShow">
                     <el-form-item label="上传时间" style="width: 380px;" >
-                        <el-date-picker clearable style="width: 300px"
-                            v-model="form.dataTime" value-format="yyyy-MM-dd"
-                            type="daterange" @change="timeChange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
+                        <el-date-picker clearable style="width: 300px" v-model="form.dataTime" value-format="yyyy-MM-dd"
+                            type="daterange" @change="timeChange" range-separator="至" start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
@@ -73,15 +64,15 @@
             </div>
             <div class="tables" v-loading.body="fullscreenLoading">
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="parse_type" label="任务环节"> </el-table-column>
-                    <el-table-column prop="file_name" label="文件名称"> </el-table-column>
-                    <el-table-column prop="create_date" label="上传时间"> </el-table-column>
-                    <el-table-column prop="update_time" label="更新时间"> </el-table-column>
-                    <!--<el-table-column prop="state" label="状态"> </el-table-column>-->
-                    <el-table-column prop="folder" label="文件路径" > </el-table-column>
-                    <el-table-column prop="state" label="文件状态" > </el-table-column>
+                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="parse_type" label="任务环节"></el-table-column>
+                    <el-table-column prop="file_name" label="文件名称"></el-table-column>
+                    <el-table-column prop="create_date" label="上传时间"></el-table-column>
+                    <el-table-column prop="update_time" label="更新时间"></el-table-column>
+                    <!--<el-table-column prop="state" label="状态"></el-table-column>-->
+                    <el-table-column prop="folder" label="文件路径"></el-table-column>
+                    <el-table-column prop="state" label="文件状态"></el-table-column>
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
@@ -123,12 +114,12 @@ function getNowFormatDate() {//获取当前时间
     var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
     var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
     var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
-            + " "  + date.getHours()  + seperator2  + date.getMinutes()
-            + seperator2 + date.getSeconds();
+        + " "  + date.getHours()  + seperator2  + date.getMinutes()
+        + seperator2 + date.getSeconds();
     return currentdate
 }
 String.prototype.trim=function(){
-  return this.replace(/(^\s*)|(\s*$)/g,'');
+    return this.replace(/(^\s*)|(\s*$)/g,'');
 }
 import {QueryFtpMonLog,GetParseType,GetFileState,QueryFilePath} from '../../js/traceEquipment/traceEquipment.js'
 export default {
@@ -182,7 +173,6 @@ export default {
                 .catch(res => {
                     console.log(res);
                 })
-
         },
         getGetFileState(){
             GetFileState('')
@@ -192,18 +182,15 @@ export default {
                 .catch(res => {
                     console.log(res);
                 })
-
         },
         getQueryFilePath(){
             QueryFilePath('')
                 .then(res => {
-                    // console.log(res)
                     this.wayArr = res.data.file_path_list
                 })
                 .catch(res => {
                     console.log(res);
                 })
-
         },
         getDataFun(){
             // const loading = this.$loading({
@@ -225,7 +212,6 @@ export default {
             }
             QueryFtpMonLog(params)
                 .then(res => {
-                    // console.log(res,"文件状态")
                     this.tableData = res.data.mon_log_list
                     this.num = res.data.mon_log.total
                     this.fullscreenLoading = false;

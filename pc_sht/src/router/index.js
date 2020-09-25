@@ -45,6 +45,11 @@ import traceabiltyInfo from './traceabiltyInfo'
 import dataPort from './dataPort'
 import compare from './compare'
 import platform from './platform.js'
+import establishment from './establishment'
+import survey from './survey'
+import report from './report'
+import approach from './approach'
+import standingBookCq from './standingBookCq'
 Vue.use(Router)
 
 export default new Router({
@@ -97,7 +102,12 @@ export default new Router({
         ...traceabiltyInfo,
         ...dataPort,
         ...compare,
-        ...platform
+        ...platform,
+        ...establishment,
+        ...survey,
+        ...report,
+        ...approach,
+        ...standingBookCq,
       ]
     },
   ]

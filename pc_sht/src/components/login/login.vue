@@ -43,6 +43,14 @@
     </div>
 </template>
 <script>
+Storage.prototype.setExpire=(key, value, expire) =>{
+    let obj={
+        data:value,
+        time: Date.now(),
+        expire: expire
+    };
+    localStorage.setItem(key,JSON.stringify(obj));
+}
 import {login,login2,GetShtUserInfo} from "../../js/login/ajax.js";
 // import PointLine from '../../assets/js/canvas.js';
 import {loginUrl} from '../../js/address/url.js'
@@ -99,8 +107,6 @@ export default {
                                 localStorage.setItem('roleId',roleId);
                                 localStorage.setItem('account',this.account);
                                 localStorage.setItem('password',this.password);
-                                sessionStorage.setItem('userName',this.account)
-                                this.setCookie('userName',this.account)
                             }
                             if(res.result){
                                 if(this.check){
@@ -192,8 +198,8 @@ export default {
                 return;
             }
             let data = {
-                username : this.account,
-                password : this.password,
+                username : this.account.replace(/\s*/g,""),
+                password : this.password.replace(/\s*/g,""),
             }
             login(data).then((res)=>{
                 console.info(res)
@@ -205,28 +211,34 @@ export default {
                         isRegion = res.data.role_list[0].region,
                         scShopId = res.data.booth_list[0].SHOP_BOOTH_ID,
                         roleId = res.data.role_list[0].ROLEID;
+                    localStorage.setExpire("token", roleId, 1000*60*60*24);
                     localStorage.setItem('loginName',name);
                     localStorage.setItem('loginId',node_id);
                     localStorage.setItem('isRegion',isRegion);
                     localStorage.setItem('scShopId',scShopId);
                     localStorage.setItem('roleId',roleId);
-                    localStorage.setItem('account',this.account);
-                    localStorage.setItem('password',this.password);
+                    localStorage.setItem('account',this.account.replace(/\s*/g,""));
+                    localStorage.setItem('password',this.password.replace(/\s*/g,""));
                     localStorage.setItem('userType',res.data.booth_list[0].usertype);
-                    sessionStorage.setItem('userName',this.account)
-                    this.setCookie('userName',this.account)
+                    // sessionStorage.setItem('userName',this.account)
+                    // this.setCookie('userName',this.account)
+                    if(roleId == 40){
+                        localStorage.setItem('booth_List',JSON.stringify(res.data.userInfo.booth_List));
+                        localStorage.setItem('parent_node_id', res.data.booth_list[0].PARENT_NODE_ID);
+                        localStorage.setItem('name', res.data.booth_list[0].name);
+                    }
                 }
                 if(res.result){
                     if(this.check){
                         localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
-                        localStorage.setItem('username',JSON.stringify(this.account));
+                        localStorage.setItem('username',JSON.stringify(this.account.replace(/\s*/g,"")));
                         localStorage.setItem('checked',JSON.stringify(true));
                         localStorage.setItem('userId',res.data.userId);
                         localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;
                     }else{
                         localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
-                        localStorage.setItem('username',JSON.stringify(this.account));
+                        localStorage.setItem('username',JSON.stringify(this.account.replace(/\s*/g,"")));
                         localStorage.setItem('userId',res.data.userId);
                         localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;

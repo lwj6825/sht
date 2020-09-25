@@ -220,22 +220,22 @@ export default {
             }
         },  
         getQueryDataSourceType(){  //数据源类型查询
-             QueryDataSourceType()
-                  .then(res=>{
-                      this.options = res.data.dataList;
-                  })
-                  .catch(res=>{
-                        console.log(res)
-                  })
+            QueryDataSourceType()
+                .then(res=>{
+                    this.options = res.data.dataList;
+                })
+                .catch(res=>{
+                    console.log(res)
+                })
         },
         getQueryNodeTypeInfo(){  //节点类型查询
-             QueryNodeTypeInfo()
-                  .then(res=>{
-                      this.options1 = res.data.dataList;
-                  })
-                  .catch(res=>{
-                        console.log(res)
-                  })
+            QueryNodeTypeInfo()
+                .then(res=>{
+                    this.options1 = res.data.dataList;
+                })
+                .catch(res=>{
+                    console.log(res)
+                })
         },
     }
 }

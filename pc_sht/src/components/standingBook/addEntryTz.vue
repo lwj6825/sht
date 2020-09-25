@@ -324,6 +324,9 @@ export default {
                 remark: false, //备注
                 print: false, // 打印
             },
+            need: {
+                gys: '',
+            },
             form2: {
                 tzUserdefineList: [],
             },
@@ -796,6 +799,7 @@ export default {
         },
         // 选择商户
         selectGet(val){
+            this.tableData2 = []
             this.options.forEach(ele => {
                 if(val == ele.bootList[0].shop_booth_id){
                     this.merchants = ele.bootList[0].booth_name
@@ -1041,6 +1045,7 @@ export default {
                     tzList.forEach(val => {
                         if(val.NAME === 'gys' && val.IS_SHOW === '1'){
                             this.show.gys = true
+                            this.need.gys = val.IS_NEED
                         }
                         if(val.NAME === 'in_date' && val.IS_SHOW === '1'){
                             this.show.in_date = true
@@ -1158,9 +1163,11 @@ export default {
             //     this.$message.error('商户信息不能为空');
             //     return
             // }
-            if(this.form.gys == ''){
-                this.$message.error('供应商不能为空');
-                return
+            if(this.need.gys == 1){
+                if(this.form.gys == ''){
+                    this.$message.error('供应商不能为空');
+                    return
+                }
             }
             // if(this.form.ghdw == ''){
             //     this.$message.error('生产单位不能为空');
@@ -1456,7 +1463,7 @@ export default {
                         detailsArr[i][1] = detailsArr[i].goods_unit
                         detailsArr[i][2] = detailsArr[i].price
                         detailsArr[i][3] = detailsArr[i].scrq
-                        detailsArr[i][4] = detailsArr[i].number
+                        detailsArr[i][4] = detailsArr[i].real_number
                         detailsArr[i][5] = detailsArr[i].bzq
                         detailsArr[i].shopId = detailsArr[i].shop_booth_id
                     }

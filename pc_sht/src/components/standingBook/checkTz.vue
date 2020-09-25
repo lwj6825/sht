@@ -55,8 +55,12 @@
           <div class="lz-three-item">
             <div class="lz-filter-name">检测商品</div>
             <el-select v-model="local_check_good" filterable clearable placeholder="请选择商品" size="small" value-key="ID" style="width: 225px">
-              <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME" :value="item" ></el-option>
+              <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME + '(' + item.GOODS_CODE + ')'" :value="item" ></el-option>
             </el-select>
+          </div>
+          <div class="lz-three-item">
+            <div class="lz-filter-name">商品编码</div>
+            <el-input v-model="good_code" clearable size="small"  style="width: 225px"></el-input>
           </div>
           <div class="lz-three-item">
             <el-button type="primary" class="search-bth white-bth" style="margin-left: 10px;" @click="checkListSearch">搜索</el-button>
@@ -191,6 +195,7 @@ function getLastYearYestdy(date) {
         form: {
           dataTime: ''
         },
+        good_code: '',
         local_stall_no: '',
         local_check_good: '',
         local_check_good_options: [],
@@ -324,6 +329,7 @@ function getLastYearYestdy(date) {
       //点击搜索
       checkListSearch(){
         this.timeChange()
+        this.page_local = 1
         this.getCheckListtable(this.page_local);
       },
       //清空筛选条件
@@ -335,10 +341,12 @@ function getLastYearYestdy(date) {
         this.local_booth_name = '';
         this.local_date_start_end = '';
         this.local_check_good = '';
+        this.good_code = '';
         let arr = []
         arr.push(this.startTime)
         arr.push(this.endTime)
         this.form.dataTime = arr
+        this.page_local = 1
         this.getCheckListtable(this.page_local);
       },
       // 获取商品列表
@@ -384,7 +392,7 @@ function getLastYearYestdy(date) {
           userId: this.userId,
           contacts: this.contacts,
           nodeName: this.nodeName,
-          node_id: this.node_id
+          node_id: this.node_id,
         }
         QueryArea(data)
           .then(res =>{
@@ -470,6 +478,7 @@ function getLastYearYestdy(date) {
           check_result:this.local_check_result,
           start_time: this.startTime,
           end_time: this.endTime,
+          check_goods_code: this.local_check_good ? this.local_check_good.GOODS_CODE : this.good_code,
         }
         getCheckList(obj)
           .then(res => {
