@@ -423,10 +423,8 @@ export default {
                 this.startTime = this.form.value1[0]
                 this.endTime = this.form.value1[1]
             }else{
-                // var currentTime = new Date()
-                // this.startTime = formatDate(currentTime)
-                // this.endTime = ''
-                this.getTime()
+                this.startTime = ''
+                this.endTime = ''
             }
         },
         searchFun(){

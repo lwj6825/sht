@@ -378,10 +378,12 @@ export default {
                 this.startTime = this.form.value1[0]
                 this.endTime = this.form.value1[1]
             }else{
+                this.startTime = ''
+                this.endTime = ''
                 // var currentTime = new Date()
                 // this.startTime = formatDate(currentTime)
                 // this.endTime = ''
-                this.getTime()
+                // this.getTime()
             }
         },
         searchFun(){

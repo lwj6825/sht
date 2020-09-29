@@ -408,7 +408,7 @@ export default {
               // this.form.addrInfo='';//地址详细信息
               // this.form.stallNo='';//摊位号
             }else{
-              this.$message.error('商户编码已存在');
+              this.$message.error(res.message);
             }
           })
           .catch(res => {

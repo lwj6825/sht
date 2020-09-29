@@ -31,13 +31,13 @@
                 </el-select>
             </el-form-item>   
             <div v-if="form.node_detail_type == '教育机构'">
-                <el-form-item label="学校类别:">
+                <el-form-item label="学校类别:" prop="category">
                     <el-select class="label-width" v-model="form.category" placeholder="请选择学校类别">
                         <el-option v-for="(item,index) in categoryArr" :key="index" :label="item.tag_name" :value="item.tag_id">
                         </el-option>
                     </el-select>
                 </el-form-item>     
-                <el-form-item label="学校属性:">
+                <el-form-item label="学校属性:" prop="attribute">
                     <el-radio-group v-model="form.attribute">
                         <el-radio label="公立">公立</el-radio>
                         <el-radio label="民办">民办</el-radio>
@@ -231,7 +231,13 @@ export default {
                     y_coordinate :[{required: true, message: '请选择纬度', trigger: 'blur'}],
                     province :[{required: true, message: '请选择省', trigger: 'blur'}],
                     city :[{required: true, message: '请选择市', trigger: 'blur'}],
-                    countyname :[{required: true, message: '请选择县', trigger: 'blur'}]
+                    countyname :[{required: true, message: '请选择县', trigger: 'blur'}],
+                    category :[
+                        {required: true, message: '请选择学校类别', trigger: 'blur'}
+                    ],
+                    attribute :[
+                        {required: true, message: '请选择学校属性', trigger: 'blur'}
+                    ],
             },
             scaleArr: [],
             typeArr: [],
@@ -356,7 +362,10 @@ export default {
         },
         // 节点详细类型
         selectDatailFun(ele){
-
+            this.form.category = ''
+            this.form.attribute = ''
+            this.form.scale = ''
+            this.form.example = ''
         },
         // 节点详细类型
         getGetNodeTagInfo(){

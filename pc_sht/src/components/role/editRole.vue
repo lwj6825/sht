@@ -199,10 +199,12 @@ export default {
                     dataArr.forEach((v, i) => {
                         v.label = v.functionName
                         v.id = v.functionId
-                        this.dataArr.push(v);
+                        // this.dataArr.push(v);
                     });
                     dataArr.forEach((v, i) => {
                         if(v.functionId){
+                            v.label = v.functionName
+                            v.id = v.functionId
                             if(v.children != undefined){
                                 v.children.forEach((v,i) => {
                                     v.label = v.name
@@ -224,7 +226,8 @@ export default {
                             }
                         }
                     })
-                    this.dataMsg = this.dataArr
+                    this.dataMsg = dataArr
+                    // this.dataMsg = this.dataArr
                     let child_list = res.data.m_child_list;
                     child_list.forEach(v => {
                         v.label = v.describe

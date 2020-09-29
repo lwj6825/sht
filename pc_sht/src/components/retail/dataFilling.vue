@@ -1935,7 +1935,8 @@ export default {
                 this.startTime = this.form.dataTime[0]
                 this.endTime = this.form.dataTime[1]
             }else{
-                this.getTime()
+                this.startTime = ''
+                this.endTime = ''
             }
         },
         getTime(){
