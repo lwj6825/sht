@@ -1,13 +1,13 @@
 // base url
-// export const baseUrl = 'http://192.168.0.25:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.0.25:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.0.25:8081/order_sht/'; // 资产0.154
-// export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
+export const baseUrl = 'http://192.168.0.25:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.0.25:8081/order_sht/';
+export const baseUrl3 = 'http://192.168.0.25:8081/order_sht/'; // 资产0.154
+export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
 
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 
 // 登录地址接口,，，,,
