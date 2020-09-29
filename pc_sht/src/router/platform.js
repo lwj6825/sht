@@ -9,8 +9,7 @@ import runAssessment from '../components/platform/runAssessment.vue';
 import singleNode from '../components/platform/singleNode.vue';
 import transactionPrice from '../components/platform/transactionPrice.vue';
 import transactionVolume from '../components/platform/transactionVolume.vue';
-import new_file from '../components/platform/new_file.vue';
-import hahaha from '../components/platform/hahaha.vue';
+import viewNodeReport from '../components/platform/viewNodeReport';
 export default [
     {
         path: 'platform/enterprise',
@@ -123,24 +122,13 @@ export default [
         }
     },
     {
-        path: 'platform/new_file',
-        component: resolve => require(['@/components/platform/new_file'],resolve),
-        name:"New_file",
+        path: 'platform/viewNodeReport',
+        component: resolve => require(['@/components/platform/viewNodeReport'],resolve),
+        name:"ViewNodeReport",
         meta:{
-            id:'562',
+            id:'589',
             node:'platform',
-            url:'new_file',
+            url:'viewNodeReport',
         }
     },
-    {
-        path: 'platform/hahaha',
-        component: resolve => require(['@/components/platform/hahaha'],resolve),
-        name:"Hahaha",
-        meta:{
-            id:'562',
-            node:'platform',
-            url:'hahaha',
-        }
-    }
-    
 ]

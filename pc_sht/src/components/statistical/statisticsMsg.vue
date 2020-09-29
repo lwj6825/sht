@@ -250,8 +250,11 @@
                 <p class="title">台账录入情况</p>
                 <div id="my-chart5" style="width: 500px;height:180px;margin-left:78px;"></div>
                 <!-- <p style="border-bottom:1px solid #ccc; padding-bottom:15px;font-size:14px;">未录入台账商户数</p> -->
+                <div class="conditions">
+                    <el-button plain @click="downloadFun" style="margin-top: 15px;">导出未录台账商户</el-button> 
+                </div>
                 <el-tabs v-model="activeName2" style="margin-top:-24px">
-                    <el-tab-pane label="未录入台账商户" name="second">
+                    <el-tab-pane label="未录入台账商户" style="text-align: right;" name="second">
                         <el-table :data="tableData4" @sort-change="sortChange4" style="width: 100%;" :cell-style="classStyle">
                             <el-table-column prop="booth_name" label="商户"></el-table-column>
                             <el-table-column  prop="stall_no" label="摊位号" ></el-table-column>
@@ -259,7 +262,6 @@
                                 <template slot-scope="scope">{{scope.row.days ? scope.row.days : '无数据'}}
                             </template>
                             </el-table-column>
-                            
                         </el-table>
                         <el-pagination v-if="num4" background layout="prev, pager, next" :current-page.sync="page4" :page-size="cols4" :total="num4"
                         @current-change="handleCurrentChange4"></el-pagination>
@@ -311,13 +313,13 @@
                             @current-change="handleCurrentChange2"></el-pagination>
                         </el-tab-pane>
                         <el-tab-pane label="不在线商户" name="second" >
-                                <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3" v-loading.body="fullscreenLoading2" :cell-style="classStyle">
-                                    <el-table-column prop="biz_name" label="商户名称"></el-table-column>
-                                    <el-table-column prop="stall_no" label="摊位号"></el-table-column>
-                                </el-table>
-                                <el-pagination v-if="num3" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num3"
-                                @current-change="handleCurrentChange3"></el-pagination>
-                            </el-tab-pane>
+                            <el-table :data="tableData3" style="width: 100%" @sort-change="sortChange3" v-loading.body="fullscreenLoading2" :cell-style="classStyle">
+                                <el-table-column prop="biz_name" label="商户名称"></el-table-column>
+                                <el-table-column prop="stall_no" label="摊位号"></el-table-column>
+                            </el-table>
+                            <el-pagination v-if="num3" background layout="prev, pager, next" :current-page.sync="page3" :page-size="cols3" :total="num3"
+                            @current-change="handleCurrentChange3"></el-pagination>
+                        </el-tab-pane>
                     </el-tabs> 
                 </div>
             </div>
@@ -370,6 +372,7 @@ import {QueryGoodsRankCurrentYear,QueryGoodsRankCurrentMonth,QueryGoodsRankCurre
     ComputNode,ComputNodeNumWeek,ComputPluNumWeek,QueryMoneyAndWeightForGoods,QueryMoneyAndWeightForBiz,QueryHasTzBizByNodeId,
     QueryMoneyCurrentWeek,QueryMoneyCurrentMonth,QueryMoneyCurrentDayHour,QueryMoneyCurrentYear, GetCustomerMoneyAndWeight
 } from '../../js/statistical/statistical.js'
+import {downloadNotTzBiz} from '../../js/address/url.js'
 export default {
     name:"statistical",
     data(){
@@ -513,6 +516,9 @@ export default {
         this.getGetCustomerMoneyAndWeightFun()
     },
     methods: {
+        downloadFun(){ 
+            window.location.href = downloadNotTzBiz + '?&node_id='+this.loginId+'&order='+this.order4+'&name=&type=1'
+        },
         // 累计购买商品数量
         goodNumFun(){
             let areaId = this.titArr[0].bootList[0].shop_booth_id,
@@ -1625,7 +1631,7 @@ export default {
         },
         // 该市场当月上传进货台账的商户信息（未录入天数）
         queryHasNoTzBizByNodeIdFun(){
-            let str = 'page='+this.page4+'&cols='+this.cols4+'&node_id='+this.loginId+'&order='+this.order4+'&name=&type=7'
+            let str = 'page='+this.page4+'&cols='+this.cols4+'&node_id='+this.loginId+'&order='+this.order4+'&name=&type=1'
             QueryHasNoTzBizByNodeId(str)
             .then((res) => {
                 this.tableData4 = res.data.list
@@ -2251,12 +2257,32 @@ export default {
         .third{
             display: flex;
             margin: 10px 0;
+            .conditions{
+                position: absolute;
+                right: 25px;  
+                top: 186px;
+                z-index: 99;
+                margin-top:5px;
+            }
+            .conditions{
+                display: flex;
+                margin-right: 10px;
+                justify-content: flex-end;
+                ul{
+                    display: flex;
+                    li{
+                        margin: 0 10px;
+                        font-size: 14px;
+                        line-height: 30px;
+                        cursor: pointer;
+                    }
+                }
+            }
             .left,.right{
                 flex: 1;
                 min-width: 534px;
                 padding: 10px;
                 background: #fff;
-                // border: 1px solid #ccc;
                 .title{
                     padding-left: 16px;
                     height: 30px;
@@ -2270,6 +2296,9 @@ export default {
                 }
             }
             .left{
+                position: relative;
+                top: 0;
+                right: 0;
                 margin-right: 10px;
                 .el-tabs__header{
                     margin: 0 0 0;
@@ -2419,6 +2448,9 @@ export default {
         }
         .el-table__body-wrapper{
             height: 121px;
+        }
+        .el-table th{
+            padding: 8px 0;
         }
         .el-progress__text{
             padding-top: 35px;

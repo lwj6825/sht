@@ -34,7 +34,7 @@
             <span >&nbsp;&nbsp;元</span>
           </el-form-item>
           <el-form-item label="单位：" prop="specifications">
-            <el-select v-model="form.specifications"  placeholder="未选择"  @change="selectChange">
+            <el-select v-model="form.specifications" filterable placeholder="未选择"  @change="selectChange">
               <el-option  v-for="item in specificationList" :key="item.TYPE_NAME" :label="item.TYPE_NAME"  :value="item.TYPE_NAME" >
               </el-option>
             </el-select>
@@ -245,7 +245,7 @@
   import {saleAdd,purchase,DeleteStkOr,GeStkOrigin,UpdateStkOr,InsertStkOr,GetGoodsJdImg,
     DeleteGoodsJdImg} from "../../js/goods/goods.js";
   import {getAddr} from '../../js/user/user.js';
-  import {baseUrl,baseUrl2,updateGoodsJdImg} from '../../js/address/url.js'
+  import {baseUrl,updateGoodsJdImg} from '../../js/address/url.js'
   import axios from 'axios';
   export default {
     name: "",    

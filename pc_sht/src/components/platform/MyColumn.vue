@@ -1,13 +1,15 @@
 <template>
 
-  <el-table-column :prop="col.prop"
-    :label="col.label"
-    align="left">
+  <el-table-column :prop="mycol.prop"
+    :label="mycol.label"
+    align="left"
+    style="width: 12.5rem;">
 
-    <template v-if="col.children">
-      <my-column v-for="(item, index) in col.children"
+    <template v-if="mycol.children">
+      <my-column v-for="(item, index) in mycol.children"
         :key="index"
-        :col="item"></my-column>
+        :mycol="item"
+        style="width: 12.5rem;"></my-column>
     </template>
 
   </el-table-column>
@@ -16,12 +18,35 @@
 <script>
 export default {
   name: 'MyColumn',
+  data() {
+    return {
+      childrenList:[],
+    }
+  },
   props: {
-    col: {
+    mycol: {
       type: Object
     }
+  },
+  watch: {
+      mycol: {
+        handler: function(newVal,oldVal){
+        //  console.log(newVal)
+         /*  console.log(newVal)
+         console.log(newVal.children) */
+        }
+      },
+      deep: true
+  },
+  mounted() {
+    console.log(this.mycol)
+    // console.log("---------" + this.mycol)
+    // console.log(this.mycol.children);
   }
+
+
 }
+
 </script>
-<style scoped>
+<style scoped >
 </style>

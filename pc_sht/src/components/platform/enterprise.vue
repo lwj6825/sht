@@ -312,7 +312,7 @@ export default {
             node_list:[],
             Dataloading:false,
             first:true,
-            cols:30,
+            cols:300,
             page:1,
             page1:1,
             map:'',
@@ -346,6 +346,7 @@ export default {
         this.$nextTick(function() {
            this.drawMap1();
         });
+        this.getQueryTraceNodeFun1();
          // this.drawMap1();
          this.getQueryTraceNodeFun1();
     },
@@ -386,7 +387,7 @@ export default {
            size:new AMap.Size(20, 20)
          },
          {
-           url:'static/dongcheng.png',
+           url:'static/image/dongcheng.png',
            anchor:new AMap.Pixel(3, 3),
            size:new AMap.Size(20, 20)
           },
@@ -1964,10 +1965,16 @@ export default {
         	background: rgba(213,217,220,.94);
         	opacity: 0.94;
         }
+
     }
 
 </style>
 <style lang="less">
+.enterprise{
+  .active{
+    color:#2EA7E0;
+  }
+}
 .el-upload--picture-card{
     height: 60px !important;
     width: 60px !important;
@@ -1985,9 +1992,6 @@ export default {
  }
 .anchorBL {
    display: none;
-}
-.active{
-   color:#2EA7E0;
 }
 .el-dropdown-menu{
   height: 240px;

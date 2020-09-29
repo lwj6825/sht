@@ -9,39 +9,37 @@
                 </div>
                 <div class="msg">
                     <p>生活必需品共维护<span>&nbsp;{{num1}}</span>种商品，其中涵盖：</p>
-                    <p>粮油副食<span> &nbsp; {{num2}}</span>种</p>
-                    <p>肉禽蛋<span> &nbsp; {{num3}}</span>种</p>
-                    <p>蔬菜<span> &nbsp; {{num4}}</span>种</p>
-                    <p>水果<span> &nbsp; {{num5}}</span>种</p>
+                    <p v-for="(item, index) in list1" :key="index" v-if="item.varieties_type">{{item.varieties_type}}<span class="spans" @click="jumpFun1(item.varieties_type)"> &nbsp; {{item.goods_count}}</span>种</p>
                 </div>
             </div>
-            <div class="item">
+            <div class="item item2">
                 <div class="tit">
                     <img src="../../assets/images/u3026.png" alt="">
                     <p>价格抽取节点管理</p>
                 </div>
                 <div class="msg">
-                    <p>价格抽取企业目前涉及<span> &nbsp; {{num6}}</span>家</p>
+                    <p>价格抽取企业目前涉及<span> &nbsp; {{num2}}</span>家</p>
                     <ul>
+                        <!--<li>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                        </li>-->
                         <li>
-                            <p>朝阳区：<span> {{num7}}</span>家</p>
-                            <p>丰台区：<span> {{num8}}</span>家</p>
-                            <p>昌平区：<span> {{num9}}</span>家</p>
-                        </li>
-                        <li>
-                            <p>怀柔区：<span> {{num10}}</span>家</p>
-                            <p>海淀区：<span> {{num11}}</span>家</p>
-                            <p>延庆区：<span> {{num12}}</span>家</p>
-                        </li>
-                        <li>
-                            <p>朝阳区：<span> {{num13}}</span>家</p>
-                            <p>丰台区：<span> {{num14}}</span>家</p>
-                            <p>昌平区：<span> {{num15}}</span>家</p>
-                        </li>
-                        <li>
-                            <p>朝阳区：<span> {{num16}}</span>家</p>
-                            <p>丰台区：<span> {{num17}}</span>家</p>
-                            <p>昌平区：<span> {{num18}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '东城区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '西城区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '朝阳区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '海淀区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '丰台区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '石景山区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '门头沟区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '房山区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '通州区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '顺义区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '昌平区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '大兴区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '怀柔区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '平谷区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '密云区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
+                            <p v-for="(item, index) in list2" :key="index" v-if="item.district_name == '延庆区'">{{item.district_name}}：<span class="spans" @click="jumpFun2(item.district_name)"> {{item.node_count}}</span>家</p>
                         </li>
                     </ul>
                 </div>
@@ -63,10 +61,10 @@
         </div>
         <div class="message message2">
             <div class="item">
-                <div class="view-btn" @click="jumpFun1">查看</div>
+                <div class="view-btn" @click="jumpFun1()">查看</div>
             </div>
-            <div class="item">
-                <div class="view-btn" @click="jumpFun2">查看</div>
+            <div class="item item2">
+                <div class="view-btn" @click="jumpFun2()">查看</div>
             </div>
             <div class="item">
                 <div class="view-btn" @click="jumpFun3">查看</div>
@@ -76,45 +74,57 @@
 </template>
 
 <script>
+import {QueryPriceExtract} from '../../js/compare/compare.js'
 export default {
     name:"priceExtraction",
     data() {
         return {
-            num1: 58,
-            num2: 7,
-            num3: 2,
-            num4: 31,
-            num5: 10,
-            num6: '**',
-            num7: '**',
-            num8: '**',
-            num9: '**',
-            num10: '**',
-            num11: '**',
-            num12: '**',
-            num13: '**',
-            num14: '**',
-            num15: '**',
-            num16: '**',
-            num17: '**',
-            num18: '**',
+            num1: '',
+            num2: '',
+            list1: [],
+            list2: [],
         }
     },
     mounted() {
-        
+        if(localStorage.getItem('varieties_type')){
+            localStorage.removeItem('varieties_type')
+        }
+        if(localStorage.getItem('district_name')){
+            localStorage.removeItem('district_name')
+        }
+        window.scrollTo(0,0)
+        this.getDataFun()
     },
     methods: {
+        getDataFun(){
+            QueryPriceExtract('')
+                .then(res => {
+                    this.list2 = res.data.nodePriceExtract
+                    this.num2 = res.data.nodePriceExtract[res.data.nodePriceExtract.length -1].node_sum
+                    this.list1 = res.data.lifeGoods
+                    this.num1 = res.data.lifeGoods[res.data.lifeGoods.length -1].goods_sum
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         // 生活必需品商品库管理
-        jumpFun1(){
+        jumpFun1(ele){
+            if(ele){
+                localStorage.setItem('varieties_type', JSON.stringify(ele))
+            }
             this.$router.push({name: 'Necessaries'})
         },
         // 价格抽取节点管理
-        jumpFun2(){
+        jumpFun2(ele){
+            if(ele){
+                localStorage.setItem('district_name', JSON.stringify(ele))
+            }
             this.$router.push({name: 'NodeExtraction'})
         },
         // 节点抽取商品管理
         jumpFun3(){
-
+            this.$router.push({name: 'NodeGoodGl'})
         },
     },
 }
@@ -135,7 +145,7 @@ export default {
             display: flex;
             min-width: 930px;
             .item{
-                flex: 1;
+                width: 30%;
                 padding: 20px;
                 margin-right: 10px;
                 background: #fff;
@@ -162,10 +172,14 @@ export default {
                     }
                     ul li{
                         display: flex;
+                        flex-wrap: wrap;
                         p{
-                            flex: 1;
+                            width: 33%;
                             font-size: 14px;
                         }
+                    }
+                    .spans{
+                        cursor: pointer;
                     }
                 }
                 .view-btn{
@@ -176,6 +190,15 @@ export default {
             }
             .item:last-child{
                 margin-right: 0;
+            }
+            .item2{
+                width: 40%;
+                .msg{
+                    p span{
+                        font-size: 14px;
+                        font-weight: bolder;
+                    }
+                }
             }
         }
         .message2{

@@ -1,6 +1,7 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryNodeInfoIndex,queryIndex,queryBizGoods,insert,queryGoodsForBiz,queryRegion,autoIdentity,insertList,queryGoodsForNode,
-    queryRegionForGoodsPrice,queryGoodsIndex} from '../address/url.js';
+    queryRegionForGoodsPrice,queryGoodsIndex, downloadPriceLife, getAllNodePage} from '../address/url.js';
+import axios from 'axios';
 
 // 超管查询所有市场的报价内容
 export const  QueryNodeInfoIndex  = function(params) {
@@ -45,4 +46,21 @@ export const  QueryRegionForGoodsPrice  = function(params) {
 //  查看市场报价  商户录的报价信息
 export const  QueryGoodsIndex  = function(params) {
     return ajaxPost(queryGoodsIndex,params)
+}
+// 导出
+export const DownloadPriceLife = function(form) {
+    return axios({ // 用axios发送post请求
+        method: 'post',
+        url: downloadPriceLife, // 请求地址
+        data: form, // 参数
+        // responseType: 'blob', // 表明返回服务器返回的数据类型
+        responseType: 'arraybuffer',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+// 获取企业信息userId 等
+export const  GetAllNodePage  = function(params) {
+    return ajaxPost(getAllNodePage,params)
 }

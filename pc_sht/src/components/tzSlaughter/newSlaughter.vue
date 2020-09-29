@@ -18,7 +18,7 @@
         <div class="data">
             <p>屠宰信息</p>
         </div>
-        <div class="table">
+        <div class="table" v-loading="loading">
             <el-table  :data="tableData" :header-cell-style="rowClass">
                 <el-table-column prop="in_date" label="商品名称">
                     <template slot-scope="scope">
@@ -136,7 +136,8 @@ export default {
                 enterprise: [
                     { required: true, message: '请选择屠宰企业', trigger: 'change' }
                 ],
-            }
+            },
+            loading: true,
         }
     },
     mounted() {
@@ -224,6 +225,7 @@ export default {
         },
         // 商品
         getNsGoodsQueryPOSTType(ele) {
+            this.loading = true
             let boothData = {
                 page: 1,
                 cols: 10000,
@@ -240,12 +242,13 @@ export default {
                     if(this.tableData.length > 0){
                         this.tableData[0].goodArr = res.data.salesList;
                     }else{
-
                         this.goodArr = res.data.salesList;
                     }
+                    this.loading = false
                 })
                 .catch(res => {
                     console.log(res)
+                    this.loading = false
                 })
         },
         // 所属企业
@@ -354,6 +357,7 @@ export default {
         },
         // 选择商品
         selectGoodFun(ele,ele2){
+            this.loading = true
             let goods_unit = '', dataList = [], goods_code = '';
             this.goodArr.forEach(val => {
                 if(ele == val.ID){
@@ -399,9 +403,17 @@ export default {
                             
                         }
                     })
+                    this.loading = false
+                })
+                .catch(res => {
+                    this.loading = false
                 })
         },
         addGoodFun(){
+            // if(!this.form.enterprise){
+            //     this.$message.warning('请选择屠宰企业');
+            //     return
+            // }
             let obj = {
                 goodArr: this.goodArr, // 商品信息
                 gooaMsgArr: [], // 原料信息

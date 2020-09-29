@@ -1,20 +1,18 @@
 <template>
     <div class="content">
-         <div class="box">
-                <div class="warn_title">预警原因：</div>
-                <el-col :span="20">
-                    <el-input type="textarea" :rows="2" v-model="warning_reason"></el-input>
-                </el-col>
-                <div class="resolve">解决方案：</div>
-                <el-col :span="20">
-                    <el-input type="textarea" :rows="5" v-model="warning_result"></el-input>
-                </el-col>
-                <div class="execute">
-                    <a  @click="downloadDaily">下载日志附件</a>
-                </div>
-               
-         </div>
-       
+        <div class="box">
+            <div class="warn_title">预警原因：</div>
+            <el-col :span="20">
+                <el-input type="textarea" :rows="2" v-model="warning_reason"></el-input>
+            </el-col>
+            <div class="resolve">解决方案：</div>
+            <el-col :span="20">
+                <el-input type="textarea" :rows="5" v-model="warning_result"></el-input>
+            </el-col>
+            <div class="execute">
+                <a @click="downloadDaily">下载日志附件</a>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -34,10 +32,10 @@ export default {
     mounted(){
         window.scrollTo(0,0)
         if(JSON.stringify(this.$route.params) != "{}"){
-                this.warning_reason = this.$route.params.warning_reason;
-                this.warning_result = this.$route.params.warning_result;
-                this.id = this.$route.params.id;
-                this.log_id = this.$route.params.warn_id;
+            this.warning_reason = this.$route.params.warning_reason;
+            this.warning_result = this.$route.params.warning_result;
+            this.id = this.$route.params.id;
+            this.log_id = this.$route.params.warn_id;
         }
     },
     methods:{

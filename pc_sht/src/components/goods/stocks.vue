@@ -50,7 +50,12 @@
           <el-table-column prop="J_NAME" label="商品简称"> </el-table-column>
           <el-table-column prop="GB_NAME" :formatter="formatter" label="品种"> </el-table-column>
           <el-table-column prop="PRICE" label="价格"> </el-table-column>
-          <el-table-column prop="GOODS_UNIT" label="规格"> </el-table-column>
+          <el-table-column prop="GOODS_UNIT" label="规格">
+            <template slot-scope="scope">
+              <p v-if="scope.row.SPECIFICATIONS">{{scope.row.COUNT + scope.row.SPECIFICATIONS + '/' + scope.row.GOODS_UNIT}}</p>
+              <p v-else>{{scope.row.GOODS_UNIT}}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="SUPPLIERS_NAME" label="供应商"> </el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
@@ -79,7 +84,7 @@
   import {QueryArea} from '../../js/area/area.js';
   import AreaSelect from '../common/area';
   import {GetSupplier} from '../../js/district/district.js'
-  import {baseUrl,baseUrl2} from '../../js/address/url.js'
+  import {baseUrl} from '../../js/address/url.js'
   export default {
     name: "stocks",
     data() {
@@ -226,18 +231,34 @@
               })
           })
         }
-        let url = baseUrl2 + 'goods/importPurchase'
+        let url = baseUrl + 'goods/importPurchase'
         ajaxPost(url,formData,config)
           .then(res => {
-            console.log(res.message)
-            this.boxShow = true;
+            // this.boxShow = true;
             this.fileMsg = res.message.replace(/\n/g,'<br>')
-            console.log(this.fileMsg)
-            this.$refs.file.value = null
+            // this.$refs.file.value = null
+            if (res.result == true) {
+              this.$alert(this.fileMsg ? this.fileMsg : '导入成功', '提示', {
+                confirmButtonText: '确定',
+                type: 'success',
+                callback: action => {
+                    
+                }
+              });
+              this.getPurchase()
+            }else{
+              this.$alert(this.fileMsg ? this.fileMsg : '导入失败', '提示', {
+                  confirmButtonText: '确定',
+                  type: 'error',
+                  callback: action => {
+                      
+                  }
+              });
+            }
+            this.file = ''
           })
           .catch(res => {
             console.log(res)
-            this.$message.error("出错了");
           })
       },
       getPurchase(){
@@ -438,6 +459,10 @@
       },
       selectId(id){//选择区域展示商品列表
         this.page = 1
+        this.goodsName = '';
+        this.supplier = '';
+        this.goodsCode = ''
+        this.j_name = ''
         if(this.isRegion == 'false'){
           this.isShow = false
           this.getPurchase()

@@ -1,5 +1,5 @@
 <template>
-    <div class="content retailList">
+    <div class="content quotationList">
         <div class="searchs" ref="searchs">
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
@@ -115,7 +115,7 @@
                                     <div class="name">
                                         <div v-if="!isAgain">
                                             <p>{{scope.row.goods_name}}</p>
-                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + scope.row.yesterday_price}}</p>
+                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + (scope.row.goods_unit=='斤'?scope.row.yesterday_price/2:scope.row.yesterday_price)}}</p>
                                             <p class="name-p" v-if="scope.row.history_price && !scope.row.yesterday_price">{{'历史价格' + '￥' + scope.row.history_price}}</p>
                                         </div>
                                         <div v-else>
@@ -132,7 +132,8 @@
                                                 <el-input @change="inputFun(scope.row)" size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input>
                                             </p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
-                                            <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else></p>
                                         </div>
                                         <div v-else>
                                             <p>
@@ -142,7 +143,12 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="goods_unit" label="规格" width="60"></el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100">
+                                <template slot-scope="scope">
+                                    <p v-if="scope.row.specifications && scope.row.count">{{Number(scope.row.count).toFixed(0) + scope.row.specifications + '/' + scope.row.goods_unit}}</p>
+                                    <p v-else>{{scope.row.goods_unit}}</p>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -192,7 +198,7 @@
                                     <div class="name" @click="goodMsgFun(scope.row)">
                                         <div>
                                             <p>{{scope.row.goods_name}}</p>
-                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + scope.row.yesterday_price}}</p>
+                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + (scope.row.goods_unit=='斤'?scope.row.yesterday_price/2:scope.row.yesterday_price)}}</p>
                                             <p class="name-p" v-if="scope.row.history_price && !scope.row.yesterday_price">{{'历史价格' + '￥' + scope.row.history_price}}</p>
                                         </div>
                                     </div>
@@ -205,12 +211,18 @@
                                             <p class="price" v-if="scope.row.price">{{scope.row.goods_unit=='斤'?scope.row.price/2:scope.row.price}}</p>
                                             <p class="price" v-else>{{scope.row.price}}</p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
-                                            <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else></p>
                                         </div>
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="goods_unit" label="规格" width="60"></el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100">
+                                <template slot-scope="scope">
+                                    <p v-if="scope.row.specifications && scope.row.count">{{Number(scope.row.count).toFixed(0) + scope.row.specifications + '/' + scope.row.goods_unit}}</p>
+                                    <p v-else>{{scope.row.goods_unit}}</p>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -241,12 +253,18 @@
                                 <template slot-scope="scope">
                                     <div class="num">
                                         <div>
-                                            <p class="price">{{scope.row.price}}</p>
+                                            <p class="price" v-if="scope.row.price">{{scope.row.goods_unit=='斤'?scope.row.price/2:scope.row.price}}</p>
+                                            <p class="price" v-else>{{scope.row.price}}</p>
                                         </div>
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="goods_unit" label="规格" width="60"></el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100">
+                                <template slot-scope="scope">
+                                    <p v-if="scope.row.specifications && scope.row.count">{{Number(scope.row.count).toFixed(0) + scope.row.specifications + '/' + scope.row.goods_unit}}</p>
+                                    <p v-else>{{scope.row.goods_unit}}</p>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                 </div>
@@ -394,7 +412,7 @@ export default {
         goodMsgFun(ele){
             this.loading3 = true
             this.isGoodMsg = true
-            this.goodName = ele.goods_name + '均价￥' + ele.price
+            this.goodName = ele.goods_name + '均价￥' + (ele.goods_unit=='斤'?ele.price/2:ele.price)
             let obj = {
                 page: 1,
                 cols: 10000,
@@ -433,6 +451,9 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
                             price: val.price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
@@ -459,6 +480,9 @@ export default {
                     goods_id: val.goods_id,
                     goods_code: val.goods_code,
                     goods_name: val.goods_name,
+                    goods_unit: val.goods_unit,
+                    count: val.count,
+                    specifications: val.specifications,
                     price: val.price,
                     yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                     history_price: val.history_price ? val.history_price : '',
@@ -531,6 +555,7 @@ export default {
                     region: this.region ? this.region : this.tabRegion,
                     in_date: this.in_date,
                     goods_name: this.name,
+                    unit_type: 1,
                 }
                 getQueryGoodsForBiz(obj)
                     .then(res => {
@@ -563,6 +588,13 @@ export default {
                                 }
                             })
                         }
+                        res.data.list.forEach(val => {
+                            if(val.price){
+                                if(val.goods_unit == '斤'){
+                                    val.price = val.price/2
+                                }
+                            }
+                        })
                         this.tableData2 = res.data.list
                         this.num2 = res.data.bean.total
                         if(this.isAgain && !this.isSearch){
@@ -583,6 +615,7 @@ export default {
                     region: this.region ? this.region : this.tabRegion,
                     in_date: this.in_date,
                     goods_name: this.name,
+                    unit_type: 1,
                 }
                 getQueryGoodsForNode(obj)
                     .then(res => {
@@ -614,6 +647,13 @@ export default {
                                 }
                             })
                         }
+                        res.data.list.forEach(val => {
+                            if(val.price){
+                                if(val.goods_unit == '斤'){
+                                    val.price = val.price/2
+                                }
+                            }
+                        })
                         this.tableData2 = res.data.list
                         this.num2 = res.data.bean.total
                         if(this.isAgain && !this.isSearch){
@@ -631,25 +671,65 @@ export default {
         getGoodFun2(){
             // this.getGoodFun()
             if(this.merchant){
-              let obj = {
-                  page: 1,
-                  cols: 10000,
-                  node_id: this.tbqy,
-                  shop_booth_id: this.merchant ? this.merchant : '',
-                  region: this.region ? this.region : this.tabRegion,
-                  in_date: this.listTime,
-                  goods_name: this.name,
-              }
+                let obj = {
+                    page: 1,
+                    cols: 10000,
+                    node_id: this.tbqy,
+                    shop_booth_id: this.merchant ? this.merchant : '',
+                    region: this.region ? this.region : this.tabRegion,
+                    in_date: this.listTime,
+                    goods_name: this.name,
+                    unit_type: 1,
+                }
               getQueryGoodsForBiz(obj)
                   .then(res => {
-                      this.loading = false
-                      res.data.list.forEach(val => {
-                          this.tableData2.forEach(val2 => {
-                              if(val.goods_code == val2.goods_code){
-                                  val2.price = val.price
-                              }
-                          })
-                      })
+                        this.loading = false
+                        res.data.list.forEach(val => {
+                            if(val.price){
+                                if(val.goods_unit == '斤'){
+                                    val.price = val.price/2
+                                }
+                            }
+                            this.tableData2.forEach(val2 => {
+                                if(val.goods_code == val2.goods_code){
+                                    // val2.price = val.price
+                                    val.area_id = val2.area_id
+                                    val.area_name = val2.area_name
+                                    val.biz_id = val2.biz_id
+                                    val.biz_name = val2.biz_name
+                                    val.cols = val2.cols
+                                    val.count = val2.count
+                                    val.end_date = val2.end_date
+                                    val.goods_code = val2.goods_code
+                                    val.goods_id = val2.goods_id
+                                    val.goods_name = val2.goods_name
+                                    val.goods_unit = val2.goods_unit
+                                    val.history_price = val2.history_price
+                                    val.history_rate = val2.history_rate
+                                    val.id = val2.id
+                                    val.in_date = val2.in_date
+                                    val.node_id = val2.node_id
+                                    val.node_name = val2.node_name
+                                    val.num = val2.num
+                                    val.page = val2.page
+                                    val.rate = val2.rate
+                                    val.real_weight = val2.real_weight
+                                    val.region = val2.region
+                                    val.region_name = val2.region_name
+                                    val.shop_booth_id = val2.shop_booth_id
+                                    val.specifications = val2.specifications
+                                    val.start_date = val2.start_date
+                                    val.state = val2.state
+                                    val.total = val2.total
+                                    val.uid = val2.uid
+                                    val.unit_type = val2.unit_type
+                                    val.user_id = val2.user_id
+                                    val.weight = val2.weight
+                                    val.yesterday = val2.yesterday
+                                    val.yesterday_price = val2.yesterday_price
+                                }
+                            })
+                        })
 
                   })
                   .catch(() => {
@@ -664,17 +744,57 @@ export default {
                   region: this.region ? this.region : this.tabRegion,
                   in_date: this.listTime,
                   goods_name: this.name,
+                    unit_type: 1,
               }
               getQueryGoodsForNode(obj)
                   .then(res => {
-                      this.loading = false
-                      res.data.list.forEach(val => {
-                          this.tableData2.forEach(val2 => {
-                              if(val.goods_code == val2.goods_code){
-                                  val2.price = val.price
-                              }
-                          })
-                      })
+                        this.loading = false
+                        res.data.list.forEach(val => {
+                            if(val.price){
+                                if(val.goods_unit == '斤'){
+                                    val.price = val.price/2
+                                }
+                            }
+                            this.tableData2.forEach(val2 => {
+                                if(val.goods_code == val2.goods_code){
+                                    // val2.price = val.price
+                                    val.area_id = val2.area_id
+                                    val.area_name = val2.area_name
+                                    val.biz_id = val2.biz_id
+                                    val.biz_name = val2.biz_name
+                                    val.cols = val2.cols
+                                    val.count = val2.count
+                                    val.end_date = val2.end_date
+                                    val.goods_code = val2.goods_code
+                                    val.goods_id = val2.goods_id
+                                    val.goods_name = val2.goods_name
+                                    val.goods_unit = val2.goods_unit
+                                    val.history_price = val2.history_price
+                                    val.history_rate = val2.history_rate
+                                    val.id = val2.id
+                                    val.in_date = val2.in_date
+                                    val.node_id = val2.node_id
+                                    val.node_name = val2.node_name
+                                    val.num = val2.num
+                                    val.page = val2.page
+                                    val.rate = val2.rate
+                                    val.real_weight = val2.real_weight
+                                    val.region = val2.region
+                                    val.region_name = val2.region_name
+                                    val.shop_booth_id = val2.shop_booth_id
+                                    val.specifications = val2.specifications
+                                    val.start_date = val2.start_date
+                                    val.state = val2.state
+                                    val.total = val2.total
+                                    val.uid = val2.uid
+                                    val.unit_type = val2.unit_type
+                                    val.user_id = val2.user_id
+                                    val.weight = val2.weight
+                                    val.yesterday = val2.yesterday
+                                    val.yesterday_price = val2.yesterday_price
+                                }
+                            })
+                        })
 
                   })
                   .catch(() => {
@@ -893,6 +1013,7 @@ export default {
                     node_id: this.tbqy,
                     region: this.region ? this.region : this.tabRegion,
                     in_date: this.in_date,
+                    unit_type: 1,
                 }
                 getAutoIdentity(obj)
                     .then(res => {
@@ -960,11 +1081,11 @@ export default {
                     this.selectGood.forEach(val => {
                         if(val.price){
                           let price = '';
-                          if(val.goods_unit=='斤'){
-                            price = val.price*2
-                          }else{
-                              price = val.price
-                          }
+                            if(val.goods_unit=='斤'){
+                                price = val.price*2
+                            }else{
+                                price = val.price
+                            }
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
@@ -975,6 +1096,9 @@ export default {
                                 goods_id: val.goods_id,
                                 goods_code: val.goods_code,
                                 goods_name: val.goods_name,
+                                goods_unit: val.goods_unit,
+                                count: val.count,
+                                specifications: val.specifications,
                                 price: price,
                                 yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                                 history_price: val.history_price ? val.history_price : '',
@@ -989,12 +1113,12 @@ export default {
                 }else{
                     this.tableData2.forEach(val => {
                         if(val.price){
-                          let price = '';
-                          if(val.goods_unit=='斤'){
-                            price = val.price*2
-                          }else{
-                              price = val.price
-                          }
+                            let price = '';
+                            if(val.goods_unit=='斤'){
+                                price = val.price*2
+                            }else{
+                                price = val.price
+                            }
                             goodobj = {
                                 node_id: val.node_id,
                                 node_name: val.node_name,
@@ -1005,7 +1129,10 @@ export default {
                                 goods_id: val.goods_id,
                                 goods_code: val.goods_code,
                                 goods_name: val.goods_name,
-                                price: val.price,
+                                goods_unit: val.goods_unit,
+                                count: val.count,
+                                specifications: val.specifications,
+                                price: price,
                                 yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                                 history_price: val.history_price ? val.history_price : '',
                                 area_id: val.area_id ? val.area_id : '',
@@ -1411,7 +1538,9 @@ export default {
                 display: flex;
                 justify-content: space-between;
                 font-size: 14px;
+                align-items: center;
                 .num-p{
+                    width: 100px;
                     color: red;
                     font-size: 12px;
                     text-align: right;
@@ -1703,7 +1832,7 @@ export default {
     }
 </style>
 <style lang="less">
-    .retailList{
+    .quotationList{
         .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
             line-height: 24px;
         }

@@ -1,11 +1,24 @@
 <template>
-    <div class="content">
-        <div class="content viewRetail">
-        <div class="searchs" ref="searchs">
+    <div class="content viewRetail">
+        <div class="node" id="code">
+            当前市场： <span class="span">{{node_name}}</span>
+        </div>
+        <div class="searchs" id="searchs">
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
-                    <el-form-item label="所属企业">
+                    <!-- <el-form-item label="所属企业">
                         {{node_name}}
+                    </el-form-item> -->
+                    <el-form-item label="日期" style="width: 280px;" >
+                        <el-date-picker style="width: 200px;" v-model="form.dataTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                            placeholder="选择日期"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="所属区域">
+                        <el-select v-model="form.tbre" filterable clearable placeholder="请选择" @change="handleRegion">
+                            <el-option v-for="(item2,index) in regionArr" :key="index" :label="item2.BOOTH_NAME"
+                            :value="item2.SHOP_BOOTH_ID">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="填报商户">
                         <el-select v-model="form.tbsh" filterable clearable placeholder="请选择">
@@ -13,10 +26,6 @@
                             :value="item.booth_name">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="日期" style="width: 380px;" >
-                        <el-date-picker style="width: 200px;" v-model="form.dataTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" 
-                            placeholder="选择日期"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="状态">
                         <el-select v-model="form.states" filterable clearable placeholder="请选择">
@@ -35,17 +44,15 @@
             <div class="title">
                 <p class="tz-title">报表预览</p>
                 <div>
-                    <el-button type="primary" @click="addFun"> + 添加</el-button><!--
+                    <el-button type="primary" @click="addFun"> + 添加报价</el-button><!--
                     <el-button type="primary" id="btn-file" plain @click="isShowFun">批量导入</el-button>-->
                 </div>
             </div>
             <div class="tables" >
-                <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
+                <el-table :data="tableData" :header-cell-style="rowClass" v-loading="Dataloading" @selection-change="changeFun">
                     <el-table-column prop="in_date" label="日期"> </el-table-column>
                     <el-table-column prop="booth_name" label="填报商户"> </el-table-column>
-                    <el-table-column prop="node_name" label="所属企业">
-                        <template slot-scope="scope">{{node_name}}</template>
-                    </el-table-column>
+                    <el-table-column prop="region_name" label="所属区域"> </el-table-column>
                     <el-table-column prop="state" label="状态"> </el-table-column>
                     <el-table-column label="操作" width="200">
                         <template slot-scope="scope">
@@ -61,6 +68,30 @@
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"
             layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
+            <!-- 选择商户 -->
+            <div class="passwrd" v-if="chooseMer">
+                <div class="text" style="height: 400px;width: 460px;margin-left: -230px;margin-top: -200px;">
+                    <div class="box-title">
+                        <p class="tit">选择商户</p>
+                        <p class="iconfont icon-close close" @click="closeFun"></p>
+                    </div>
+                    <div>
+                        <el-tabs v-model="activeName" @tab-click="handleClick1">
+                            <!-- <el-tab-pane label="全部" name="first"></el-tab-pane> -->
+                            <el-tab-pane v-for="(item,index5) in regionArr" :key="index5" :label="item.BOOTH_NAME"
+                                :name="item.BOOTH_NAME"></el-tab-pane>
+                        </el-tabs>
+                    </div>
+                    <div class="table">
+                        <el-table :data="tbshArr" :header-cell-style="rowClass" @row-click="handleRow" height="300" v-loading="merloading">
+                            <!-- <el-table-column type="selection" width="55"></el-table-column> -->
+                            <el-table-column prop="booth_name" label="商户名称"></el-table-column>
+                            <el-table-column prop="stall_no" label="摊位号"></el-table-column>
+                        </el-table>
+                    </div>
+
+                </div>
+            </div>
             <!--新增-->
             <div class="passwrd" v-if="isEdits">
                 <div class="text">
@@ -70,10 +101,36 @@
                     </div>
                     <div class="msg-box" v-if="isAgain">
                         <div class="data">
-                            <div class="tit">填报企业：</div>
+                            <div class="tit">所属商户：</div>
+                            <div class="msg">{{biz_name}}</div>
+                        </div>
+                        <div class="data">
+                            <div class="tit">填报日期：</div>
                             <div class="msg">
-                                {{node_name}}
+                                <el-date-picker style="width: 150px;" v-model="in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                                placeholder="选择日期"></el-date-picker>
                             </div>
+                        </div>
+                        <div class="data">
+                            <div class="tit">填报单位</div>
+                            <div class="msg">
+                                <el-select v-model="unit" placeholder="请选择" @change="changeFun">
+                                    <el-option label="公斤" value="0"></el-option>
+                                    <el-option label="斤" value="1"></el-option>
+                                </el-select>
+                            </div>
+                        </div>
+                        <div class="data">
+                            <div class="tit">商品名称</div>
+                            <div class="msg">
+                                <el-input clearable v-model="name" type="text" placeholder="请输入" @input="searchGoodFun"></el-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="msg-box" v-else>
+                        <div class="data">
+                            <div class="tit">所属区域：</div>
+                            <div class="msg">{{regionName}}</div>
                         </div>
                         <div class="data">
                             <div class="tit">所属商户：</div>
@@ -81,55 +138,41 @@
                         </div>
                         <div class="data">
                             <div class="tit">填报日期：</div>
-                            <div class="msg">{{in_date}}</div>
-                        </div>
-                    </div>
-                    <div class="msg-box" v-else>
-                        <div class="data">
-                            <div class="tit">填报企业：</div>
                             <div class="msg">
-                                {{node_name}}
+                                <el-date-picker style="width: 150px;" v-model="in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                                placeholder="选择日期"></el-date-picker>
                             </div>
                         </div>
                         <div class="data">
-                            <div class="tit">所属商户：</div>
+                            <div class="tit">填报单位</div>
                             <div class="msg">
-                                <el-select v-model="merchant" filterable placeholder="请选择" @change="selectMarchant">
-                                    <el-option v-for="(item,index) in tbshArr" :key="index" :label="item.booth_name"
-                                    :value="item.shop_booth_id">
-                                    </el-option>
+                                <el-select v-model="unit" placeholder="请选择" @change="changeFun">
+                                    <el-option label="公斤" value="0"></el-option>
+                                    <el-option label="斤" value="1"></el-option>
                                 </el-select>
                             </div>
                         </div>
                         <div class="data">
-                            <div class="tit">填报日期：</div>
+                            <div class="tit">商品名称</div>
                             <div class="msg">
-                                <el-date-picker style="width: 150px;" v-model="in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" 
-                                placeholder="选择日期"></el-date-picker>
+                                <el-input clearable v-model="name" type="text" placeholder="请输入" @input="searchGoodFun"></el-input>
                             </div>
                         </div>
                     </div>
-                    <div class="tips">
+                    <!-- <div class="tips">
                         <el-radio-group v-model="company" @change="changeFun">
                             <el-radio :label="0">按公斤报价</el-radio>
                             <el-radio :label="1">按斤报价</el-radio>
                         </el-radio-group>
-                    </div>
-                    <div class="search">
-                        <p>
-                            <el-input style="width: 300px;" clearable v-model="name" type="text" placeholder="搜索商品"></el-input>
-                            <el-button @click="searchGoodFun" type="primary" class="ss-btn">搜索</el-button>
-                        </p>
-                        <el-button v-if="!isAgain" @click="znlrFun" plain class="znlr-btn">智能录入</el-button>
-                    </div>
+                    </div> -->
                     <div class="table">
-                        <el-table :data="tableData2" :header-cell-style="rowClass" height="380" v-loading="loading">
-                            <el-table-column prop="goods_name" label="商品名称"> 
+                        <el-table :data="tableData2" :header-cell-style="rowClass" height="400" v-loading="loading">
+                            <el-table-column prop="goods_name" label="商品名称">
                                 <template slot-scope="scope">
                                     <div class="name">
                                         <div v-if="!isAgain">
                                             <p>{{scope.row.goods_name}}</p>
-                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + scope.row.yesterday_price}}</p>
+                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + (scope.row.goods_unit=='斤'?scope.row.yesterday_price/2:scope.row.yesterday_price)}}</p>
                                             <p class="name-p" v-if="scope.row.history_price && !scope.row.yesterday_price">{{'历史价格' + '￥' + scope.row.history_price}}</p>
                                         </div>
                                         <div v-else>
@@ -144,7 +187,8 @@
                                         <div v-if="!isAgain">
                                             <p><el-input @change="inputFun(scope.row)" size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input></p>
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
-                                            <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else></p>
                                         </div>
                                         <div v-else>
                                             <p><el-input @change="inputFun(scope.row)" size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价"></el-input></p>
@@ -152,12 +196,18 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="goods_unit" label="规格" width="60"></el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100">
+                                <template slot-scope="scope">
+                                    <p v-if="scope.row.specifications && scope.row.count">{{Number(scope.row.count).toFixed(0) + scope.row.specifications + '/' + scope.row.goods_unit}}</p>
+                                    <p v-else>{{scope.row.goods_unit}}</p>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
+                        <el-button @click="znlrFun" plain class="znlr-btn">智能录入</el-button>
                         <span>共{{tableData2.length}}种商品</span>
-                        <el-button @click="closeFun" style="margin-left: 300px;">取消</el-button>
+                        <el-button @click="closeFun"  style="margin-left: 240px">取消</el-button>
                         <el-button type="primary" @click="allAddFun" v-if="allGood.length > 0">确认上报</el-button>
                         <el-button type="primary" @click="submitForm" v-else>确认上报</el-button>
                     </div>
@@ -180,7 +230,7 @@
             <div class="passwrd" v-if="isView">
                 <div class="text">
                     <div class="box-title">
-                        <p class="tit">查看</p>
+                        <p class="tit">查看报价单</p>
                         <p class="iconfont icon-close close" @click="closeFun4"></p>
                     </div>
                     <div class="msg-box">
@@ -216,7 +266,7 @@
                                     <div class="name">
                                         <div>
                                             <p>{{scope.row.goods_name}}</p>
-                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + scope.row.yesterday_price}}</p>
+                                            <p class="name-p" v-if="scope.row.yesterday_price">{{'昨日价格' + '￥' + (scope.row.goods_unit=='斤'?scope.row.yesterday_price/2:scope.row.yesterday_price)}}</p>
                                             <p class="name-p" v-if="scope.row.history_price && !scope.row.yesterday_price">{{'历史价格' + '￥' + scope.row.history_price}}</p>
                                         </div>
                                     </div>
@@ -226,25 +276,32 @@
                                 <template slot-scope="scope">
                                     <div class="num">
                                         <div>
-                                            <p><el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价" @change="inputFun(scope.row)"></el-input></p>
+                                            <p class="price" v-if="scope.row.price">{{scope.row.goods_unit=='斤'?scope.row.price/2:scope.row.price}}</p>
+                                            <p class="price" v-else>{{scope.row.price}}</p>
+                                            <!-- <p><el-input size="min" clearable v-model="scope.row.price" type="text" placeholder="请填写零售价" @change="inputFun(scope.row)"></el-input></p> -->
                                             <p class="num-p" v-if="scope.row.rate > 0">{{'上涨' + scope.row.rate + '%'}}</p>
-                                            <p class="num-p" v-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else-if="scope.row.xiaj">{{'下降' + scope.row.xiaj + '%'}}</p>
+                                            <p class="num-p" v-else></p>
                                         </div>
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="goods_unit" label="规格" width="60"></el-table-column>
+                            <el-table-column prop="goods_unit" label="规格" width="100">
+                                <template slot-scope="scope">
+                                    <p v-if="scope.row.specifications && scope.row.count">{{Number(scope.row.count).toFixed(0) + scope.row.specifications + '/' + scope.row.goods_unit}}</p>
+                                    <p v-else>{{scope.row.goods_unit}}</p>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
-                        <span>共{{tableData2.length}}种商品</span>
-                        <el-button @click="closeFun4" style="margin-left: 350px;">取消</el-button>
-                        <el-button type="primary" @click="editFun">确认</el-button>
+                        <span>已上报{{tableData2.length}}种商品</span>
+                        <el-button @click="closeFun4" style="margin-left: 410px;">关闭</el-button>
+                        <!-- <el-button type="primary" @click="editFun">确认</el-button> -->
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -284,7 +341,7 @@ function getNowFormatDate() {//获取当前时间
         + " "  + date.getHours()  + seperator2  + date.getMinutes() + seperator2 + date.getSeconds();
     return currentdate
 }
-import {QueryBizGoods,QueryIndex,QueryGoodsForBiz,Insert,QueryRegion,AutoIdentity,InsertList} from '../../js/retail/retail.js'
+import {getQueryBizGoods,getQueryGoodsForBiz,getInsert,getQueryRegion,getAutoIdentity,getInsertList} from '../../js/quotation/quotation.js'
 import {allBizs} from "../../js/management/management.js";
 import {GetAllNode} from '../../js/user/user.js'
 export default {
@@ -299,6 +356,7 @@ export default {
                 enterprise: '',
                 tbsh: '',
                 states: '',
+                tbre:'',
             },
             inline: true,
             page: 1,
@@ -334,6 +392,7 @@ export default {
             tabRegion: '',
             region: '',
             regionArr: [],
+            regionName:'',
             newGoodArr: [],
             newGoodObj: {},
             biz_id: '',
@@ -342,7 +401,7 @@ export default {
             istableAdd: false, // 点击列表操作添加报表
             allGood: [],
             viewBiz: '',
-            selectGood: [], 
+            selectGood: [],
             company: 0,
             isSearch: false, // 是否搜索报价商品
             unitName: '公斤',
@@ -351,6 +410,12 @@ export default {
             loading2: false, // 查看商品
             isAgain: false, // 再次报价
             merchant_name: '',
+            Dataloading:true,
+            chooseMer:false,
+            merloading:false,
+            unit: '',
+            roleId: '',
+            count: 1,
         }
     },
     mounted() {
@@ -362,7 +427,7 @@ export default {
         this.form.dataTime = formatDate(currentTime)
         if(this.$route.params.bizView){
             let param = this.$route.params.bizView
-            this.form.enterprise = JSON.stringify(param.node_id) 
+            this.form.enterprise = JSON.stringify(param.node_id)
             this.form.dataTime = param.in_date
             this.node_name = param.node_name
             this.form.tbsh = param.biz_name
@@ -372,9 +437,11 @@ export default {
             this.form.dataTime = param.in_date
             this.node_name = param.node_name
         }
-        console.log(this.form.enterprise)
-        this.getBizFun()
-        this.getDataFun()
+        // this.getBizFun();
+        this.getDataFun();
+        this.getRegionFun();
+        console.log(this.form.dataTime)
+        console.log(this.$route.params)
     },
     methods: {
         selectTimeFun(ele){
@@ -468,7 +535,7 @@ export default {
                         arr.push(goodobj)
                     }
                 })
-            }else{    
+            }else{
                 this.tableData2.forEach(val => {
                     if(val.price){
                         goodobj = {
@@ -506,9 +573,9 @@ export default {
                         }
                     })
                 }
-                console.log(arr)    
+                console.log(arr)
                 let obj =  JSON.stringify(arr)
-                InsertList(obj)
+                getInsertList(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success('修改成功');
@@ -544,13 +611,14 @@ export default {
         },
         // 选择区域
         selectRegion(ele){
-            this.page2 = 1
+            this.page2 = 1;
             if(ele){
-                this.getBizFun2()
+                this.region = ele.SHOP_BOOTH_ID;
+                this.getBizFun2();
             }else{
-                this.region = ''
+                this.region = '';
             }
-            this.getGoodFun()
+            this.getGoodFun();
         },
         // 新增获取商户
         getBizFun2(){
@@ -558,7 +626,7 @@ export default {
                 page: 1,
                 cols: 1000,
                 total: 0,
-                userId: this.tbqyUserId,
+                userId: localStorage.getItem('userId'),
                 name: '',
                 boothName: '',
                 stall_no: '',
@@ -588,7 +656,6 @@ export default {
                     this.selectGood = this.tableData2
                 }
             }
-            console.log(this.selectGood)
             let obj = {
                 page: 1,
                 cols: 10000,
@@ -597,8 +664,9 @@ export default {
                 region: this.region,
                 in_date: this.in_date,
                 goods_name: this.name,
+                unit_type: 1,
             }
-            QueryGoodsForBiz(obj)
+            getQueryGoodsForBiz(obj)
                 .then(res => {
                     this.loading = false
                     let str = ''
@@ -628,20 +696,28 @@ export default {
                             }
                         })
                     }
+                    // res.data.list.forEach(val => {
+                    //     if(val.price){
+                    //         if(val.goods_unit == '斤'){
+                    //             val.price = val.price/2
+                    //         }
+                    //     }
+                    // })
                     this.tableData2 = res.data.list
                     this.num2 = res.data.bean.total
-                    if(this.isAgain == true && this.isSearch == false){
-                        this.loading = true
-                        this.getGoodFun2()
+                    if(this.isAgain && !this.isSearch){
+                      this.loading = true;
+                      this.getGoodFun2();
                     }
                 })
-                .catch(() => {
+                .catch(res => {
                     this.loading = false
-                    this.$message.error("出错啦!");
+                    console.log(res)
                 })
         },
         // 获取列表搜索时间商品
         getGoodFun2(){
+            // this.getGoodFun()
             let obj = {
                 page: 1,
                 cols: 10000,
@@ -650,14 +726,54 @@ export default {
                 region: this.region,
                 in_date: this.form.dataTime,
                 goods_name: this.name,
+                unit_type: 1,
             }
-            QueryGoodsForBiz(obj)
+            getQueryGoodsForBiz(obj)
                 .then(res => {
                     this.loading = false
                     res.data.list.forEach(val => {
+                        if(val.price){
+                            if(val.goods_unit == '斤'){
+                                val.price = val.price/2
+                            }
+                        }
                         this.tableData2.forEach(val2 => {
                             if(val.goods_code == val2.goods_code){
-                                val2.price = val.price
+                                // val2.price = val.price
+                                val.area_id = val2.area_id
+                                val.area_name = val2.area_name
+                                val.biz_id = val2.biz_id
+                                val.biz_name = val2.biz_name
+                                val.cols = val2.cols
+                                val.count = val2.count
+                                val.end_date = val2.end_date
+                                val.goods_code = val2.goods_code
+                                val.goods_id = val2.goods_id
+                                val.goods_name = val2.goods_name
+                                val.goods_unit = val2.goods_unit
+                                val.history_price = val2.history_price
+                                val.history_rate = val2.history_rate
+                                val.id = val2.id
+                                val.in_date = val2.in_date
+                                val.node_id = val2.node_id
+                                val.node_name = val2.node_name
+                                val.num = val2.num
+                                val.page = val2.page
+                                val.rate = val2.rate
+                                val.real_weight = val2.real_weight
+                                val.region = val2.region
+                                val.region_name = val2.region_name
+                                val.shop_booth_id = val2.shop_booth_id
+                                val.specifications = val2.specifications
+                                val.start_date = val2.start_date
+                                val.state = val2.state
+                                val.total = val2.total
+                                val.uid = val2.uid
+                                val.unit_type = val2.unit_type
+                                val.user_id = val2.user_id
+                                val.weight = val2.weight
+                                val.yesterday = val2.yesterday
+                                val.yesterday_price = val2.yesterday_price
                             }
                         })
                     })
@@ -676,6 +792,10 @@ export default {
                 }
             })
         },
+        handleRegion(){
+          this.region = this.form.tbre;
+          this.getBizFun();
+        },
         // 获取填报商户
         getBizFun(){
             let params = {
@@ -684,12 +804,13 @@ export default {
                 in_date: this.form.dataTime,
                 cols: 1000,
                 page: 1,
-                region: '',
+                region: this.region,
                 biz_name: '',
             }
-            QueryBizGoods(params)
+            getQueryBizGoods(params)
                 .then(res => {
-                    this.tbshArr = res.data.list
+                    this.tbshArr = res.data.list;
+                    this.merloading = false;
                 })
                 .catch((res) => {
                     console.log(res)
@@ -718,12 +839,20 @@ export default {
             this.isZnlr = true
         },
         searchGoodFun(){
-            this.page2 = 1
-            this.isSearch = true
-            if(this.viewNodeId){
-                this.getViewFun()
-            }else{
-                this.getGoodFun()
+            this.clearTimer();
+            this.timer = setTimeout(() => {
+                this.page2 = 1
+                this.isSearch = true
+                if(this.viewNodeId){
+                    this.getViewFun()
+                }else{
+                    this.getGoodFun()
+                }
+            }, 1000);
+        },
+        clearTimer() {
+            if (this.timer) {
+                clearTimeout(this.timer);
             }
         },
         submitForm(ele){
@@ -742,6 +871,16 @@ export default {
                 })
                 this.selectGood.forEach(val => {
                     if(val.price){
+                      let price = '';
+                        if(!this.unit){
+                            if(val.goods_unit=='斤'){
+                                price = val.price*2
+                            }else{
+                                price = val.price
+                            }
+                        }else{
+                            price = val.price
+                        }
                         goodobj = {
                             node_id: val.node_id,
                             node_name: val.node_name,
@@ -752,7 +891,10 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
-                            price: val.price,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
+                            price: price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
                             area_id: val.area_id ? val.area_id : '',
@@ -761,11 +903,21 @@ export default {
                             real_weight: val.real_weight ? val.real_weight : '',
                         }
                         arr.push(goodobj)
-                    }       
+                    }
                 })
-            }else{    
+            }else{
                 this.tableData2.forEach(val => {
                     if(val.price){
+                        let price = '';
+                        if(!this.unit){
+                            if(val.goods_unit=='斤'){
+                                price = val.price*2
+                            }else{
+                                price = val.price
+                            }
+                        }else{
+                            price = val.price
+                        }
                         goodobj = {
                             node_id: val.node_id,
                             node_name: val.node_name,
@@ -776,7 +928,10 @@ export default {
                             goods_id: val.goods_id,
                             goods_code: val.goods_code,
                             goods_name: val.goods_name,
-                            price: val.price,
+                            goods_unit: val.goods_unit,
+                            count: val.count,
+                            specifications: val.specifications,
+                            price: price,
                             yesterday_price: val.yesterday_price ? val.yesterday_price : '',
                             history_price: val.history_price ? val.history_price : '',
                             area_id: val.area_id ? val.area_id : '',
@@ -788,7 +943,6 @@ export default {
                     }
                 })
             }
-            console.log(this.viewGood)
             if(arr.length > 0 || this.viewGood.length > 0){
                 if(this.viewGood.length > 0){
                     this.viewGood.forEach((val,index) => {
@@ -800,7 +954,7 @@ export default {
                     })
                     arr = arr.concat(this.viewGood)
                 }
-                if(this.company == 1){
+                if(this.unit == 1){
                     arr.forEach(val => {
                         if(val.price){
                             val.price = val.price*2
@@ -809,7 +963,7 @@ export default {
                 }
                 console.log(arr)
                 let obj =  JSON.stringify(arr)
-                InsertList(obj)
+                getInsertList(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success(res.message);
@@ -829,9 +983,12 @@ export default {
             this.isEdits = false
             this.isAgain = false
             this.tbqy = ''
+            this.unit = '';
+            this.count = 1
             this.tbqyUserId = ''
             this.tbqyName = ''
             this.region = ''
+            this.regionName ='';
             this.regionArr = []
             this.newGoodArr = []
             this.newGoodObj = {}
@@ -853,6 +1010,7 @@ export default {
             this.allGood = []
             this.unitName = '公斤'
             this.viewGood = []
+            this.chooseMer = false;
         },
         chack_name(str){
         　　var pattern = new RegExp("[`~!@#$^&*()=|{}''\\[\\]<>《》/?~！@#￥&*（）——|{}【】‘”“'？]");
@@ -900,8 +1058,9 @@ export default {
                     node_id: this.form.enterprise,
                     region: this.region,
                     in_date: this.in_date,
+                    unit_type: 1
                 }
-                AutoIdentity(obj)
+                getAutoIdentity(obj)
                     .then(res => {
                         if(res.result == true){
                             this.$message.success(res.message);
@@ -963,31 +1122,69 @@ export default {
             this.unitName = '公斤'
             this.viewGood = []
         },
-        changeFun(ele){
-            if(ele == 0){
-                this.unitName = '公斤'
-                this.tableData2.forEach(val => {
-                    if(val.price){
-                       val.price = val.price*2
-                    }
-                })
-                this.selectGood.forEach(val => {
-                    if(val.price){
-                       val.price = val.price*2
-                    }
-                })
-            }else if(ele == 1){
-                this.unitName = '斤'
-                this.tableData2.forEach(val => {
-                    if(val.price){
-                       val.price = val.price/2
-                    }
-                })
-                this.selectGood.forEach(val => {
-                    if(val.price){
-                       val.price = val.price/2
-                    }
-                })
+        changeFun(){
+            if(this.count == 1){
+                // 第一次选择单位
+                this.count = 2
+                if(this.unit == 0){
+                    this.unitName = '公斤'
+                    this.tableData2.forEach(val => {
+                        if(val.price){
+                            if(val.goods_unit=='斤'){
+                                val.price = val.price*2
+                            }
+                        }
+                    })
+                    this.selectGood.forEach(val => {
+                        if(val.price){
+                            if(val.goods_unit=='斤'){
+                                val.price = val.price*2
+                            }
+                        }
+                    })
+                }else if(this.unit == 1){
+                    this.unitName = '斤'
+                    this.tableData2.forEach(val => {
+                        if(val.price){
+                            if(val.goods_unit=='公斤'){
+                                val.price = val.price/2
+                            }
+                        }
+                    })
+                    this.selectGood.forEach(val => {
+                        if(val.price){
+                            if(val.goods_unit=='公斤'){
+                                val.price = val.price/2
+                            }
+                        }
+                    })
+                }
+            }else{
+                if(this.unit == 0){
+                    this.unitName = '公斤'
+                    this.tableData2.forEach(val => {
+                        if(val.price){
+                            val.price = val.price*2
+                        }
+                    })
+                    this.selectGood.forEach(val => {
+                        if(val.price){
+                            val.price = val.price*2
+                        }
+                    })
+                }else if(this.unit == 1){
+                    this.unitName = '斤'
+                    this.tableData2.forEach(val => {
+                        if(val.price){
+                            val.price = val.price/2
+                        }
+                    })
+                    this.selectGood.forEach(val => {
+                        if(val.price){
+                            val.price = val.price/2
+                        }
+                    })
+                }
             }
         },
         // 在次报价
@@ -1006,19 +1203,59 @@ export default {
             this.getGoodFun()
             this.isEdits = true
         },
+        handleClick1(){
+           this.merloading = true;
+          this.regionArr.forEach(val => {
+              if(val.bootList){
+                  if(this.activeName == val.bootList[0].booth_name){
+                      this.region = val.bootList[0].shop_booth_id;
+                  }
+              }else{
+                  if(this.activeName == val.BOOTH_NAME ){
+                      this.region = val.SHOP_BOOTH_ID
+                  }
+              }
+          })
+          if(this.activeName == 'first'){
+              this.tabRegion = ''
+          }
+          setTimeout(() => {
+              this.getBizFun();
+          }, 100)
+        },
+        handleRow(e){
+           this.chooseMer = false;
+           this.merchant = e.shop_booth_id
+           this.biz_id = e.biz_id
+           this.biz_name = e.booth_name
+           this.region = e.region
+           this.regionName = e.region_name ? e.region_name : '无'
+           this.isEdits = true
+           this.getGoodFun()
+        },
         addFun(ele){
             var currentTime = new Date()
             this.in_date = formatDate(currentTime)
             if(ele.shop_booth_id){
-                this.merchant = ele.shop_booth_id
-                this.biz_id = ele.biz_id
-                this.biz_name = ele.booth_name
-                this.region = ele.region
+                this.merchant = ele.shop_booth_id;
+                this.biz_id = ele.biz_id;
+                this.biz_name = ele.booth_name;
+                this.region = ele.region;
+                this.regionName = ele.region_name ? ele.region_name : '无';
+                this.isEdits = true;
+                this.getGoodFun();
             }else{
-                // this.getRegionFun()
+                this.merloading = true;
+                this.chooseMer = true;
+                this.getRegionFun()
+                setTimeout(() => {
+                    this.region = this.regionArr[0].SHOP_BOOTH_ID;
+                    this.activeName = this.regionArr[0].BOOTH_NAME;
+                    this.getBizFun();
+                }, 1000)
             }
-            this.getGoodFun()
-            this.isEdits = true
+            // this.getGoodFun2()
+            // this.isEdits = true
         },
         viewFun(ele){
             this.isView = true
@@ -1059,7 +1296,7 @@ export default {
                 in_date: this.tbrqView,
                 goods_name: this.name,
             }
-            QueryGoodsForBiz(params)
+            getQueryGoodsForBiz(params)
                 .then(res => {
                     this.loading2 = false
                     let str = ''
@@ -1096,9 +1333,9 @@ export default {
             let obj = {
                 node_id: this.form.enterprise,
             }
-            QueryRegion(obj)
+            getQueryRegion(obj)
                 .then(res => {
-                    this.regionArr = res.data.regionList
+                    this.regionArr = res.data.regionList;
                 })
                 .catch((res) => {
                     console.log(res)
@@ -1120,11 +1357,12 @@ export default {
                 in_date: this.form.dataTime,
                 cols: this.cols,
                 page: this.page,
-                region: '',
+                region: this.form.tbre,
                 biz_name: this.form.tbsh,
             }
-            QueryBizGoods(params)
+            getQueryBizGoods(params)
                 .then(res => {
+                  this.Dataloading = false;
                     this.tableData = res.data.list
                     this.num = res.data.bean.total
                 })
@@ -1188,12 +1426,23 @@ export default {
     .content{
         width: 100%;
         height: 100%;
+        .node{
+            padding: 10px 20px; 
+            margin-bottom: 10px;
+            background: #fff;
+            font-size: 14px;
+            .span{
+                font-weight: bolder;
+            }
+        }
         .num{
             div{
                 display: flex;
                 justify-content: space-between;
                 font-size: 14px;
+                align-items: center;
                 .num-p{
+                    width: 100px;
                     color: red;
                     font-size: 12px;
                     text-align: right;
@@ -1288,6 +1537,29 @@ export default {
                     }
                 }
             }
+            /* .el-table{
+              height: 433px !important;
+            } */
+             .el-table .el-table__body-wrapper{
+               height: 388px !important;
+             }
+            .el-table__body-wrapper::-webkit-scrollbar {
+              width: 16px !important;
+              height: 16px !important;
+            }
+            .el-table__body-wrapper::-webkit-scrollbar-track
+            {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3) !important;
+                border-radius: 10px !important;  /*滚动条的背景区域的圆角*/
+                background-color: red !important;/*滚动条的背景颜色*/
+            }
+            /*定义滑块 内阴影+圆角*/
+            .el-table__body-wrapper::-webkit-scrollbar-thumb
+            {
+                border-radius: 10px !important;  /*滚动条的圆角*/
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3) !important;
+                background-color: green !important;  /*滚动条的背景颜色*/
+            }
             .import{
                 color: #409EFF;
                 background: #fff;
@@ -1354,6 +1626,10 @@ export default {
                         cursor: pointer;
                     }
                 }
+                .table{
+                    margin-top: 0;
+                    padding: 0 15px 10px;
+                }
                 .msg-box{
                     clear: both;
                     margin-top: 10px;
@@ -1373,6 +1649,9 @@ export default {
                             flex: 1;
                             line-height: 30px;
                         }
+                        .el-select, .el-input{
+                            width: 150px;
+                        }
                     }
                 }
                 .tips{
@@ -1389,7 +1668,7 @@ export default {
                         width: 310px;
                     }
                     .el-input{
-                        margin-left: 30px;
+                        margin-left: 10px;
                         width: 200px;
                     }
                     .ss-btn{
@@ -1439,7 +1718,7 @@ export default {
                         opacity: 0;
                         background: rgba(0,0,0,0);
                     }
-                } 
+                }
             }
         }
         .znlr{
@@ -1465,11 +1744,14 @@ export default {
                 }
             }
         }
-        
+
     }
 </style>
 <style lang="less">
     .viewRetail{
+        .el-tabs{
+            padding: 0 15px;
+        }
         .el-date-editor .el-range-separator, .el-date-editor .el-range__icon, .el-date-editor .el-range__close-icon{
             line-height: 24px;
         }
@@ -1481,6 +1763,16 @@ export default {
         }
         .el-tabs__header{
             margin: 0 10px 10px !important;
+        }
+        .passwrd{
+            .has-gutter{
+                th{
+                    padding: 5px 0;
+                }
+            }
+        }
+        .el-table th, .el-table tr{
+            height: 40px;
         }
     }
 </style>

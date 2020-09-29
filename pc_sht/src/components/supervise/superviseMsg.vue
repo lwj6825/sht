@@ -4,11 +4,12 @@
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
                     <el-form-item label="报表类型">
-                        <el-select v-model="form.enterprise" filterable clearable placeholder="请选择">
+                        <el-select v-model="form.enterprise" filterable clearable placeholder="请选择" @change="selectChangeFun">
                             <el-option label="零售市场" value="零售市场"></el-option>
                             <el-option label="批发市场" value="批发市场"></el-option>
                             <el-option label="超市" value="超市"></el-option>
-                            <el-option label="菜车" value="菜车"></el-option>
+                            <el-option label="生鲜配送" value="生鲜配送"></el-option>
+                            <el-option label="团体消费单位" value="团体消费单位"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="填报日期">
@@ -44,7 +45,7 @@
             <div class="title">
                 <p class="tz-title">报表浏览</p>
             </div>
-            <div class="tables" >
+            <div class="tables" v-loading="loading">
                 <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="node_type" label="报表类型"> </el-table-column>
                     <el-table-column prop="node_name" label="填报企业"> </el-table-column>
@@ -56,11 +57,11 @@
                             <p v-if="scope.row.data_source == 2">查询机抽取</p>
                             <p v-if="scope.row.data_source == 4">京东到家抽取</p>
                             <p v-if="scope.row.data_source == 5">人工填报</p>
-                        </template>
+                        </template>(scope.row.data_source == 5 || scope.row.data_source == 1) && 
                     </el-table-column>-->
                     <el-table-column label="操作" width="100">
                         <template slot-scope="scope">
-                            <div v-if="scope.row.data_source == 5 && scope.row.state == '已上报'">
+                            <div v-if="scope.row.state == '已上报'">
                                 <el-button type="text" size="small" @click="viewFun(scope.row)">查看报价单</el-button>
                             </div>
                         </template>
@@ -95,10 +96,10 @@
                         <el-tab-pane v-for="(item,index) in regionArr" :key="index"  :label="item.BOOTH_NAME"
                             :name="item.BOOTH_NAME"></el-tab-pane> 
                     </el-tabs>
-                    <div class="table"><!-- v-loading="loading2"-->
+                    <div class="table"v-loading="loading2"><!-- -->
                         <el-table :data="tableData2" :header-cell-style="rowClass" height="400">
-                            <el-table-column prop="goods_name" label="商品名称"></el-table-column>
-                            <el-table-column prop="price" label="销售价（元/公斤）"></el-table-column>
+                            <el-table-column :prop="data_source == 5 ? 'goods_name' : 'plu_name'" label="商品名称"></el-table-column>
+                            <el-table-column prop="price" label="价格"></el-table-column>
                         </el-table>
                     </div>
                     <div class="btn">
@@ -151,7 +152,8 @@ import {QueryNodeInfoIndex,QueryIndex,QueryGoodsForBiz,Insert,QueryRegion,AutoId
     QueryRegionForGoodsPrice,QueryGoodsIndex} from '../../js/retail/retail.js'
 import {allBizs} from "../../js/management/management.js";
 import { GetMarkets} from '../../js/district/district.js';
-import {QueryNodeInfoIndexNew, GetAllNodeJc} from '../../js/supervise/supervise.js'
+import {QueryNodeInfoIndexNew, GetAllNodeJc, GetAllNodeNew} from '../../js/supervise/supervise.js'
+import { QueryNodeGoodsDetails} from '../../js/survey/survey.js'
 export default {
     name:"superviseMsg",
     data() {
@@ -214,11 +216,12 @@ export default {
             isGoodMsg: false,
             goodName: '',
             tableData3: [],
-            loading: false, // 新增商品
+            loading: true, // 新增商品
             loading2: false, // 查看商品
             loading3: false, // 查看商品详细信息
             titleArr: [],
             count: 1,
+            data_source: '',
         }
     },
     mounted() {
@@ -235,14 +238,13 @@ export default {
         this.getNodeFun()
     },
     methods: {
-        // 获取商品
-        getGoodFun(){
-
+        selectChangeFun(ele){
+            this.getNodeFun()
         },
         // 获取填报企业
         getNodeFun(){
-            let str = 'node_id=' + this.node_id
-            GetAllNodeJc(str)
+            let str = 'node_id=' + this.node_id + '&node_type=' + (this.form.enterprise ? this.form.enterprise : '')
+            GetAllNodeNew(str)
                 .then(res => {
                     this.tbqyArr = res.data.dataList
                 })
@@ -276,6 +278,7 @@ export default {
             this.regionArr = []
             this.tabRegion = ''
             this.name = ''
+            this.data_source = ''
             this.count = 1
             this.viewNodeId = ''
             this.activeName = 'first'
@@ -289,6 +292,7 @@ export default {
             this.tbrqView = ele.in_date
             this.tbqyView = ele.node_name
             this.viewNodeId = ele.node_id
+            this.data_source = ele.data_source
             this.page2 = 1
             this.loading2 = true
             this.getViewFun(ele.node_id)
@@ -296,33 +300,56 @@ export default {
         // 查看获取商品
         getViewFun(node_id){
             let that = this;
-            let params = {
-                node_id: this.viewNodeId,
-                in_date: this.tbrqView,
-                cols: 10000,
-                page: 1,
-                region: this.tabRegion,
-                goods_name: this.name,
-            }
-            QueryIndex(params)
-                .then(res => {
-                    this.tableData2 = res.data.list
-                    if(this.count == 1){
-                        let arr = res.data.map,
-                            obj = {};
-                        for(let key in arr){
-                            obj = {
-                                SHOP_BOOTH_ID: key,
-                                BOOTH_NAME: arr[key]
+            if(this.data_source == 5){
+                let params = {
+                    node_id: this.viewNodeId,
+                    in_date: this.tbrqView,
+                    cols: 1000,
+                    page: 1,
+                    region: this.tabRegion,
+                    goods_name: this.name,
+                }
+                QueryIndex(params)
+                    .then(res => {
+                        this.loading2 = false
+                        this.tableData2 = res.data.list
+                        if(this.count == 1){
+                            let arr = res.data.map,
+                                obj = {};
+                            for(let key in arr){
+                                obj = {
+                                    SHOP_BOOTH_ID: key,
+                                    BOOTH_NAME: arr[key]
+                                }
+                                this.regionArr.push(obj)
                             }
-                            this.regionArr.push(obj)
+                            this.count = 2
                         }
-                        this.count = 2
-                    }
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                        this.loading2 = false
+                    })
+
+            }else if(this.data_source == 1 || this.data_source == 4){
+                let params = {
+                    node_id: this.viewNodeId,
+                    cols: 1000,
+                    page: 1,
+                    start_date: this.tbrqView,
+                    end_date: this.tbrqView,
+                }
+                QueryNodeGoodsDetails(params)
+                    .then(res => {
+                        this.loading2 = false
+                        this.tableData2 = res.data.dataList
+                        this.num2 = res.data.condition.total
+                    })
+                    .catch((res) => {
+                        this.loading2 = false
+                        console.log(res)
+                    })
+            }
             // if(node_id){
             //     let obj = {
             //         node_id: node_id,
@@ -352,6 +379,7 @@ export default {
             this.isfile = true
         },
         getDataFun(){
+            this.loading = true
             let params = {
                 node_id: this.form.tbqy,
                 state: this.form.states,
@@ -364,10 +392,12 @@ export default {
             }
             QueryNodeInfoIndexNew(params)
                 .then(res => {
+                    this.loading = false
                     this.tableData = res.data.list
                     this.num = res.data.bean.total
                 })
                 .catch((res) => {
+                    this.loading = true
                     console.log(res)
                 })
         },
@@ -404,7 +434,7 @@ export default {
         },
         getTime(){
             var start = new Date();
-            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
+            var startTime = start.setTime(start.getTime());
             this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
@@ -652,7 +682,10 @@ export default {
             margin: 0 10px 10px !important;
         }
         .el-table td{
-            padding: 3px 0;
+            padding: 5px 0;
+        }
+        .el-button--small{
+            padding: 0 15px;
         }
     }
 </style>

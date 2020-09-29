@@ -108,7 +108,7 @@
   import {getDefaultProductTypes,allSuppliers,allSpecification,addPurchase,goodUpdate,GoodsCode,UpdateGoodsImgForTrace} from "../../js/goods/goods.js";
   import {GetSupplier} from '../../js/district/district.js'
   import {getAddr} from '../../js/user/user.js';
-  import {baseUrl,baseUrl2} from '../../js/address/url.js'
+  import {baseUrl} from '../../js/address/url.js'
   import axios from 'axios';
   export default {
     name: "",    

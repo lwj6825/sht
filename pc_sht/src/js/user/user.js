@@ -20,7 +20,9 @@ import {
     updateNodeApply,
     queryMonitoring,
     getNodeInfoXt,
-    updatePasswordByUserId
+    updatePasswordByUserId,
+    queryNodeIdForName,
+    queryNodeType,
 } from '../address/url.js';
 
 //所有用户信息
@@ -49,8 +51,16 @@ export const  GetAllNode  = function(params) {
 }
 //添加市场
 export const  InsertNodeInfo  = function(params) {
-    return ajaxPost(insertNodeInfo,params)
-  }
+  return ajaxPost(insertNodeInfo,params)
+}
+// 添加市场企业类型
+export const  QueryNodeIdForName  = function(params) {
+  return ajaxPost(queryNodeIdForName,params)
+}
+// 添加市场企业类型查询
+export const  QueryNodeType  = function(params) {
+  return ajaxGet(queryNodeType,params)
+}
 
 // 供货单位 
 //供货单位管理查询（超管）

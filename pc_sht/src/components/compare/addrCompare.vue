@@ -6,12 +6,8 @@
                     <el-form-item label="节点名称">
                         <el-input v-model="form.node_name" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="产地信息">
-                        <el-select v-model="form.addr" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item,index) in addrArr" :key="index" :label="item.item"
-                            :value="item.item">
-                            </el-option>
-                        </el-select>
+                    <el-form-item label="产地名称">
+                        <el-input v-model="form.addr" clearable></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn" @click="searchFun"style="margin-left: 10px;">搜索</el-button>
@@ -24,26 +20,56 @@
             <div class="title">
                 <p class="tz-title">数据列表</p>
                 <div>
-                    <el-button type="primary" @click="addFun"> + 添加</el-button>
-                    <div class="submit">
+                    <el-button v-if="editAllBtn == '批量修改'" type="primary" @click="addFun"> + 添加</el-button>
+                    <el-button v-if="editAllBtn == '批量修改'" @click="downloadFun">导出</el-button>
+                    <div class="submit" v-if="editAllBtn == '批量修改'">
                         批量导入
                         <form id="upload" enctype="multipart/form-data" method="post"> 
                             <input type="file" class="file" ref="file" @change="fileFun($event)">
                         </form> 
                     </div>
-                    <el-button type="primary" @click="allEditFun">批量编辑</el-button>
-                    <el-button type="primary" plain @click="downloadFun">导出</el-button>
+                    <el-button v-if="editAllBtn == '完成'" @click="cancelFun">取消</el-button>
+                    <el-button type="primary" @click="allEditFun">{{editAllBtn}}</el-button>
                 </div>
             </div>
-            <el-table :data="tableData" :header-cell-style="rowClass">
-                <el-table-column prop="id" label="产地编码"></el-table-column>
-                <el-table-column prop="id" label="产地名称"></el-table-column>
-                <el-table-column prop="id" label="自定义编码"></el-table-column>
-                <el-table-column prop="id" label="自定义名称"></el-table-column>
+            <el-table :data="tableData" :header-cell-style="rowClass" :style="editAllBtn == '批量修改' ? {'display': 'block'} : {'display': 'none'}">
+                <el-table-column prop="before_code" label="产地编码"></el-table-column>
+                <el-table-column prop="before_name" label="产地名称"></el-table-column>
+                <el-table-column prop="userdefine_code" label="自定义编码"></el-table-column>
+                <el-table-column prop="userdefine_name" label="自定义名称"></el-table-column>
                 <el-table-column label="操作" width="120">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
                         <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-table :data="tableData" :header-cell-style="rowClass" :style="editAllBtn == '批量修改' ? {'display': 'none'} : {'display': 'block'}">
+                <el-table-column prop="before_code" label="产地编码">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.before_code" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="before_name" label="产地名称">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.before_name" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                </el-table-column>
+                <el-table-column prop="userdefine_code" label="自定义编码">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.userdefine_code" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="userdefine_name" label="自定义名称">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.userdefine_name" clearable @input="inputFun(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
+                        <el-button type="text" size="small" @click="deleteFun(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -55,6 +81,20 @@
 </template>
 
 <script>
+import {QueryNodeUserdefine, DeleteUserdefine, DownloadNodeUserdefine, BatchUpdateNodeUserdefine} from '../../js/compare/compare.js'
+function getNowFormatDate() {//获取当前时间
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
+    var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
+    var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
+            + " "  + date.getHours()  + seperator2  + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate
+}
+import {importNodeUserdefine} from '../../js/address/url.js'
+import axios from 'axios';
 export default {
     name:"addrCompare",
     data() {
@@ -62,43 +102,226 @@ export default {
             page: 1,
             cols: 10,
             total: 0,
-            tableData: [
-                {
-                    aa: '111'
-                }
-            ],
+            tableData: [],
             form: {
                 node_name: '',
                 addr: '',
             },
             addrArr: [],
+            loading: true,
+            editAllBtn: '批量修改',
+            editArr: [],
+            file: '',
         }
     },
     mounted() {
-        
+        let routeMsg1 = '';
+        if(localStorage.getItem('routeMsg1')){
+            routeMsg1 = JSON.parse(localStorage.getItem('routeMsg1'))
+        }
+        if(localStorage.getItem('searchMsg2')){
+            this.form = JSON.parse(localStorage.getItem('searchMsg2'))
+            localStorage.removeItem('searchMsg2')
+        }
+        this.form.node_name = routeMsg1.node_name
+        this.form.node_id = routeMsg1.node_id
+        this.getDataFun()
     },
     methods: {
+        inputFun(ele){
+            if(this.editArr.length == 0){
+                this.editArr.push(ele)
+            }else{
+                this.editArr.forEach((val,index) => {
+                    if(val.id == ele.id){
+                        this.editArr.splice(index,1)
+                    }
+                })
+                this.editArr.push(ele)
+            }
+        },
         // 批量编辑
         allEditFun(){
-
+            if(this.editAllBtn == '批量修改'){
+                this.editAllBtn = '完成'
+            }else if(this.editAllBtn == '完成'){
+                let arr = [], itemObj = {};
+                if(this.editArr.length > 0){
+                    this.editArr.forEach((val,index) => {
+                        itemObj = {
+                            id: val.id,
+                            node_name: val.node_name,
+                            node_id: val.node_id,
+                            userdefine_code: val.userdefine_code,
+                            userdefine_name: val.userdefine_name,
+                            before_code: val.before_code,
+                            before_name: val.before_name,
+                            association_id: '',
+                            userdefine_type: 4,
+                            userdefine_code_one: '',
+                            userdefine_code_two: '',
+                            specifications: '',
+                            janescreen_retrieve: '',
+                            fullscreen_retrieve: '',
+                            managing_mode: '',
+                            brand: '',
+                            supplier: '',
+                            supplier_id: '',
+                            ws_supplier_id: '',
+                            ws_supplier: ''
+                        }
+                        arr.push(itemObj)
+                    })
+                    let obj = "{" + '"data"' + ":" + JSON.stringify(arr) + "}"
+                    BatchUpdateNodeUserdefine(obj)
+                        .then(res => {
+                            if (res.result == true) {
+                                this.$message.success('修改成功');
+                                this.editAllBtn = '批量修改'
+                                this.editArr = []
+                                this.getDataFun()
+                            }else{
+                                this.$message.error('修改失败');
+                            }
+                        })
+                        .catch(res => {
+                            this.loading = false
+                            console.log(res)
+                        })
+                }else{
+                    this.editAllBtn = '批量修改'
+                    this.editArr = []
+                    this.getDataFun()
+                }
+            }
+        },
+        cancelFun(){
+            this.editAllBtn = '批量修改'
+            this.editArr = []
+            this.getDataFun()
         },
         downloadFun(){
-
+            let params = {
+                node_id: this.form.node_id, // 节点编码
+                userdefine_code: '', // 自定义编码
+                userdefine_name: '', // 自定义名称
+                before_code: '', // 国标编码
+                before_name: '', // 国标名称
+                association_id: '', // 标签编码
+                userdefine_type: 4, // 自定义类型1.商户对照2.节点对照3.商品对照4.产地对照
+                level_id: '', // 商品分类
+            }
+            DownloadNodeUserdefine( params, {})
+                .then((res) => {
+                    let time = getNowFormatDate()
+                    let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
+                    let url = window.URL.createObjectURL(blob);
+                    let aLink = document.createElement("a");
+                    aLink.style.display = "none";
+                    aLink.href = url;
+                    aLink.setAttribute("download", `产地对照` + time);
+                    document.body.appendChild(aLink);
+                    aLink.click();
+                    document.body.removeChild(aLink); 
+                    window.URL.revokeObjectURL(url); 
+                })
+                .catch(function (res) {});
+        },
+        // 上传
+        fileFun(event){
+            let param = this.$refs.file.files[0];
+            this.file = event.target.files[0];
+            let formData = new FormData();
+            formData.append('node_userdefine', this.file);  
+            formData.append('userdefine_type', 4);  
+            formData.append('node_id', this.form.node_id); 
+            formData.append('node_name', this.form.node_name); 
+            let config = {
+                headers:{'Content-Type':'multipart/form-data'}
+            };
+            const ajaxPost = function (url, params,config) {
+                return new Promise((resolve, reject) => {
+                    axios
+                    .post(url, params,{config})
+                    .then((res) => {
+                        resolve(res.data)
+                    })
+                    .catch(() => {
+                        reject('error')
+                    })
+                })
+            }  
+            let url = importNodeUserdefine
+            ajaxPost(url,formData,config)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success(res.message ? res.message : '导入成功');
+                        this.getDataFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                    this.file = ''
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         addFun(){
+            localStorage.setItem('searchMsg2', JSON.stringify(this.form))
             this.$router.push({name: 'NewAddrCompare'})
         },
         editFun(ele){
-            this.$router.push({name: 'EditAddrCompare'})
+            localStorage.setItem('searchMsg2', JSON.stringify(this.form))
+            this.$router.push({name: 'EditAddrCompare', params: ele})
         },
-        deleteFun(ele){
-
+        deleteFun(ele, index){
+            let str = 'id=' + ele.id
+            DeleteUserdefine(str)
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success('删除成功');
+                        this.page = 1
+                        if(this.editAllBtn == '批量修改'){
+                            this.getDataFun()
+                        }else if(this.editAllBtn == '完成'){
+                            this.tableData.splice(index,1)
+                        }
+                    }else{
+                        this.$message.error('删除失败');
+                    }
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         getDataFun(){
-
+            this.loading = true
+            let obj = {
+                page: this.page,
+                cols: this.cols,
+                node_id: this.form.node_id, // 节点编码
+                userdefine_code: '', // 自定义编码
+                userdefine_name: '', // 自定义名称
+                before_code: '', // 国标编码
+                before_name: this.form.addr, // 国标名称
+                association_id: '', // 标签编码
+                userdefine_type: 4, // 自定义类型1.商户对照2.节点对照3.商品对照4.产地对照
+                level_id: '', // 商品分类
+            }
+            QueryNodeUserdefine(obj)
+                .then(res => {
+                    this.loading = false
+                    this.tableData = res.data.dataList 
+                    this.total = res.data.condition.total
+                })
+                .catch(res => {
+                    this.loading = false
+                    console.log(res)
+                })
         },
         handleSizeChange(val){
             this.cols = val
+            this.getDataFun()
         },
         handleCurrentChange(val) {
             this.page = val
@@ -113,6 +336,13 @@ export default {
                 node_name: '',
                 addr: '',
             }
+            let routeMsg1 = '';
+            if(localStorage.getItem('routeMsg1')){
+                routeMsg1 = JSON.parse(localStorage.getItem('routeMsg1'))
+            }
+            this.form.node_name = routeMsg1.node_name
+            this.form.node_id = routeMsg1.node_id
+            this.page = 1
             this.getDataFun()
         },
         rowClass({ row, rowIndex}) {

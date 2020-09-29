@@ -46,7 +46,7 @@
             </div>
             <div class="tables" v-loading="loading">
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="id" label="序号"></el-table-column>
+                    <el-table-column type="index" label="序号"></el-table-column>
                     <el-table-column prop="node_id" label="企业编码"></el-table-column>
                     <el-table-column prop="node_name" label="企业名称"></el-table-column>
                     <el-table-column prop="trace_code" label="查询码"></el-table-column>

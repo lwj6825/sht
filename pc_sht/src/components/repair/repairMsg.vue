@@ -193,7 +193,7 @@
                                     </li>
                                     <li v-for="(item3,index3) in videoArr" :key="item3.id" v-if="item3.video_url">
                                         <p class="delete" @click="removeFun(item3,index3,2)" v-if="item_id">-</p>
-                                        <img class="stop" src="/static/stop.png" alt="">
+                                        <img class="stop" src="../../../static/stop.png" alt="">
                                         <video @click="bigImgFun(item3,3)" class="border" width="50" height="50" :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' + item3.video_url" 
                                             ></video>
                                     </li>
@@ -1483,6 +1483,12 @@ export default {
             let that = this, types = '', states = true;
             this.file = event.target.files[0];
             let url = '',loading = '';
+            loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             if(event.target.files[0].type == 'video/mp4'){
                 let fileSize = event.target.files[0].size / 1024 / 1024
                 if(fileSize > 10){
@@ -1492,12 +1498,6 @@ export default {
                 }
                 url = uploadVideo
                 types = 'video'
-                loading = this.$loading({
-                    lock: true,
-                    text: 'Loading',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                });
             }else{
                 url = uploadImgTask
                 types = 'img'
@@ -1539,6 +1539,7 @@ export default {
                             }
                         }else if(types == 'img'){
                             if(res.result == true){
+                                loading.close();
                                 let obj = {
                                     img_url: res.data
                                 }
@@ -1547,6 +1548,7 @@ export default {
                                 this.imgArr1.push(obj)
                                 this.$message.success(res.message);
                             }else{
+                                loading.close();
                                 this.$message.error(res.message);
                             }
                         }
@@ -1554,11 +1556,12 @@ export default {
                         this.file = null
                     })
                     .catch(res => {
-                        // loading.close();
+                        loading.close();
                         console.log(res)
                     })
             }else{
                 this.file = null
+                loading.close();
             }
         },
         submitForm(formName) {

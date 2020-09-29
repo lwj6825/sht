@@ -29,11 +29,11 @@
             </div>-->
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass">
-                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="file_name" label="文件名"> </el-table-column>
-                    <el-table-column prop="down_path" label="上传路径"> </el-table-column>
-                    <el-table-column prop="upload_time" label="上传时间" > </el-table-column>
+                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="file_name" label="文件名"></el-table-column>
+                    <el-table-column prop="down_path" label="上传路径"></el-table-column>
+                    <el-table-column prop="upload_time" label="上传时间"></el-table-column>
                 </el-table>
             </div>
             <el-pagination v-if="num" background @current-change="handleCurrentChange" :current-page.sync="page" :page-size="cols"

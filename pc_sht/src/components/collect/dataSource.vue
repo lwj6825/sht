@@ -1,11 +1,11 @@
 <template>
-<div class="content">
-    <div class="search">
+    <div class="content">
+        <div class="search">
             <el-form ref="form" :inline="true" :model="form" label-width="100px">
                 <el-form-item label="数据源类型：">
                     <el-select v-model="form.value" clearable placeholder="请选择"  @change="selectGet" style="width:230px">
-                            <el-option v-for="item in options" :key="item.text" :label="item.text" :value="item.id">
-                            </el-option>
+                        <el-option v-for="item in options" :key="item.text" :label="item.text" :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="数据源名称：">
@@ -16,31 +16,23 @@
                     <span class="clear-content" @click="clearFun">清空筛选条件</span>
                 </el-form-item>
             </el-form>
-            <!-- <span class="data_type">数据源类型：</span>
-            <el-select v-model="value" placeholder="请选择"  @change="selectGet" >
-                        <el-option v-for="item in options" :key="item.text" :label="item.text" :value="item.id">
-                        </el-option>
-            </el-select> -->
-            <!-- <span class="data_name">数据源名称：</span>
-            <el-input v-model="input" placeholder="请输入内容" style="width:250px"></el-input> -->
-            
-    </div>
-    <div class="tables" v-loading.body="fullscreenLoading">
+        </div>
+        <div class="tables" v-loading.body="fullscreenLoading">
             <div class="title">
                 <p class="tz-title">全部数据</p>
-                 <div>
+                <div>
                     <el-button class="btn_data"  type="primary" @click="addSource()">+添加数据源</el-button>
                 </div>
             </div>
             <div class="table-box">
                 <el-table :data="tableData" :header-cell-style="rowClass" >
-                    <el-table-column prop="id" label="数据源ID" align="left"> </el-table-column>
-                    <el-table-column prop="source_name" label="数据源名称" align="left"> </el-table-column>
-                    <el-table-column prop="driver_class_name" label="数据源类型" align="left"> </el-table-column>
-                    <el-table-column prop="ip" label="IP地址" align="left"> </el-table-column>
-                    <el-table-column prop="port" label="端口" align="left"> </el-table-column>
-                    <el-table-column prop="data_name" label="数据库名称" align="left"> </el-table-column>
-                    <el-table-column label="操作" fixed="right" align="left">
+                    <el-table-column prop="id" label="数据源ID"></el-table-column>
+                    <el-table-column prop="source_name" label="数据源名称"></el-table-column>
+                    <el-table-column prop="driver_class_name" label="数据源类型"></el-table-column>
+                    <el-table-column prop="ip" label="IP地址"></el-table-column>
+                    <el-table-column prop="port" label="端口"></el-table-column>
+                    <el-table-column prop="data_name" label="数据库名称"></el-table-column>
+                    <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
                         </template>
@@ -49,14 +41,12 @@
             </div>
             <div class="pagination">
                 <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
-                                :total='total'>
+                    :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
+                    :total='total'>
                 </el-pagination>
             </div>
+        </div>
     </div>
-</div>
-    
-    
 </template>
 
 <script>

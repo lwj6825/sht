@@ -2,7 +2,7 @@
     <div class="content enterpriseMsg">
         <div class="searchs" ref="searchs">
             <div class="search">
-                <el-form ref="form" :inline="true" :model="form" label-width="80px">
+                <el-form ref="form" :inline="true" :model="form" label-width="80px" size="mini">
                     <el-form-item label="企业名称">
                         <el-input class="fill" v-model="form.name" clearable placeholder="请输入"></el-input> 
                     </el-form-item>
@@ -16,7 +16,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="监管机构">
-                        <el-select v-model="form.supervise" filterable clearable placeholder="请选择">
+                        <el-select v-model="form.supervise" filterable clearable placeholder="请选择" :disabled="roleId == 40">
                             <el-option v-for="(item, index) in superviseArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
                         </el-select>
                     </el-form-item>
@@ -259,12 +259,23 @@ export default {
                     { required: true, message: '请输入Y坐标', trigger: 'blur' },
                 ]
             },
+            roleId: '',
         }
     },
     mounted(){
         this.node_ids = localStorage.getItem('loginId')
         this.userType = localStorage.getItem('userType')
-        this.getGetJgjgByNodeid()
+        this.roleId = localStorage.getItem('roleId')
+        if(this.roleId == 40){
+            let arr = JSON.parse(localStorage.getItem('booth_List'))
+            let obj = {
+                jgjg: arr[0].BOOTH_NAME
+            }
+            this.superviseArr.push(obj)
+            this.form.supervise = this.superviseArr[0].jgjg
+        }else{
+            this.getGetJgjgByNodeid()
+        }
         this.getDataFun()
     },
     methods: {
@@ -456,6 +467,7 @@ export default {
                 region: '',
                 supervise: '',
             }
+            this.form.supervise = this.superviseArr[0].jgjg
             this.page = 1
             this.getDataFun()
         },
@@ -505,7 +517,7 @@ export default {
                     cursor: pointer;
                 }
                 .el-form-item{
-                    margin-bottom: 0;
+                    margin-bottom: 10px;
                 }
             }
         }

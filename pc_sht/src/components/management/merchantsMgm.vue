@@ -99,7 +99,7 @@ import {allBizs} from "../../js/management/management.js";
 import {QueryArea} from '../../js/area/area.js';
 import AreaSelect from '../common/area';
 import axios from 'axios';
-import {baseUrl,baseUrl2} from '../../js/address/url.js'
+import {baseUrl} from '../../js/address/url.js'
 
 export default {
     name: "merchantsMgm",   

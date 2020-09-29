@@ -67,16 +67,16 @@
             <div class="tables" >
                 <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="changeFun">
                     <el-table-column type="selection" width="50"></el-table-column>
-                    <el-table-column prop="id" label="ID"> </el-table-column>
-                    <el-table-column prop="node_id" label="节点编码"> </el-table-column>
-                    <el-table-column prop="node_name" label="节点名称"> </el-table-column>
-                    <el-table-column prop="log_type" label="日志类型"> </el-table-column>
-                    <el-table-column prop="error_code" label="缺对照编码"> </el-table-column>
-                    <el-table-column prop="error_name" label="取对照名称"> </el-table-column>
-                    <el-table-column prop="error_data" label="备用信息" > </el-table-column>
-                    <el-table-column prop="message" label="数据说明" > </el-table-column>
-                    <el-table-column prop="record_date" label="最后时间" > </el-table-column>
-                    <!--<el-table-column prop="SCBJ" label="删除标记" > </el-table-column>-->
+                    <el-table-column prop="id" label="ID"></el-table-column>
+                    <el-table-column prop="node_id" label="节点编码"></el-table-column>
+                    <el-table-column prop="node_name" label="节点名称"></el-table-column>
+                    <el-table-column prop="log_type" label="日志类型"></el-table-column>
+                    <el-table-column prop="error_code" label="缺对照编码"></el-table-column>
+                    <el-table-column prop="error_name" label="取对照名称"></el-table-column>
+                    <el-table-column prop="error_data" label="备用信息"></el-table-column>
+                    <el-table-column prop="message" label="数据说明"></el-table-column>
+                    <el-table-column prop="record_date" label="最后时间"></el-table-column>
+                    <!--<el-table-column prop="SCBJ" label="删除标记"></el-table-column>-->
                     <el-table-column label="操作" width="160">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="signFun(scope.row)">标记不需要做对照的数据</el-button>
@@ -231,7 +231,6 @@ export default {
         getNodeFun(){
             QueryNodeDetailType('')
                 .then(res => {
-                    // console.log(res)
                     this.nodeArr = res.data.node_detail_type_list
                 })
                 .catch(res => {

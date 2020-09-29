@@ -1,6 +1,6 @@
 <template>
     <div class="container" ref="container">
-        <div class="level-one-menu" :class="isShow==true?'level-one-menu1':'level-one-menu'">
+        <div class="level-one-menu" :class="isShow==true?'level-one-menu1':(isShow1==true?'level-one-menu2':'level-one-menu')">
             <figure class="logo"><img src="../../assets/images/logo.png"></figure>
             <ul class="menu-list">
                 <li class="menu-item" v-for="item in mainList" :key="item.id" :class="{active:levelOneCurrId == item.id}"
@@ -96,6 +96,7 @@ export default {
             roleId: '',
             user:'',
             isShow : false,
+            isShow1:false
         }
     },
     created() {
@@ -108,12 +109,15 @@ export default {
             this.user = localStorage.getItem("loginName");
             if(this.user == 'paas'){
                 this.isShow = true;
+            }else if(this.user.indexOf('丰台')>-1){
+                this.isShow1 = true;
             }else{
                 this.isShow = false;
             }
         },200)
         if(localStorage.getItem('menuList')){
             this.mainList = JSON.parse(localStorage.getItem('menuList'));//查询菜单列表
+            console.log(this.mainList);
             this.levelOneCurrId = this.mainList[0].id;//选择第一项
             this.changeMenu(this.levelOneCurrId);
             // 查询品种列表
@@ -424,6 +428,54 @@ export default {
                             })
                             this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
                                 if(ele.node == "district"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                        if(ele.id == parentId){
+                                            this.parentName = ele.text;
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                   }
+               })
+            }else if(to.meta.node == 'DataEnterprise'){
+                this.mainList.forEach(ele => {
+                   if(ele.node == 'DataEnterprise'){
+                        if(ele.children.id == toId){
+                            this.enterChildPage = false;
+                        }else{
+                            this.enterChildPage = true;
+                            this.mainList.forEach(ele => {
+                                if(ele.node == "DataEnterprise"){//market页操作
+                                    ele.children.nodeList.forEach(val=> {
+                                        if(val.id == toId){
+                                            this.parentName = ele.children.nav_title;
+                                            this.childrenName = val.text;
+                                        }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得子级名称
+                                if(ele.node == "DataEnterprise"){
+                                    ele.children.nodeList.forEach(ele=> {
+                                       if(ele.children && ele.children.nodeList.length > 0){
+                                           ele.children.nodeList.forEach(val => {
+                                               if(val.id == toId ){
+                                                    parentId = val.parentId;
+                                                    if(to.params.name){
+                                                        this.childrenName = to.params.name;
+                                                    }else{
+                                                        this.childrenName = val.text;
+                                                    }
+
+                                                }
+                                           })
+                                       }
+                                    })
+                                }
+                            })
+                            this.mainList.forEach(ele => {//market子页操作 - 获得上一级名称
+                                if(ele.node == "DataEnterprise"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
                                             this.parentName = ele.text;
@@ -747,6 +799,20 @@ export default {
                     this.enterChildPage = true;
                     this.$router.push({path:this.fromPrevPageMsg.url})
                 }
+            }else if(this.$route.meta.node == 'DataEnterprise'){
+                let name = '';
+                this.mainList.forEach(ele => {
+                    if(ele.node == 'DataEnterprise'){
+                        name = ele.children.nav_title
+                    }
+                })
+                if(this.parentName == name){
+                    this.enterChildPage = false;
+                    this.$router.push({path:'DataReportList'})
+                }else{
+                    this.enterChildPage = true;
+                    this.$router.push({path:this.fromPrevPageMsg.url})
+                }
             }else{
                 this.enterChildPage = false;
                 let parentId = '',id_1_level = '',id_2_level = '';
@@ -818,6 +884,7 @@ export default {
         backLogin(){//退出
             localStorage.clear();
             sessionStorage.clear();
+            console.log(this.remember)
             if(this.remember == 'true'){
                 localStorage.setItem('account',this.account)
                 localStorage.setItem('password',this.password);
@@ -918,7 +985,12 @@ export default {
         .level-one-menu1{
             &:hover{
                 // width: 100px;
-                width:135px;
+                width:150px;
+            }
+        }
+        .level-one-menu2{
+            &:hover{
+                width:120px;
             }
         }
         .icon-traceabiltyInfo{
@@ -1010,6 +1082,22 @@ export default {
             background: url('../../assets/images/retail.svg') no-repeat center center;
             background-size: 100% 100%;
         }
+        .icon-DataEnterprise{
+            background: url('../../assets/images/traceEquipment.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-FtReport{
+           background: url('../../assets/images/analyze.svg') no-repeat center center;
+           background-size: 100% 100%;
+        }
+        .icon-FtReport{
+           background: url('../../assets/images/analyze.svg') no-repeat center center;
+           background-size: 100% 100%;
+        }
+        .icon-DataReport{
+          background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IuWbvuWxgl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjQ0cHgiIGhlaWdodD0iNDRweCIgdmlld0JveD0iMCAwIDQ0IDQ0IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA0NCA0NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8cGF0aCBmaWxsPSIjOUZBMEEwIiBkPSJNOS4xNTMsMzAuMTk5VjExLjA2OGMwLTEuMDU2LDAuODU4LTEuOTE0LDEuOTEzLTEuOTE0aDE2LjM5OWMxLjA1NSwwLDEuOTEzLDAuODU4LDEuOTEzLDEuOTE0djkuNDkxaDEuNjQNCgkJdi05LjQ5MWMwLTEuOTU5LTEuNTk0LTMuNTU0LTMuNTUzLTMuNTU0SDExLjA2NmMtMS45NTksMC0zLjU1MywxLjU5NS0zLjU1MywzLjU1NHYxOS4xMzFjMCwxLjk1OSwxLjU5NCwzLjU1MywzLjU1MywzLjU1M2g5LjUxOQ0KCQl2LTEuNjM5aC05LjUxOUMxMC4wMTIsMzIuMTEzLDkuMTUzLDMxLjI1NCw5LjE1MywzMC4xOTl6Ii8+DQoJPHBhdGggZmlsbD0iIzlGQTBBMCIgZD0iTTI1LjQxNSwxMi42ODVIMTMuMTE2Yy0wLjQ1MiwwLTAuODIsMC4zNjctMC44MiwwLjgyYzAsMC40NTIsMC4zNjgsMC44MTksMC44MiwwLjgxOWgxMi4yOTkNCgkJYzAuNDUzLDAsMC44MTktMC4zNjcsMC44MTktMC44MTlDMjYuMjM0LDEzLjA1MiwyNS44NjgsMTIuNjg1LDI1LjQxNSwxMi42ODV6Ii8+DQoJPHBhdGggZmlsbD0iIzlGQTBBMCIgZD0iTTI2LjIzNCwxOC41NjFjMC0wLjQ1Mi0wLjM2Ni0wLjgxOS0wLjgxOS0wLjgxOUgxMy4xMTZjLTAuNDUyLDAtMC44MiwwLjM2Ny0wLjgyLDAuODE5DQoJCWMwLDAuNDUzLDAuMzY4LDAuODIsMC44MiwwLjgyaDEyLjI5OUMyNS44NjgsMTkuMzgxLDI2LjIzNCwxOS4wMTQsMjYuMjM0LDE4LjU2MXoiLz4NCgk8cGF0aCBmaWxsPSIjOUZBMEEwIiBkPSJNMTMuMTE2LDIyLjc5OWMtMC40NTIsMC0wLjgyLDAuMzY1LTAuODIsMC44MThzMC4zNjgsMC44MiwwLjgyLDAuODJoNi4xNWMwLjQ1MiwwLDAuODE5LTAuMzY3LDAuODE5LTAuODINCgkJcy0wLjM2Ny0wLjgxOC0wLjgxOS0wLjgxOEgxMy4xMTZ6Ii8+DQoJPHBhdGggZmlsbD0iIzlGQTBBMCIgZD0iTTMxLjk1NiwyNy42NTRoLTAuOTMxbDAuNzk1LTAuNzk1YzAuMzItMC4zMiwwLjMyLTAuODQsMC0xLjE2Yy0wLjMxOS0wLjMyLTAuODQtMC4zMi0xLjE1OSwwbC0xLjE0NiwxLjE0Ng0KCQlsLTEuMTQ2LTEuMTQ2Yy0wLjMyLTAuMzE4LTAuODQtMC4zMTgtMS4xNTksMGMtMC4zMTksMC4zMi0wLjMxOSwwLjg0LTAuMDAxLDEuMTZsMC43OTUsMC43OTVoLTAuOTNjLTAuNDUyLDAtMC44MiwwLjM2Ny0wLjgyLDAuODINCgkJYzAsMC40NTIsMC4zNjgsMC44MTksMC44MiwwLjgxOWgxLjYyMXYwLjY1OEgyNy43NWMtMC40NTMsMC0wLjgyLDAuMzY2LTAuODIsMC44MTlzMC4zNjcsMC44MiwwLjgyLDAuODJoMC45NDV2MS4xNTgNCgkJYzAsMC40NTMsMC4zNjcsMC44MiwwLjgyLDAuODJjMC40NTEsMCwwLjgxOC0wLjM2NywwLjgxOC0wLjgydi0xLjE1OGgwLjk0NWMwLjQ1MywwLDAuODItMC4zNjcsMC44Mi0wLjgycy0wLjM2Ny0wLjgxOS0wLjgyLTAuODE5DQoJCWgtMC45NDV2LTAuNjU4aDEuNjIxYzAuNDUzLDAsMC44Mi0wLjM2NywwLjgyLTAuODE5QzMyLjc3NSwyOC4wMjEsMzIuNDA5LDI3LjY1NCwzMS45NTYsMjcuNjU0eiIvPg0KCTxwYXRoIGZpbGw9IiM5RkEwQTAiIGQ9Ik0yOS41MTYsMjIuNTQ3Yy0zLjg0NCwwLTYuOTcsMy4xMjctNi45Nyw2Ljk2OWMwLDMuODQ0LDMuMTI2LDYuOTY5LDYuOTcsNi45NjlzNi45NjktMy4xMjUsNi45NjktNi45NjkNCgkJQzM2LjQ4NCwyNS42NzQsMzMuMzU3LDIyLjU0NywyOS41MTYsMjIuNTQ3eiBNMjkuNTE2LDM0Ljg0NmMtMi45MzgsMC01LjMzLTIuMzkxLTUuMzMtNS4zM2MwLTIuOTM4LDIuMzkyLTUuMzMsNS4zMy01LjMzDQoJCXM1LjMzLDIuMzkyLDUuMzMsNS4zM0MzNC44NDYsMzIuNDU1LDMyLjQ1NCwzNC44NDYsMjkuNTE2LDM0Ljg0NnoiLz4NCjwvZz4NCjwvc3ZnPg0K) no-repeat center center;
+          background-size: 100% 100%;
+        }
         .icon-repair{
             background: url('../../assets/images/repair.svg') no-repeat center center;
             background-size: 100% 100%;
@@ -1053,6 +1141,7 @@ export default {
         }
         .icon-farmworkreview{
             background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
         .icon-quotation{
             background: url('../../assets/images/retail.svg') no-repeat center center;
@@ -1064,9 +1153,30 @@ export default {
         }
         .icon-compare{
             background: url('../../assets/images/management.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
         .icon-platform{
             background: url('../../assets/images/retail.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-establishment{
+            background: url('../../assets/images/enterprise.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-survey{
+            background: url('../../assets/images/supervise.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-report{
+            background: url('../../assets/images/supervise.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-approach{
+            background: url('../../assets/images/statistical.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-standingBookCq{
+            background: url('../../assets/images/standingBook.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{

@@ -1,6 +1,6 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {traceDataReporting, getNodeCount, getJdhydPc, quantityReportedNew, getGoodsAvgPc, getWsPriceIndexPc, vegMeatProvince,   
-    vegetableProvince, getGoodsType, getNodeJgInfoType} from '../address/url.js';
+    vegetableProvince, getGoodsType, getNodeJgInfoType, getPriceNode} from '../address/url.js';
 
 // 企业数量?node_id=110114311
 export const  GetNodeCount  = function(params) {
@@ -41,4 +41,8 @@ export const  GetGoodsType  = function(params) {
 // 企业数量按类型查看
 export const  GetNodeJgInfoType  = function(params) {
     return ajaxGet(getNodeJgInfoType +'?'+ params)
+}
+// 首页查询节点数量接口
+export const GetPriceNode  = function(params) {
+    return ajaxGet(getPriceNode +'?'+ params)
 }

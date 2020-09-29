@@ -472,8 +472,8 @@ export default {
                     this.time = res.data.record_date
                     this.qyjj = res.data.introduce
                 })
-                .catch(() => {
-                    this.$message.error("出错啦!");
+                .catch((res) => {
+                    console.log(res)
                 })
         }
     }

@@ -1,76 +1,74 @@
 <template>
-     <div class="content">
-         <div class="search">
-                    <el-form ref="form" :inline="true" :model="form" label-width="100px">
-                        <el-form-item label="节点类型">
-                            <el-select v-model="value" placeholder="请选择" clearable @change="selectGet" style="width:230px">
-                                <el-option v-for="(item,index) in options" :key="index" :label="item.NODE_DETAIL_TYPE" :value="item.NODE_DETAIL_TYPE">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="节点信息">
-                              <el-input v-model="input" placeholder="请输入内容" style="width:230px;"></el-input>
-                        </el-form-item>
-                       
-                        <el-form-item>
-                             <el-button class="btn" type="primary" @click="handleBtnTable()">搜索</el-button>
-                             <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                        </el-form-item>
-                    </el-form>
-
-                    <!-- <span>节点信息：</span>
-                    <el-input v-model="input" placeholder="请输入内容" style="width:250px;"></el-input>
-                    <span class="status">节点类型：</span>
-                    <el-select v-model="value" placeholder="请选择" @change="selectGet">
+    <div class="content">
+        <div class="search">
+            <el-form ref="form" :inline="true" :model="form" label-width="100px">
+                <el-form-item label="节点类型">
+                    <el-select v-model="value" placeholder="请选择" clearable @change="selectGet" style="width:230px">
                         <el-option v-for="(item,index) in options" :key="index" :label="item.NODE_DETAIL_TYPE" :value="item.NODE_DETAIL_TYPE">
                         </el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="节点信息">
+                    <el-input v-model="input" placeholder="请输入内容" style="width:230px;"></el-input>
+                </el-form-item>
+                <el-form-item>
                     <el-button class="btn" type="primary" @click="handleBtnTable()">搜索</el-button>
-                    <span class="clear-content" @click="clearFun">清空筛选条件</span> -->
-         </div>
-         <div class="tables" v-loading.body="fullscreenLoading">
-                    <div class="title">
-                        <p class="tz-title">对照管理</p>
-                    </div>
-                    <div class="table-box">
-                        <el-table :data="tableData" :header-cell-style="rowClass" >
-                            <el-table-column prop="node_id" label="节点编码" align="left"> </el-table-column>
-                            <el-table-column prop="node_name" label="节点名称" align="left"> </el-table-column>
-                            <el-table-column prop="node_detail_type" label="节点类型" align="left"> </el-table-column>
-                            <el-table-column prop="goods_count" label="缺对照商品数量" align="left"> </el-table-column>
-                            <el-table-column prop="remark" label="备注" align="left"> </el-table-column>
-                            <!-- <el-table-column prop="" label="未处理天数" align="center"> </el-table-column> -->
-                            <el-table-column label="操作" fixed="right" align="left">
-                                <template slot-scope="scope">
-                                    <el-button type="text" size="small" @click="handleResult(scope.row)">查看</el-button>
-                                    <el-button type="text" size="small" @click="remarksFun(scope.row)">添加备注</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                    <div class="pagination">
-                       <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                       :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
-                                       :total="total">
-                        </el-pagination>
-                    </div>
-         </div>
-         <div class="box" v-if="isShow">
-             <div class="form1">
-                  <div class="title">
-                    <p class="tit">添加备注</p>
-                    <p class="iconfont close icon-close" @click="closeForm"></p>
-                  </div>
-                  <div class="container">
-                       <span>备注：</span>
-                       <el-input type="textarea" style="width:300px;" :autosize="{ minRows: 2, maxRows: 3}"  placeholder="请输入内容"
+                    <span class="clear-content" @click="clearFun">清空筛选条件</span>
+                </el-form-item>
+            </el-form>
+                <!-- <span>节点信息：</span>
+                <el-input v-model="input" placeholder="请输入内容" style="width:250px;"></el-input>
+                <span class="status">节点类型：</span>
+                <el-select v-model="value" placeholder="请选择" @change="selectGet">
+                    <el-option v-for="(item,index) in options" :key="index" :label="item.NODE_DETAIL_TYPE" :value="item.NODE_DETAIL_TYPE">
+                    </el-option>
+                </el-select>
+                <el-button class="btn" type="primary" @click="handleBtnTable()">搜索</el-button>
+                <span class="clear-content" @click="clearFun">清空筛选条件</span> -->
+        </div>
+        <div class="tables" v-loading.body="fullscreenLoading">
+            <div class="title">
+                <p class="tz-title">对照管理</p>
+            </div>
+            <div class="table-box">
+                <el-table :data="tableData" :header-cell-style="rowClass" >
+                    <el-table-column prop="node_id" label="节点编码" align="left"> </el-table-column>
+                    <el-table-column prop="node_name" label="节点名称" align="left"> </el-table-column>
+                    <el-table-column prop="node_detail_type" label="节点类型" align="left"> </el-table-column>
+                    <el-table-column prop="goods_count" label="缺对照商品数量" align="left"> </el-table-column>
+                    <el-table-column prop="remark" label="备注" align="left"> </el-table-column>
+                    <!-- <el-table-column prop="" label="未处理天数" align="center"> </el-table-column> -->
+                    <el-table-column label="操作" fixed="right" align="left">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="handleResult(scope.row)">查看</el-button>
+                            <el-button type="text" size="small" @click="remarksFun(scope.row)">添加备注</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="pagination">
+                <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                    :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
+            </div>
+        </div>
+        <div class="box" v-if="isShow">
+            <div class="form1">
+                <div class="title">
+                <p class="tit">添加备注</p>
+                <p class="iconfont close icon-close" @click="closeForm"></p>
+                </div>
+                <div class="container">
+                    <span>备注：</span>
+                    <el-input type="textarea" style="width:300px;" :autosize="{ minRows: 2, maxRows: 3}"  placeholder="请输入内容"
                         v-model="textarea2">
-                        </el-input>
-                  </div>
-                  <div class="btn1">
-                            <el-button @click="closeForm">取消</el-button>
-                            <el-button type="primary" @click="submit()">确认</el-button>
-                  </div>
+                    </el-input>
+                </div>
+                <div class="btn1">
+                    <el-button @click="closeForm">取消</el-button>
+                    <el-button type="primary" @click="submit()">确认</el-button>
+                </div>
             </div>
         </div>
     </div>
@@ -124,18 +122,19 @@ export default {
             }).then(()=>{
                 AddErrorDateRemark(params)
                 .then(res => {
-                    console.log(params)
                     this.$message({
                         message: '已成功添加备注',
                         type: 'success'
                     });
                     this.isShow = false;
+                    this.textarea2 = ''
+                    this.getQueryLoseDataNode()
                 })
             }).catch(()=>{
-                    this.$message({
-                        message: '已取消备注',
-                        type: 'success'
-                    });
+                this.$message({
+                    message: '已取消备注',
+                    type: 'success'
+                });
             })
             
         },
@@ -143,10 +142,10 @@ export default {
             this.isShow = false;
         },
         remarksFun(row){
-            console.log(row)
             this.node_id = row.node_id
             this.node_name = row.node_name
-             this.isShow = true;
+            this.textarea2 = row.remark
+            this.isShow = true;
         },
         clearFun(){
             this.input = '';
@@ -189,13 +188,11 @@ export default {
             }
         },
         handleResult(row){  //查看执行结果
-            // console.log(row)
             this.$router.push({name:"LookComparison",params:row})
         },
         getQueryNodeDetailType(){  //节点类型
             QueryNodeDetailType()
                 .then( res => {
-                    // console.log(res)
                     this.options = res.data.node_detail_type_list;
                 })
                 .catch(error => {
@@ -203,6 +200,7 @@ export default {
                 })
         },
         getQueryLoseDataNode(){  //查看数据
+            this.fullscreenLoading = true;
             let params = {
                 mon_log_base:this.input,
                 node_detail_type:this.dataSou,
@@ -219,7 +217,6 @@ export default {
                     console.log(error)
                 })
         },
-       
     },
     components:{
     }

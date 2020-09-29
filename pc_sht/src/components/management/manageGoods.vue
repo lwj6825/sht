@@ -71,7 +71,7 @@
         </el-tabs>
         <div class="msg-box" v-if="addNew">
             <div class="list">
-                <header class="title">绑定商品<i class="icon-close" @click="closeMsgBox">x</i></header>
+                <header class="title">绑定商品<span class="iconfont icon-close close" @click="closeMsgBox"></span></header>
                 <div class="search">
                     <el-input class="search-input" v-model="searchGoodsName" placeholder="请输入商品名称" clearable></el-input>
                     <el-button class="search-button" type="primary" v-if="good == '1'" @click="seaechJhFun">搜索</el-button>
@@ -110,7 +110,7 @@
 import {EntryGoodsList,SellGoodsList,BindingGoods,SaveBindingGoods} from "../../js/management/management.js";
 import {deleteGood} from '../../js/goods/goods.js'
 import axios from 'axios';
-import {baseUrl,baseUrl2} from '../../js/address/url.js'
+import {baseUrl} from '../../js/address/url.js'
 export default {    
     name:'manageGoods',
     data(){
@@ -495,6 +495,7 @@ export default {
 </script>
 
 <style scoped lang='less'>
+    @import '../../assets/css/common.css';
     .content{
         padding: 20px;
         height: 100%;
@@ -548,12 +549,14 @@ export default {
         right: 0;
         bottom: 0;
         z-index: 999;
+        width: 100%;
+        height: 100%;
         background: rgba(0,0,0,.5);      
         .list{
             position: relative;
-            top:50%;
+            top: 0;
             left: 50%;
-            margin-top: -325px;
+            margin-top: 50px;
             margin-left: -250px;
             padding: 20px;
             width: 500px;
@@ -570,14 +573,11 @@ export default {
                 } 
                 .icon-close{
                     float: right;
-                    display: block;
-                    padding: 5px;
-                    width: 10px;
-                    height: 10px;
+                    width: 40px;
+                    height: 40px;
                     text-align: center;
-                    line-height: 10px;
+                    line-height: 40px;
                     font-size: 16px;
-                    font-style: normal;
                     cursor: pointer;
                 }  
             }

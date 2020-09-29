@@ -531,7 +531,7 @@ export default {
         setCheckedKeys(){
             queryRoleId(this.roleId)
                 .then(res => {
-                    // console.log(res)
+                    console.log(res)
                     let funArr = [],checkList = [];
                     funArr = res.data.u_list
                     let entryId = [],saleId = [];
@@ -600,6 +600,8 @@ export default {
             })
             this.entryId = entryId.join(',')
             this.saleId = saleId.join(',')
+            console.log(this.entryId)   
+            console.log(this.saleId)   
         },
         handleCheckChange2(){
             let mchild = this.$refs.tree2.getCheckedNodes(),
@@ -641,6 +643,7 @@ export default {
                         tzSale: this.saleId,  
                         parent: this.parent_id 
                     }
+                    console.log(editData)   
                     editRoleList(editData)
                         .then(res => {
                             if (res.result == true) {
@@ -665,7 +668,8 @@ export default {
                         tzEntry: this.entryId,
                         tzSale: this.saleId,    
                         parent: this.parent_id
-                    }           
+                    }        
+                    console.log(data)   
                     addRoleList(data)
                         .then(res => {
                             if (res.result == true) {

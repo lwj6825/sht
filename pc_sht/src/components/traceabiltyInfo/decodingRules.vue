@@ -4,8 +4,8 @@
             <el-form ref="form" :inline="true" :model="form" label-width="100px">
                 <el-form-item label="码类型：">
                     <el-select v-model="form.type" placeholder="请选择" clearable  style="width:230px" >
-                            <el-option v-for="item in options" :key="item.text" :label="item.text" :value="item.id">
-                            </el-option>
+                        <el-option v-for="item in options" :key="item.text" :label="item.text" :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="节点查询：">
@@ -22,7 +22,6 @@
                     <!-- <el-button>导出</el-button> -->
                     <span class="clear-content" @click="clearFun">清空筛选条件</span>
                 </el-form-item>    
-                
             </el-form>
         </div>
         <div class="tables" v-loading="fullscreenLoading">
@@ -41,6 +40,7 @@
             </div>
             <div class="table-box">
                 <el-table :data="tableData" :header-cell-style="rowClass" >
+                    <el-table-column type="index" label="序号" width="50"></el-table-column>
                     <el-table-column prop="node_name" label="企业名称"></el-table-column>
                     <el-table-column prop="code_type" label="码类型"></el-table-column>
                     <el-table-column prop="rule_name" label="规则名称"></el-table-column>
@@ -169,21 +169,21 @@ export default {
         },
         QueryCodeTypeSelectFun(){  //码类型
             QueryCodeTypeSelect()
-            .then(res => {
-                this.options = res.data.dataList;
-            })
-            .catch(res => {
-                console.log(res)
-            })
+                .then(res => {
+                    this.options = res.data.dataList;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         QueryRuleTypeSelectFun(){ 
             QueryRuleTypeSelect()
-            .then(res => {
-                this.options1 = res.data.dataList;
-            })
-            .catch(res => {
-                console.log(res)
-            })
+                .then(res => {
+                    this.options1 = res.data.dataList;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         // 表格数据
         QueryDecodeRuleFun(){  //查询所有节点
@@ -196,15 +196,14 @@ export default {
                 rule_type:this.form.rule,
             }
             QueryDecodeRule(params)
-            .then(res => {
-                this.fullscreenLoading = false;
-                this.tableData = res.data.dataList;
-                this.total = res.data.condition.total;
-
-            })
-            .catch(res => {
-                console.log(res)
-            })
+                .then(res => {
+                    this.fullscreenLoading = false;
+                    this.tableData = res.data.dataList;
+                    this.total = res.data.condition.total;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         // 下载节点
         DownloadDecodeRuleFun(){
@@ -238,35 +237,35 @@ export default {
             let formData = new FormData();
             formData.append('decodeRule', this.file);
             let config = {
-            headers:{'Content-Type':'multipart/form-data'}
+                headers:{'Content-Type':'multipart/form-data'}
             };
             const ajaxPost = function (url, params,config) {
-            return new Promise((resolve, reject) => {
-                axios
-                .post(url, params,{config})
-                .then((res) => {
-                    resolve(res.data)
+                return new Promise((resolve, reject) => {
+                    axios
+                    .post(url, params,{config})
+                    .then((res) => {
+                        resolve(res.data)
+                    })
+                    .catch(() => {
+                        reject('error')
+                    })
                 })
-                .catch(() => {
-                    reject('error')
-                })
-            })
             }  
             let url = baseUrl4 + 'warning/importDecodeRule'
             ajaxPost(url,formData,config)
-            .then(res => {
-                if (res.result == true) {
-                    this.$message.success('导入成功');
-                    this.currentPage = 1
-                    this.QueryDecodeRuleFun()
-                }else{
-                    this.$message.error(res.message);
-                }
-                this.file = null
-            })
-            .catch(res => {
-                this.$message.error("出错了");
-            })
+                .then(res => {
+                    if (res.result == true) {
+                        this.$message.success('导入成功');
+                        this.currentPage = 1
+                        this.QueryDecodeRuleFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                    this.file = null
+                })
+                .catch(res => {
+                    this.$message.error("出错了");
+                })
         },
     },
     components:{

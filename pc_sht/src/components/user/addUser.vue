@@ -50,7 +50,7 @@
                 <el-form-item label="详细地址：" class="padding-left">
                     <el-input class="fill-input" v-model="form.addrInfo" clearable placeholder="请输入详细地址"></el-input>
                 </el-form-item>
-                <el-form-item label="所属节点：" class="padding-left">
+                <el-form-item label="所属节点：" class="padding-left" prop="node">
                     <el-select class="fill-input" filterable v-model="form.node" placeholder="请选择" clearable>
                         <el-option v-for="item in nodeOptions" :key="item.node_id" :label="item.node_name" :value="item.node_id" > </el-option>
                     </el-select>

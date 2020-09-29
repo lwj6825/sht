@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="tables" >
-                <el-table  :data="tableData" :header-cell-style="rowClass" @selection-change="handleSelectionChange">
+                <el-table :data="tableData" :header-cell-style="rowClass" @selection-change="handleSelectionChange">
                     <el-table-column type="selection"  width="55"></el-table-column>
                     <el-table-column prop="node_name" label="供货单位名称"></el-table-column>
                     <el-table-column prop="legal_represent" label="法人"> </el-table-column>

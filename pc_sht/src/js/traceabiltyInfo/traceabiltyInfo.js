@@ -3,8 +3,10 @@ import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryDecodeRule,queryCodeTypeSelect,queryNodeSelect,insertDecodeRule,updateDecodeRule,deleteDecodeRule,downloadDecodeRule,importDecodeRule,
     queryTraceabilityCode,insertTraceabilityCode,updateTraceabilityCode,deleteTraceabilityCode,downloadTraceabilityCode,importTraceabilityCode,querySupplierSelect,
     queryTraceInfo,insertTraceInfo,updateTraceInfo,deleteTraceInfo,downloadTraceInfo,importTraceInfo, queryRuleTypeSelect, queryEtraceLog,
-    queryResultTypeSelect, downloadEtraceLog, queryTraceCode
+    queryResultTypeSelect, downloadEtraceLog, queryTraceCode, queryIsTraceTypeSelect, queryNodeTrace, traceabilityCodeTypeSelect,
+    traceabilityCodeGainSelect, checkLogicSelect, updateNodeTrace, toExecuteBusiness, toExecute, toUpdateNodeTrace
 } from '../address/url.js';
+
 
 //解码规则管理
 export const  QueryDecodeRule  = function(params) {
@@ -141,4 +143,40 @@ export const DownloadEtraceLog = function(form) {
 // 追溯查询日志
 export const QueryTraceCode = function(params) {
     return ajaxPost(queryTraceCode, params)
+}
+// 追溯节点管理下拉选  
+export const QueryIsTraceTypeSelect = function(params) {
+    return ajaxGet(queryIsTraceTypeSelect +'?'+ params)
+}
+// 追溯节点查询
+export const QueryNodeTrace = function(params) {
+    return ajaxPost(queryNodeTrace, params)
+}
+// 物品吗类型筛选  
+export const TraceabilityCodeTypeSelect = function(params) {
+    return ajaxGet(traceabilityCodeTypeSelect +'?'+ params)
+}
+// 获取物品码来源筛选  
+export const TraceabilityCodeGainSelect = function(params) {
+    return ajaxGet(traceabilityCodeGainSelect +'?'+ params)
+}
+// 查询逻辑类型筛选  
+export const CheckLogicSelect = function(params) {
+    return ajaxGet(checkLogicSelect +'?'+ params)
+}
+// 编辑追溯节点查询
+export const UpdateNodeTrace = function(params) {
+    return ajaxPost(updateNodeTrace, params)
+}
+// 编辑追溯节点详情
+export const ToUpdateNodeTrace = function(params) {
+    return ajaxGet(toUpdateNodeTrace +'?'+ params)
+}
+// 手动同步 get  
+export const ToExecuteBusiness = function(params) {
+    return ajaxGet(toExecuteBusiness +'?'+ params)
+}
+// 手动同步（每条）post
+export const ToExecute = function(params) {
+    return ajaxPost(toExecute, params)
 }

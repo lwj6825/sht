@@ -1,66 +1,49 @@
 <template>
 <div class="content">
     <div class="search">
-            <el-form ref="form" :inline="true" :model="form" label-width="100px">
-                <el-form-item label="任务类型：">
-                      <el-select v-model="value" placeholder="请选择" clearable style="width:230px" @change="selectType" >
-                            <el-option v-for="(item,index) in options" :key="index" :label="item.text" :value="item.id">
-                            </el-option>
-                       </el-select>
-                </el-form-item>
-                <el-form-item label="任务名称：">
-                    <el-input v-model="input" placeholder="请输入内容" style="width:230px"></el-input>
-                </el-form-item>
-                <el-form-item label="任务状态：">
-                    <el-select v-model="value1" clearable placeholder="请选择" style="width:230px"  @change="selectStatus" >
-                        <el-option v-for="(item,index) in status" :key="index" :label="item.text" :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="btn" type="primary" @click="handleBtn()">搜索</el-button>
-                    <span class="clear-content" @click="clearFun">清空筛选条件</span>
-                </el-form-item>
-            </el-form>
-
-            <!-- <span class="type">任务类型：</span>
-            <el-select v-model="value" placeholder="请选择" style="width:150px" @change="selectType">
-                <el-option v-for="(item,index) in options" :key="index" :label="item.text" :value="item.id">
-                </el-option>
-            </el-select> -->
-            <!-- <span class="task_name">任务名称：</span>
-            <el-input v-model="input" placeholder="请输入内容" style="width:210px"></el-input>
-            <span class="task_status">任务状态：</span>
-            <el-select v-model="value1" placeholder="请选择" style="width:150px"  @change="selectStatus">
-                <el-option v-for="(item,index) in status" :key="index" :label="item.text" :value="item.id">
-                </el-option>
-            </el-select> -->
-            <!-- <el-button class="btn" type="primary" @click="handleBtn()">搜索</el-button>
-            <span class="clear-content" @click="clearFun">清空筛选条件</span> -->
+        <el-form ref="form" :inline="true" :model="form" label-width="100px">
+            <el-form-item label="任务类型：">
+                <el-select v-model="value" placeholder="请选择" clearable style="width:230px" @change="selectType" >
+                    <el-option v-for="(item,index) in options" :key="index" :label="item.text" :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="任务名称：">
+                <el-input v-model="input" placeholder="请输入内容" style="width:230px"></el-input>
+            </el-form-item>
+            <el-form-item label="任务状态：">
+                <el-select v-model="value1" clearable placeholder="请选择" style="width:230px"  @change="selectStatus" >
+                    <el-option v-for="(item,index) in status" :key="index" :label="item.text" :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button class="btn" type="primary" @click="handleBtn()">搜索</el-button>
+                <span class="clear-content" @click="clearFun">清空筛选条件</span>
+            </el-form-item>
+        </el-form>
     </div>
     <div class="tables" v-loading.body="fullscreenLoading">
-            <div class="title">
-                <p class="tz-title">全部定时任务</p>
-            </div>
-            <div class="table-box">
-                <el-table :data="tableData" :header-cell-style="rowClass" >
-                    <el-table-column prop="quartz_name" label="任务名称" align="left"> </el-table-column>
-                    <el-table-column prop="quartz_job" label="任务类型" align="left"> </el-table-column>
-                    <el-table-column prop="quartz_time" label="调度规则" align="left"> </el-table-column>
-                    <el-table-column prop="update_time" label="最后执行时间" align="left"> </el-table-column>
-                    <el-table-column prop="quartz_state" label="任务状态" align="left"> </el-table-column>
-                </el-table>
-            </div>
-            <div class="pagination">
-                <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
-                                :total="total">
-                </el-pagination>
-            </div>
+        <div class="title">
+            <p class="tz-title">全部定时任务</p>
+        </div>
+        <div class="table-box">
+            <el-table :data="tableData" :header-cell-style="rowClass">
+                <el-table-column prop="quartz_name" label="任务名称"></el-table-column>
+                <el-table-column prop="quartz_job" label="任务类型"></el-table-column>
+                <el-table-column prop="quartz_time" label="调度规则"></el-table-column>
+                <el-table-column prop="update_time" label="最后执行时间"></el-table-column>
+                <el-table-column prop="quartz_state" label="任务状态"></el-table-column>
+            </el-table>
+        </div>
+        <div class="pagination">
+            <el-pagination  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                :page-sizes="[10, 20, 30, 40]" :page-size="cols" layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination>
+        </div>
     </div>
 </div>
-    
-    
 </template>
 
 <script>
@@ -137,12 +120,12 @@ export default {
         },
         getqueryQuartzJob(){  //任务类型
             QueryQuartzJob()
-            .then(res => {
-                 this.options = res.data.dataList;
-            })
-            .catch(res => {
-                 console.log(res)
-            })
+                .then(res => {
+                    this.options = res.data.dataList;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         handleBtn(){
             this.fullscreenLoading = true;
@@ -151,30 +134,30 @@ export default {
         },
         getqueryQuartzState(){
             QueryQuartzState()
-            .then(res => {    
-                this.status = res.data.dataList;      
-            })
-            .catch(res => {
-                console.log(res)
-            })
+                .then(res => {    
+                    this.status = res.data.dataList;      
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         },
         getquartzManagerNew(){
             let params = {
-                 page:this.currentPage,
-                 cols:this.cols,
-                 quartz_job:this.taskType,
-                 quartz_name:this.input,
-                 quartz_state:this.taskStatus
+                page:this.currentPage,
+                cols:this.cols,
+                quartz_job:this.taskType,
+                quartz_name:this.input,
+                quartz_state:this.taskStatus
             }
             QuartzManagerNew(params)
-            .then(res => {    
-                this.fullscreenLoading = false;
-                this.tableData = res.data.dataList;
-                this.total = res.data.condition.total;
-            })
-            .catch(res => {
-                console.log(res)
-            })
+                .then(res => {    
+                    this.fullscreenLoading = false;
+                    this.tableData = res.data.dataList;
+                    this.total = res.data.condition.total;
+                })
+                .catch(res => {
+                    console.log(res)
+                })
         }
     },
     components:{

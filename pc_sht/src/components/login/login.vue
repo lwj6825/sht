@@ -17,7 +17,7 @@
                         <span class="iconfont icon-mim"></span>
                         <input type="password" @focus="focusFun(2)" v-model="password" placeholder="输入密码">
                     </div>
-                    <div class="code"> 
+                    <div class="code">
                         <div class="validation" :class="current == 3 ? 'active' : ''">
                             <span class="iconfont icon-yanzm"></span>
                             <input type="text" @focus="focusFun(3)" v-model="validation" placeholder="验证码">
@@ -30,7 +30,7 @@
                             <el-checkbox v-model="check" @change="checkFun">记住密码</el-checkbox>
                         </label>
                         <!--<span class="code-login">验证码登录</span>
-                        <span class="forget-password">忘记密码？</span> -->                   
+                        <span class="forget-password">忘记密码？</span> -->
                     </div>
                 </div>
                 <footer class="login-btn" @click="loginClick()">
@@ -43,6 +43,108 @@
     </div>
 </template>
 <script>
+Storage.prototype.setExpire=(key, value, expire) =>{
+    let obj={
+        data:value,
+        time: Date.now(),
+        expire: expire
+    };
+    localStorage.setItem(key,JSON.stringify(obj));
+}
+let obj1 =  [
+  {
+        id:'10003',
+        text:'企业',
+        url:'DataEnterprise',
+        node:'DataEnterprise',
+        icon:'icon-DataEnterprise',
+        level:1,
+        children:{
+          nav_title:'企业管理',
+          url:'DataReportList',
+          node:'DataEnterprise',
+          level:2,
+          id:'10004',
+          parentId:'10003',
+            nodeList:[
+              {
+                id:'10006',
+                parentId:'10004',
+                text:'查看',
+                node:'DataEnterprise',
+                url:'DataMarketList',
+                level:3,
+                children:{
+                  nodeList:[]
+                }
+              }
+          ]
+        }
+    },
+    {
+      id:'10007',
+      text:'报告',
+      url:'FtReport',
+      node:'FtReport',
+      icon:'icon-FtReport',
+      level:1,
+      children:{
+        nav_title:'生活必需品专报',
+        id:'10008',
+        parentId:'10007',
+        node:"FtReport",
+        url:'ReportLife',
+        level:2,
+        nodeList:[],
+
+        // nav_title:'报告管理',
+        // nodeList:[
+        //   {
+        //     id:'10008',
+        //     parentId:'10007',
+        //     text:'生活必需品专报',
+        //     type:'',
+        //     node:'FtReport',
+        //     level:2,
+        //     children:{
+        //       nodeList:[
+        //         {
+        //           id:'10009',
+        //           parentId:'10008',
+        //           text:'生活必需品专报',
+        //           url:'ReportLife',
+        //           node:'FtReport',
+        //           level:3,
+        //           children:{
+        //             nodeList:[]
+        //           }
+        //         }
+        //       ]
+        //     }
+        //   }
+        // ]
+      }
+    }
+];
+let obj2 = [
+  {
+    id:'10001',
+    text:'数据上报',
+    url:'DataReport',
+    node:'DataReport',
+    icon:'icon-DataReport',
+    level:1,
+    children:{
+        nav_title:'数据上报',
+        id:'10002',
+        parentId:'10001',
+        node:"role",
+        url:'DataReportUpload',
+        level:2,
+        nodeList:[]
+    }
+  }
+];
 import {login,login2,GetShtUserInfo} from "../../js/login/ajax.js";
 // import PointLine from '../../assets/js/canvas.js';
 import {loginUrl} from '../../js/address/url.js'
@@ -70,7 +172,7 @@ export default {
         this.getValidationFun()
     },
     mounted(){
-        
+
         // console.log(this.$route.query)
         if(this.$route.query.account){
             localStorage.clear();
@@ -99,19 +201,31 @@ export default {
                                 localStorage.setItem('roleId',roleId);
                                 localStorage.setItem('account',this.account);
                                 localStorage.setItem('password',this.password);
-                                sessionStorage.setItem('userName',this.account)
-                                this.setCookie('userName',this.account)
                             }
                             if(res.result){
                                 if(this.check){
+                                  if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
+                                    localStorage.setItem('menuList',JSON.stringify(obj1));
+                                  }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
+                                     localStorage.setItem('menuList',JSON.stringify(obj2));
+                                  }else{
                                     localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                                  }
+                                    // localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
                                     localStorage.setItem('username',JSON.stringify(this.account));
                                     localStorage.setItem('checked',JSON.stringify(true));
                                     localStorage.setItem('userId',res.data.userId);
                                     localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                                     this.userId = res.data.userId;
                                 }else{
+                                  if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
+                                    localStorage.setItem('menuList',JSON.stringify(obj1));
+                                  }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
+                                     localStorage.setItem('menuList',JSON.stringify(obj2));
+                                  }else{
                                     localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                                  }
+                                    // localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
                                     localStorage.setItem('username',JSON.stringify(this.account));
                                     localStorage.setItem('userId',res.data.userId);
                                     localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
@@ -119,8 +233,8 @@ export default {
                                 }
                                 this.$router.push({name:'home'})
                             }else{
-                                clocalStorage.clear();                    
-                            }                
+                                clocalStorage.clear();
+                            }
                         }).catch((res)=>{
                             this.$message.error('账号或密码输入不正确!')
                         })
@@ -132,12 +246,12 @@ export default {
         }
         // this.getValidationFun()
         // const pointLine = new PointLine();
-        // if(localStorage.getItem('checked')){        
+        // if(localStorage.getItem('checked')){
         //     this.account = localStorage.getItem('accoutn');
         //     this.userId = localStorage.getItem('userId');
         //     this.$router.push({path:'home'})
         // }
-        if(localStorage.getItem('remember')){        
+        if(localStorage.getItem('remember')){
             this.account = localStorage.getItem('account');
             this.password = localStorage.getItem('password');
             if(localStorage.getItem('remember') == 'true'){
@@ -146,7 +260,7 @@ export default {
                 this.check = false
             }
         }
-        if(localStorage.getItem('routerId')){        
+        if(localStorage.getItem('routerId')){
             localStorage.removeItem('routerId');
         }
     },
@@ -182,18 +296,18 @@ export default {
             if(this.password == ''){
                 this.$message.error("请输入密码");
                 return;
-            }  
+            }
             if(this.validation == ''){
                 this.$message.error("请输入验证码");
                 return;
-            }            
+            }
             if(this.validation.toLowerCase() != this.numCode.toLowerCase()){
                 this.$message.error("验证码不正确");
                 return;
             }
             let data = {
-                username : this.account,
-                password : this.password,
+                username : this.account.replace(/\s*/g,""),
+                password : this.password.replace(/\s*/g,""),
             }
             login(data).then((res)=>{
                 console.info(res)
@@ -205,40 +319,58 @@ export default {
                         isRegion = res.data.role_list[0].region,
                         scShopId = res.data.booth_list[0].SHOP_BOOTH_ID,
                         roleId = res.data.role_list[0].ROLEID;
+                    localStorage.setExpire("token", roleId, 1000*60*60*24);
                     localStorage.setItem('loginName',name);
                     localStorage.setItem('loginId',node_id);
                     localStorage.setItem('isRegion',isRegion);
                     localStorage.setItem('scShopId',scShopId);
                     localStorage.setItem('roleId',roleId);
-                    localStorage.setItem('account',this.account);
-                    localStorage.setItem('password',this.password);
+                    localStorage.setItem('account',this.account.replace(/\s*/g,""));
+                    localStorage.setItem('password',this.password.replace(/\s*/g,""));
                     localStorage.setItem('userType',res.data.booth_list[0].usertype);
-                    sessionStorage.setItem('userName',this.account)
-                    this.setCookie('userName',this.account)
+                    // sessionStorage.setItem('userName',this.account)
+                    // this.setCookie('userName',this.account)
+                    if(roleId == 40){
+                        localStorage.setItem('booth_List',JSON.stringify(res.data.userInfo.booth_List));
+                        localStorage.setItem('parent_node_id', res.data.booth_list[0].PARENT_NODE_ID);
+                        localStorage.setItem('name', res.data.booth_list[0].name);
+                    }
                 }
                 if(res.result){
                     if(this.check){
+                      if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
+                        localStorage.setItem('menuList',JSON.stringify(obj1));
+                      }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
+                         localStorage.setItem('menuList',JSON.stringify(obj2));
+                      }else{
                         localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
-                        localStorage.setItem('username',JSON.stringify(this.account));
+                      }
+                        localStorage.setItem('username',JSON.stringify(this.account.replace(/\s*/g,"")));
                         localStorage.setItem('checked',JSON.stringify(true));
                         localStorage.setItem('userId',res.data.userId);
                         localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;
                     }else{
+                      if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
+                        localStorage.setItem('menuList',JSON.stringify(obj1));
+                      }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
+                         localStorage.setItem('menuList',JSON.stringify(obj2));
+                      }else{
                         localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
-                        localStorage.setItem('username',JSON.stringify(this.account));
+                      }
+                        localStorage.setItem('username',JSON.stringify(this.account.replace(/\s*/g,"")));
                         localStorage.setItem('userId',res.data.userId);
                         localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;
                     }
                     this.$router.push({name:'home'})
                 }else{
-                    clocalStorage.clear();                    
-                }                
+                    clocalStorage.clear();
+                }
             }).catch((res)=>{
                 this.$message.error('账号或密码输入不正确!')
             })
-            
+
         }
     }
 }
@@ -277,7 +409,7 @@ export default {
             font-weight: bold;
             color: #000;
         }
-        .login-area{           
+        .login-area{
             margin: 0 auto;
             width: 400px;
             height:420px;
@@ -322,7 +454,7 @@ export default {
                 .code{
                     display: flex;
                     margin: 0 auto;
-                    width: 80%;  
+                    width: 80%;
                     .validation{
                         display: block;
                         margin-bottom: 10px;
@@ -370,18 +502,18 @@ export default {
                         border: 1px solid #2ea7e0;
                         border-radius: 2px;
                         cursor: pointer;
-                        
+
                     }
                 }
                 .other{
                     margin: 0 auto 25px;
-                    width: 80%; 
-                    font-size: 14px;  
-                    color: #606266; 
+                    width: 80%;
+                    font-size: 14px;
+                    color: #606266;
                     label{
                         cursor: pointer;
-                    }                
-                }                
+                    }
+                }
                 .code-login,.forget-password{
                     float: right;
                     display: block;
@@ -421,4 +553,3 @@ export default {
         }
     }
 </style>
-

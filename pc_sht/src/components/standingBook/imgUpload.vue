@@ -6,7 +6,7 @@
                     <p class="title">进货（厂家销售）凭证</p>
                     <div v-for="(item,index) in item_1_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,1)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,1)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -24,7 +24,7 @@
                     <p class="title">检测情况</p>
                     <div v-for="(item,index) in item_2_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,2)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,2)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -42,7 +42,7 @@
                     <p class="title">动物检疫合格证明</p>
                     <div v-for="(item,index) in item_3_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,3)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,3)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -60,7 +60,7 @@
                     <p class="title">肉品品质检验合格证</p>
                     <div v-for="(item,index) in item_4_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,4)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,4)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -78,7 +78,7 @@
                     <p class="title">产地证明</p>
                     <div v-for="(item,index) in item_5_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,5)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,5)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -96,7 +96,7 @@
                     <p class="title">肉品质量承诺书</p>
                     <div v-for="(item,index) in item_6_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,6)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,6)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -114,7 +114,7 @@
                     <p class="title">产品检验报告单</p>
                     <div v-for="(item,index) in item_7_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,7)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,7)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -132,7 +132,7 @@
                     <p class="title">水分检测报告单</p>
                     <div v-for="(item,index) in item_8_list" :key="index">
                         <figure class="image" v-if="item.img_url">
-                            <p class="icon-delete" @click="deleteFun(item,index,8)">-</p>
+                            <p class="icon-delete-p" @click="deleteFun(item,index,8)">-</p>
                             <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com'+item.img_url" @click="bigImgFun(item)">
                         </figure>
                     </div>
@@ -545,7 +545,7 @@ export default {
                         height: 120px;
                         box-sizing: border-box;
                         border: 1px dashed #ccc;
-                        .icon-delete{
+                        .icon-delete-p{
                             position: absolute;
                             top: -6px;
                             right: -6px;
