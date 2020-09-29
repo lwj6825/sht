@@ -50,6 +50,9 @@ import survey from './survey'
 import report from './report'
 import approach from './approach'
 import standingBookCq from './standingBookCq'
+import DataEnterprise from './DataEnterprise'
+import DataReport from './DataReport'
+import FtReport from './FtReport'
 Vue.use(Router)
 
 export default new Router({
@@ -108,6 +111,9 @@ export default new Router({
         ...report,
         ...approach,
         ...standingBookCq,
+        ...FtReport,
+        ...DataEnterprise,
+        ...DataReport,
       ]
     },
   ]

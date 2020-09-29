@@ -169,7 +169,8 @@ import BmMarkerClusterer from  'vue-baidu-map/components/extra/MarkerClusterer';
 import BmMarker from 'vue-baidu-map/components/overlays/Marker';
 import BmInfoWindow from 'vue-baidu-map/components/overlays/InfoWindow';
 import BmPointCollection from 'vue-baidu-map/components/overlays/PointCollection';
-import '../../../node_modules/_echarts@4.8.0@echarts/map/js/province/beijing.js' // 引入北京地图数据
+// import '../../../node_modules/_echarts@4.8.0@echarts/map/js/province/beijing.js' // 引入北京地图数据
+import '../../../node_modules/echarts/map/js/province/beijing.js'
 import axios from 'axios';
 import {queryGetPriceTransactionType,queryGetGoodsAvg,getQueryPriceDistrictProportion,getQueryPriceNodeTypeProportion,getQueryPriceGroupProportion} from '../../js/platform/platform.js';
 var preD = function (e) {

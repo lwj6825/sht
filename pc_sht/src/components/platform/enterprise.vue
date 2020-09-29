@@ -348,6 +348,7 @@ export default {
         });
         this.getQueryTraceNodeFun1();
          // this.drawMap1();
+         this.getQueryTraceNodeFun1();
     },
     methods: {
       handlesubmit(){
@@ -1964,7 +1965,7 @@ export default {
         	background: rgba(213,217,220,.94);
         	opacity: 0.94;
         }
-        
+
     }
 
 </style>
@@ -2000,5 +2001,5 @@ export default {
 .mytables .el-table .cell{
   font-size: 12px;
 }
-.amap-logo,.amap-copyright {display:none !important;}
+.amap-logo,.amap-copyright { display:none !important; }
 </style>

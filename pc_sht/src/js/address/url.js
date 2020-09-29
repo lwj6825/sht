@@ -1,14 +1,16 @@
 // base url
-export const baseUrl = 'http://192.168.0.25:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.0.25:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.0.25:8081/order_sht/'; // 资产0.154
-export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
+// export const baseUrl = 'http://192.168.0.154:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.0.154:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.0.154:8081/order_sht/'; // 资产0.154
+// export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
+// export const baseUrl6 = 'http://192.168.0.148:8080/analysis-file/';
 
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
+export const baseUrl6 = 'http://47.92.11.75:13781/zhd-file/';
 
 // 登录地址接口,，，,
 export const loginUrl = baseUrl + 'login/login';
@@ -455,9 +457,12 @@ export const queryRegionForGoodsPrice = baseUrl + 'tz/queryRegionForGoodsPrice' 
 export const queryGoodsIndex = baseUrl + 'goodsPrice/queryGoodsIndex' //查看市场报价  商户录的报价信息
 export const queryIndexDate =  baseUrl + 'goodsPrice/queryIndexDate'//时间段查询报价记录
 export const queryNodeGoodsBiz = baseUrl + 'goodsPrice/queryNodeGoodsBiz';
-export const downloadPriceLife = baseUrl2 + 'goodsPrice/downloadPriceLife' // 导出 shbxppt 
-export const importPriceLife = baseUrl2 + 'goodsPrice/importPriceLife' // 导入 shbxppt 
+export const downloadPriceLife = baseUrl2 + 'goodsPrice/downloadPriceLife' // 导出 shbxppt
+export const importPriceLife = baseUrl2 + 'goodsPrice/importPriceLife' // 导入 shbxppt
 export const getAllNodePage = baseUrl + 'login/getAllNodePage' // 获取企业信息userId 等
+export const fileParseFT = baseUrl6 + 'ZhdTzParse/fileParseFT.do';//导入企业数据
+export const getReportRecordFengTai = baseUrl4 + 'dataReport/getReportRecordFengTai';
+export const fileExportFT = baseUrl6 + 'ZhdTzParse/fileExportFT.do';
 
 // 报修
 export const queryNodeBasePage = baseUrl + 'assets/queryNodeBasePage' // 查询节点
@@ -597,9 +602,9 @@ export const queryBusinessTypeSelect = baseUrl4 + 'warning/queryBusinessTypeSele
 export const queryBusiness2 = baseUrl4 + 'warning/queryBusiness' // 商户备案查询
 // export const queryNodeSelect = baseUrl4 + 'warning/queryNodeSelect' // 查询企业
 export const querypropertySelect = baseUrl4 + 'warning/querypropertySelect' // 查询得到经营者性质（个人企业）下拉框信息
-export const getBizIdByCondition = baseUrl4 + 'warning/getBizIdByCondition' // 根据node_id获得biz_id   
-export const insertBusiness = baseUrl4 + 'warning/insertBusiness' // 添加商户备案   
-export const updateBusiness = baseUrl4 + 'warning/updateBusiness' // 编辑商户备案   
+export const getBizIdByCondition = baseUrl4 + 'warning/getBizIdByCondition' // 根据node_id获得biz_id
+export const insertBusiness = baseUrl4 + 'warning/insertBusiness' // 添加商户备案
+export const updateBusiness = baseUrl4 + 'warning/updateBusiness' // 编辑商户备案
 export const updateBusinessState = baseUrl4 + 'warning/updateBusinessState' // 修改商户状态（启用，停用）
 export const updateBusinessIsPay = baseUrl4 + 'warning/updateBusinessIsPay' // 修改商户支付状态（启用，停用）
 export const downloadBusiness = baseUrl4 + 'warning/downloadBusiness' // 商户备案下载
@@ -639,8 +644,8 @@ export const queryAllWsSupplierName = baseUrl + 'cygl/queryAllWsSupplierName' //
 export const queryNodeInfoIndexNew = baseUrl + 'goodsPrice/queryNodeInfoIndexNew' // 价格监测列表
 export const getAllNodeJc = baseUrl + 'cygl/getAllNode' // 填报企业
 export const getAllNodeNew = baseUrl + 'cygl/getAllNodeNew' // 填报企业
-export const getNodePriceData = baseUrl2 + 'cygl/getNodePriceData' // 价格检测接口 shbxppt 
-export const queryNodeGoodsDetails = baseUrl + 'cygl/queryNodeGoodsDetail' // 查看中心价格上报商品 shbxppt 
+export const getNodePriceData = baseUrl2 + 'cygl/getNodePriceData' // 价格检测接口 shbxppt
+export const queryNodeGoodsDetails = baseUrl + 'cygl/queryNodeGoodsDetail' // 查看中心价格上报商品 shbxppt
 // 统计分析
 export const traceDataReporting = baseUrl + 'compute/traceDataReporting' // 各类型企业上报数据量
 export const getNodeCount = baseUrl + 'cygl/getNodeCount' // 企业数量?node_id=110114311

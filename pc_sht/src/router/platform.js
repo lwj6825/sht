@@ -10,7 +10,6 @@ import singleNode from '../components/platform/singleNode.vue';
 import transactionPrice from '../components/platform/transactionPrice.vue';
 import transactionVolume from '../components/platform/transactionVolume.vue';
 import viewNodeReport from '../components/platform/viewNodeReport';
-
 export default [
     {
         path: 'platform/enterprise',
