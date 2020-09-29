@@ -523,6 +523,9 @@ export default {
             if(this.dataTime){
                 this.startTime = this.dataTime[0]
                 this.endTime = this.dataTime[1]
+            }else{
+                this.startTime = ''
+                this.endTime = ''
             }
             this.getAllTypesFun()
         },

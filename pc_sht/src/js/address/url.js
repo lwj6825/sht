@@ -1,23 +1,17 @@
 // base url
-export const baseUrl = 'http://192.168.0.154:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.0.154:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.0.154:8081/order_sht/'; // 资产0.154
-export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
+// export const baseUrl = 'http://192.168.0.25:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.0.25:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.0.25:8081/order_sht/'; // 资产0.154
+// export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
 
-// export const baseUrl4 = 'https://mobile.zhdtech.com/order_sht/'
-// export const baseUrl3 = 'https://mobile.zhdtech.com/test_sht/';  // 测试线上资产
-// export const baseUrl = 'http://shtordertest.zhdtech.com:8080/order_sht/';//外网
-
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 
-// export const baseUrl = 'http://47.92.44.95:14380/order_sht/';
-
 // 登录地址接口,，，,,
-export const loginUrl = baseUrl4 + 'login/login';
+export const loginUrl = baseUrl + 'login/login';
 export const getShtUserInfo = baseUrl + 'login/getShtUserInfo'; // get单点登录
 export const loginout = baseUrl + 'login/loginout';// 登出
 export const updatePassword = baseUrl + 'login/updatePassword'; // 修改密码
