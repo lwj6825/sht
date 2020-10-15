@@ -74,7 +74,7 @@ function formatDate(date) {
     var month = date.getMonth() + 1;
     var day = date.getDate();
     var hour = date.getHours();
-    var minute = date.getMinutes();
+    var minute = date.getMinutes(); 
     var second = date.getSeconds();
     return year + "-" + formatTen(month) + "-" + formatTen(day);
 }
