@@ -113,7 +113,7 @@ export default {
             roleId: '',
             loading: true,
             options:[
-              {node_name:'永辉',id:0},
+              {node_name:'永辉',id:6},
               {node_name:'首航',id:1},
               {node_name:'志广',id:2},
               {node_name:'物美',id:3},
