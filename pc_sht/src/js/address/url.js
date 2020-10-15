@@ -12,7 +12,7 @@ export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 export const baseUrl6 = 'http://47.92.11.75:13781/zhd-file/';
 
-// 登录地址接口,，，,,
+// 登录地址接口,，，,
 export const loginUrl = baseUrl + 'login/login';
 export const getShtUserInfo = baseUrl + 'login/getShtUserInfo'; // get单点登录
 export const loginout = baseUrl + 'login/loginout';// 登出
