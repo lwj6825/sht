@@ -14,6 +14,16 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
+                    <el-form-item label="学校类别" v-if="account == 'cpjw'">
+                        <el-select v-model="form.category" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item, index) in categoryArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="学校属性" v-if="account == 'cpjw'">
+                        <el-select v-model="form.attribute" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item, index) in attributeArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" class="search-btn" @click="searchFun"style="margin-left: 10px;">搜索</el-button>
                         <span class="clear-content" @click="clearFun">清空筛选条件</span>
@@ -43,7 +53,7 @@
                     <el-table-column prop="RETAIL_MARKET_ID" label="节点编码" width="120"></el-table-column>
                     <el-table-column prop="RETAIL_MARKET_NAME" label="节点名称"></el-table-column>
                     <el-table-column prop="ADDR" label="地址"></el-table-column>
-                    <el-table-column prop="JGJG" label="监管机构" width="120"></el-table-column>
+                    <el-table-column prop="JGJG" label="监管机构" width="120" v-if="account != 'cpjw' && userType != 6"></el-table-column>
                     <el-table-column prop="TOTAL_NUM" label="数据量" width="70"></el-table-column>
                     <el-table-column prop="DAY_COUNT" label="报送天数" width="90"></el-table-column>
                     <el-table-column prop="AVG" label="日均报送量" width="90"></el-table-column>
@@ -70,6 +80,7 @@ function formatDate(date) {
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
 import {QueryBizInfos, QuerySaleEntryJgInfo} from '../../js/approach/approach.js'
+import {QueryNodeTagTree} from '../../js/retrieval/retrieval.js'
 export default {
     name:"approachList",
     data() {
@@ -77,7 +88,11 @@ export default {
             form: {
                 node_name: '',
                 dataTime: [],
+                category: '',
+                attribute: '',
             },
+            attributeArr: [],
+            categoryArr: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -87,12 +102,15 @@ export default {
             name: '',
             nodeArr: [],
             loading: true,
+            account: '',
+            userType: '',
         }
     },
     mounted() {
         this.parent_node_id = localStorage.getItem('parent_node_id');
         this.name = localStorage.getItem('name');
         this.account = localStorage.getItem('account');
+        this.userType = localStorage.getItem('userType')
         this.getTime()
         let arr = []
         arr.push(this.startTime)
@@ -100,8 +118,26 @@ export default {
         this.form.dataTime = arr
         this.getQueryBizInfosFun()
         this.getDataFun()
+        this.getQueryNodeTagTreeFun()
     },
     methods: {
+        getQueryNodeTagTreeFun(){
+            let str = 'tag_parent_id=27'
+            QueryNodeTagTree(str)
+                .then(res => {
+                    res.data.forEach(val => {
+                        if(val.tag_name == "学校类别"){
+                            this.categoryArr = val.childList
+                        }
+                        if(val.tag_name == "学校属性"){
+                            this.attributeArr = val.childList
+                        }
+                    })
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         // 节点名称
         getQueryBizInfosFun(){
             let obj = {
@@ -124,12 +160,21 @@ export default {
         },
         getDataFun(){
             this.loading = true
+            let str = ''
+            if(this.form.category && this.form.attribute){
+                str += this.form.category + ',' + this.form.attribute
+            }else if(this.form.category && !this.form.attribute){
+                str += this.form.category
+            }else if(!this.form.category && this.form.attribute){
+                str += this.form.attribute
+            }
             let obj = {
                 jg_dm: this.parent_node_id,
                 yh_mc: this.name,
                 node_name: this.form.node_name,
                 startDate: this.startTime,
                 endDate: this.endTime,
+                tag_id: str
             }
             QuerySaleEntryJgInfo(obj)
                 .then(res => {
@@ -153,6 +198,8 @@ export default {
             this.form = {
                 node_name: '',
                 dataTime: '',
+                category: '',
+                attribute: '',
             }
             this.getTime()
             let arr = []

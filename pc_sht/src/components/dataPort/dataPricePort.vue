@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <div class="searchs" ref="searchs">
+        <div class="searchs" ref="searchs" v-if="roleId != 80">
             <div class="search">
                 <el-form ref="form" :inline="true" :model="form" label-width="80px">
                     <el-form-item label="日期">
@@ -13,7 +13,7 @@
                 </el-form>
             </div>
         </div>
-        <div class="iframe">
+        <div class="iframe" v-if="roleId == 80">
             <iframe :src="url" 
             scrolling="auto" width="100%" height="100%" frameborder="0" id="contentIframe"></iframe>
         </div>
@@ -50,7 +50,7 @@ export default {
     name:"dataPricePort",
     data() {
         return {
-            url: '',
+            url: 'https://shop.zhdtech.com/necessities/?0',
             mainList: [],
             form: {
                 dataTime: '',
@@ -61,6 +61,7 @@ export default {
                 //     return time.getTime() >  new Date(this.currentTime).getTime()
                 // }
             },
+            roleId: '',
         }
     },
     mounted() {
@@ -84,12 +85,13 @@ export default {
                 }
             }
         })
-        // this.url = 'http://192.168.0.137:8848/Report/index.html' + '?' + this.form.dataTime
+        this.roleId = localStorage.getItem('roleId')
     },
     methods: {
         searchFun(){
-            // window.open('http://192.168.0.117:8848/necessities/index.html' + '?' + this.form.dataTime)
-            window.open('https://shop.zhdtech.com/necessities/' + '?' + this.form.dataTime)
+            if(this.roleId != '80'){
+                window.open('https://shop.zhdtech.com/necessities/' + '?' + this.form.dataTime)
+            }
         },
     },
 }
@@ -119,7 +121,7 @@ export default {
         }
         .iframe{
             width: 100%;
-            height: 620px;
+            height: 680px;
         }
     }
 </style>

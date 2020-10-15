@@ -1,6 +1,6 @@
 <template>
     <div class="content reportList">
-        <div class="areaBox" ref="areaBox">
+        <div class="areaBox" ref="areaBox" v-if="roleId != '80'">
             <div class="area-content">
                 <div class="area-title">区县</div>
                 <div class="area-wrapper">
@@ -24,7 +24,8 @@
                     </el-form-item>
                     <el-form-item label="类型">
                         <el-select v-model="form.types" @change="selectFun" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item, index) in typesArr" :key="index" :label="item" :value="item"></el-option>
+                            <el-option v-for="(item, index) in typesArr" :key="index" :label="item" :value="item"
+                             v-if="roleId != 80 && item != '牛肉类' && item != '禽肉类' && item != '羊肉类'"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="品种">
@@ -97,8 +98,8 @@ function getNowFormatDate() {//获取当前时间
             + seperator2 + date.getSeconds();
     return currentdate
 }
-import {GetTodayGoodsTableLimteTime, GetGoodsTypeAndName} from '../../js/report/report.js'
-import {exportTodayGoodsTableLimteTime} from '../../js/address/url.js'
+import {GetTodayGoodsTableLimteTime, GetTodayGoodsTableLimteTimeNew, GetGoodsTypeAndName, GetGoodsTypeAndNameNew} from '../../js/report/report.js'
+import {exportTodayGoodsTableLimteTime, exportTodayGoodsTableLimteTimeNew} from '../../js/address/url.js'
 export default {
     name: 'reportList',
     data() {
@@ -129,9 +130,11 @@ export default {
                     return time.getTime() >  new Date().getTime()
                 }
             },
+            roleId: '',
         }
     },
     mounted() {
+        this.roleId = localStorage.getItem('roleId')
         this.getTime()
         let arr = []
         arr.push(this.startTime)
@@ -144,27 +147,52 @@ export default {
         selectFun(){
             this.form.varieties = ''
             let str = 'goodsType=' + (this.form.types ? this.form.types : '')
-            GetGoodsTypeAndName(str)
-                .then(res => {
-                    this.varietiesArr = res.data.mian_goods
-                })
-                .catch((res) => {
-                    this.loading = false
-                    console.log(res)
-                })
+            if(this.roleId == '80'){
+                GetGoodsTypeAndNameNew(str)
+                    .then(res => {
+                        this.varietiesArr = res.data.mian_goods
+                    })
+                    .catch((res) => {
+                        this.loading = false
+                        console.log(res)
+                    })
+            }else{
+                GetGoodsTypeAndName(str)
+                    .then(res => {
+                        this.varietiesArr = res.data.mian_goods
+                    })
+                    .catch((res) => {
+                        this.loading = false
+                        console.log(res)
+                    })
+            }
         },
         getGetGoodsTypeAndName(){
-            GetGoodsTypeAndName('')
-                .then(res => {
-                    this.varietiesArr = res.data.mian_goods
-                    this.typesArr = res.data.goods_type
-                    this.areaList = res.data.qx
-                    this.selectArea = this.areaList[0]
-                })
-                .catch((res) => {
-                    this.loading = false
-                    console.log(res)
-                })
+            if(this.roleId == '80'){
+                GetGoodsTypeAndNameNew('')
+                    .then(res => {
+                        this.varietiesArr = res.data.mian_goods
+                        this.typesArr = res.data.goods_type
+                        this.areaList = res.data.qx
+                        this.selectArea = this.areaList[0]
+                    })
+                    .catch((res) => {
+                        this.loading = false
+                        console.log(res)
+                    })
+            }else{
+                GetGoodsTypeAndName('')
+                    .then(res => {
+                        this.varietiesArr = res.data.mian_goods
+                        this.typesArr = res.data.goods_type
+                        this.areaList = res.data.qx
+                        this.selectArea = this.areaList[0]
+                    })
+                    .catch((res) => {
+                        this.loading = false
+                        console.log(res)
+                    })
+            }
         },
         // 选择区县
         selectId(ele){
@@ -219,19 +247,35 @@ export default {
                 let str = 'date=' + this.startTime + '&endDate=' + this.endTime + '&node_type=' + node_type 
                     + '&node_detail_type=' + node_detail_type + '&goods_type=' + (this.form.types ? this.form.types : '') 
                     + '&goods_name=' + (this.form.varieties ? this.form.varieties : '') + '&district_name=' + district_name
-                GetTodayGoodsTableLimteTime(str)
-                    .then(res => {
-                        this.loading = false
-                        if(!res.data){
-                            this.tableData = []
-                        }else{
-                            this.tableData = res.data.list
-                        }
-                    })
-                    .catch((res) => {
-                        this.loading = false
-                        console.log(res)
-                    })
+                if(this.roleId == '80'){
+                    GetTodayGoodsTableLimteTimeNew(str)
+                        .then(res => {
+                            this.loading = false
+                            if(!res.data){
+                                this.tableData = []
+                            }else{
+                                this.tableData = res.data.list
+                            }
+                        })
+                        .catch((res) => {
+                            this.loading = false
+                            console.log(res)
+                        })
+                }else{
+                    GetTodayGoodsTableLimteTime(str)
+                        .then(res => {
+                            this.loading = false
+                            if(!res.data){
+                                this.tableData = []
+                            }else{
+                                this.tableData = res.data.list
+                            }
+                        })
+                        .catch((res) => {
+                            this.loading = false
+                            console.log(res)
+                        })
+                }
             }
         },
         searchFun(){
@@ -257,10 +301,15 @@ export default {
             }else{
                 district_name = this.selectArea
             }
-            window.location.href = exportTodayGoodsTableLimteTime + '?date=' + this.startTime + '&endDate=' + this.endTime + '&node_type=' + node_type 
-                + '&node_detail_type=' + node_detail_type + '&goods_type=' + this.form.types + '&goods_name=' + this.form.varieties
-                + '&district_name=' + district_name
-            
+            if(this.roleId == '80'){
+                window.location.href = exportTodayGoodsTableLimteTimeNew + '?date=' + this.startTime + '&endDate=' + this.endTime + '&node_type=' + node_type 
+                    + '&node_detail_type=' + node_detail_type + '&goods_type=' + this.form.types + '&goods_name=' + this.form.varieties
+                    + '&district_name=' + district_name
+            }else{
+                window.location.href = exportTodayGoodsTableLimteTime + '?date=' + this.startTime + '&endDate=' + this.endTime + '&node_type=' + node_type 
+                    + '&node_detail_type=' + node_detail_type + '&goods_type=' + this.form.types + '&goods_name=' + this.form.varieties
+                    + '&district_name=' + district_name
+            }
         },
         timeChange(ele){
             if(this.form.dataTime){
@@ -335,7 +384,6 @@ export default {
             }
         }
         .searchs{
-            margin-top: 10px;
             padding: 10px 0;
             background: #fff;
             .search{

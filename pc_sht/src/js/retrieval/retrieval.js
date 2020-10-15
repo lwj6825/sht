@@ -1,7 +1,7 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {getJdhyd, getNodeTzInfoGroupForJg, getGoodsTzInfoGroupForJg, getBusinessTzInfoGroupForJg, getTzcyInfo, queryInTzDetailBySjjgjg, 
     jcqueryRegion, querybizByNodeId, getAllTzGys, getSuperMeatIn, queryTtxfjcxxDetailApi, queryOriginalDocAPI, jsqueryInTzDetailByTzId,
-    getAllOriginalDoc, queryMeatOriginalDoc, queryAllWsSupplierName} from '../address/url.js';
+    getAllOriginalDoc, queryMeatOriginalDoc, queryAllWsSupplierName, queryNodeTagTree} from '../address/url.js';
 
 // 企业活跃度
 export const  GetJdhyd  = function(params) {
@@ -66,4 +66,8 @@ export const  QueryMeatOriginalDoc  = function(params) {
 // 来源市场
 export const  QueryAllWsSupplierName  = function(params) {
     return ajaxGet(queryAllWsSupplierName + '?' + params)
+}
+// 企业标签 ==>  类别，属性...
+export const  QueryNodeTagTree  = function(params) {
+    return ajaxGet(queryNodeTagTree + '?' + params)
 }

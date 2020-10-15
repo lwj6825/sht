@@ -12,7 +12,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="所属区县">
+                    <el-form-item label="所属区县" v-if="roleId != '80'">
                         <el-select v-model="form.addr" filterable clearable placeholder="请选择">
                             <el-option v-for="(item,index) in addrArr" :key="index" :label="item.district_name" :value="item.district_name">
                             </el-option>
@@ -66,7 +66,7 @@ function getNowFormatDate() {//获取当前时间
             + seperator2 + date.getSeconds();
     return currentdate
 }
-import {QueryNodePriceExtract, NodePriceType, DownloadPriceNodeExtract, BatchUpdatePriceNode} from '../../js/compare/compare.js'
+import {QueryNodePriceExtract, QueryNodePriceExtractNew, NodePriceType, NodePriceTypeNew, DownloadPriceNodeExtract, BatchUpdatePriceNode} from '../../js/compare/compare.js'
 import {importPriceNodeExtract} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
@@ -92,9 +92,11 @@ export default {
             editAllBtn: '批量修改',
             editArr: [],
             file: '',
+            roleId: '',
         }
     },
     mounted() {
+        this.roleId = localStorage.getItem('roleId')
         let routeMsg1 = '';
         if(localStorage.getItem('routeMsg1')){
             routeMsg1 = JSON.parse(localStorage.getItem('routeMsg1'))
@@ -111,16 +113,29 @@ export default {
     },
     methods: {
         getNodePriceType(){
-            NodePriceType('')
-                .then(res => {
-                    this.typesArr = res.data.node_type
-                    this.detailArr = res.data.node_detail_type
-                    this.addrArr = res.data.district_name
-                    this.extractArr = res.data.data_source
-                })
-                .catch(res => {
-                    console.log(res)
-                })
+            if(this.roleId == '80'){
+                NodePriceTypeNew('')
+                    .then(res => {
+                        this.typesArr = res.data.node_type.slice(0, res.data.node_type.length -2)
+                        this.detailArr = res.data.node_detail_type
+                        this.addrArr = res.data.district_name
+                        this.extractArr = res.data.data_source
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }else{
+                NodePriceType('')
+                    .then(res => {
+                        this.typesArr = res.data.node_type
+                        this.detailArr = res.data.node_detail_type
+                        this.addrArr = res.data.district_name
+                        this.extractArr = res.data.data_source
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }
         },
         getDataFun(){
             this.loading = true
@@ -134,24 +149,45 @@ export default {
                 data_source: this.form.extract_types,
                 state: 1,
             }
-            QueryNodePriceExtract(obj)
-                .then(res => {
-                    this.loading = false
-                    this.total = res.data.condition.total
-                    let arr = [], num = '';
-                    res.data.dataList.forEach(val =>{
-                        this.extractArr.forEach(val2 => {
-                            if(val2.text == val.data_source){
-                                val.types = val2.id
-                            }
+            if(this.roleId == '80'){
+                QueryNodePriceExtractNew(obj)
+                    .then(res => {
+                        this.loading = false
+                        this.total = res.data.condition.total
+                        let arr = [], num = '';
+                        res.data.dataList.forEach(val =>{
+                            // this.extractArr.forEach(val2 => {
+                            //     if(val2.text == val.data_source){
+                            //         val.types = val2.id
+                            //     }
+                            // })
                         })
+                        this.tableData = res.data.dataList 
                     })
-                    this.tableData = res.data.dataList 
-                })
-                .catch(res => {
-                    this.loading = false
-                    console.log(res)
-                })
+                    .catch(res => {
+                        this.loading = false
+                        console.log(res)
+                    })
+            }else{
+                QueryNodePriceExtract(obj)
+                    .then(res => {
+                        this.loading = false
+                        this.total = res.data.condition.total
+                        let arr = [], num = '';
+                        res.data.dataList.forEach(val =>{
+                            this.extractArr.forEach(val2 => {
+                                if(val2.text == val.data_source){
+                                    val.types = val2.id
+                                }
+                            })
+                        })
+                        this.tableData = res.data.dataList 
+                    })
+                    .catch(res => {
+                        this.loading = false
+                        console.log(res)
+                    })
+            }
         },
         handleSizeChange(val){
             this.cols = val

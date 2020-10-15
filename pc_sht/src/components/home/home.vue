@@ -96,18 +96,20 @@ export default {
             roleId: '',
             user:'',
             isShow : false,
-            isShow1:false
+            isShow1:false,
+            account: '',
         }
     },
     created() {
         this.loginName =  localStorage.getItem('loginName');
+        this.account =  localStorage.getItem('account');
         this.roleId = localStorage.getItem('roleId');
         // console.log(localStorage.getItem('menuList'));
     },
     mounted(){
         setTimeout(()=>{
             this.user = localStorage.getItem("loginName");
-            if(this.user == 'paas'){
+            if(this.user == 'paas' || this.account == 'sjcj' ){
                 this.isShow = true;
             }else if(this.user.indexOf('丰台')>-1){
                 this.isShow1 = true;

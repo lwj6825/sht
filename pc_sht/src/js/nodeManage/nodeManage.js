@@ -5,7 +5,7 @@ import {
     queryProvinceToSelect, updateBasicInfo, toBasicUpdate, notReportedMonitoring, insertCommunicationRecord, queryCommunicationRecord,
     queryInfoType, querygroupName, downloadNodeInfo, queryNodeDetailType2, downloadNotReportedMonitoring, queryBusinessStateSelect, 
     queryBusinessTypeSelect, queryBusiness2, queryNodeSelect, querypropertySelect, getBizIdByCondition, insertBusiness, updateBusiness,
-    updateBusinessState, updateBusinessIsPay, downloadBusiness, getNodeTagInfo
+    updateBusinessState, updateBusinessIsPay, downloadBusiness, getNodeTagInfo, queryJgJg
 } from '../address/url.js';
 
 export const QuerygroupName  = function(params) {
@@ -155,4 +155,8 @@ export const DownloadBusiness = function(form) {
 // 节点详细类型
 export const GetNodeTagInfo  = function(params) {
     return ajaxGet(getNodeTagInfo+'?' + params)
+}
+// 监管机构
+export const QueryJgJg  = function(params) {
+    return ajaxGet(queryJgJg+'?' + params)
 }

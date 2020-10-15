@@ -14,16 +14,31 @@
                             <el-option label="批发市场" value="批发市场"></el-option>
                             <el-option label="零售市场" value="零售市场"></el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item><!--
                     <el-form-item label="监管机构">
                         <el-select v-model="form.supervise" filterable clearable placeholder="请选择" :disabled="roleId == 40">
                             <el-option v-for="(item, index) in superviseArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item>-->
                     <el-form-item label="状态">
                         <el-select v-model="form.node_state" clearable placeholder="请选择">
                             <el-option  label="开启" value="1"></el-option>
                             <el-option  label="关闭" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="学校类别" v-if="account == 'cpjw'">
+                        <el-select v-model="form.category" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item, index) in categoryArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="学校属性" v-if="account == 'cpjw'">
+                        <el-select v-model="form.attribute" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item, index) in attributeArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="企业规模" v-if="userType == 5">
+                        <el-select v-model="form.scale" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item, index) in scaleArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
                         </el-select>
                     </el-form-item>
                     <!--<el-form-item label="所属区域">
@@ -47,12 +62,12 @@
                     <el-button type="primary" size="medium" class="new-add" @click="addFun">新增企业</el-button><!---->
                 </div>
             </div>
-            <div class="tables" >
+            <div class="tables" v-loading="loading">
                 <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="node_name" label="企业名称"></el-table-column>
-                    <el-table-column prop="node_type" label="企业类型"></el-table-column>
+                    <el-table-column prop="node_type" label="企业类型"></el-table-column><!--
                     <el-table-column prop="sjjgjg" label="监管机构"></el-table-column>
-                    <el-table-column prop="district_name" label="所属区域"></el-table-column>
+                    <el-table-column prop="district_name" label="所属区域"></el-table-column>-->
                     <el-table-column prop="node_state" label="状态">
                         <template slot-scope="scope">
                             <p v-if="scope.row.node_state == 1">开启</p>
@@ -163,7 +178,7 @@
                         <el-switch v-model="form2.node_state" active-text="开启" inactive-text="关闭"
                             active-value="1" inactive-value="2">
                         </el-switch>
-                    </el-form-item><!---->
+                    </el-form-item>
                     <el-form-item style="margin-left: 400px;">
                         <el-button type="primary" @click="submitForm('form2')">保存</el-button>
                     </el-form-item>
@@ -175,6 +190,7 @@
 
 <script>
 import {GetNodeJgInfoGroupForJg, GetJgjgByNodeid, InsertNodeJgInfo, UpdateNodeJgInfo, DeleteNodeJgInfo} from '../../js/enterprise/enterprise.js'
+import {QueryNodeTagTree} from '../../js/retrieval/retrieval.js'
 export default {
     name:"auditJournal",
     data(){
@@ -187,7 +203,13 @@ export default {
                 region: '',
                 supervise: '',
                 node_state: '',
+                category: '',
+                attribute: '',
+                scale: '',
             },
+            attributeArr: [],
+            categoryArr: [],
+            scaleArr: [],
             page: 1,
             cols: 15,
             num: 0,
@@ -260,9 +282,12 @@ export default {
                 ]
             },
             roleId: '',
+            account: '',
+            loading: true,
         }
     },
     mounted(){
+        this.account = localStorage.getItem('account')
         this.node_ids = localStorage.getItem('loginId')
         this.userType = localStorage.getItem('userType')
         this.roleId = localStorage.getItem('roleId')
@@ -277,8 +302,39 @@ export default {
             this.getGetJgjgByNodeid()
         }
         this.getDataFun()
+        this.getQueryNodeTagTreeFun()
     },
     methods: {
+        getQueryNodeTagTreeFun(){
+            let str = 'tag_parent_id=27'
+            QueryNodeTagTree(str)
+                .then(res => {
+                    res.data.forEach(val => {
+                        if(val.tag_name == "学校类别"){
+                            this.categoryArr = val.childList
+                        }
+                        if(val.tag_name == "学校属性"){
+                            this.attributeArr = val.childList
+                        }
+                    })
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+            if(this.userType == 5){
+                QueryNodeTagTree('tag_parent_id=-1')
+                    .then(res => {
+                        res.data.forEach(val => {
+                            if(val.tag_name == "企业规模"){
+                                this.scaleArr = val.childList
+                            }
+                        })
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }
+        },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -388,6 +444,23 @@ export default {
                 })
         },
         getDataFun(){
+            this.loading = true
+            let str = ''
+            if(this.form.category && this.form.attribute && this.form.scale){
+                str += this.form.category + ',' + this.form.attribute + ',' + this.form.scale
+            }else if(this.form.category && !this.form.attribute && !this.form.scale){
+                str += this.form.category
+            }else if(this.form.category && this.form.attribute && !this.form.scale){
+                str += this.form.category + ',' + this.form.attribute
+            }else if(this.form.category && !this.form.attribute && this.form.scale){
+                str += this.form.category + ',' + this.form.scale
+            }else if(!this.form.category && this.form.attribute && !this.form.scale){
+                str += this.form.attribute
+            }else if(!this.form.category && this.form.attribute && this.form.scale){
+                str += this.form.attribute + ',' + this.form.scale
+            }else if(!this.form.category && !this.form.attribute && this.form.scale){
+                str += this.form.scale
+            }
             let params = {
                 node_id: this.node_ids,
                 usertype: this.userType,
@@ -397,14 +470,17 @@ export default {
                 node_type: this.form.types == 0 ? '' : this.form.types,
                 node_name: this.form.name,
                 node_state: this.form.node_state,
+                tag_id: str
             }
             GetNodeJgInfoGroupForJg(params)
                 .then(res => {
+                    this.loading = false
                     this.tableData = res.data.list
                     this.num = res.data.total
                 })
                 .catch((res) => {
                     console.log(res)
+                    this.loading = false
                 })
         },
         addFun(){
@@ -466,6 +542,9 @@ export default {
                 account: '',
                 region: '',
                 supervise: '',
+                category: '',
+                attribute: '',
+                scale: '',
             }
             this.form.supervise = this.superviseArr[0].jgjg
             this.page = 1

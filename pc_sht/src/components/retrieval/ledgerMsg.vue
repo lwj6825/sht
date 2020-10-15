@@ -9,7 +9,7 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="企业类型">
+                    <el-form-item label="企业类型" v-if="account != 'cpjw'">
                         <el-select v-model="form.types" placeholder="请选择" @change="typesChangeFun">
                             <el-option label="餐饮" value="餐饮"></el-option>
                             <el-option label="超市" value="超市"></el-option>
@@ -40,7 +40,7 @@
                             :value="item.WS_SUPPLIER_NAME"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="所属街道" v-if="form.types == '餐饮'">
+                    <el-form-item label="所属街道" v-if="form.types == '餐饮' && account != 'cpjw' && userType != 6">
                         <el-select v-model="form.supervise" filterable clearable placeholder="请选择" :disabled="roleId == 40">
                             <el-option v-for="(item, index) in superviseArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
                         </el-select>
@@ -48,7 +48,7 @@
                     <el-form-item label="商品名称" v-if="form.types == '零售市场'">
                         <el-input class="label-width" v-model="form.good_name" clearable placeholder="请输入"></el-input>
                     </el-form-item>
-                    <el-form-item label="所属区域" v-if="form.types == '零售市场'">
+                    <el-form-item label="所属区域" v-if="form.types == '零售市场' && userType != 6">
                         <el-select v-model="form.region" filterable clearable placeholder="请选择" @change="regionChangeFun">
                             <el-option v-for="(item, index) in regionArr" :key="index" :label="item.BOOTH_NAME" :value="item.SHOP_BOOTH_ID"></el-option>
                         </el-select>
@@ -63,9 +63,19 @@
                             <el-option v-for="(item, index) in gysArr" :key="index" :label="item.biz_name" :value="item.biz_name"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="所属街道" v-if="form.types == '零售市场'">
+                    <el-form-item label="所属街道" v-if="form.types == '零售市场' && account != 'cpjw' && userType != 6">
                         <el-select v-model="form.supervise" filterable clearable placeholder="请选择" :disabled="roleId == 40">
                             <el-option v-for="(item, index) in superviseArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="学校类别" v-if="account == 'cpjw'">
+                        <el-select v-model="form.category" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item, index) in categoryArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="学校属性" v-if="account == 'cpjw'">
+                        <el-select v-model="form.attribute" filterable clearable placeholder="请选择">
+                            <el-option v-for="(item, index) in attributeArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
@@ -91,7 +101,7 @@
                     <el-table-column prop="is_uplode" label="单据上传">
                         <template slot-scope="scope">{{scope.row.is_uplode}}</template>
                     </el-table-column>
-                    <el-table-column prop="secend_parent" label="监管机构">
+                    <el-table-column prop="secend_parent" label="监管机构" v-if="account != 'cpjw'&& userType != 6">
                         <template slot-scope="scope">{{scope.row.secend_parent}}</template>
                     </el-table-column>
                     <el-table-column label="操作" width="200">
@@ -117,7 +127,7 @@
                             <p v-else-if="scope.row.is_oc_upload == 0">未上传</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="sjjgjg" label="监管机构">
+                    <el-table-column prop="sjjgjg" label="监管机构" v-if="account != 'cpjw' && userType != 6">
                         <template slot-scope="scope">{{scope.row.sjjgjg}}</template>
                     </el-table-column><!--
                     <el-table-column prop="" label=""></el-table-column>-->
@@ -215,7 +225,8 @@ function formatDate(date) {
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
 import {GetGoodsTzInfoGroupForJg, GetBusinessTzInfoGroupForJg, GetJdhyd, GetNodeTzInfoGroupForJg, QueryInTzDetailBySjjgjg, JcqueryRegion,
-    QuerybizByNodeId, GetAllTzGys, GetSuperMeatIn, QueryOriginalDocAPI, GetAllOriginalDoc, QueryMeatOriginalDoc, QueryAllWsSupplierName} from '../../js/retrieval/retrieval.js'
+    QuerybizByNodeId, GetAllTzGys, GetSuperMeatIn, QueryOriginalDocAPI, GetAllOriginalDoc, QueryMeatOriginalDoc, QueryAllWsSupplierName,
+    QueryNodeTagTree} from '../../js/retrieval/retrieval.js'
 import {GetJgjgByNodeid, GetNodeJgInfoGroupForJg} from '../../js/enterprise/enterprise.js'
 export default {
     name:"ledgerMsg",
@@ -232,7 +243,11 @@ export default {
                 region: '',
                 sh_name: '',
                 cs_name: [],
+                category: '',
+                attribute: '',
             },
+            attributeArr: [],
+            categoryArr: [],
             startTime: '',
             endTime: '', 
             page: 1,
@@ -267,6 +282,7 @@ export default {
             imgHeight: '',
             sizeObj: {},
             roleId: '',
+            account: '',
         }
     },
     mounted() {
@@ -274,6 +290,7 @@ export default {
         this.node_id = localStorage.getItem('loginId')
         this.userType = localStorage.getItem('userType')
         this.roleId = localStorage.getItem('roleId')
+        this.account = localStorage.getItem('account')
         this.getTime()
         let arr = []
         arr.push(this.startTime)
@@ -310,8 +327,26 @@ export default {
             })
         this.getGetJdhyd()
         this.getDataFun()
+        this.getQueryNodeTagTreeFun()
     },
     methods: {
+        getQueryNodeTagTreeFun(){
+            let str = 'tag_parent_id=27'
+            QueryNodeTagTree(str)
+                .then(res => {
+                    res.data.forEach(val => {
+                        if(val.tag_name == "学校类别"){
+                            this.categoryArr = val.childList
+                        }
+                        if(val.tag_name == "学校属性"){
+                            this.attributeArr = val.childList
+                        }
+                    })
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         bigImgFun(){
             this.isBigImg = true
             this.imgArr = this.imgArr1
@@ -559,6 +594,14 @@ export default {
         // 餐饮
         getDataFun(){
             this.loading = true
+            let str = ''
+            if(this.form.category && this.form.attribute){
+                str += this.form.category + ',' + this.form.attribute
+            }else if(this.form.category && !this.form.attribute){
+                str += this.form.category
+            }else if(!this.form.category && this.form.attribute){
+                str += this.form.attribute
+            }
             let params = {
                 node_id: this.form.name,
                 usertype: this.userType,
@@ -571,6 +614,7 @@ export default {
                 ws_supplier_name: this.form.market_name, // 来源市场
                 gys_mc: this.form.gys_name,
                 plu_name: this.form.good_name,
+                tag_id: str
             }
             GetNodeTzInfoGroupForJg(params)
                 .then(res => {
@@ -685,6 +729,8 @@ export default {
                 supervise: '',
                 region: '',
                 sh_name: '',
+                category: '',
+                attribute: '',
             }
             this.form.supervise = this.superviseArr[0].jgjg
             this.form.cs_name = []

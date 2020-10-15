@@ -24,7 +24,7 @@
                     </ul>
                     <div class="proportion proportion_1">
                         <div>
-                            <p>餐饮 {{qy_num1}}</p>
+                            <p v-if="roleId != '80'">餐饮 {{qy_num1}}</p>
                             <p>批发 {{qy_num2}}</p>
                             <p>零售 {{qy_num3}}</p>
                             <p>超市 {{qy_num4}}</p>
@@ -37,7 +37,7 @@
                 <div class="list">
                     <ul class="list_2">
                         <li>
-                            <p class="list-title"><span v-if="roleId == '80'">昨日</span>已上报企业</p>
+                            <p class="list-title"><span v-if="roleId == '80'">昨日上报企业</span><span v-else>已上报企业</span></p>
                             <p class="num num_1">{{list_num2}}<span style="font-size: 14px;">（占{{list_num11 + (roleId == '80' ? '%' : '')}}）</span></p>          
                         </li> 
                     </ul>
@@ -112,9 +112,9 @@
                 <el-tab-pane label="猪肉走势" name="first"></el-tab-pane>
                 <el-tab-pane label="蔬菜走势" name="second"></el-tab-pane>
                 <el-tab-pane label="水果走势" name="third"></el-tab-pane>
-                <el-tab-pane label="牛肉走势" name="fourth"></el-tab-pane>
-                <el-tab-pane label="羊肉走势" name="seventh"></el-tab-pane>
-                <el-tab-pane label="禽肉走势" name="fifth"></el-tab-pane><!--
+                <el-tab-pane label="牛肉走势" name="fourth" v-if="roleId != '80'"></el-tab-pane>
+                <el-tab-pane label="羊肉走势" name="seventh" v-if="roleId != '80'"></el-tab-pane>
+                <el-tab-pane label="禽肉走势" name="fifth" v-if="roleId != '80'"></el-tab-pane><!--
                 <el-tab-pane label="粮油走势" name="sixth"></el-tab-pane>-->
             </el-tabs>
             <div class="category">
@@ -130,7 +130,7 @@
             </div>-->
             <div id="my-chart6" class="echart"></div>
         </div>
-        <div class="fourth">
+        <div class="fourth" v-if="roleId != '80'">
             <div v-loading="loading">
                 <p>猪肉来源省份</p>
                 <div id="my-chart7" class="echart"></div>
@@ -169,8 +169,8 @@ function formatDate(date) {
     var second = date.getSeconds(); 
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
-import {GetNodeCount, GetJdhydPc, QuantityReportedNew, GetGoodsAvgPc, GetWsPriceIndexPc, VegMeatProvince, VegetableProvince,
-    GetGoodsType, GetNodeJgInfoType, GetPriceNode} from '../../js/monitor/monitor.js'
+import {GetNodeCount, GetJdhydPc, QuantityReportedNew, GetGoodsAvgPc, GetGoodsAvgPcNew, GetWsPriceIndexPc, VegMeatProvince, VegetableProvince,
+    GetGoodsType, GetNodeJgInfoType, GetPriceNode, GetPriceNodeNew} from '../../js/monitor/monitor.js'
 export default {
     name:"monitorMsg",
     data() {
@@ -264,82 +264,161 @@ export default {
         // 首页查询节点数量接口
         getGetPriceNode(){
             let str = 'type=' + this.types
-            GetPriceNode(str)
-                .then(res => {
-                    let dataNumList = res.data.dataNumList, // 各个环节数据的数量
-                        goodsNumList = res.data.goodsNumList, // 商品
-                        numList = res.data.numList, // 各个环节节点数量
-                        onLineList = res.data.onLineList, // 各个环节在线节点的数量
-                        title1 = [], title2 = [];
-                    this.list_num6 = goodsNumList[0].today_num
-                    this.list_num1 = res.data.total_num
-                    if(this.types == 'day'){
-                        title1 = ['昨日', '今日', '日环比']
-                        this.arr3 = title1
-                    }else if(this.types == 'week'){
-                        title1 = ['上周', '本周', '周环比']
-                        this.arr3 = title1
-                    }else if(this.types == 'month'){
-                        title1 = ['上月', '本月', '月环比']
-                        this.arr3 = title1
-                    }else if(this.types == 'year'){
-                        title1 = ['上年', '本年', '年环比']
-                        this.arr3 = title1
-                    }
-                    this.list_num7 = parseFloat(goodsNumList[0].rate)
-                    let num = 0, num2 = 0;
-                    let title = [], data = []
-                    numList.forEach(val => {
-                        title.push(val.node_type)
-                        data.push(val.node_count)
-                        if(val.node_type == '超市'){
-                            this.qy_num4 = val.node_count
-                        }else if(val.node_type == '零售市场'){
-                            this.qy_num3 = val.node_count
-                        }else if(val.node_type == '批发市场'){
-                            this.qy_num2 = val.node_count
-                        }else if(val.node_type == '生鲜配送'){
-                            num = val.node_count
-                        }else if(val.node_type == '团体消费单位'){
-                            num2 = val.node_count
+            if(this.roleId == '80'){
+                GetPriceNodeNew(str)
+                    .then(res => {
+                        let dataNumList = res.data.dataNumList, // 各个环节数据的数量
+                            goodsNumList = res.data.goodsNumList, // 商品
+                            numList = res.data.numList, // 各个环节节点数量
+                            onLineList = res.data.onLineList, // 各个环节在线节点的数量
+                            title1 = [], title2 = [];
+                        this.list_num6 = goodsNumList[0].today_num
+                        this.list_num1 = res.data.total_num
+                        if(this.types == 'day'){
+                            title1 = ['昨日', '今日', '日环比']
+                            this.arr3 = title1
+                        }else if(this.types == 'week'){
+                            title1 = ['上周', '本周', '周环比']
+                            this.arr3 = title1
+                        }else if(this.types == 'month'){
+                            title1 = ['上月', '本月', '月环比']
+                            this.arr3 = title1
+                        }else if(this.types == 'year'){
+                            title1 = ['上年', '本年', '年环比']
+                            this.arr3 = title1
+                        }
+                        this.list_num7 = parseFloat(goodsNumList[0].rate)
+                        let num = 0, num2 = 0;
+                        let title = [], data = []
+                        numList.forEach(val => {
+                            title.push(val.node_type)
+                            data.push(val.node_count)
+                            if(val.node_type == '超市'){
+                                this.qy_num4 = val.node_count
+                            }else if(val.node_type == '零售市场'){
+                                this.qy_num3 = val.node_count
+                            }else if(val.node_type == '批发市场'){
+                                this.qy_num2 = val.node_count
+                            }else if(val.node_type == '生鲜配送'){
+                                num = val.node_count
+                            }else if(val.node_type == '团体消费单位'){
+                                num2 = val.node_count
+                            }
+                        })
+                        this.qy_num1 = num + num2
+                        this.list_num4 = dataNumList[0].today_num
+                        this.list_num5 = parseFloat(dataNumList[0].rate)
+                        if(this.types == 'day'){
+                            this.arr2 = ['昨日', '当前', '日环比']
+                        }else if(this.types == 'week'){
+                            title2 = ['上周', '本周', '周环比']
+                            this.arr2 = title2
+                            // this.getChartFun2(title2, arr2, arr3)
+                        }else if(this.types == 'month'){
+                            title2 = ['上月', '本月', '月环比']
+                            this.arr2 = title2
+                        }else if(this.types == 'year'){
+                            title2 = ['上年', '本年', '年环比']
+                            this.arr2 = title2
+                        }
+                        this.list_num2 = onLineList[0].today_num
+                        this.list_num3 = parseFloat(onLineList[0].rate)
+                        this.list_num11 = onLineList[0].numRate
+                        if(this.types == 'day'){
+                            this.arr1 = ['昨日', '当前', '日环比']
+                        }else if(this.types == 'week'){
+                            title2 = ['上周', '本周', '周环比']
+                            this.arr1 = title2
+                            // this.getChartFun2(title2, arr2, arr3)
+                        }else if(this.types == 'month'){
+                            title2 = ['上月', '本月', '月环比']
+                            this.arr1 = title2
+                        }else if(this.types == 'year'){
+                            title2 = ['上年', '本年', '年环比']
+                            this.arr1 = title2
                         }
                     })
-                    this.qy_num1 = num + num2
-                    this.list_num4 = dataNumList[0].today_num
-                    this.list_num5 = parseFloat(dataNumList[0].rate)
-                    if(this.types == 'day'){
-                        this.arr2 = ['昨日', '当前', '日环比']
-                    }else if(this.types == 'week'){
-                        title2 = ['上周', '本周', '周环比']
-                        this.arr2 = title2
-                        // this.getChartFun2(title2, arr2, arr3)
-                    }else if(this.types == 'month'){
-                        title2 = ['上月', '本月', '月环比']
-                        this.arr2 = title2
-                    }else if(this.types == 'year'){
-                        title2 = ['上年', '本年', '年环比']
-                        this.arr2 = title2
-                    }
-                    this.list_num2 = onLineList[0].today_num
-                    this.list_num3 = parseFloat(onLineList[0].rate)
-                    this.list_num11 = onLineList[0].numRate
-                    if(this.types == 'day'){
-                        this.arr1 = ['昨日', '当前', '日环比']
-                    }else if(this.types == 'week'){
-                        title2 = ['上周', '本周', '周环比']
-                        this.arr1 = title2
-                        // this.getChartFun2(title2, arr2, arr3)
-                    }else if(this.types == 'month'){
-                        title2 = ['上月', '本月', '月环比']
-                        this.arr1 = title2
-                    }else if(this.types == 'year'){
-                        title2 = ['上年', '本年', '年环比']
-                        this.arr1 = title2
-                    }
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }else{
+                GetPriceNode(str)
+                    .then(res => {
+                        let dataNumList = res.data.dataNumList, // 各个环节数据的数量
+                            goodsNumList = res.data.goodsNumList, // 商品
+                            numList = res.data.numList, // 各个环节节点数量
+                            onLineList = res.data.onLineList, // 各个环节在线节点的数量
+                            title1 = [], title2 = [];
+                        this.list_num6 = goodsNumList[0].today_num
+                        this.list_num1 = res.data.total_num
+                        if(this.types == 'day'){
+                            title1 = ['昨日', '今日', '日环比']
+                            this.arr3 = title1
+                        }else if(this.types == 'week'){
+                            title1 = ['上周', '本周', '周环比']
+                            this.arr3 = title1
+                        }else if(this.types == 'month'){
+                            title1 = ['上月', '本月', '月环比']
+                            this.arr3 = title1
+                        }else if(this.types == 'year'){
+                            title1 = ['上年', '本年', '年环比']
+                            this.arr3 = title1
+                        }
+                        this.list_num7 = parseFloat(goodsNumList[0].rate)
+                        let num = 0, num2 = 0;
+                        let title = [], data = []
+                        numList.forEach(val => {
+                            title.push(val.node_type)
+                            data.push(val.node_count)
+                            if(val.node_type == '超市'){
+                                this.qy_num4 = val.node_count
+                            }else if(val.node_type == '零售市场'){
+                                this.qy_num3 = val.node_count
+                            }else if(val.node_type == '批发市场'){
+                                this.qy_num2 = val.node_count
+                            }else if(val.node_type == '生鲜配送'){
+                                num = val.node_count
+                            }else if(val.node_type == '团体消费单位'){
+                                num2 = val.node_count
+                            }
+                        })
+                        this.qy_num1 = num + num2
+                        this.list_num4 = dataNumList[0].today_num
+                        this.list_num5 = parseFloat(dataNumList[0].rate)
+                        if(this.types == 'day'){
+                            this.arr2 = ['昨日', '当前', '日环比']
+                        }else if(this.types == 'week'){
+                            title2 = ['上周', '本周', '周环比']
+                            this.arr2 = title2
+                            // this.getChartFun2(title2, arr2, arr3)
+                        }else if(this.types == 'month'){
+                            title2 = ['上月', '本月', '月环比']
+                            this.arr2 = title2
+                        }else if(this.types == 'year'){
+                            title2 = ['上年', '本年', '年环比']
+                            this.arr2 = title2
+                        }
+                        this.list_num2 = onLineList[0].today_num
+                        this.list_num3 = parseFloat(onLineList[0].rate)
+                        this.list_num11 = onLineList[0].numRate
+                        if(this.types == 'day'){
+                            this.arr1 = ['昨日', '当前', '日环比']
+                        }else if(this.types == 'week'){
+                            title2 = ['上周', '本周', '周环比']
+                            this.arr1 = title2
+                            // this.getChartFun2(title2, arr2, arr3)
+                        }else if(this.types == 'month'){
+                            title2 = ['上月', '本月', '月环比']
+                            this.arr1 = title2
+                        }else if(this.types == 'year'){
+                            title2 = ['上年', '本年', '年环比']
+                            this.arr1 = title2
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }
         },
         // 上报商品种类
         getGetGoodsType(){
@@ -506,22 +585,41 @@ export default {
             let str = '';
             str = 'date=' + this.currentTime + '&node_type=零售市场' + '&goods_type=' + this.goods_type + '&node_id='
                 + '&type=month' + '&goods_name=' + goods_name
-            GetGoodsAvgPc(str)
-                .then(res => {
-                    let data = res.data.map,
-                        title = [],
-                        arr = [];
-                    for(let key in data){
-                        title.push(key)
-                        arr.push(data[key].toFixed(2))
-                    }
-                    this.lsPriceArr = arr.slice(0,arr.length - 1)
-                    this.priceTit = title
-                    this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            if(this.roleId == '80'){
+                GetGoodsAvgPcNew(str)
+                    .then(res => {
+                        let data = res.data.map,
+                            title = [],
+                            arr = [];
+                        for(let key in data){
+                            title.push(key)
+                            arr.push(data[key].toFixed(2))
+                        }
+                        this.lsPriceArr = arr.slice(0,arr.length - 1)
+                        this.priceTit = title.slice(0,arr.length - 1)
+                        this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }else{
+                GetGoodsAvgPc(str)
+                    .then(res => {
+                        let data = res.data.map,
+                            title = [],
+                            arr = [];
+                        for(let key in data){
+                            title.push(key)
+                            arr.push(data[key].toFixed(2))
+                        }
+                        this.lsPriceArr = arr.slice(0,arr.length - 1)
+                        this.priceTit = title
+                        this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }
         },
         // 超市价格走势
         getGetGoodsAvgPc2(){
@@ -535,22 +633,41 @@ export default {
             str = 'date=' + this.currentTime + '&node_type=超市' + '&goods_type=' + this.goods_type + '&node_id='
             + '&type=month' + '&goods_name=' + goods_name
             // node_type零售市场，超市，批发市场
-            GetGoodsAvgPc(str)
-                .then(res => {
-                    let data = res.data.map,
-                        title = [],
-                        arr = [];
-                    for(let key in data){
-                        title.push(key)
-                        arr.push(data[key].toFixed(2))
-                    }
-                    this.csPriceArr = arr.slice(0,arr.length - 1)
-                    this.priceTit = title
-                    this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            if(this.roleId == '80'){
+                GetGoodsAvgPcNew(str)
+                    .then(res => {
+                        let data = res.data.map,
+                            title = [],
+                            arr = [];
+                        for(let key in data){
+                            title.push(key)
+                            arr.push(data[key].toFixed(2))
+                        }
+                        this.csPriceArr = arr.slice(0,arr.length - 1)
+                        this.priceTit = title.slice(0,arr.length - 1)
+                        this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }else{
+                GetGoodsAvgPc(str)
+                    .then(res => {
+                        let data = res.data.map,
+                            title = [],
+                            arr = [];
+                        for(let key in data){
+                            title.push(key)
+                            arr.push(data[key].toFixed(2))
+                        }
+                        this.csPriceArr = arr.slice(0,arr.length - 1)
+                        this.priceTit = title
+                        this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }
         },
         // 批发价格走势
         getGetGoodsAvgPc3(){
@@ -564,22 +681,41 @@ export default {
             str = 'date=' + this.currentTime + '&node_type=批发市场' + '&goods_type=' + this.goods_type + '&node_id='
             + '&type=month' + '&goods_name=' + goods_name
             // node_type零售市场，超市，批发市场
-            GetGoodsAvgPc(str)
-                .then(res => {
-                    let data = res.data.map,
-                        title = [],
-                        arr = [];
-                    for(let key in data){
-                        title.push(key)
-                        arr.push(data[key].toFixed(2))
-                    }
-                    this.pfPriceArr = arr.slice(0,arr.length - 1)
-                    this.priceTit = title
-                    this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            if(this.roleId == '80'){
+                GetGoodsAvgPcNew(str)
+                    .then(res => {
+                        let data = res.data.map,
+                            title = [],
+                            arr = [];
+                        for(let key in data){
+                            title.push(key)
+                            arr.push(data[key].toFixed(2))
+                        }
+                        this.pfPriceArr = arr.slice(0,arr.length - 1)
+                        this.priceTit = title.slice(0,arr.length - 1)
+                        this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }else{
+                GetGoodsAvgPc(str)
+                    .then(res => {
+                        let data = res.data.map,
+                            title = [],
+                            arr = [];
+                        for(let key in data){
+                            title.push(key)
+                            arr.push(data[key].toFixed(2))
+                        }
+                        this.pfPriceArr = arr.slice(0,arr.length - 1)
+                        this.priceTit = title
+                        this.getChartFun6(this.priceTit, this.pfPriceArr, this.csPriceArr, this.lsPriceArr)
+                    })
+                    .catch((res) => {
+                        console.log(res)
+                    })
+            }
         },
         // 企业数量已上报企业
         getGetJdhydPc(){

@@ -1,6 +1,6 @@
 <template>
     <div class="content addnodeManage">
-        <el-form ref="form" :model="form" label-width="180px" :rules="rules">
+        <el-form ref="form" size="mini" :model="form" label-width="180px" :rules="rules">
             <el-form-item label="企业编码:" prop="node_id" >
                 <el-input class="label-width" v-model="form.node_id" :disabled="isShow"></el-input>
             </el-form-item>
@@ -124,6 +124,11 @@
             <el-form-item label="企业父节点:">
                 <el-input class="label-width" v-model="form.parent"></el-input>
             </el-form-item> 
+            <el-form-item label="监管机构:">
+                <el-select class="label-width" size="mini" v-model="form.jgjg" multiple clearable filterable placeholder="请选择">
+                    <el-option v-for="(item, index) in jgjgArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
+                </el-select>
+            </el-form-item> 
             <!--<el-form-item label="传真:" >
                 <el-input class="label-width" v-model="form.fax"></el-input>
             </el-form-item> -->
@@ -134,7 +139,7 @@
 
 <script>
 import {QueryNodeTypeInfoForType,QueryTraceabilityType,QuerySourceWay,QueryProvinceToSelect,GetCode,UpdateNodeState,UpdateBasicInfo,
-GetNodeInfo,InsertBasicInfo, GetNodeTagInfo} from '../../js/nodeManage/nodeManage.js'
+GetNodeInfo,InsertBasicInfo, GetNodeTagInfo, QueryJgJg} from '../../js/nodeManage/nodeManage.js'
 export default {
     name:'editFun',
     data(){
@@ -186,6 +191,8 @@ export default {
                 scale: '',
                 category: '',
                 attribute: '',
+                jgjg: '',
+                icon: '',
             },
             options:[],
             options1:[],
@@ -193,6 +200,7 @@ export default {
             options3:[],
             options4:[],
             options5:[],
+            jgjgArr: [],
             province_S_text:'',
             countyname_X_text:'',
             city_c:[],
@@ -252,9 +260,12 @@ export default {
         this.getQuerySourceWay();
         this.getQueryProvinceToSelect();
         this.getGetNodeTagInfo()
+        this.getQueryJgJgFun()
         if(JSON.stringify(this.$route.params) != "{}"){
-            this.form.attribute = this.$route.params.data.basic.school_attribute
-            this.form.example = this.$route.params.data.basic.node_example ? true : ''
+            // console.log(this.$route.params)
+            this.form.attribute = this.$route.params.data.basic.school_attribute;
+            this.form.icon = this.$route.params.data.basic.icon;
+            this.form.example = this.$route.params.data.basic.node_example ? true : '';
             this.isShow = true;
             this.isEdit = true;
             this.form.node_id = this.$route.params.data.basic.node_id; 
@@ -266,6 +277,9 @@ export default {
             this.form.BDP = this.$route.params.data.basic.node_id_bdp;
             this.form.group_name = this.$route.params.data.basic.group_name;
             this.form.district_name = this.$route.params.data.basic.district_name;
+            if(this.$route.params.data.basic.jgjg){
+                this.form.jgjg = this.$route.params.data.basic.jgjg.split(',');
+            }
             // this.form.traceability_type = this.$route.params.traceability_type;
             if(this.$route.params.data.basic.traceability_type == '1'){
                 this.form.traceability = '猪肉'
@@ -333,6 +347,15 @@ export default {
         }
     },
     methods:{
+        getQueryJgJgFun(){
+            QueryJgJg('')
+                .then(res => {
+                    this.jgjgArr = res.data.list
+                })
+                .catch(res => {
+                    console.log(res)
+                })
+        },
         // 节点类型
         selectTypeFun(ele){
             console.log(ele)
@@ -374,12 +397,10 @@ export default {
                     this.typeArr = res.data.tagType
                     if(this.$route.params.data){
                         this.typeArr.forEach(val => {
-                            console.log(val)
                             if(val.tag_name == this.$route.params.data.basic.node_type){
                                 this.detailArr = val.child_list
                                 val.child_list.forEach(val2 => {
                                     val2.child_list.forEach(val3 => {
-                                        console.log(val3)
                                         if(val3.tag_name == '企业规模'){
                                             this.scaleArr = val3.child_list
                                             this.form.scale = this.$route.params.data.basic.node_scale_id
@@ -539,6 +560,8 @@ export default {
                             area_id:this.form.countyname_X,
                             area_name:this.province_S_text+this.city_text+this.countyname_X_text,
                             tag_ids: tag_ids,
+                            jgjg: this.form.jgjg ? this.form.jgjg.join(',') : '',
+                            icon: this.form.icon,
                         };
                         UpdateBasicInfo(data)
                             .then( res =>{
@@ -582,6 +605,7 @@ export default {
                             area_id:this.form.countyname_X,
                             area_name:this.province_S_text+this.city_text+this.countyname_X_text,
                             tag_ids: tag_ids,
+                            jgjg: this.form.jgjg ? this.form.jgjg.join(',') : '',
                         };
                         InsertBasicInfo(data)
                             .then( res =>{
@@ -665,9 +689,6 @@ export default {
         height: 100%;
         background: #fff;
         box-sizing: border-box;   
-        .el-form-item{
-            margin-bottom: 10px;
-        }
         .save-btn{
             margin-top: 30px;
             margin-left: 150px;

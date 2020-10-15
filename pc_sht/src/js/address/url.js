@@ -1,14 +1,14 @@
 // base url
-// export const baseUrl = 'http://192.168.0.154:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.0.154:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.0.154:8081/order_sht/'; // 资产0.154
-// export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
+export const baseUrl = 'http://192.168.0.154:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.0.154:8081/order_sht/';
+export const baseUrl3 = 'http://192.168.0.154:8081/order_sht/'; // 资产0.154
+export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
 // export const baseUrl6 = 'http://192.168.0.148:8080/analysis-file/';
 
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 export const baseUrl6 = 'http://47.92.11.75:13781/zhd-file/';
 
@@ -596,6 +596,7 @@ export const toBasicUpdate = baseUrl4 + 'warning/toBasicUpdate' // 查看节点�
 export const downloadNodeInfo = baseUrl4 + 'warning/downloadNodeInfo' //节点导出
 export const importNodeInfo = baseUrl4 + 'warning/importNodeInfo' //节点导入
 export const getNodeTagInfo = baseUrl4 + 'warning/getNodeTagInfo' // 节点详细类型
+export const queryJgJg = baseUrl4 + 'warning/queryJgJg' // 监管机构
 // 商户备案
 export const queryBusinessStateSelect = baseUrl4 + 'warning/queryBusinessStateSelect' // 查询得到启用停用信息
 export const queryBusinessTypeSelect = baseUrl4 + 'warning/queryBusinessTypeSelect' // 查询得到经营类型下拉框信息
@@ -640,6 +641,7 @@ export const jsqueryInTzDetailByTzId = baseUrl + 'tz/queryInTzDetailByTzId' // �
 export const getAllOriginalDoc = baseUrl + 'originalDoc/getAllOriginalDoc' // 零售市场查看单据
 export const queryMeatOriginalDoc = baseUrl5 + 'method=queryMeatOriginalDoc' // 超市查看单据
 export const queryAllWsSupplierName = baseUrl + 'cygl/queryAllWsSupplierName' // 来源市场
+export const queryNodeTagTree = baseUrl + 'cygl/queryNodeTagTree' // 企业标签 ==>  类别，属性...
 // 监测
 export const queryNodeInfoIndexNew = baseUrl + 'goodsPrice/queryNodeInfoIndexNew' // 价格监测列表
 export const getAllNodeJc = baseUrl + 'cygl/getAllNode' // 填报企业
@@ -652,12 +654,14 @@ export const getNodeCount = baseUrl + 'cygl/getNodeCount' // 企业数量?node_i
 export const getJdhydPc = baseUrl + 'cygl/getJdhydPc' // 已上报企业?node_id=110114311&type=year
 export const quantityReportedNew = baseUrl + 'compute/quantityReportedNew' // 上报数据量
 export const getGoodsAvgPc = baseUrl + 'dataReport/getGoodsAvgPc' // 生活必需品价格走势
+export const getGoodsAvgPcNew = baseUrl4 + 'dataReport/getGoodsAvgPcNew' // 生活必需品价格走势
 export const getWsPriceIndexPc = baseUrl + 'cygl/getPriceForCpPc' // 生活必需品价格走势文字内容
 export const vegMeatProvince = baseUrl + 'compute/meatProvincePc' // 猪肉省份来源
 export const vegetableProvince = baseUrl + 'compute/vegProvincePc' // 蔬菜省份来源
 export const getGoodsType = baseUrl + 'cygl/getGoodsType' // 上报商品种类
 export const getNodeJgInfoType = baseUrl + 'cygl/getNodeJgInfoType' // 企业数量按类型查看
 export const getPriceNode = baseUrl + 'cygl/getPriceNode' // 首页查询节点数量接口
+export const getPriceNodeNew = baseUrl4 + 'cygl/getPriceNodeNew' // 首页查询节点数量接口
 //解码规则管理
 export const queryDecodeRule = baseUrl4 + 'warning/queryDecodeRule' //解码规则查询
 export const queryCodeTypeSelect = baseUrl4 + 'warning/queryCodeTypeSelect' //解码规则中码类型查询
@@ -726,7 +730,9 @@ export const deleteLifeBxGoods = baseUrl4 + 'warning/deleteLifeBxGoods' // 删�
 export const downloadLifeBxGoods = baseUrl4 + 'warning/downloadLifeBxGoods' // 导出生活必需品商品
 export const batchUpdateLifeBxGoods = baseUrl4 + 'warning/batchUpdateLifeBxGoods' // 批量修改生活必需品商品
 export const nodePriceType = baseUrl4 + 'warning/nodePriceType' // 价格抽取节点管理的条件查询
+export const nodePriceTypeNew = baseUrl4 + 'warning/nodePriceTypeNew' // 价格抽取节点管理的条件查询
 export const queryNodePriceExtract = baseUrl4 + 'warning/queryNodePriceExtract' // 价格抽取节点查询(英文逗号)
+export const queryNodePriceExtractNew = baseUrl4 + 'warning/queryNodePriceExtractNew' // 价格抽取节点查询(英文逗号)
 export const queryNodePriceName = baseUrl4 + 'warning/queryNodePriceName' // 根据节点编码关联出其他相关信息?node_id=110100489
 export const insertPriceNode = baseUrl4 + 'warning/insertPriceNode' // 新增价格节点抽取
 export const updatePriceNode = baseUrl4 + 'warning/updatePriceNode' // 编辑价格节点抽取
@@ -742,8 +748,11 @@ export const queryWarningReportNodeGoods = baseUrl4 + 'warning/queryWarningRepor
 export const downloadWarningNodeGoods = baseUrl4 + 'warning/downloadWarningNodeGoods' // 下载预警商品
 // 价格报表
 export const getTodayGoodsTableLimteTime = baseUrl + 'dataReport/getTodayGoodsTableLimteTime' // 价格报表
+export const getTodayGoodsTableLimteTimeNew = baseUrl4 + 'dataReport/getTodayGoodsTableLimteTimeNew' // 价格报表
 export const exportTodayGoodsTableLimteTime = baseUrl + 'dataReport/exportTodayGoodsTableLimteTime' // 导出价格报表
+export const exportTodayGoodsTableLimteTimeNew = baseUrl4 + 'dataReport/exportTodayGoodsTableLimteTimeNew' // 导出价格报表
 export const getGoodsTypeAndName = baseUrl + 'dataReport/getGoodsTypeAndName' // 价格报表查询条件
+export const getGoodsTypeAndNameNew = baseUrl4 + 'dataReport/getGoodsTypeAndNameNew' // 价格报表查询条件
 // hlgjd  统计
 export const queryBizInfos = baseUrl + 'cygl/queryBizInfos' // 节点名称下拉
 export const querySaleEntryJgInfo = baseUrl + 'cygl/querySaleEntryJgInfo' // 列表数据

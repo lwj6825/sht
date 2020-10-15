@@ -182,6 +182,7 @@ export default {
         },
         handleBtn(){  //点击搜索
             this.fullscreenLoading = true;
+            this.currentPage = 1;
             this.GetNodeInfoFun()
         },
         selectType(val){  //选择企业类型
@@ -309,6 +310,8 @@ export default {
                     }else{
                         this.$message.error(res.message);
                     }
+                    this.file = ''
+                    document.getElementById('upload').reset();
                 })
                 .catch(res => {
                     console.log(res)

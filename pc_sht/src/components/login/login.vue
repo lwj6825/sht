@@ -138,7 +138,7 @@ let obj2 = [
         nav_title:'数据上报',
         id:'10002',
         parentId:'10001',
-        node:"role",
+        node:"DataReport",
         url:'DataReportUpload',
         level:2,
         nodeList:[]
@@ -204,13 +204,13 @@ export default {
                             }
                             if(res.result){
                                 if(this.check){
-                                  if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
-                                    localStorage.setItem('menuList',JSON.stringify(obj1));
-                                  }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
-                                     localStorage.setItem('menuList',JSON.stringify(obj2));
-                                  }else{
-                                    localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
-                                  }
+                                    if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
+                                        localStorage.setItem('menuList',JSON.stringify(obj1));
+                                    }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
+                                        localStorage.setItem('menuList',JSON.stringify(obj2));
+                                    }else{
+                                        localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                                    }
                                     // localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
                                     localStorage.setItem('username',JSON.stringify(this.account));
                                     localStorage.setItem('checked',JSON.stringify(true));
@@ -218,13 +218,13 @@ export default {
                                     localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                                     this.userId = res.data.userId;
                                 }else{
-                                  if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
-                                    localStorage.setItem('menuList',JSON.stringify(obj1));
-                                  }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
-                                     localStorage.setItem('menuList',JSON.stringify(obj2));
-                                  }else{
-                                    localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
-                                  }
+                                    if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
+                                        localStorage.setItem('menuList',JSON.stringify(obj1));
+                                    }else if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] != 'swj'){
+                                        localStorage.setItem('menuList',JSON.stringify(obj2));
+                                    }else{
+                                        localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
+                                    }
                                     // localStorage.setItem('menuList',JSON.stringify(res.data.menu_list));
                                     localStorage.setItem('username',JSON.stringify(this.account));
                                     localStorage.setItem('userId',res.data.userId);

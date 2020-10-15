@@ -1,6 +1,6 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {traceDataReporting, getNodeCount, getJdhydPc, quantityReportedNew, getGoodsAvgPc, getWsPriceIndexPc, vegMeatProvince,   
-    vegetableProvince, getGoodsType, getNodeJgInfoType, getPriceNode} from '../address/url.js';
+    vegetableProvince, getGoodsType, getNodeJgInfoType, getPriceNode, getPriceNodeNew, getGoodsAvgPcNew} from '../address/url.js';
 
 // 企业数量?node_id=110114311
 export const  GetNodeCount  = function(params) {
@@ -21,6 +21,10 @@ export const  TraceDataReporting  = function(params) {
 // 生活必需品价格走势?date=2020-02-29&node_type=零售市场&goods_type=蔬菜&node_id=110114311&type=month&goods_name=圆白菜
 export const  GetGoodsAvgPc  = function(params) {
     return ajaxGet(getGoodsAvgPc +'?'+ params)
+}
+// 生活必需品价格走势?date=2020-02-29&node_type=零售市场&goods_type=蔬菜&node_id=110114311&type=month&goods_name=圆白菜
+export const  GetGoodsAvgPcNew  = function(params) {
+    return ajaxGet(getGoodsAvgPcNew +'?'+ params)
 }
 // 生活必需品价格走势文字内容?date=2020-03-14&node_type=零售市场&goods_type=猪肉类&goods_name=白条
 export const  GetWsPriceIndexPc  = function(params) {
@@ -45,4 +49,8 @@ export const  GetNodeJgInfoType  = function(params) {
 // 首页查询节点数量接口
 export const GetPriceNode  = function(params) {
     return ajaxGet(getPriceNode +'?'+ params)
+}
+// 首页查询节点数量接口
+export const GetPriceNodeNew  = function(params) {
+    return ajaxGet(getPriceNodeNew +'?'+ params)
 }

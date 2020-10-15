@@ -5,7 +5,7 @@ import {queryNode, queryNodeTypeSelect, queryNodeNameByType, queryNodeUserdefine
     deleteUserdefine, downloadNodeUserdefine, updateNodeUserdefine, queryReportNodeGoods, getGoodsTypes, closeReportNodeGoods, 
     queryNodeGoodsDetail, downloadReportNodeGoods, selectReportNodeGoodsType, selectReportNodeGoodsPrice, queryPriceExtract,
     getLifeBxGoods, insertLifeBxGoods, updateLifeBxGoods, deleteLifeBxGoods, downloadLifeBxGoods, batchUpdateLifeBxGoods,
-    nodePriceType, queryNodePriceExtract, queryNodePriceName, insertPriceNode, updatePriceNode, batchUpdatePriceNode, 
+    nodePriceType, nodePriceTypeNew, queryNodePriceExtract, queryNodePriceExtractNew, queryNodePriceName, insertPriceNode, updatePriceNode, batchUpdatePriceNode, 
     downloadPriceNodeExtract, nodeGoodsManage, queryNodeGoods, updateNodeGoods, queryProposalReportNodeGoods,
     queryWarningReportNodeGoods, downloadWarningNodeGoods, downloadProposalReportNodeGoods, getGoodsTypeNew, queryNodeSelectNew
 } from '../address/url.js';
@@ -137,9 +137,17 @@ export const BatchUpdateLifeBxGoods  = function(params) {
 export const NodePriceType  = function(params) {
     return ajaxGet(nodePriceType +'?'+ params)
 }
+// 价格抽取节点管理的条件查询
+export const NodePriceTypeNew  = function(params) {
+    return ajaxGet(nodePriceTypeNew +'?'+ params)
+}
 // 价格抽取节点查询(英文逗号)
 export const QueryNodePriceExtract  = function(params) {
     return ajaxPost(queryNodePriceExtract, params)
+}
+// 价格抽取节点查询(英文逗号)
+export const QueryNodePriceExtractNew  = function(params) {
+    return ajaxPost(queryNodePriceExtractNew, params)
 }
 // 根据节点编码关联出其他相关信息?node_id=110100489
 export const QueryNodePriceName  = function(params) {
