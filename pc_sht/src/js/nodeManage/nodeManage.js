@@ -5,7 +5,8 @@ import {
     queryProvinceToSelect, updateBasicInfo, toBasicUpdate, notReportedMonitoring, insertCommunicationRecord, queryCommunicationRecord,
     queryInfoType, querygroupName, downloadNodeInfo, queryNodeDetailType2, downloadNotReportedMonitoring, queryBusinessStateSelect, 
     queryBusinessTypeSelect, queryBusiness2, queryNodeSelect, querypropertySelect, getBizIdByCondition, insertBusiness, updateBusiness,
-    updateBusinessState, updateBusinessIsPay, downloadBusiness, getNodeTagInfo, queryJgJg
+    updateBusinessState, updateBusinessIsPay, downloadBusiness, getNodeTagInfo, queryJgJg, queryBasic, examineBasicInfo, getNodeId,
+    addRejected,
 } from '../address/url.js';
 
 export const QuerygroupName  = function(params) {
@@ -159,4 +160,20 @@ export const GetNodeTagInfo  = function(params) {
 // 监管机构
 export const QueryJgJg  = function(params) {
     return ajaxGet(queryJgJg+'?' + params)
+}
+// 申请审核列表
+export const QueryBasic  = function(params) {
+    return ajaxPost(queryBasic, params)
+}
+// 审核
+export const ExamineBasicInfo  = function(params) {
+    return ajaxPost(examineBasicInfo, params)
+}
+// 节点码获取
+export const GetNodeId  = function(params) {
+    return ajaxGet(getNodeId+'?' + params)
+}
+// 审核驳回
+export const AddRejected  = function(params) {
+    return ajaxPost(addRejected, params)
 }

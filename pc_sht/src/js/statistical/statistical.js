@@ -4,7 +4,7 @@ import {queryGoodsRankCurrentYear,queryGoodsRankCurrentMonth,queryGoodsRankCurre
     getTzInfoUploadDays,getTzInfoUploadBizNum,getBizOnlineTime,getGoodsWeightRankAndAvgPrice,queryMoneyAndWeightForBiz,
     computNode,computNodeNumWeek,computPluNumWeek,queryMoneyLittleTime,queryMoneyAndWeightForGoods,getBizNotOnlineTime,queryHasTzBizByNodeId,
     queryMoneyCurrentWeek,queryMoneyCurrentMonth,queryMoneyCurrentDayHour,queryMoneyCurrentYear,queryMoneyAndWeightForMarket,
-    queryMoneyAndWeightForNode, getCustomerMoneyAndWeight, queryMoneyAndWeightForOneBiz
+    queryMoneyAndWeightForNode, getCustomerMoneyAndWeight, queryMoneyAndWeightForOneBiz, downloadBizNotOnline
 } from '../address/url.js';
 
 
@@ -123,4 +123,8 @@ export const GetCustomerMoneyAndWeight = function(params){
 // 商户交易额查看--商品交易额明细（搜索商户）
 export const QueryMoneyAndWeightForOneBiz = function(params){
     return ajaxGet(queryMoneyAndWeightForOneBiz + '?' + params)
+}
+// 导出不在线商户
+export const DownloadBizNotOnline = function(params){
+    return ajaxGet(downloadBizNotOnline + '?' + params)
 }

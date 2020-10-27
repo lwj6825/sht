@@ -1,14 +1,14 @@
 // base url
-export const baseUrl = 'http://192.168.0.154:8081/order_sht/';
-export const baseUrl2 = 'http://192.168.0.154:8081/order_sht/';
-export const baseUrl3 = 'http://192.168.0.154:8081/order_sht/'; // 资产0.154
-export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
+// export const baseUrl = 'http://192.168.0.25:8081/order_sht/';
+// export const baseUrl2 = 'http://192.168.0.25:8081/order_sht/';
+// export const baseUrl3 = 'http://192.168.0.25:8081/order_sht/'; // 资产0.154
+// export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
 // export const baseUrl6 = 'http://192.168.0.148:8080/analysis-file/';
 
-// export const baseUrl = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
-// export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl = 'http://shop.zhdtech.com/';//外网
+export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 export const baseUrl6 = 'http://47.92.11.75:13781/zhd-file/';
 
@@ -321,6 +321,7 @@ export const getCustomerMoneyAndWeight = baseUrl + 'redis/getCustomerMoneyAndWei
 export const queryMoneyAndWeightForOneBiz = baseUrl + 'redis/queryMoneyAndWeightForOneBiz' // 商户交易额查看--商品交易额明细
 export const queryXsTzDetailRegionForOneGoods = baseUrl + 'tz/queryXsTzDetailRegionForOneGoods' // 商品交易额查看--销售台账
 export const downloadNotTzBiz = baseUrl2 + 'tz/downloadNotTzBiz' // 导出未录入台账商户
+export const downloadBizNotOnline = baseUrl + 'redis/downloadBizNotOnline' // 导出不在线商户
 // 供货单位
 export const querySupplier = baseUrl + 'supplier/querySupplier' // 供货单位管理查询（超管）
 export const insertSupplier = baseUrl + 'supplier/insertSupplier' // 新增供货单位（超管）
@@ -597,6 +598,10 @@ export const downloadNodeInfo = baseUrl4 + 'warning/downloadNodeInfo' //节点�
 export const importNodeInfo = baseUrl4 + 'warning/importNodeInfo' //节点导入
 export const getNodeTagInfo = baseUrl4 + 'warning/getNodeTagInfo' // 节点详细类型
 export const queryJgJg = baseUrl4 + 'warning/queryJgJg' // 监管机构
+export const queryBasic = baseUrl4 + 'basic/queryBasic' // 查询企业备案
+export const examineBasicInfo = baseUrl4 + 'basic/examineBasicInfo' // 查询企业备案
+export const getNodeId = baseUrl4 + 'basic/getNodeId' // 节点码获取
+export const addRejected = baseUrl4 + 'basic/addRejected' // 审核驳回
 // 商户备案
 export const queryBusinessStateSelect = baseUrl4 + 'warning/queryBusinessStateSelect' // 查询得到启用停用信息
 export const queryBusinessTypeSelect = baseUrl4 + 'warning/queryBusinessTypeSelect' // 查询得到经营类型下拉框信息

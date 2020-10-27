@@ -42,7 +42,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="数据来源" v-if="isShow2">
-                        <el-select clearable filterable placeholder="请选择" @change="selectGet" v-model="form.source" >
+                        <el-select clearable filterable placeholder="请选择" v-model="form.source" >
                             <el-option label="电子秤（称重）" value="1"></el-option>
                             <el-option label="手动录入" value="2"></el-option>
                             <el-option label="电子秤（收银）" value="3"></el-option>
@@ -275,9 +275,9 @@ export default {
 
       },
         exportFun(){
-            window.location.href = baseUrl + 'tz/downloadXsTzDetail?region=' + this.areaId + '&seller_booth_id=' + this.scShopId
-                + '&seller_booth_name=' + this.form.user + '&start_time=' + this.startTime + '&end_time=' + this.endTime
-                + '&tz_origin=' + this.form.source + '&details=' + this.form.GoodList + '&node_id=' + this.node_id
+            window.location.href = baseUrl + 'tz/downloadXsTzDetail?region=' + this.areaId + '&seller_booth_id=' + (this.form.user ? this.form.user : '')
+                + '&seller_booth_name=' + (this.buyerName ? this.buyerName : '') + '&start_time=' + this.startTime + '&end_time=' + this.endTime
+                + '&tz_origin=' + this.form.source + '&details=' + (this.form.GoodList ? this.form.GoodList : '') + '&node_id=' + this.node_id
         },
         getTime(){
             var start = new Date();

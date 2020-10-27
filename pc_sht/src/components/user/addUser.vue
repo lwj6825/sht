@@ -231,23 +231,23 @@ export default {
                 node_name = this.form.name
             }
             let addData = {
-                userName:this.form.account,
-                password:this.form.password,
-                roleID:this.form.systemRole,
-                state:this.form.switchStatus==true?1:0,
-                licenceNo:this.form.code,
-                nodeName:node_name,
-                regId:this.form.idCard,
-                name:this.form.people,
-                callphone:this.form.phone,
-                areaId:this.form.addr[2],
-                areaName:addrArr.join(""),
-                addr:this.form.addrInfo,
-                nodeId:this.form.node,
-                userId:localStorage.getItem('userId'),
-                email: this.form.mailbox,
-                telphone: this.form.phone,
-                shop_mer_id: this.form.shop_mer_id,
+                userName:this.form.account, // 账号
+                password:this.form.password, // 密码
+                roleID:this.form.systemRole, // 系统角色
+                state:this.form.switchStatus==true?1:0, // 状态
+                licenceNo:this.form.code, // 营业执照号
+                nodeName:node_name, // 企业名称
+                regId:this.form.idCard, // 身份证号：
+                name:this.form.people, // 联系人：
+                callphone:this.form.phone, // 联系电话：
+                areaId:this.form.addr[2], // 地址：省市区数字
+                areaName:addrArr.join(""), // 地址文字
+                addr:this.form.addrInfo, // 详细地址：
+                nodeId:this.form.node, // 所属节点：
+                userId:localStorage.getItem('userId'), // 登录userid
+                email: this.form.mailbox, // 邮箱：
+                telphone: this.form.phone, // 联系电话：
+                shop_mer_id: this.form.shop_mer_id, // 工行支付账户：
             }
             console.log(addData)
             addUser(addData)

@@ -6,7 +6,7 @@
                     <el-form-item label="企业名称">
                         <el-input class="fill" v-model="form.name" clearable placeholder="请输入"></el-input> 
                     </el-form-item>
-                    <el-form-item label="企业类型">
+                    <el-form-item label="企业类型" v-if="account != 'cpjw'">
                         <el-select v-model="form.types" filterable clearable placeholder="请选择">
                             <el-option label="全部" value="0"></el-option>
                             <el-option label="餐饮" value="餐饮"></el-option>
@@ -58,14 +58,17 @@
         <div class="table">
             <div class="title">
                 <p class="tz-title">全部企业</p>
-                <div>
-                    <el-button type="primary" size="medium" class="new-add" @click="addFun">新增企业</el-button><!---->
+                <div><!--
+                    <el-button type="primary" size="medium" class="new-add" @click="addFun">新增企业</el-button>-->
                 </div>
             </div>
             <div class="tables" v-loading="loading">
                 <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="node_name" label="企业名称"></el-table-column>
-                    <el-table-column prop="node_type" label="企业类型"></el-table-column><!--
+                    <el-table-column prop="node_type" label="企业类型" v-if="account != 'cpjw'"></el-table-column>
+                    <el-table-column prop="leibie" label="学校类别" v-if="account == 'cpjw'"></el-table-column>
+                    <el-table-column prop="shuxing" label="学校属性" v-if="account == 'cpjw'"></el-table-column>
+                    <!--
                     <el-table-column prop="sjjgjg" label="监管机构"></el-table-column>
                     <el-table-column prop="district_name" label="所属区域"></el-table-column>-->
                     <el-table-column prop="node_state" label="状态">
@@ -76,8 +79,8 @@
                     </el-table-column>
                     <el-table-column prop="state" label="操作" width="160">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
                             <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button><!--
+                            <el-button type="text" size="small" @click="editFun(scope.row)">编辑</el-button>
                             <el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>-->
                         </template>
                     </el-table-column>
@@ -475,6 +478,18 @@ export default {
             GetNodeJgInfoGroupForJg(params)
                 .then(res => {
                     this.loading = false
+                    res.data.list.forEach(val => {
+                        if(val.tag_name){
+                            let arr = val.tag_name.split(',');
+                            if(arr[0] != '公立' && arr[0] != '民办'){
+                                val.leibie = arr[0];
+                                val.shuxing = arr[1];
+                            }else{
+                                val.leibie = arr[1];
+                                val.shuxing = arr[0];
+                            }
+                        }
+                    })
                     this.tableData = res.data.list
                     this.num = res.data.total
                 })

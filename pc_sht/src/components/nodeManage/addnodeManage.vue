@@ -151,7 +151,7 @@ export default {
                 node_id:'',
                 node_name:'',
                 CompanyType:'',
-                des:'',
+                des:'1',
                 nodeType:'',
                 node_detail_type:'',
                 BDP:'',

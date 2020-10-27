@@ -1,6 +1,8 @@
 import addBizManage from '../components/nodeManage/addBizManage.vue'
 import bizManageMsg from '../components/nodeManage/bizManageMsg.vue'
 import editBizManage from '../components/nodeManage/editBizManage.vue'
+import examineMsg from '../components/nodeManage/examineMsg.vue'
+import viewExamine from '../components/nodeManage/viewExamine.vue'
 
 export default [
     {
@@ -61,6 +63,26 @@ export default [
             id:'599',
             node:'nodeManage',
             url:'editBizManage',
+        }
+    },
+    {
+        path: 'nodeManage/examineMsg',
+        component: resolve => require(['@/components/nodeManage/examineMsg'],resolve),
+        name:"ExamineMsg",
+        meta:{
+            id:'626',
+            node:'nodeManage',
+            url:'examineMsg',
+        }
+    },
+    {
+        path: 'nodeManage/viewExamine',
+        component: resolve => require(['@/components/nodeManage/viewExamine'],resolve),
+        name:"ViewExamine",
+        meta:{
+            id:'627',
+            node:'nodeManage',
+            url:'viewExamine',
         }
     },
 ]

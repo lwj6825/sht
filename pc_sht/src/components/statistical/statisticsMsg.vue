@@ -279,7 +279,7 @@
                  </el-tabs> 
                 </el-tabs> 
             </div>
-            <div class="right">
+            <div class="right" v-loading="loadingBiz">
                 <p class="title">电子秤在线率</p>
                 <div class="msg">
                     <ul class="msg-text">
@@ -302,6 +302,9 @@
                     <el-progress type="circle" :percentage="progress"  :width="100" style="margin-top:10px;" ></el-progress>
                 </div>
                 <div class="table">
+                    <div class="conditions">
+                        <el-button plain @click="downloadBizFun" style="margin-top: 15px;">导出不在线商户</el-button> 
+                    </div>
                     <el-tabs v-model="activeName1" @tab-click="active" >
                         <el-tab-pane label="在线商户" name="first" >
                             <el-table :data="tableData2" style="width: 100%" @sort-change="sortChange2" v-loading.body="fullscreenLoading2" :cell-style="classStyle">
@@ -370,9 +373,11 @@ import {QueryGoodsRankCurrentYear,QueryGoodsRankCurrentMonth,QueryGoodsRankCurre
     QueryBizRankCurrentWeek,QueryBizRankCurrentDay,QueryBizRankCurrentMonth,QueryBizRankCurrentYear,QueryHasNoTzBizByNodeId,
     GetTzInfoUploadDays,GetTzInfoUploadBizNum,GetBizOnlineTime,GetGoodsWeightRankAndAvgPrice,GetBizNotOnlineTime,
     ComputNode,ComputNodeNumWeek,ComputPluNumWeek,QueryMoneyAndWeightForGoods,QueryMoneyAndWeightForBiz,QueryHasTzBizByNodeId,
-    QueryMoneyCurrentWeek,QueryMoneyCurrentMonth,QueryMoneyCurrentDayHour,QueryMoneyCurrentYear, GetCustomerMoneyAndWeight
+    QueryMoneyCurrentWeek,QueryMoneyCurrentMonth,QueryMoneyCurrentDayHour,QueryMoneyCurrentYear, GetCustomerMoneyAndWeight,
+    DownloadBizNotOnline
 } from '../../js/statistical/statistical.js'
-import {downloadNotTzBiz} from '../../js/address/url.js'
+import {downloadNotTzBiz, downloadBizNotOnline} from '../../js/address/url.js'
+import axios from 'axios';
 export default {
     name:"statistical",
     data(){
@@ -469,6 +474,7 @@ export default {
             list_num8: '0',
             start_date: '', // 客单量客单价日期
             end_date: '', // 客单量客单价日期
+            loadingBiz: false,
         }
     },
     mounted(){
@@ -516,6 +522,32 @@ export default {
         this.getGetCustomerMoneyAndWeightFun()
     },
     methods: {
+        downloadBizFun(){
+            this.loadingBiz = true
+            DownloadBizNotOnline('node_id=' + this.loginId)
+                .then(res => {
+            //         let blob = new Blob([res.data], {type: "application/vnd.ms-excel"}); 
+            // 　      let objectUrl = URL.createObjectURL(blob); 
+            //         window.location.href = objectUrl;
+                    // window.location.href = res
+                    // let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
+                    // let url = window.URL.createObjectURL(blob);
+                    // let aLink = document.createElement("a");
+                    // aLink.style.display = "none";
+                    // aLink.href = url;
+                    // aLink.setAttribute("download", `不在线电子秤`);
+                    // document.body.appendChild(aLink);
+                    // aLink.click();
+                    // document.body.removeChild(aLink); 
+                    // window.URL.revokeObjectURL(url); 
+                    this.loadingBiz = false
+                })
+                .catch(res => {
+                    console.log(res)
+                    this.loadingBiz = false
+                })
+            window.location.href = downloadBizNotOnline + '?node_id='+this.loginId;
+        },
         downloadFun(){ 
             window.location.href = downloadNotTzBiz + '?&node_id='+this.loginId+'&order='+this.order4+'&name=&type=1'
         },
@@ -2305,6 +2337,9 @@ export default {
                 }
             }
             .right{
+                position: relative;
+                top: 0;
+                right: 0;
                 .msg{
                     display: flex;
                     padding: 24px 0;

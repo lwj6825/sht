@@ -18,7 +18,7 @@
                     <!-- <i class="edit-icon" @click='systemRoleDialog = true'></i> -->
                 </span>
                 <span class="text">状态：</span>   
-                    <el-switch v-model="form.switchStatus" active-text="禁用" inactive-text="启用"
+                    <el-switch v-model="form.switchStatus" active-text="启用" inactive-text="禁用"
                     active-value="1" inactive-value="0" @change="toggleStatus(form.switchStatus)">
                     </el-switch>
             </el-form-item>
@@ -1078,38 +1078,23 @@ export default {
 <style lang='less'>
     .loolInfo{
         .el-switch__label--left{
-            margin-right:-28px;
-            z-index: 2;
+            position: relative;
+            left: 60px;
             color: #fff;
-            >span{
-                position: relative;
-                left: 4px;
-            }
+            z-index: -1111;
         }
         .el-switch__label--right{
-            margin-left:-28px;
-            z-index: 2;
-            >span{
-                position: relative;
-                right: 4px;
-            }
+            position: relative;
+            right: 60px;
+            color: #fff;
+            z-index: -1111;
         }
-        .el-switch.is-checked {
-            .el-switch__core::after{
-                z-index: 5;
-            }
+        .el-switch__label.is-active{
+            z-index: 1111;
+            color: #fff;
         }
         .el-switch__core{
-            width: 54px !important;
-        }
-        .is-active{
-            display: none !important;
-        }
-        .el-cascader-menu{
-            height: 160px;
-        }
-        .el-dialog{
-            width: 360px;
+            width: 60px !important;
         }
     }
 </style>

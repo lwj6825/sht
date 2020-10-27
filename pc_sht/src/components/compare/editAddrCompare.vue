@@ -17,7 +17,7 @@
                 <el-input v-model="form.custom_name" clearable></el-input>
             </el-form-item>
             <el-form-item style="margin-left: 150px">
-                <el-button type="primary" class="new-add" @click="submitForm('form')" >保存</el-button>
+                <el-button type="primary" class="new-add" @click="submitForm('form')">保存</el-button>
             </el-form-item>
         </el-form>
     </div>
