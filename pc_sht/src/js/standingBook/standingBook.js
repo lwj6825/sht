@@ -1,7 +1,8 @@
 import {ajaxPost,ajaxGet} from '../config/ajax.js';
+import axios from 'axios';
 import {queryInTzDetailRegion,tzAdd,updatePc,getAllBiz,queryInTzDetailByTzId,queryXsTzDetailRegion,querySuppiler,ZhdTzParse,
   getAllTzGys,queryCheckList,addCheckItem,deteleCheckItem,jcqueryPurchase,deleteDoc,searchDoc,deleteTzByTzId,downloadXsTzDetail,tzUpdate,
-  queryXsTzDetailByTzId,updateCheck, queryXsTzDetailRegionForOneGoods} from '../address/url.js';
+  queryXsTzDetailByTzId,updateCheck, queryXsTzDetailRegionForOneGoods, queryCheckGoods2, exportAllCheck} from '../address/url.js';
 import {baseUrl} from "../address/url";
 
 // ----获取供应商
@@ -73,7 +74,23 @@ export const DeteleCheckItem  = function(params) {
 export const jcpurchase  = function(params) {
   return ajaxPost(jcqueryPurchase,params)
 }
-
+// 查询检测里面的商品 超市
+export const QueryCheckGoods2  = function(params) {
+  return ajaxPost(queryCheckGoods2,params)
+}
+// 检测导出
+export const ExportAllCheck = function(form) {
+  return axios({ // 用axios发送post请求
+      method: 'post',
+      url: exportAllCheck, // 请求地址
+      data: form, // 参数
+      // responseType: 'blob', // 表明返回服务器返回的数据类型
+      responseType: 'arraybuffer',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+}
 //删除单据
 export const DeleteDoc = function(params){
   return ajaxPost(deleteDoc,params)

@@ -1,8 +1,8 @@
-import production from '../components/production/production.vue'
-import productionMsg from '../components/production/productionMsg.vue'
-import viewProduction from '../components/production/viewProduction.vue'
-import addProduction from '../components/production/addProduction.vue'
-import szProcessing from '../components/production/szProcessing.vue'
+// import production from '../components/production/production.vue'
+// import productionMsg from '../components/production/productionMsg.vue'
+// import viewProduction from '../components/production/viewProduction.vue'
+// import addProduction from '../components/production/addProduction.vue'
+// import szProcessing from '../components/production/szProcessing.vue'
 
 export default [
     {

@@ -1,12 +1,12 @@
-import Goods from '@/components/goods/goods'
-import Stocks from '@/components/goods/stocks'
-import EditStocks from '@/components/goods/editStocks'
-import ViewStocks from '@/components/goods/viewStocks'
-import Market from '@/components/goods/market'
-import EditMarket from '@/components/goods/editMarket'
-import ViewMarket from '@/components/goods/viewMarket'
-import newStocks from '../components/goods/newStocks.vue'
-import newMarket from '../components/goods/newMarket.vue'
+// import Goods from '@/components/goods/goods'
+// import Stocks from '@/components/goods/stocks'
+// import EditStocks from '@/components/goods/editStocks'
+// import ViewStocks from '@/components/goods/viewStocks'
+// import Market from '@/components/goods/market'
+// import EditMarket from '@/components/goods/editMarket'
+// import ViewMarket from '@/components/goods/viewMarket'
+// import newStocks from '../components/goods/newStocks.vue'
+// import newMarket from '../components/goods/newMarket.vue'
 
 export default [
   {

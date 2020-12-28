@@ -1,4 +1,4 @@
-import ReportLife from '../components/FtReport/ReportLife.vue'
+// import ReportLife from '../components/FtReport/ReportLife.vue'
 export default [
     {
         path: 'FtReport/ReportLife',

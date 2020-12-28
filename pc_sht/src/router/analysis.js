@@ -1,5 +1,3 @@
-
-
 export default [
     { 
         path: 'analysis/analysis', //数据解析

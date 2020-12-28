@@ -24,7 +24,7 @@ import {getAllTzType,queryArea,updateTz,saveTzProperty,saveTzUserdefineProperty,
     getAllStall, query, insertStall, deleteStall, updateStall, getAllStallFunction,
 
     getScreenStyle,
-    updateScreenStyle
+    updateScreenStyle, deleteNodeImg
 } from '../address/url.js'
 
 // 进货台账 销售台账 进货 tz_type = 1 销售 tz_type = 2
@@ -108,6 +108,10 @@ export const GetNodeInfo = function(params){
 // ----企业信息-获取企业信息
 export const UpdateNodeInfo = function(params){
     return ajaxPost(updateNodeInfo,params)
+}
+// 企业管理-删除img/logo
+export const DeleteNodeImg = function(params) {
+    return ajaxGet(deleteNodeImg +'?'+ params)
 }
 // ----追溯模板-追溯精选蔬菜查询
 export const QueryGoodsForTrace = function(params){

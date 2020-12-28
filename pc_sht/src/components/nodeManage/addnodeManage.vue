@@ -296,7 +296,7 @@ export default {
             if(this.$route.params.data.basic.source_way == '1'){
                 this.form.source_way = '配送'
             }else if(this.$route.params.data.basic.source_way == '2'){
-                this.form.source_way = '商务通'
+                this.form.source_way = '商户通'
             }
             this.form.regId = this.$route.params.data.basic.reg_id;
             this.form.legalRepresent = this.$route.params.data.basic.legal_represent;

@@ -3,7 +3,6 @@
         <div class="files">
             <div class="text">
                 <div class="types" v-if="fileShow1">
-                    <p class="title">进货（厂家销售）凭证</p>
                     <div v-for="(item,index) in item_1_list" :key="index">
                         <figure class="image" v-if="item.img_url">
                             <p class="icon-delete-p" @click="deleteFun(item,index,1)">-</p>
@@ -20,7 +19,7 @@
                         </form>
                     </div>  
                 </div>
-                <div class="types" v-if="fileShow2">
+                <!--<div class="types" v-if="fileShow2">
                     <p class="title">检测情况</p>
                     <div v-for="(item,index) in item_2_list" :key="index">
                         <figure class="image" v-if="item.img_url">
@@ -145,9 +144,9 @@
                             <input type="file" class="file" ref="file8" multiple accept="image/*" @change="fileFun($event,8)">
                         </form>
                     </div>  
-                </div>
+                </div>-->
             </div>
-        </div>
+        </div> 
         <div class="box" v-show="isBigImg" ref="boxsize">
             <p class="close" @click="closeFun">X</p>
             <div class="imgBox">
@@ -160,7 +159,7 @@
                 </el-carousel>
             </div>
         </div>
-        <!-- -->
+        
     </div>
 </template>
 

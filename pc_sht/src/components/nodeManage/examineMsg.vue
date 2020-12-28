@@ -42,9 +42,16 @@
                 </el-table-column>
                 <el-table-column prop="state" label="状态" width="100">
                     <template slot-scope="scope">
-                        <p v-if="scope.row.icon == 0">未审核</p>
-                        <p v-if="scope.row.icon == 1">审核通过</p>
-                        <p v-if="scope.row.icon == 2">审核驳回</p>
+                        <div v-if="!scope.row.is_open">
+                            <p v-if="scope.row.icon == 0">未审核</p>
+                            <p v-if="scope.row.icon == 1">审核通过</p>
+                            <p v-if="scope.row.icon == 2">审核驳回</p>
+                        </div>
+                        <div v-else>
+                            <p v-if="scope.row.is_open == 0">企业未修改</p>
+                            <p v-if="scope.row.is_open == 1">企业已修改</p>
+                            <p v-if="scope.row.is_open == 2">审核通过</p>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="node_name" label="操作" width="100">

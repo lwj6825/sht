@@ -1,8 +1,8 @@
-import ledgerMsg from '../components/retrieval/ledgerMsg.vue'
-import retrieval from '../components/retrieval/retrieval.vue'
-import retrievalMsg from '../components/retrieval/retrievalMsg.vue'
-import viewLedger from '../components/retrieval/viewLedger.vue'
-import viewRetrieval from '../components/retrieval/viewRetrieval.vue'
+// import ledgerMsg from '../components/retrieval/ledgerMsg.vue'
+// import retrieval from '../components/retrieval/retrieval.vue'
+// import retrievalMsg from '../components/retrieval/retrievalMsg.vue'
+// import viewLedger from '../components/retrieval/viewLedger.vue'
+// import viewRetrieval from '../components/retrieval/viewRetrieval.vue'
 
 export default [
     {

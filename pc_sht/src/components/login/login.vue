@@ -52,78 +52,81 @@ Storage.prototype.setExpire=(key, value, expire) =>{
     localStorage.setItem(key,JSON.stringify(obj));
 }
 let obj1 =  [
-  {
+    {
         id:'10003',
         text:'企业',
+        describe: '企业',
         url:'DataEnterprise',
         node:'DataEnterprise',
         icon:'icon-DataEnterprise',
         level:1,
         children:{
-          nav_title:'企业管理',
-          url:'DataReportList',
-          node:'DataEnterprise',
-          level:2,
-          id:'10004',
-          parentId:'10003',
-            nodeList:[
-              {
-                id:'10006',
-                parentId:'10004',
-                text:'查看',
-                node:'DataEnterprise',
-                url:'DataMarketList',
-                level:3,
-                children:{
-                  nodeList:[]
+            nav_title:'企业管理',
+            url:'DataReportList',
+            node:'DataEnterprise',
+            level:2,
+            id:'10004',
+            parentId:'10003',
+                nodeList:[
+                {
+                    id:'10006',
+                    parentId:'10004',
+                    text:'查看',
+                    describe: '查看',
+                    node:'DataEnterprise',
+                    url:'DataMarketList',
+                    level:3,
+                    children:{
+                    nodeList:[]
+                    }
                 }
-              }
-          ]
+            ]
         }
     },
     {
-      id:'10007',
-      text:'报告',
-      url:'FtReport',
-      node:'FtReport',
-      icon:'icon-FtReport',
-      level:1,
-      children:{
-        nav_title:'生活必需品专报',
-        id:'10008',
-        parentId:'10007',
-        node:"FtReport",
-        url:'ReportLife',
-        level:2,
-        nodeList:[],
+        id:'10007',
+        text:'报告',
+        describe: '报告',
+        url:'FtReport',
+        node:'FtReport',
+        icon:'icon-FtReport',
+        level:1,
+        children:{
+            nav_title:'生活必需品专报',
+            id:'10008',
+            parentId:'10007',
+            node:"FtReport",
+            url:'ReportLife',
+            level:2,
+            nodeList:[],
 
-        // nav_title:'报告管理',
-        // nodeList:[
-        //   {
-        //     id:'10008',
-        //     parentId:'10007',
-        //     text:'生活必需品专报',
-        //     type:'',
-        //     node:'FtReport',
-        //     level:2,
-        //     children:{
-        //       nodeList:[
-        //         {
-        //           id:'10009',
-        //           parentId:'10008',
-        //           text:'生活必需品专报',
-        //           url:'ReportLife',
-        //           node:'FtReport',
-        //           level:3,
-        //           children:{
-        //             nodeList:[]
-        //           }
-        //         }
-        //       ]
-        //     }
-        //   }
-        // ]
-      }
+            // nav_title:'报告管理',
+            // nodeList:[
+            //   {
+            //     id:'10008',
+            //     parentId:'10007',
+            //     text:'生活必需品专报',
+            //     type:'',
+            //     node:'FtReport',
+            //     level:2,
+            //     children:{
+            //       nodeList:[
+            //         {
+            //           id:'10009',
+            //           parentId:'10008',
+            //           text:'生活必需品专报',
+            //           url:'ReportLife',
+            //           node:'FtReport',
+            //           level:3,
+            //           children:{
+            //             nodeList:[]
+            //           }
+            //         }
+            //       ]
+            //     }
+            //   }
+            // ]
+        }
     }
 ];
 let obj2 = [
@@ -316,18 +319,13 @@ export default {
                 if(res.data.booth_list.length != 0){
                     let name = res.data.booth_list[0].name,
                         node_id = res.data.booth_list[0].node_id,
-                        isRegion = res.data.role_list[0].region,
                         scShopId = res.data.booth_list[0].SHOP_BOOTH_ID,
                         roleId = res.data.role_list[0].ROLEID;
-                    localStorage.setExpire("token", roleId, 1000*60*60*24);
                     localStorage.setItem('loginName',name);
                     localStorage.setItem('loginId',node_id);
-                    localStorage.setItem('isRegion',isRegion);
                     localStorage.setItem('scShopId',scShopId);
-                    localStorage.setItem('roleId',roleId);
-                    localStorage.setItem('account',this.account.replace(/\s*/g,""));
-                    localStorage.setItem('password',this.password.replace(/\s*/g,""));
                     localStorage.setItem('userType',res.data.booth_list[0].usertype);
+                    localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                     // sessionStorage.setItem('userName',this.account)
                     // this.setCookie('userName',this.account)
                     if(roleId == 40){
@@ -337,6 +335,13 @@ export default {
                     }
                 }
                 if(res.result){
+                    let isRegion = res.data.role_list[0].region,
+                        roleId = res.data.role_list[0].ROLEID;
+                    localStorage.setItem('isRegion',isRegion);
+                    localStorage.setExpire("token", roleId, 1000*60*60*24);
+                    localStorage.setItem('roleId',roleId);
+                    localStorage.setItem('account',this.account.replace(/\s*/g,""));
+                    localStorage.setItem('password',this.password.replace(/\s*/g,""));
                     if(this.check){
                       if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
                         localStorage.setItem('menuList',JSON.stringify(obj1));
@@ -348,7 +353,6 @@ export default {
                         localStorage.setItem('username',JSON.stringify(this.account.replace(/\s*/g,"")));
                         localStorage.setItem('checked',JSON.stringify(true));
                         localStorage.setItem('userId',res.data.userId);
-                        localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;
                     }else{
                       if(this.account.indexOf('_ft')>-1 && this.account.split('_')[0] == 'swj'){
@@ -360,7 +364,6 @@ export default {
                       }
                         localStorage.setItem('username',JSON.stringify(this.account.replace(/\s*/g,"")));
                         localStorage.setItem('userId',res.data.userId);
-                        localStorage.setItem('nodeidlocal',res.data.booth_list[0].node_id);
                         this.userId = res.data.userId;
                     }
                     this.$router.push({name:'home'})
@@ -368,6 +371,7 @@ export default {
                     clocalStorage.clear();
                 }
             }).catch((res)=>{
+                console.log(res)
                 this.$message.error('账号或密码输入不正确!')
             })
 

@@ -58,16 +58,22 @@
                     <el-table-column prop="in_date" label="配送日期"  width="180"> </el-table-column>
                     <el-table-column label="商品信息">
                         <template slot-scope="scope">
-                            <p>{{scope.row.details}}等共{{scope.row.details_count}}件商品</p>
+                            <p>{{scope.row.goodMsg}}等共{{scope.row.details_count}}件商品</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="details_count" label="数量" width="80"> </el-table-column>
                     <el-table-column prop="buyer_booth_name" label="配送单位"></el-table-column>
+                    <el-table-column prop="address" label="单据上传" > 
+                        <template slot-scope="scope">
+                            <p v-if="scope.row.is_oc_upload == 1">已上传单据</p>
+                            <p v-else-if="scope.row.is_oc_upload == 0">未上传单据</p>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作" width="200">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
-                            <el-button type="text" size="small" @click="againFun(scope.row)">再次录入</el-button>
-                            <el-button type="text" size="small" @click="deleteTzFun(scope.row)">删除</el-button>
+                            <el-button type="text" size="small" @click="againFun(scope.row)">再次录入</el-button><!--
+                            <el-button type="text" size="small" @click="deleteTzFun(scope.row)">删除</el-button>-->
                         </template>
                     </el-table-column>
                     <!--<el-table-column prop="address" label="数据来源">
@@ -339,7 +345,7 @@ export default {
         },
         getTime(){
             var start = new Date();
-            var startTime = start.setTime(start.getTime());
+            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
             this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
@@ -421,6 +427,7 @@ export default {
             this.getSaleTzFun()
         },
         getSaleTzFun(){
+            this.loading = true
             let obj = {
                 seller_booth_id: this.scShopId,
                 start_time: this.startTime,
@@ -433,6 +440,10 @@ export default {
             QueryPcTzSaleInfoList(obj)
                 .then(res => {
                     this.loading = false
+                    res.data.tzList.forEach(val => {
+                        let arr = val.details.split(',');
+                        val.goodMsg = arr[0];
+                    })
                     this.tableData = res.data.tzList
                     this.num = res.data.tzBean.total
                 })
@@ -478,7 +489,7 @@ export default {
                 cursor: pointer;
             }
             .el-form{
-                width: 1000px;
+                min-width: 1000px;
             }
             .el-input,.el-date-picker,.el-select{
                 width: 160px;

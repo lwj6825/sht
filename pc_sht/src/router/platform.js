@@ -1,15 +1,15 @@
-import enterprise from '../components/platform/enterprise.vue';
-import DataVolume from '../components/platform/DataVolume.vue';
-import merchantReport from '../components/platform/merchantReport.vue';
-import moreMerchant from '../components/platform/moreMerchant.vue';
-import moreStore from '../components/platform/moreStore.vue';
-import nodeReport from '../components/platform/nodeReport.vue';
-import query from '../components/platform/query.vue';
-import runAssessment from '../components/platform/runAssessment.vue';
-import singleNode from '../components/platform/singleNode.vue';
-import transactionPrice from '../components/platform/transactionPrice.vue';
-import transactionVolume from '../components/platform/transactionVolume.vue';
-import viewNodeReport from '../components/platform/viewNodeReport';
+// import enterprise from '../components/platform/enterprise.vue';
+// import DataVolume from '../components/platform/DataVolume.vue';
+// import merchantReport from '../components/platform/merchantReport.vue';
+// import moreMerchant from '../components/platform/moreMerchant.vue';
+// import moreStore from '../components/platform/moreStore.vue';
+// import nodeReport from '../components/platform/nodeReport.vue';
+// import query from '../components/platform/query.vue';
+// import runAssessment from '../components/platform/runAssessment.vue';
+// import singleNode from '../components/platform/singleNode.vue';
+// import transactionPrice from '../components/platform/transactionPrice.vue';
+// import transactionVolume from '../components/platform/transactionVolume.vue';
+// import viewNodeReport from '../components/platform/viewNodeReport';
 export default [
     {
         path: 'platform/enterprise',
@@ -54,7 +54,7 @@ export default [
     {
         path: 'platform/query',
         component: resolve => require(['@/components/platform/query'],resolve),
-        name:"MerchantReport",
+        name:"Query",
         meta:{
             id:'554',
             node:'platform',

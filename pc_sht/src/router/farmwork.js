@@ -1,12 +1,12 @@
-import Farmwork from '@/components/farmwork/farmwork'
-import Recording from '@/components/farmwork/recording'
-import ViewRecord from '@/components/farmwork/viewrecord'
-import SyCodeApplication from '@/components/farmworksy/sycodeapplication'
-import SyCodeSearch from '@/components/farmworksy/sycodesearch'
-import ManagementCrop from '@/components/farmwork/managementCrop'
-import AddCrop from '@/components/farmwork/addCrop'
-import InforCrop from '@/components/farmwork/inforCrop'
-import EditCrop from '@/components/farmwork/editCrop'
+// import Farmwork from '@/components/farmwork/farmwork'
+// import Recording from '@/components/farmwork/recording'
+// import ViewRecord from '@/components/farmwork/viewrecord'
+// import SyCodeApplication from '@/components/farmworksy/sycodeapplication'
+// import SyCodeSearch from '@/components/farmworksy/sycodesearch'
+// import ManagementCrop from '@/components/farmwork/managementCrop'
+// import AddCrop from '@/components/farmwork/addCrop'
+// import InforCrop from '@/components/farmwork/inforCrop'
+// import EditCrop from '@/components/farmwork/editCrop'
 
 //农业_农事管理
 export default [

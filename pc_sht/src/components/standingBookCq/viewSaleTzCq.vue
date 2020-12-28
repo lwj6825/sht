@@ -16,11 +16,36 @@
                             <p>{{form.ghdw ? form.ghdw : '无'}}</p>
                         </div>
                     </div>
+                    <div class="data">
+                        <div class="title">单据上传</div>
+                        <div class="msg">
+                            <div class="msg-item">   
+                                <div class="img-list">
+                                    <ul>
+                                        <li v-for="(item,index) in imgArr1" :key="index" v-if="item.img_url">
+                                            <figure class="image">
+                                                <p class="delete" @click="deleteFun(item)">-</p>
+                                                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + item.img_url" @click="bigImgFun(item)">
+                                            </figure>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <span class="submit">
+                                        上传图片
+                                        <form id="upload" enctype="multipart/form-data" method="post"> 
+                                            <input type="file" class="file" ref="file" @change="fileFun($event)">
+                                        </form>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="table">
-            <div class="list-title">商品信息<span>(已选{{count}}种商品，合计￥{{totalPrice}})</span></div>
+            <div class="list-title">商品信息<span>(已选{{count}}种商品，合计￥{{totalPrice.toFixed(2)}})</span></div>
             <div class="table">
                 <el-table :data="tableData" :header-cell-style="rowClass">
                     <el-table-column prop="goods_name" label="商品名称"> </el-table-column>
@@ -35,8 +60,7 @@
                     <el-table-column prop="area_origin_name" label="产地"> </el-table-column>-->
                 </el-table>
             </div>
-            </div>
-        </div><!--
+        </div>
         <div class="bigimg-box" v-show="isBigImg" ref="boxsize">
             <div class="imgBox">
                 <p class="close" @click="closeFun">X</p>
@@ -50,7 +74,7 @@
                     </el-carousel-item>
                 </el-carousel>
             </div>
-        </div>-->
+        </div><!---->
     </div>
 </template>
 
@@ -68,9 +92,12 @@ function formatDate(date) {
     var second = date.getSeconds(); 
     return year + "-" + formatTen(month) + "-" + formatTen(day); 
 } 
-import {TzAdd,UpdatePc,GetAllBiz,QueryInTzDetailByTzId,QuerySuppiler,GetAllTzGys,TzUpdate, SearchDoc, QueryPcTzSaleDetailInfoList} from '../../js/standingBookCq/standingBookCq.js'
+import {TzAdd,UpdatePc,GetAllBiz,QueryInTzDetailByTzId,QuerySuppiler,GetAllTzGys,TzUpdate, SearchDoc, QueryPcTzSaleDetailInfoList,
+    GetAllOriginalDoc2, DeleteVouchers,} from '../../js/standingBookCq/standingBookCq.js'
 import {purchase,getDefaultProductTypes} from "../../js/goods/goods.js";
 import {getAddr} from '../../js/user/user.js';
+import axios from 'axios';
+import {updateVouchers} from '../../js/address/url.js'
 export default {
     name: "viewSaleTzCq",
     data() {
@@ -190,6 +217,7 @@ export default {
             oldmerchants: '',
             states: 1,
             valLength1: 4,
+            biz_id: '',
         }
     },
     created() {
@@ -208,10 +236,53 @@ export default {
         let param = this.$route.params
         this.tzId = param.tz_id
         this.form.ghdw = param.buyer_booth_name
+        this.biz_id = param.biz_id
+        this.buyer_node_id = param.buyer_node_id
         this.form.in_date = param.in_date
         this.detailTzFun()
+        this.getImgFun()
     },
     methods: {
+        fileFun(event,ele){
+            var that = this;
+            let param = this.$refs.file.files[0];
+            this.file = event.target.files[0];
+            let formData = new FormData();
+            formData.append('myfile', this.file);  
+            formData.append('tz_id', this.tzId);  
+            formData.append('node_id', this.buyer_node_id);  
+            formData.append('biz_id', this.biz_id);  
+            formData.append('tz_type', 2);  
+            let config = {
+              headers:{'Content-Type':'multipart/form-data'}
+            };
+            const ajaxPost = function (url, params,config) {
+                return new Promise((resolve, reject) => {
+                    axios
+                        .post(url, params,{config})
+                        .then((res) => {
+                            resolve(res.data)
+                        })
+                        .catch(() => {
+                            reject('error')
+                        })
+                })
+            }  
+            const url = updateVouchers
+            ajaxPost(url,formData,config)
+                .then(res => {
+                    if(res.result == true){
+                        this.$message.success(res.message);
+                        this.getImgFun()
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                    document.getElementById("upload").reset()
+                })
+                .catch(res => {
+                    
+                })
+        },
         bigImgFun(item){
             this.isBigImg = true
             this.current = item
@@ -225,6 +296,23 @@ export default {
                 this.sizeObj = sizeObj
             })
         },
+        deleteFun(ele){
+            let obj = {
+                id: ele.id
+            }
+            DeleteVouchers(obj)
+                .then(res => {
+                    if(res.result == true){
+                        this.$message.success(res.message ? res.message : '删除成功');
+                        this.getImgFun()
+                    }else{
+                        this.$message.error(res.message ? res.message : '删除失败');
+                    }
+                })
+                .catch(res => {
+
+                })
+        },
         closeFun(){
             this.isBigImg = false
         },
@@ -232,9 +320,9 @@ export default {
             let obj = {
                 tz_id: this.tzId,
                 node_id: this.node_id,
-                tz_type: 1,
+                tz_type: 2,
             }
-            SearchDoc(obj)
+            GetAllOriginalDoc2(obj)
                 .then(res => {
                     this.imgArr1 = res.data              
                 })
@@ -252,7 +340,7 @@ export default {
                     this.tableData = res.data.tzList
                     this.count = this.tableData.length
                     this.tableData.forEach(val => {
-                        this.totalPrice += Number(val.price)
+                        this.totalPrice += Number(val.price*val.number)
                     })
                 })
                 .catch(res => {
@@ -413,6 +501,68 @@ export default {
             .delete-btn{
                 color: #f56c6c;
             }   
+        }
+        .msg-item{
+            margin: 10px 0;
+            width: 500px;
+            display: flex;
+            .submit{
+                margin: 0 30px;
+                position: relative;
+                left: 0;
+                top: 20%;
+                display: inline-block;
+                width: 90px;
+                height: 30px;
+                line-height: 30px;
+                color: #409EFF;
+                background: #fff;
+                text-align: center;
+                overflow: hidden;
+                border-radius: 5px;
+                font-size: 14px;
+                box-sizing: border-box;
+                border: 1px solid #409EFF;
+                .file{
+                    position: absolute;
+                    left: 0px;
+                    top: 0px;
+                    width: 90px;
+                    height: 30px;
+                    opacity: 0;
+                    background: rgba(0,0,0,0);
+                }
+            }
+            .img-list{
+                ul{
+                    display: flex;
+                    flex-wrap:wrap;
+                    li{
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        margin: 10px;
+                        .delete{
+                            position: absolute;
+                            top: -6px;
+                            right: -6px;
+                            width: 12px;
+                            height: 12px;
+                            text-align: center;
+                            line-height: 7px;
+                            font-size: 24px;
+                            background: #990000;
+                            color: #fff;
+                            border-radius: 50%;
+                            cursor: pointer;
+                        }
+                        img{
+                            width: 50px;
+                            height: 50px;
+                        }
+                    }
+                }
+            }
         }
         .btn{
             display: flex;

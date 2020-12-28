@@ -435,8 +435,8 @@
         .sub-title {
           text-align: right;
           padding-right: 20px;
-          height: 40px;
-          line-height: 40px;
+          height: 30px;
+          line-height: 30px;
           font-size: 14px;
         }
       }

@@ -1,13 +1,13 @@
-import StandingBook from '@/components/standingBook/standingBook'
-import EntryTz from '@/components/standingBook/entryTz'
-import SaleTz from '@/components/standingBook/saleTz'
-import AddEntryTz from '@/components/standingBook/addEntryTz'
-import AddSaleTz from '@/components/standingBook/addSaleTz'
-import CheckTz from '@/components/standingBook/checkTz'
-import AddCheckTz from '@/components/standingBook/addCheckTz'
-import imgUpload from '../components/standingBook/imgUpload.vue'
-import viewCheckTz from '../components/standingBook/viewCheckTz.vue'
-import viewEntryTz from '../components/standingBook/viewEntryTz.vue'
+// import StandingBook from '@/components/standingBook/standingBook'
+// import EntryTz from '@/components/standingBook/entryTz'
+// import SaleTz from '@/components/standingBook/saleTz'
+// import AddEntryTz from '@/components/standingBook/addEntryTz'
+// import AddSaleTz from '@/components/standingBook/addSaleTz'
+// import CheckTz from '@/components/standingBook/checkTz'
+// import AddCheckTz from '@/components/standingBook/addCheckTz'
+// import imgUpload from '../components/standingBook/imgUpload.vue'
+// import viewCheckTz from '../components/standingBook/viewCheckTz.vue'
+// import viewEntryTz from '../components/standingBook/viewEntryTz.vue'
 
 export default [
     {

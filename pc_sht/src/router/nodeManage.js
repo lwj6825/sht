@@ -1,8 +1,9 @@
-import addBizManage from '../components/nodeManage/addBizManage.vue'
-import bizManageMsg from '../components/nodeManage/bizManageMsg.vue'
-import editBizManage from '../components/nodeManage/editBizManage.vue'
-import examineMsg from '../components/nodeManage/examineMsg.vue'
-import viewExamine from '../components/nodeManage/viewExamine.vue'
+// import addBizManage from '../components/nodeManage/addBizManage.vue'
+// import bizManageMsg from '../components/nodeManage/bizManageMsg.vue'
+// import editBizManage from '../components/nodeManage/editBizManage.vue'
+// import examineMsg from '../components/nodeManage/examineMsg.vue'
+// import viewExamine from '../components/nodeManage/viewExamine.vue'
+// import jgjgList from '../components/nodeManage/jgjgList.vue'
 
 export default [
     {
@@ -83,6 +84,16 @@ export default [
             id:'627',
             node:'nodeManage',
             url:'viewExamine',
+        }
+    },
+    {
+        path: 'nodeManage/jgjgList',
+        component: resolve => require(['@/components/nodeManage/jgjgList'],resolve),
+        name:"JgjgList",
+        meta:{
+            id:'629',
+            node:'nodeManage',
+            url:'jgjgList',
         }
     },
 ]

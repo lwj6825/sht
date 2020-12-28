@@ -40,6 +40,7 @@
             <span class="name" :style="logoUrl ? {'margin-top': '38px'} : {}">logo：</span>
             <div class="box">
                 <figure class="image" v-if="logoUrl">
+                    <p class="delete" @click="removeFun(1)">-</p>
                     <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + logoUrl">
                 </figure>
                 <span class="submit">
@@ -55,6 +56,7 @@
             <span class="name" :style="imgUrl ? {'margin-top': '38px'} : {}">企业图片：</span>
             <div class="box">
                 <figure class="image" v-if="imgUrl">
+                    <p class="delete" @click="removeFun(2)">-</p>
                     <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + imgUrl">
                 </figure>
                 <span class="submit">
@@ -91,7 +93,7 @@
 </template>
 
 <script>
-import {GetNodeInfo,UpdateNodeInfo} from '../../js/settings/settings.js'
+import {GetNodeInfo,UpdateNodeInfo, DeleteNodeImg} from '../../js/settings/settings.js'
 import {baseUrl} from '../../js/address/url.js'
 import {getAddr} from '../../js/user/user.js';
 import axios from 'axios';
@@ -137,6 +139,41 @@ export default {
         this.getQyMsgFun()
     },
     methods: {
+        removeFun(ele){
+            if(ele == 1){
+                let str = 'node_id=' + this.node_id + '&type=logo';
+                DeleteNodeImg(str)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.logoUrl = ''
+                            // this.btnMsg = '修改'
+                            // this.getQyMsgFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }else if(ele == 2){
+                let str = 'node_id=' + this.node_id + '&type=img';
+                DeleteNodeImg(str)
+                    .then(res => {
+                        if (res.result == true) {
+                            this.$message.success(res.message);
+                            this.imgUrl = ''
+                            // this.btnMsg = '修改'
+                            // this.getQyMsgFun()
+                        }else{
+                            this.$message.error(res.message);
+                        }
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    })
+            }
+        },
         getAddrList(){//获取地区列表
             getAddr()
                 .then(res => {
@@ -547,13 +584,29 @@ export default {
                 line-height: 30px;
             }
             .image{
+                position: relative;
+                top: 0;
+                left: 0;
                 display: inline-block;
                 /*margin-right: 10px;*/
                 width: 200px;
                 height: 100px;
                 vertical-align: middle;
                 border: 1px solid #eaeaea;
-                overflow: hidden;
+                .delete{
+                    position: absolute;
+                    top: -6px;
+                    right: -6px;
+                    width: 12px;
+                    height: 12px;
+                    text-align: center;
+                    line-height: 7px;
+                    font-size: 24px;
+                    background: #990000;
+                    color: #fff;
+                    border-radius: 50%;
+                    cursor: pointer;
+                }
                 img{
                     display: block;
                     border: none;

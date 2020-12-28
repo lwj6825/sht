@@ -8,7 +8,7 @@ import {baseUrl,queryAssetsUser,queryAssetsConf,queryAssetsType,queryNodeBase,qu
     queryAssetsSpecifications,queryAssetsNames,queryAssetsManufacturers,queryNodeBase2,parseMonLog,queryTableName,getFileState,
     queryFtpMonLog,getParseType,analysisDataMon,setByFtpId,queryErrorData,downloadErrorData,deleteErrorLogData,queryErrorLogType,
     queryUploadFilesByFtpId,parseMonLogForRecently,downloadErrorLog,queryChangeLogList,downloadChangeLog,queryChangeItem,
-    deleteParseMonLogById,queryNodeDetailType,deleteAllErrorData,queryFilePath,addErrorDateRemark, 
+    deleteParseMonLogById,queryNodeDetailType,deleteAllErrorData,queryFilePath,addErrorDateRemark, queryChildAssetsBaseByParentId,
     // queryAssetsBaseByAssetsId
     } from "../address/url";
 export const QueryFilePath = function(){
@@ -85,6 +85,10 @@ export const QueryInspectinfoListByAssetsId  = function(params) {
 //  资产--查询维修记录
 export const QueryMaintaininfoListByAssetsId  = function(params) {
     return ajaxPost(queryMaintaininfoListByAssetsId,params)
+}
+// 资产--查询所属资产
+export const QueryChildAssetsBaseByParentId  = function(params) {
+    return ajaxPost(queryChildAssetsBaseByParentId,params)
 }
 // 批量变更
 export const UpdateMoreAssetsStatus  = function(params) {

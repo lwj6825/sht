@@ -2,7 +2,8 @@ import {ajaxPost,ajaxGet} from '../config/ajax.js';
 import {queryInTzDetailRegion,tzAdd,updatePc,getAllBiz,queryInTzDetailByTzId,queryXsTzDetailRegion,querySuppiler,ZhdTzParse,
   getAllTzGys,queryCheckList,addCheckItem,deteleCheckItem,jcqueryPurchase,deleteDoc,searchDoc,deleteTzByTzId,downloadXsTzDetail,tzUpdate,
   queryXsTzDetailByTzId,updateCheck, queryXsTzDetailRegionForOneGoods, exportPcTzInfoList, queryPcTzInfoList, queryPcTzInfoDetailList,
-  queryPcTzSaleInfoList, queryPcTzSaleDetailInfoList, saveInTzAgain, saveSaleTzAgain} from '../address/url.js';
+  queryPcTzSaleInfoList, queryPcTzSaleDetailInfoList, saveInTzAgain, saveSaleTzAgain, updateVouchers, deleteVouchers, getAllOriginalDoc2,
+} from '../address/url.js';
 import {baseUrl} from "../address/url";
 import axios from 'axios';
 
@@ -128,4 +129,16 @@ export const QueryPcTzSaleDetailInfoList = function(params){
 // 新增
 export const SaveSaleTzAgain = function(params){
   return ajaxPost(saveSaleTzAgain, params)
+} 
+// 上传单据进货1  销售2  
+export const UpdateVouchers = function(params){
+  return ajaxPost(updateVouchers, params)
+}
+// 删除单据
+export const DeleteVouchers = function(params){
+  return ajaxPost(deleteVouchers, params)
+}
+// 查看单据
+export const GetAllOriginalDoc2 = function(params){
+  return ajaxPost(getAllOriginalDoc2, params)
 } 

@@ -1,5 +1,5 @@
-import FarmworkReview from '@/components/farmworkreview/farmworkreview'
-import SymReview from '@/components/farmworkreview/symreview'
+// import FarmworkReview from '@/components/farmworkreview/farmworkreview'
+// import SymReview from '@/components/farmworkreview/symreview'
 
 //农事审核
 export default [

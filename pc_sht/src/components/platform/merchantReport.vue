@@ -406,7 +406,6 @@ var preD = function (e) {
 
         if(column.label == '商户在线率'){
            row.node.forEach(ele=>{
-               console.log(parseFloat(ele.proportion))
                if(parseFloat(ele.proportion) < 60){
                  return {
                      background: 'red',
@@ -632,10 +631,10 @@ var preD = function (e) {
              this.getQueryBizOnlineNodeTypeMonitor1(lineName,lineValue);
             this.biz_online_list.push({
               "online_count": data[0].sum_online,
-              "online_sum": data[0].sum_total,
+              "online_sum": data[0].sum_num,
               "node_detail_type": "列总计",
               "proportion": data[0].sum_proportion,
-              "total_count":  data[0].sum_num,
+              "total_count":  data[0].sum_total,
               "avg_num": data[0].avg_num,
             })
             this.Dataloading3 = false;

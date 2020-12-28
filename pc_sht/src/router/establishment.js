@@ -1,4 +1,4 @@
-import establishmentList from '../components/establishment/establishmentList.vue'
+// import establishmentList from '../components/establishment/establishmentList.vue'
 
 export default [
     { 

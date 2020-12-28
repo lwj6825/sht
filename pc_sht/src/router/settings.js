@@ -1,29 +1,29 @@
-import Settings from '@/components/settings/settings'
-import EnterpriseInfo from '@/components/settings/enterpriseInfo'
-import AccountSeting from '@/components/settings/accountSeting'
-import StandingBookMsg from '@/components/settings/standingBookMsg'
-import WorkersSeting from '@/components/settings/workersSeting'
-import CustomSeting from '@/components/settings/customSeting'
-import BoothManagement from '@/components/settings/boothManagement'
-import EditEntryTz from '@/components/settings/editEntryTz'
-import EditSaleTz from '@/components/settings/editSaleTz'
-import EquipmentMsg from '@/components/settings/equipmentMsg'
-import AddEquipment from '@/components/settings/addEquipment'
-import retrospect from '@/components/settings/retrospect.vue'
-import lookImages from '../components/settings/lookImages.vue'
-import assetState from '../components/settings/assetState.vue';
-import assetTypes from '../components/settings/assetTypes.vue';
-import partName from '../components/settings/partName.vue';
-import repairMs from '../components/settings/repairMs.vue';
-import taskTypes from '../components/settings/taskTypes.vue';
-import groupMsg from '../components/settings/groupMsg.vue';
-import editEquipment from '../components/settings/editEquipment.vue';
-import rolePermissions from '../components/settings/rolePermissions.vue';
-import newRolePermissions from '../components/settings/newRolePermissions.vue';
-import newWorkers from '../components/settings/newWorkers.vue';
-import editWorkers from '../components/settings/editWorkers.vue';
-import viewWorkers from '../components/settings/viewWorkers.vue';
-import enterpriseProp from '@/components/settings/enterpriseProp'
+// import Settings from '@/components/settings/settings'
+// import EnterpriseInfo from '@/components/settings/enterpriseInfo'
+// import AccountSeting from '@/components/settings/accountSeting'
+// import StandingBookMsg from '@/components/settings/standingBookMsg'
+// import WorkersSeting from '@/components/settings/workersSeting'
+// import CustomSeting from '@/components/settings/customSeting'
+// import BoothManagement from '@/components/settings/boothManagement'
+// import EditEntryTz from '@/components/settings/editEntryTz'
+// import EditSaleTz from '@/components/settings/editSaleTz'
+// import EquipmentMsg from '@/components/settings/equipmentMsg'
+// import AddEquipment from '@/components/settings/addEquipment'
+// import retrospect from '@/components/settings/retrospect.vue'
+// import lookImages from '../components/settings/lookImages.vue'
+// import assetState from '../components/settings/assetState.vue';
+// import assetTypes from '../components/settings/assetTypes.vue';
+// import partName from '../components/settings/partName.vue';
+// import repairMs from '../components/settings/repairMs.vue';
+// import taskTypes from '../components/settings/taskTypes.vue';
+// import groupMsg from '../components/settings/groupMsg.vue';
+// import editEquipment from '../components/settings/editEquipment.vue';
+// import rolePermissions from '../components/settings/rolePermissions.vue';
+// import newRolePermissions from '../components/settings/newRolePermissions.vue';
+// import newWorkers from '../components/settings/newWorkers.vue';
+// import editWorkers from '../components/settings/editWorkers.vue';
+// import viewWorkers from '../components/settings/viewWorkers.vue';
+// import enterpriseProp from '@/components/settings/enterpriseProp'
 
 export default [
   {

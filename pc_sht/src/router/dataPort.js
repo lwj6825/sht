@@ -1,5 +1,5 @@
-import dataPricePort from '../components/dataPort/dataPricePort.vue'
-import dataWeekPort from '../components/dataPort/dataWeekPort.vue'
+// import dataPricePort from '../components/dataPort/dataPricePort.vue'
+// import dataWeekPort from '../components/dataPort/dataWeekPort.vue'
 
 export default [
     { 

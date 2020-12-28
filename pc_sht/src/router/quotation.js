@@ -1,6 +1,6 @@
-import quotation from '../components/quotation/quotation.vue'
-import quotationList from '../components/quotation/quotationList.vue'
-import viewQuotation from '../components/quotation/viewQuotation.vue'
+// import quotation from '../components/quotation/quotation.vue'
+// import quotationList from '../components/quotation/quotationList.vue'
+// import viewQuotation from '../components/quotation/viewQuotation.vue'
 
 export default [
     {

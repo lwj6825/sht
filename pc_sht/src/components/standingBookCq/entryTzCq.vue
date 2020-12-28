@@ -40,7 +40,7 @@
                 </el-form>
             </div>
         </div>
-        <div class="table">
+        <div class="table" v-loading="loading">
             <div class="title">
                 <p class="tz-title">全部进货台账</p>
                 <div>
@@ -74,8 +74,8 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width='220'>
-                        <template slot-scope="scope">
-                            <el-button type="text" size="small" v-if="fileBtn" @click="fileShowFun(scope.row)">上传单据</el-button>
+                        <template slot-scope="scope"><!--
+                            <el-button type="text" size="small" v-if="fileBtn" @click="fileShowFun(scope.row)">上传单据</el-button>-->
                             <el-button type="text" size="small" @click="againFun(scope.row)">再次进货</el-button>
                             <el-button type="text" size="small" @click="detailTzFun(scope.row)">查看</el-button>
                         </template>
@@ -243,7 +243,8 @@ export default {
                 disabledDate(time) {
                     return time.getTime() >  new Date().getTime()
                 }
-            }
+            },
+            loading: true,
         }
     },
     created() {
@@ -334,7 +335,7 @@ export default {
                     .catch(res => {
                         console.log(res)
                     })
-                }
+            }
         },
         fileFun(event){
             let param = this.$refs.file.files[0];
@@ -499,7 +500,7 @@ export default {
         },
         getTime(){
             var start = new Date();
-            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            var startTime = start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
             this.startTime = timestampToTime(startTime)
             var currentTime = new Date()
             this.endTime = formatDate(currentTime)
@@ -601,6 +602,7 @@ export default {
                 })
         },
         getEntryTzFun(){
+            this.loading = true
             if(this.isRegion == 'false'){
                 let obj = {
                     buyer_booth_id: this.scShopId,
@@ -616,11 +618,14 @@ export default {
                     .then(res => {
                         this.tableData = res.data.tzList
                         this.num = res.data.tzBean.total
+                        this.loading = false
                     })
                     .catch(res => {
                         console.log(res)
+                        this.loading = false
                     })
             }else{    
+                this.loading = false
                 // let obj = {
                 //     region:  this.areaId,
                 //     buyer_booth_id: this.form.user,

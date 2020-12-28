@@ -1,5 +1,3 @@
-
-
 export default [
     { 
         path: 'control/control', //数据监控管理

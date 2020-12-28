@@ -1,8 +1,8 @@
-import Role from '@/components/role/role'
-import RoleManagement from '@/components/role/roleManagement'
-import EditRole from '@/components/role/editRole'
-import retailRoleList from '../components/role/retailRoleList.vue'
-import newRetailRole from '../components/role/newRetailRole.vue'
+// import Role from '@/components/role/role'
+// import RoleManagement from '@/components/role/roleManagement'
+// import EditRole from '@/components/role/editRole'
+// import retailRoleList from '../components/role/retailRoleList.vue'
+// import newRetailRole from '../components/role/newRetailRole.vue'
 
 export default [
   {

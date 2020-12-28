@@ -1,13 +1,13 @@
 // base url
-// export const baseUrl = 'http://192.168.0.25:8081/order_sht/';
-// export const baseUrl2 = 'http://192.168.0.25:8081/order_sht/';
-// export const baseUrl3 = 'http://192.168.0.25:8081/order_sht/'; // 资产0.154
-// export const baseUrl4 = 'http://192.168.0.25:8081/order_sht/'; // paas 0.25
+export const baseUrl = 'http://192.168.0.154:8081/order_sht/';
+export const baseUrl2 = 'http://192.168.0.154:8081/order_sht/';
+export const baseUrl3 = 'http://192.168.0.154:8081/order_sht/'; // 资产0.154
+// export const baseUrl4 = 'http://192.168.0.154:8081/order_sht/'; // paas 0.25
 // export const baseUrl6 = 'http://192.168.0.148:8080/analysis-file/';
 
-export const baseUrl = 'http://shop.zhdtech.com/';//外网
-export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
-export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl2 = 'http://shop.zhdtech.com/';//外网
+// export const baseUrl3 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl4 = 'http://shop.zhdtech.com/';//外网
 export const baseUrl5 = 'https://analyse.zhdtech.com/analyse/mobileTrace.do?'
 export const baseUrl6 = 'http://47.92.11.75:13781/zhd-file/';
@@ -63,6 +63,7 @@ export const getAllBizType = baseUrl + 'manage/getAllBizType';//新增商户-商
 export const UpdateBizUser = baseUrl + 'manage/UpdateBizUser';// 商户详情 修改用户信息
 export const UpdateBizBooth = baseUrl + 'manage/UpdateBizBooth';// 商户详情 修改商铺信息
 export const addBizId = baseUrl + 'manage/addBizId';// 自动生成得商户编码
+export const deleteBizImg = baseUrl + 'manage/deleteBizImg';// 商户管理-删除img/logo
 // 供应商
 export const getAllGys = baseUrl + 'manage/getAllGys';// 查询供应商列表
 export const insertGys = baseUrl + 'manage/insertGys';// 新增供应商
@@ -107,7 +108,7 @@ export const unBindKeys = baseUrl + 'sbgl/updateSbGoods';//设备管理-解绑�
 //进货商品
 export const queryAllSuppliers = baseUrl + 'goods/queryAllSuppliers';// 查询供应商列表（菜单选项）
 export const querySpecification = baseUrl + 'goods/querySpecification';// 查询规格列表
-export const queryPurchase = baseUrl + 'goods/queryPurchase ';// 查询进货商品列表
+export const queryPurchase = baseUrl + 'goods/queryPurchase';// 查询进货商品列表
 export const purchaseAdd  = baseUrl + 'goods/purchaseAdd  ';// 新增进货商品
 export const getDefaultProductType = baseUrl4 + 'comm/getDefaultProductType';// 查询商品品种三级列表goods/GoodsCode
 export const goodsCode = baseUrl + 'goods/GoodsCode';// 商品编码
@@ -224,6 +225,7 @@ export const downLoadDoc = baseUrl + 'sbgl/downloadSbGoods';//设备管理 - 下
 // 企业信息
 export const getNodeInfo = baseUrl + 'login/getNodeInfo';//获取企业信息
 export const updateNodeInfo = baseUrl + 'login/updateNodeInfo';//修改企业信息
+export const deleteNodeImg = baseUrl + 'login/deleteNodeImg';//企业管理-删除img/logo
 // 追溯模板
 export const queryGoodsForTrace = baseUrl + 'goods/queryGoodsForTrace';//追溯精选蔬菜查询
 export const queryGoodsForNoTrace = baseUrl + 'goods/queryGoodsForNoTrace';//追溯精选蔬菜添加时
@@ -268,6 +270,9 @@ export const exportPcTzInfoList =  baseUrl + 'tz/parse/exportPcTzInfoList';//导
 export const queryPcTzInfoList =  baseUrl + 'tz/parse/queryPcTzInfoList';//列表数据
 export const queryPcTzInfoDetailList =  baseUrl + 'tz/parse/queryPcTzInfoDetailList';// 查看详情
 export const saveInTzAgain =  baseUrl + 'tz/parse/saveInTzAgain';// 新增
+export const updateVouchers =  baseUrl + 'tz/parse/updateVouchers';// 上传单据进货1  销售2
+export const deleteVouchers =  baseUrl + 'tz/parse/deleteVouchers';// 删除单据
+export const getAllOriginalDoc2 =  baseUrl + 'originalDoc/getAllOriginalDoc';// 查看单据{"tz_id":"7673872022121791172","node_id":"888888888","tz_type":1}
 // 餐企销售台账
 export const exportTzSaleInfoTemplate =  baseUrl + 'tz/parse/exportTzSaleInfoTemplate';//下载模板
 export const importTzSaleInfo =  baseUrl + 'tz/parse/importTzSaleInfo';//导入
@@ -287,8 +292,11 @@ export const deteleCheckItem = baseUrl + 'check/deleteCheck' // 删除检测信�
 export const BaseImgUrl = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' // 删除检测信息
 export const BaseImgUrl2 = 'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com/' // 删除检测信息
 export const jcqueryPurchase = baseUrl + 'check/queryCheckGoods';// 查询进货商品列表
+export const queryCheckGoods2 = baseUrl + 'check/queryCheckGoods2';// 查询进货商品列表  超市
+export const exportAllCheck = baseUrl + 'check/exportAllCheck';// 检测导出
 export const updateCheck = baseUrl + 'check/updateCheck';// 编辑检测
 export const uploadImgJc = baseUrl + 'comm/uploadImg';// 新增检查上传图片 多张
+
 
 // 统计
 export const queryMoneyAndWeightForMarket = baseUrl + 'redis/queryMoneyAndWeightForMarket' //查询商品商户总额
@@ -351,7 +359,6 @@ export const updateProductionTech = baseUrl + 'farming/updateProductionTech' // 
 export const deleteProductionTech = baseUrl + 'farming/deleteProductionTech' // 删除加工工艺接口
 
 // 资产
-
 export const queryAssetsUser = baseUrl3 + 'assets/queryAssetsUser' // 查询 所有资产用户信息（需要确定用户类型类型）
 export const queryAssetsConf = baseUrl3 + 'assets/queryAssetsConf' // 2.查询 资产状态、所属期 等查询条件下拉框
 export const queryAssetsType = baseUrl3 + 'assets/queryAssetsType' // 3.查询 资产类型树
@@ -369,6 +376,7 @@ export const muploadPhotos = baseUrl3 + 'assets/uploadPhotos' // 多图片上传
 export const queryChangeListByAssetsId = baseUrl3 + 'assets/queryChangeListByAssetsId' // 资产--查询变更记录
 export const queryInspectinfoListByAssetsId = baseUrl3 + 'assets/queryInspectinfoListByAssetsId' // 资产--查询巡检记录
 export const queryMaintaininfoListByAssetsId = baseUrl3 + 'assets/queryMaintaininfoListByAssetsId' // 资产--查询维修记录
+export const queryChildAssetsBaseByParentId = baseUrl3 + 'assets/queryChildAssetsBaseByParentId' // 资产--查询所属资产
 export const updateMoreAssetsStatus = baseUrl3 + 'assets/updateMoreAssetsStatus' // 批量变更
 export const inspectMoreAssets = baseUrl3 + 'assets/inspectMoreAssets' // 批量巡检
 export const addinspect = baseUrl3 + 'assets/addinspect' // 新增巡检
@@ -598,10 +606,19 @@ export const downloadNodeInfo = baseUrl4 + 'warning/downloadNodeInfo' //节点�
 export const importNodeInfo = baseUrl4 + 'warning/importNodeInfo' //节点导入
 export const getNodeTagInfo = baseUrl4 + 'warning/getNodeTagInfo' // 节点详细类型
 export const queryJgJg = baseUrl4 + 'warning/queryJgJg' // 监管机构
+// 申请审核
 export const queryBasic = baseUrl4 + 'basic/queryBasic' // 查询企业备案
 export const examineBasicInfo = baseUrl4 + 'basic/examineBasicInfo' // 查询企业备案
 export const getNodeId = baseUrl4 + 'basic/getNodeId' // 节点码获取
 export const addRejected = baseUrl4 + 'basic/addRejected' // 审核驳回
+// 监管机构
+export const queryTcJgJg = baseUrl4 + 'cygl/queryTcJgJg' // 监管机构列表
+export const queryXhJd = baseUrl4 + 'cygl/queryXhJd' // 查询序号
+export const queryParentNode = baseUrl4 + 'cygl/queryParentNode' // 查询父节点
+export const addTcJgJg = baseUrl4 + 'cygl/addTcJgJg' // 添加监管机构
+export const updateTcJgJg = baseUrl4 + 'cygl/updateTcJgJg' // 修改监管机构
+export const updateTcJgJgXh = baseUrl4 + 'cygl/updateTcJgJgXh' // 修改监管机构序号
+
 // 商户备案
 export const queryBusinessStateSelect = baseUrl4 + 'warning/queryBusinessStateSelect' // 查询得到启用停用信息
 export const queryBusinessTypeSelect = baseUrl4 + 'warning/queryBusinessTypeSelect' // 查询得到经营类型下拉框信息
@@ -761,3 +778,15 @@ export const getGoodsTypeAndNameNew = baseUrl4 + 'dataReport/getGoodsTypeAndName
 // hlgjd  统计
 export const queryBizInfos = baseUrl + 'cygl/queryBizInfos' // 节点名称下拉
 export const querySaleEntryJgInfo = baseUrl + 'cygl/querySaleEntryJgInfo' // 列表数据
+// 丰台数据上报
+export const queryWeekReportList = baseUrl + 'ftsjsb/queryWeekReportList' // 数据上报列表查询
+export const queryReportDetailsList = baseUrl + 'ftsjsb/queryReportDetailsList' // 数据上报详情
+export const exportGwzxTemplate = baseUrl + 'ftsjsb/exportGwzxTemplate' // 下载模板
+export const exportGwzxDetails = baseUrl + 'ftsjsb/exportGwzxDetails' // 数据上报单条数据下载
+export const importWeekReport = baseUrl + 'ftsjsb/importWeekReport' // 数据上报导入
+export const getShopInfoByUserId = baseUrl + 'ftsjsb/getShopInfoByUserId' // 根据user_id 返回门店数据
+export const updateShopInfoByUserId = baseUrl + 'ftsjsb/updateShopInfoByUserId' // 根据shop_id 修改商户信息
+export const getSavedReport = baseUrl + 'ftsjsb/getSavedReport' // 回显已保存的数据(数据上报)
+export const addReport = baseUrl + 'ftsjsb/addReport' // 数据上报新增
+export const getYestodaySaleroom = baseUrl + 'ftsjsb/getYestodaySaleroom' // 获取本周第二天的前一天数据（上周三）
+export const exportWeekReportExcel = baseUrl + 'ftsjsb/exportWeekReportExcel' // 导出汇总表

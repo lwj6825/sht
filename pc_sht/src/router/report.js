@@ -1,4 +1,4 @@
-import reportList from '../components/report/reportList.vue'
+// import reportList from '../components/report/reportList.vue'
 
 export default [
     { 

@@ -31,7 +31,7 @@
             </el-date-picker>
           </div>
           <!--商户名称-->
-          <div class="lz-three-item">
+          <div class="lz-three-item" v-if="roleId != 76">
             <div class="lz-filter-name">商户名称</div>
             <el-select v-model="local_booth_name" slot="append" placeholder="请选择" value-key="userId"
                 class="select-width-me" size="small" filterable  clearable style="width: 225px">
@@ -48,17 +48,23 @@
               <el-option v-for="item in check_result_options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </div>
+          <div class="lz-three-item" v-if="roleId == 76">
+            <div class="lz-filter-name">检测商品</div>
+            <el-select v-model="goods_name" filterable clearable placeholder="请选择商品" size="small" style="width: 225px">
+              <el-option v-for="(item, index) in goodsArr" :key="index" :label="item.check_good + '(' + item.check_goods_code + ')'" :value="item.check_good" ></el-option>
+            </el-select>
+          </div>
         </div>
         <!--第二行筛选条件-->
         <div class="lz-filter-one-style">
           <!--检测商品-->
-          <div class="lz-three-item">
+          <div class="lz-three-item" v-if="roleId != 76">
             <div class="lz-filter-name">检测商品</div>
             <el-select v-model="local_check_good" filterable clearable placeholder="请选择商品" size="small" value-key="ID" style="width: 225px">
               <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME + '(' + item.GOODS_CODE + ')'" :value="item" ></el-option>
             </el-select>
           </div>
-          <div class="lz-three-item">
+          <div class="lz-three-item" v-if="roleId != 76">
             <div class="lz-filter-name">商品编码</div>
             <el-input v-model="good_code" clearable size="small"  style="width: 225px"></el-input>
           </div>
@@ -79,12 +85,13 @@
         <p class="tz-title">全部检测信息</p>
         <div>
           <el-button type="primary" class="addBtn blue-bth" @click="goAddCheck">新增检测信息</el-button>
+          <el-button type="primary" class="addBtn blue-bth" @click="downloadFun">导出</el-button>
         </div>
       </div>
       <div class="tables">
-        <el-table :data="tableData" :header-cell-style="rowClass" >
+        <el-table :data="tableData" :header-cell-style="rowClass" v-loading="loading">
           <el-table-column prop="check_date"  label="检测日期"></el-table-column>
-          <el-table-column prop="booth_name" label="商户名称"></el-table-column>
+          <el-table-column prop="booth_name" label="商户名称" v-if="roleId != 76"></el-table-column>
           <el-table-column prop="stall_no" label="摊位号" v-if="isShow"></el-table-column>
           <el-table-column prop="check_good" label="检测商品"></el-table-column>
           <el-table-column prop="check_project" label="检测项目"></el-table-column>
@@ -178,9 +185,20 @@ function getLastYearYestdy(date) {
 } 
   import AreaSelect from '../common/area';
   import {QueryArea} from '../../js/area/area.js';
-  import {getCheckList,GetAllBiz, DeteleCheckItem, Parse,jcpurchase} from '../../js/standingBook/standingBook.js'
+  import {getCheckList,GetAllBiz, DeteleCheckItem, Parse,jcpurchase, QueryCheckGoods2, ExportAllCheck} from '../../js/standingBook/standingBook.js'
   import {purchase, getDefaultProductTypes,} from "../../js/goods/goods.js";
   import {BaseImgUrl} from '../../js/address/url.js';
+  function getNowFormatDate() {//获取当前时间
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
+    var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
+    var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
+            + " "  + date.getHours()  + seperator2  + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate
+}
   export default {
     name: "saleTz",
     data() {
@@ -219,13 +237,13 @@ function getLastYearYestdy(date) {
         tableData: [],
         centerDialogVisible: false,
         viewImgUrl: '',
-        isshowcondition: true,
+        isshowcondition: false,
         currentPage: 0,
         totalPageSize: 0,
         page_local: '1',
         userId: '',
         areaId: '', // 大区的shop_booth_id
-        // bigAreaId: '', // 大区userId
+        bigAreaId: '', // 大区userId
         contacts: '',
         nodeName: '',
         file: '',
@@ -244,6 +262,10 @@ function getLastYearYestdy(date) {
         current: 0,
         sizeObj: {},
         imgHeight: '',
+        roleId: '', // 超市76
+        goods_name: '',
+        goodsArr: '',
+        loading: true,
       }
     },
     mounted() {
@@ -253,6 +275,7 @@ function getLastYearYestdy(date) {
       this.isRegion = localStorage.getItem('isRegion');
       this.scShopId = localStorage.getItem('scShopId');
       this.userId = localStorage.getItem('userId');
+      this.roleId = localStorage.getItem('roleId');
       this.getTime()
       this.local_node_id_id = localStorage.getItem('nodeidlocal');
       let arr = []
@@ -263,7 +286,6 @@ function getLastYearYestdy(date) {
         // nodeidlocal
         this.local_node_id = localStorage.getItem('nodeidlocal');
         this.isShow = false;
-        this.getCheckListtable(this.page_local);
         this.getMerchantsFun();
         this.getGoodsFun();
       }else{
@@ -271,6 +293,53 @@ function getLastYearYestdy(date) {
       }
     },
     methods: {
+      downloadFun(){
+        this.loading = true
+        let goods_name = '', check_goods_code = '';
+        if(this.roleId == 76){
+          goods_name = this.goods_name;
+          this.goodsArr.forEach(val => {
+            if(this.goods_name == val.check_goods_code){
+              check_goods_code = val.check_goods_code
+            }
+          })
+        }else{
+          if(this.local_check_good){
+            goods_name = this.local_check_good.GOODS_NAME
+            check_goods_code = this.local_check_good.GOODS_CODE
+          }else{
+            check_goods_code = this.good_code
+          }
+        }
+        let params = {
+          node_id: this.local_node_id,
+          region: this.areaId,
+          check_good: goods_name,
+          shop_booth_id: this.local_booth_name,
+          check_result:this.local_check_result,
+          start_time: this.startTime,
+          end_time: this.endTime,
+          check_goods_code: check_goods_code,
+        }
+        ExportAllCheck( params, {})
+          .then((res) => {
+              this.loading = false
+              let time = getNowFormatDate()
+              let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'})
+              let url = window.URL.createObjectURL(blob);
+              let aLink = document.createElement("a");
+              aLink.style.display = "none";
+              aLink.href = url;
+              aLink.setAttribute("download", `检测信息` + time);
+              document.body.appendChild(aLink);
+              aLink.click();
+              document.body.removeChild(aLink); 
+              window.URL.revokeObjectURL(url); 
+          })
+          .catch(function (res) {
+              this.loading = false
+          });
+      },
       viewFun(ele){
         this.$router.push({name:'ViewCheckTz',query: {areaId: this.areaId,bigAreaId: this.bigAreaId, areaName: this.local_area_booth_name, msg: JSON.stringify(ele)}})
         // let routeData = this.$router.resolve({
@@ -343,6 +412,7 @@ function getLastYearYestdy(date) {
         this.local_date_start_end = '';
         this.local_check_good = '';
         this.good_code = '';
+        this.goods_name = '';
         let arr = []
         arr.push(this.startTime)
         arr.push(this.endTime)
@@ -352,17 +422,32 @@ function getLastYearYestdy(date) {
       },
       // 获取商品列表
       getGoodsFun() {
-        let boothData = {
-          region: this.areaId,
-          userId:this.userId,
-          node_id:this.local_node_id_id,
+        if(this.roleId == 76){
+          let obj = {
+            check_good: '',
+            node_id:this.local_node_id_id,
+          }
+          QueryCheckGoods2(obj)
+            .then(res => {
+              this.goodsArr = res.data.list;
+              this.getCheckListtable(this.page_local);
+            })
+            .catch(res => {
+            })
+        }else{
+          let boothData = {
+            region: this.areaId,
+            userId:this.userId,
+            node_id:this.local_node_id_id,
+          }
+          jcpurchase(boothData)
+            .then(res => {
+              this.local_check_good_options = res.data;
+              this.getCheckListtable(this.page_local);
+            })
+            .catch(res => {
+            })
         }
-        jcpurchase(boothData)
-          .then(res => {
-            this.local_check_good_options = res.data;
-          })
-          .catch(res => {
-          })
       },
       // 获取商户
       getMerchantsFun() {
@@ -469,26 +554,45 @@ function getLastYearYestdy(date) {
       },
       //获取检测列表
       getCheckListtable(currentPageLocal) {
+        this.loading = true
+        let goods_name = '', check_goods_code = '';
+        if(this.roleId == 76){
+          goods_name = this.goods_name;
+          this.goodsArr.forEach(val => {
+            if(this.goods_name == val.check_goods_code){
+              check_goods_code = val.check_goods_code
+            }
+          })
+        }else{
+          if(this.local_check_good){
+            goods_name = this.local_check_good.GOODS_NAME
+            check_goods_code = this.local_check_good.GOODS_CODE
+          }else{
+            check_goods_code = this.good_code
+          }
+        }
         let obj = {
           page: currentPageLocal,
           cols: '10',
           node_id: this.local_node_id,
           region: this.areaId,
-          check_good:this.local_check_good ? this.local_check_good.GOODS_NAME : '',
+          check_good: goods_name,
           shop_booth_id: this.local_booth_name,
           check_result:this.local_check_result,
           start_time: this.startTime,
           end_time: this.endTime,
-          check_goods_code: this.local_check_good ? this.local_check_good.GOODS_CODE : this.good_code,
+          check_goods_code: check_goods_code,
         }
         getCheckList(obj)
           .then(res => {
+            this.loading = false
             this.currentPage = parseInt(res.data.condition.page);
             this.totalPageSize =parseInt(res.data.condition.total) ;
             this.totalItemNum = res.data.dataList.length;
             this.tableData = res.data.dataList;
           })
           .catch(res => {
+            this.loading = false
           })
       },
       //删除数据

@@ -46,6 +46,13 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
+                    <el-form-item label="查询列表">
+                        <el-select v-model="form.tableList" clearable placeholder="请选择">
+                            <el-option label="全部" value="0"></el-option>
+                            <el-option label="父级资产" value="1"></el-option>
+                            <el-option label="子级资产" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" plain @click="searchFun"style="margin-left: 10px;">查询</el-button>
                         <!-- <el-button @click="clearFun">重置</el-button>-->
@@ -123,6 +130,7 @@
                     <el-table-column prop="merchant_name" label="所属商户" >
                         <template slot-scope="scope">{{scope.row.merchant_name ? scope.row.merchant_name : '- - -'}}</template>
                     </el-table-column>
+                    <el-table-column prop="swj_assets_id" label="商务局资产ID" > </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="viewFun(scope.row)">查看</el-button>
@@ -196,7 +204,8 @@ export default {
                 node: '',
                 user: '',
                 state: '',
-                dataTime: ''
+                dataTime: '',
+                tableList: '1',
             },
             unfold: '收起',
             show: true,
@@ -455,6 +464,7 @@ export default {
                 merchant_name: this.form.user.trim(),
                 cols: this.cols,
                 page: this.page,
+                is_parent: this.form.tableList == 0 ? '' : this.form.tableList,
             }
             QueryAssetsBase(params)
                 .then(res => {
@@ -562,7 +572,8 @@ export default {
                 node: '',
                 user: '',
                 state: '',
-                dataTime: ''
+                dataTime: '',
+                tableList: '1',
             }
             this.page = 1
             this.startTime = ''

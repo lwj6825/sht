@@ -1,24 +1,24 @@
-import analyze from '@/components/analyze/analyze'// 总
-import amountJiank from '../components/analyze/amountJiank.vue' // 追溯产品交易量监控及预测
-import electronicMap from '../components/analyze/electronicMap.vue' //追溯节点运营监控(电子地图）
-import gailAnalyze from '../components/analyze/gailAnalyze.vue' // 追溯企业/环节覆盖率分析
-import jiegAnalysis from '../components/analyze/jiegAnalysis.vue' // 追溯体系运行考核结果分析
-import lthcShow from '../components/analyze/lthcShow.vue' // 追溯链条合成展示
-import merchantsReport from '../components/analyze/merchantsReport.vue' // 商户运行报告
-import nodeReport from '../components/analyze/nodeReport.vue' // 节点运行报告
-import priceJiank from '../components/analyze/priceJiank.vue' // 追溯产品交易价格监控及预测
-import statisticalShow from '../components/analyze/statisticalShow.vue' // 追溯链条合成展示
-import storesReport from '../components/analyze/storesReport.vue' //  门店运行报告
-import yxTestYb from '../components/analyze/yxTestYb.vue' // 运行考核月报
-import cateringData from '../components/analyze/cateringData.vue'  // 餐饮数据运行概况
-import dataStatistics from '../components/analyze/dataStatistics.vue'  // 数据量统计
-import dxqMonitoring from '../components/analyze/dxqMonitoring.vue' // 大兴区餐饮监控
-import ftqMonitoring from '../components/analyze/ftqMonitoring.vue' // 丰台区餐饮监控 
-import getsTo from '../components/analyze/getsTo.vue' // 查询机 
-import monitoring from '../components/analyze/monitoring.vue' // 节点/商户连续未上报及电子秤监控 
-import groupData from '../components/analyze/groupData.vue' // 集团数据监控
-import logMonitoring from '../components/analyze/logMonitoring.vue' // 日志监控
-import dataServices from '../components/analyze/dataServices.vue' // 数据服务监控
+// import analyze from '@/components/analyze/analyze'// 总
+// import amountJiank from '../components/analyze/amountJiank.vue' // 追溯产品交易量监控及预测
+// import electronicMap from '../components/analyze/electronicMap.vue' //追溯节点运营监控(电子地图）
+// import gailAnalyze from '../components/analyze/gailAnalyze.vue' // 追溯企业/环节覆盖率分析
+// import jiegAnalysis from '../components/analyze/jiegAnalysis.vue' // 追溯体系运行考核结果分析
+// import lthcShow from '../components/analyze/lthcShow.vue' // 追溯链条合成展示
+// import merchantsReport from '../components/analyze/merchantsReport.vue' // 商户运行报告
+// import nodeReport from '../components/analyze/nodeReport.vue' // 节点运行报告
+// import priceJiank from '../components/analyze/priceJiank.vue' // 追溯产品交易价格监控及预测
+// import statisticalShow from '../components/analyze/statisticalShow.vue' // 追溯链条合成展示
+// import storesReport from '../components/analyze/storesReport.vue' //  门店运行报告
+// import yxTestYb from '../components/analyze/yxTestYb.vue' // 运行考核月报
+// import cateringData from '../components/analyze/cateringData.vue'  // 餐饮数据运行概况
+// import dataStatistics from '../components/analyze/dataStatistics.vue'  // 数据量统计
+// import dxqMonitoring from '../components/analyze/dxqMonitoring.vue' // 大兴区餐饮监控
+// import ftqMonitoring from '../components/analyze/ftqMonitoring.vue' // 丰台区餐饮监控 
+// import getsTo from '../components/analyze/getsTo.vue' // 查询机 
+// import monitoring from '../components/analyze/monitoring.vue' // 节点/商户连续未上报及电子秤监控 
+// import groupData from '../components/analyze/groupData.vue' // 集团数据监控
+// import logMonitoring from '../components/analyze/logMonitoring.vue' // 日志监控
+// import dataServices from '../components/analyze/dataServices.vue' // 数据服务监控
 export default [
   {
     path: 'analyze/gailAnalyze',
@@ -84,7 +84,7 @@ export default [
   {
     path: 'analyze/nodeReport',
     component:  resolve => require(['@/components/analyze/nodeReport'],resolve),
-    name:'NodeReport',
+    name:'NodeReports',
     meta:{
       id:'227',
       node:'analyze',

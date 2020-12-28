@@ -1,18 +1,18 @@
-import enterprise from '../components/enterprise/enterprise.vue'
-import enterpriseMsg from '../components/enterprise/enterpriseMsg.vue'
-import newEnterprise from '../components/enterprise/newEnterprise.vue'
+// import enterprise from '../components/enterprise/enterprise.vue'
+// import enterpriseMsg from '../components/enterprise/enterpriseMsg.vue'
+// import newEnterprise from '../components/enterprise/newEnterprise.vue'
 
 export default [
-    {
-        path: 'enterprise/enterprise',
-        component: resolve => require(['@/components/enterprise/enterprise'],resolve),
-        name:"Enterprise",
-        meta:{
-            id:'466',
-            node:'enterprise',
-            url:'enterprise',
-        }
-    },
+    // {
+    //     path: 'enterprise/enterprise',
+    //     component: resolve => require(['@/components/enterprise/enterprise'],resolve),
+    //     name:"Enterprise",
+    //     meta:{
+    //         id:'466',
+    //         node:'enterprise',
+    //         url:'enterprise',
+    //     }
+    // },
     {
         path: 'enterprise/enterpriseMsg',
         component: resolve => require(['@/components/enterprise/enterpriseMsg'],resolve),

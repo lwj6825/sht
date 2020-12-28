@@ -53,6 +53,10 @@ import standingBookCq from './standingBookCq'
 import DataEnterprise from './DataEnterprise'
 import DataReport from './DataReport'
 import FtReport from './FtReport'
+import enterpriseFt from './enterpriseFt'
+import reportGwzx from './reportGwzx'
+import reportCs from './reportCs'
+import reportFt from './reportFt'
 Vue.use(Router)
 
 export default new Router({
@@ -114,6 +118,10 @@ export default new Router({
         ...FtReport,
         ...DataEnterprise,
         ...DataReport,
+        ...enterpriseFt,
+        ...reportGwzx,
+        ...reportCs,
+        ...reportFt,
       ]
     },
   ]

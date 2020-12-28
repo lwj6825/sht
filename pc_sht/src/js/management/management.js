@@ -20,7 +20,8 @@ import {getAllBiz,lookShop,
   getAllBizType,
   downloadGys,
   downloadCustomer,
-  addBizId,
+  addBizId, 
+  deleteBizImg
 } from '../address/url.js';
 
 // 查询商户列表
@@ -127,4 +128,8 @@ export const SaveBindingGoods = function(params){
 // 自动生成得商户编码
 export const  AddBizId  = function(params) {
   return ajaxGet(addBizId +'?'+ params)
+}
+// 商户管理-删除img/logo
+export const  DeleteBizImg  = function(params) {
+  return ajaxGet(deleteBizImg +'?'+ params)
 }

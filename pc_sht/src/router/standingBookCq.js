@@ -1,10 +1,10 @@
-import EntryTzCq from '@/components/standingBookCq/entryTzCq'
-import SaleTzCq from '@/components/standingBookCq/saleTzCq'
-import AddEntryTzCq from '@/components/standingBookCq/addEntryTzCq'
-import imgUploadCq from '../components/standingBookCq/imgUploadCq.vue'
-import viewEntryTzCq from '../components/standingBookCq/viewEntryTzCq.vue'
-import addSaleTzCq from '../components/standingBookCq/addSaleTzCq.vue'
-import viewSaleTzCq from '../components/standingBookCq/viewSaleTzCq.vue'
+// import EntryTzCq from '@/components/standingBookCq/entryTzCq'
+// import SaleTzCq from '@/components/standingBookCq/saleTzCq'
+// import AddEntryTzCq from '@/components/standingBookCq/addEntryTzCq'
+// import imgUploadCq from '../components/standingBookCq/imgUploadCq.vue'
+// import viewEntryTzCq from '../components/standingBookCq/viewEntryTzCq.vue'
+// import addSaleTzCq from '../components/standingBookCq/addSaleTzCq.vue'
+// import viewSaleTzCq from '../components/standingBookCq/viewSaleTzCq.vue'
 
 export default [
     {

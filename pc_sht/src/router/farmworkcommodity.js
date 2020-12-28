@@ -1,5 +1,5 @@
-import FarmworkCommodity from '@/components/farmworkcommodity/farmworkcommodity'
-import ComVariety from '@/components/farmworkcommodity/comvariety'
+// import FarmworkCommodity from '@/components/farmworkcommodity/farmworkcommodity'
+// import ComVariety from '@/components/farmworkcommodity/comvariety'
 
 //农事商品
 export default [

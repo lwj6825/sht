@@ -1,5 +1,3 @@
-
-
 export default [
     { 
         path: 'collect/collect', //数据采集

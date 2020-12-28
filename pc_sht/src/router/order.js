@@ -1,4 +1,4 @@
-import Order from '@/components/order/order'
+// import Order from '@/components/order/order'
 
 export default [
     { 

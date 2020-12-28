@@ -567,7 +567,6 @@ export default {
                                 this.comments22 = true
                             }
                         })
-                        console.log(this.account_idea)
                     }
 
                 })
@@ -1130,7 +1129,7 @@ export default {
             // }
             console.log(arr)
             let obj = {
-                url: 'http://192.168.0.40:8083/#/' + '?id=' + this.ids,
+                url: 'http://m.zhdtech.com/auto_access/#/' + '?id=' + this.ids,
                 icon: 2,
                 remarkList: arr.length > 0 ? arr : '', //这是个list   attribute  名字  notation备注
                 id: this.ids,

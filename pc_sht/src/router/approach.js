@@ -1,4 +1,4 @@
-import dataPricePort from '../components/approach/approachList.vue'
+// import dataPricePort from '../components/approach/approachList.vue'
 
 export default [
     { 

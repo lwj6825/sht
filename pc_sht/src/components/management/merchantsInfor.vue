@@ -151,8 +151,9 @@
           </el-form-item>
           <el-form-item label="营业执照：">
             <div class="box-fileimg">
-              <figure class="image" v-if="imgUrl" @click="bigImgFun(imgUrl)">
-                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + imgUrl">
+              <figure class="image" v-if="imgUrl">
+                <p class="delete" @click="removeFun(1)">-</p>
+                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + imgUrl" @click="bigImgFun(imgUrl)">
               </figure>
               <span class="submit">
                 上传图片
@@ -164,8 +165,9 @@
           </el-form-item>
           <el-form-item label="个人照：">
             <div class="box-fileimg">
-              <figure class="image" v-if="logoUrl" @click="bigImgFun(logoUrl)">
-                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + logoUrl">
+              <figure class="image" v-if="logoUrl">
+                <p class="delete" @click="removeFun(2)">-</p>
+                <img :src="'https://zhd-img.oss-cn-zhangjiakou.aliyuncs.com' + logoUrl" @click="bigImgFun(logoUrl)">
               </figure>
               <span class="submit">
                 上传图片
@@ -249,7 +251,7 @@
 
 <script>
 import {getAddr} from '../../js/user/user.js';
-import {insBiz,allBizs,updateBizUser,updateBizBooth} from '../../js/management/management.js';
+import {insBiz,allBizs,updateBizUser,updateBizBooth, DeleteBizImg} from '../../js/management/management.js';
 import {baseUrl} from '../../js/address/url.js'
 import axios from 'axios';
 import {UpdatePassword} from '../../js/settings/settings.js'
@@ -342,6 +344,43 @@ export default {
     this.userId = localStorage.getItem('userId')
   },
   methods:{
+    removeFun(ele){
+      if(ele == 1){
+        let str = 'shop_booth_id=' + this.shop_booth_id + '&type=img';
+        DeleteBizImg(str)
+          .then(res => {
+            if (res.result == true) {
+              this.$message.success(res.message);
+              this.imgUrl = ''
+              // this.btnMsg = '修改'
+              // this.getShopMsg()
+              // this.getMarketFun()
+            }else{
+              this.$message.error(res.message);
+            }
+          })
+          .catch(res => {
+            console.log(res)
+          })
+      }else if(ele == 2){
+        let str = 'shop_booth_id=' + this.shop_booth_id + '&type=logo';
+        DeleteBizImg(str)
+          .then(res => {
+            if (res.result == true) {
+              this.$message.success(res.message);
+              this.logoUrl = ''
+              // this.btnMsg = '修改'
+              // this.getShopMsg()
+              // this.getMarketFun()
+            }else{
+              this.$message.error(res.message);
+            }
+          })
+          .catch(res => {
+            console.log(res)
+          })
+      }
+    },
     bigImgFun(item){
       this.isBigImg = true
       this.$nextTick(()=>{            
@@ -1019,16 +1058,32 @@ export default {
         }
       }
       .image{
+        position: relative;
+        top: 0;
+        left: 0;
         width: 200px;
         height: 100px;
         vertical-align: middle;
         border: 1px solid #eaeaea;
-        overflow: hidden;
         box-sizing: border-box;
+        .delete{
+          position: absolute;
+          top: -6px;
+          right: -6px;
+          width: 12px;
+          height: 12px;
+          text-align: center;
+          line-height: 7px;
+          font-size: 24px;
+          background: #990000;
+          color: #fff;
+          border-radius: 50%;
+          cursor: pointer;
+        }
         img{
           display: block;
           border: none;
-          max-width: 100%;
+          max-width: 190px;
           max-height: 100%;
         }
       }

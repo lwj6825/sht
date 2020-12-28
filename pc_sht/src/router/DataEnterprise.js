@@ -1,5 +1,5 @@
-import DataReportList from '../components/DataEnterprise/DataReportList.vue'
-import DataMarketList from '../components/DataEnterprise/DataMarketList.vue'
+// import DataReportList from '../components/DataEnterprise/DataReportList.vue'
+// import DataMarketList from '../components/DataEnterprise/DataMarketList.vue'
 export default [
     {
         path: 'DataEnterprise/DataReportList',

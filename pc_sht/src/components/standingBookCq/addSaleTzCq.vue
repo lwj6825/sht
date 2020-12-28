@@ -44,13 +44,13 @@
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.number"></el-input>
                     </template>
-                </el-table-column>
+                </el-table-column><!--
                 <el-table-column prop="in_date" label="生产日期">
                     <template slot-scope="scope">
                         <el-date-picker :picker-options="pickerOptions" v-model="scope.row.in_date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期">
                         </el-date-picker>
                     </template>
-                </el-table-column>
+                </el-table-column>-->
                 <el-table-column prop="BZQ" label="保质期">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.BZQ"></el-input>
@@ -515,7 +515,7 @@ export default {
                     }
                     str += '{"配送单位名称":"' + this.form.gys + '","配送日期":"' + this.form.in_date 
                         + '","成品编码":"' + val.GOODS_CODE + '","成品名称":"' + val.GOODS_NAME + '","保质期":"' + val.BZQ
-                        + '","配送数量":"' + val.number
+                        + '","配送数量":"' + val.number + '","销售单价":"' + val.PRICE
                         + (idx == this.tableData.length - 1 ? '"}' : '"},')
                          // + '","单价":"' + val.PRICE 
                 }
@@ -530,9 +530,11 @@ export default {
                     .then(res =>{
                         console.log(res)
                         if (res.result == true) {
-                            this.$message.success(res.message ? res.message : '保存成功');
+                            this.$message.success('保存成功');
+                            // this.$message.success(res.message ? res.message : '保存成功');
                             this.$router.push({name: 'SaleTzCq'})
                         }else{
+                            // this.$message.error('保存失败');
                             this.$message.error(res.message ? res.message : '保存失败');
                         }
                     })

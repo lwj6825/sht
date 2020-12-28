@@ -6,7 +6,7 @@
                 <li class="menu-item" v-for="item in mainList" :key="item.id" :class="{active:levelOneCurrId == item.id}"
                     @click="selectMenu(item.id)">
                     <p style="width: 40px"><i class="icon" :class="'icon-' + item.url"></i></p>
-                    <span style="width: 200px" class="text">{{item.text}}</span>
+                    <span style="width: 200px; overflow: hidden;" class="text">{{item.describe}}</span>
                 </li>
             </ul>
         </div>
@@ -17,13 +17,13 @@
                     <span class='type-name'>{{type}}</span>
                     <ul>
                          <li class="menu-item" v-if='type==item.type' v-for="item in levelTwoMenu" :key='item.id' :class="{active:levelTwoCurrId == item.id}"
-                            @click="selectMenu(item.id)">{{item.text}}</li>
+                            @click="selectMenu(item.id)">{{item.describe}}</li>
                     </ul>
                 </li>
             </ul>
             <ul class="menu-list" v-else>
                 <li class="menu-item" v-for="item in levelTwoMenu" :key='item.id' :class="{active:levelTwoCurrId == item.id}"
-                    @click="selectMenu(item.id)">{{item.text}}</li>
+                    @click="selectMenu(item.id)">{{item.describe}}</li>
             </ul>
         </div>
         <div class="level-three-menu" :class="{'left-distance200':isHasDistance,'left-distance100':!isHasDistance}">
@@ -109,7 +109,7 @@ export default {
     mounted(){
         setTimeout(()=>{
             this.user = localStorage.getItem("loginName");
-            if(this.user == 'paas' || this.account == 'sjcj' ){
+            if(this.user == 'paas' || this.account == 'sjcj'){
                 this.isShow = true;
             }else if(this.user.indexOf('丰台')>-1){
                 this.isShow1 = true;
@@ -160,7 +160,7 @@ export default {
                                     ele.children.nodeList.forEach(val=> {
                                         if(val.id == toId){
                                             this.parentName = ele.children.nav_title;
-                                            this.childrenName = val.text;
+                                            this.childrenName = val.describe;
                                         }
                                     })
                                 }
@@ -175,7 +175,7 @@ export default {
                                                     if(to.params.name){
                                                         this.childrenName = to.params.name;
                                                     }else{
-                                                        this.childrenName = val.text;
+                                                        this.childrenName = val.describe;
                                                     }
 
                                                 }
@@ -188,7 +188,7 @@ export default {
                                 if(ele.node == "statistical"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
-                                            this.parentName = ele.text;
+                                            this.parentName = ele.describe;
                                         }
                                     })
                                 }
@@ -209,7 +209,7 @@ export default {
                                     ele.children.nodeList.forEach(val=> {
                                         if(val.id == toId){
                                             this.parentName = ele.children.nav_title;
-                                            this.childrenName = val.text;
+                                            this.childrenName = val.describe;
                                         }
                                     })
                                 }
@@ -224,7 +224,7 @@ export default {
                                                     if(to.params.name){
                                                         this.childrenName = to.params.name;
                                                     }else{
-                                                        this.childrenName = val.text;
+                                                        this.childrenName = val.describe;
                                                     }
 
                                                 }
@@ -237,7 +237,7 @@ export default {
                                 if(ele.node == "retail"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
-                                            this.parentName = ele.text;
+                                            this.parentName = ele.describe;
                                         }
                                     })
                                 }
@@ -258,7 +258,7 @@ export default {
                                     ele.children.nodeList.forEach(val=> {
                                         if(val.id == toId){
                                             this.parentName = ele.children.nav_title;
-                                            this.childrenName = val.text;
+                                            this.childrenName = val.describe;
                                         }
                                     })
                                 }
@@ -273,7 +273,7 @@ export default {
                                                     if(to.params.name){
                                                         this.childrenName = to.params.name;
                                                     }else{
-                                                        this.childrenName = val.text;
+                                                        this.childrenName = val.describe;
                                                     }
 
                                                 }
@@ -286,7 +286,7 @@ export default {
                                 if(ele.node == "role"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
-                                            this.parentName = ele.text;
+                                            this.parentName = ele.describe;
                                         }
                                     })
                                 }
@@ -307,7 +307,7 @@ export default {
                                     ele.children.nodeList.forEach(val=> {
                                         if(val.id == toId){
                                             this.parentName = ele.children.nav_title;
-                                            this.childrenName = val.text;
+                                            this.childrenName = val.describe;
                                         }
                                     })
                                 }
@@ -322,7 +322,7 @@ export default {
                                                     if(to.params.name){
                                                         this.childrenName = to.params.name;
                                                     }else{
-                                                        this.childrenName = val.text;
+                                                        this.childrenName = val.describe;
                                                     }
 
                                                 }
@@ -335,7 +335,7 @@ export default {
                                 if(ele.node == "retrieval"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
-                                            this.parentName = ele.text;
+                                            this.parentName = ele.describe;
                                         }
                                     })
                                 }
@@ -356,7 +356,7 @@ export default {
                                     ele.children.nodeList.forEach(val=> {
                                         if(val.id == toId){
                                             this.parentName = ele.children.nav_title;
-                                            this.childrenName = val.text;
+                                            this.childrenName = val.describe;
                                         }
                                     })
                                 }
@@ -371,7 +371,7 @@ export default {
                                                     if(to.params.name){
                                                         this.childrenName = to.params.name;
                                                     }else{
-                                                        this.childrenName = val.text;
+                                                        this.childrenName = val.describe;
                                                     }
 
                                                 }
@@ -384,7 +384,7 @@ export default {
                                 if(ele.node == "quotation"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
-                                            this.parentName = ele.text;
+                                            this.parentName = ele.describe;
                                         }
                                     })
                                 }
@@ -404,7 +404,7 @@ export default {
                                     ele.children.nodeList.forEach(val=> {
                                         if(val.id == toId){
                                             this.parentName = ele.children.nav_title;
-                                            this.childrenName = val.text;
+                                            this.childrenName = val.describe;
                                         }
                                     })
                                 }
@@ -419,7 +419,7 @@ export default {
                                                     if(to.params.name){
                                                         this.childrenName = to.params.name;
                                                     }else{
-                                                        this.childrenName = val.text;
+                                                        this.childrenName = val.describe;
                                                     }
 
                                                 }
@@ -432,7 +432,7 @@ export default {
                                 if(ele.node == "district"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
-                                            this.parentName = ele.text;
+                                            this.parentName = ele.describe;
                                         }
                                     })
                                 }
@@ -452,7 +452,7 @@ export default {
                                     ele.children.nodeList.forEach(val=> {
                                         if(val.id == toId){
                                             this.parentName = ele.children.nav_title;
-                                            this.childrenName = val.text;
+                                            this.childrenName = val.describe;
                                         }
                                     })
                                 }
@@ -467,7 +467,7 @@ export default {
                                                     if(to.params.name){
                                                         this.childrenName = to.params.name;
                                                     }else{
-                                                        this.childrenName = val.text;
+                                                        this.childrenName = val.describe;
                                                     }
 
                                                 }
@@ -480,7 +480,7 @@ export default {
                                 if(ele.node == "DataEnterprise"){
                                     ele.children.nodeList.forEach(ele=> {
                                         if(ele.id == parentId){
-                                            this.parentName = ele.text;
+                                            this.parentName = ele.describe;
                                         }
                                     })
                                 }
@@ -496,7 +496,7 @@ export default {
                                 ele.children.nodeList.forEach(ele=>{
                                     if(ele.id == toId){
                                         this.enterChildPage = false;
-                                        this.childrenName = ele.text;
+                                        this.childrenName = ele.describe;
                                         parentId = ele.parentId;
 
                                         this.mainList.forEach(ele=>{
@@ -521,7 +521,7 @@ export default {
                                                         if(ele.id == toId){
                                                             this.enterChildPage = true;
                                                             parentId = ele.parentId;
-                                                            this.childrenName = ele.text;
+                                                            this.childrenName = ele.describe;
 
                                                             this.mainList.forEach(ele => {
                                                                 if(ele.children && ele.children.nodeList.length > 0){
@@ -529,7 +529,7 @@ export default {
                                                                         if(ele.children && ele.children.nodeList.length > 0){
                                                                             ele.children.nodeList.forEach(ele => {
                                                                                 if(ele.id == parentId){
-                                                                                    this.parentName = ele.text;
+                                                                                    this.parentName = ele.describe;
                                                                                 }
                                                                             })
 
@@ -580,7 +580,7 @@ export default {
                     if(ele.id == tabTd){
                         this.levelThreeMenu.push({
                             id:ele.id,
-                            title:ele.text
+                            title:ele.describe
                         })
                         this.$router.push({path:`/home/${ele.node}/${ele.url}`});
                     }
@@ -670,7 +670,7 @@ export default {
                         ele.children.nodeList[0].children.nodeList.forEach(ele => {
                             this.levelThreeMenu.push({
                                 id:ele.id,
-                                title:ele.text
+                                title:ele.describe
                             })
                         })
                         this.$router.push({
@@ -687,7 +687,7 @@ export default {
                                 ele.children.nodeList.forEach(ele => {
                                     this.levelThreeMenu.push({
                                         id:ele.id,
-                                        title:ele.text
+                                        title:ele.describe
                                     })
                                 })
                                 if(ele.describe == "自定义图表"){
@@ -941,7 +941,7 @@ export default {
                 overflow: hidden;
             }
             &:hover{
-                width: 100px;
+                width: 110px;
                 // width:135px;
                 .text{
                     width: 200px;
@@ -1097,8 +1097,8 @@ export default {
            background-size: 100% 100%;
         }
         .icon-DataReport{
-          background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IuWbvuWxgl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjQ0cHgiIGhlaWdodD0iNDRweCIgdmlld0JveD0iMCAwIDQ0IDQ0IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA0NCA0NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8cGF0aCBmaWxsPSIjOUZBMEEwIiBkPSJNOS4xNTMsMzAuMTk5VjExLjA2OGMwLTEuMDU2LDAuODU4LTEuOTE0LDEuOTEzLTEuOTE0aDE2LjM5OWMxLjA1NSwwLDEuOTEzLDAuODU4LDEuOTEzLDEuOTE0djkuNDkxaDEuNjQNCgkJdi05LjQ5MWMwLTEuOTU5LTEuNTk0LTMuNTU0LTMuNTUzLTMuNTU0SDExLjA2NmMtMS45NTksMC0zLjU1MywxLjU5NS0zLjU1MywzLjU1NHYxOS4xMzFjMCwxLjk1OSwxLjU5NCwzLjU1MywzLjU1MywzLjU1M2g5LjUxOQ0KCQl2LTEuNjM5aC05LjUxOUMxMC4wMTIsMzIuMTEzLDkuMTUzLDMxLjI1NCw5LjE1MywzMC4xOTl6Ii8+DQoJPHBhdGggZmlsbD0iIzlGQTBBMCIgZD0iTTI1LjQxNSwxMi42ODVIMTMuMTE2Yy0wLjQ1MiwwLTAuODIsMC4zNjctMC44MiwwLjgyYzAsMC40NTIsMC4zNjgsMC44MTksMC44MiwwLjgxOWgxMi4yOTkNCgkJYzAuNDUzLDAsMC44MTktMC4zNjcsMC44MTktMC44MTlDMjYuMjM0LDEzLjA1MiwyNS44NjgsMTIuNjg1LDI1LjQxNSwxMi42ODV6Ii8+DQoJPHBhdGggZmlsbD0iIzlGQTBBMCIgZD0iTTI2LjIzNCwxOC41NjFjMC0wLjQ1Mi0wLjM2Ni0wLjgxOS0wLjgxOS0wLjgxOUgxMy4xMTZjLTAuNDUyLDAtMC44MiwwLjM2Ny0wLjgyLDAuODE5DQoJCWMwLDAuNDUzLDAuMzY4LDAuODIsMC44MiwwLjgyaDEyLjI5OUMyNS44NjgsMTkuMzgxLDI2LjIzNCwxOS4wMTQsMjYuMjM0LDE4LjU2MXoiLz4NCgk8cGF0aCBmaWxsPSIjOUZBMEEwIiBkPSJNMTMuMTE2LDIyLjc5OWMtMC40NTIsMC0wLjgyLDAuMzY1LTAuODIsMC44MThzMC4zNjgsMC44MiwwLjgyLDAuODJoNi4xNWMwLjQ1MiwwLDAuODE5LTAuMzY3LDAuODE5LTAuODINCgkJcy0wLjM2Ny0wLjgxOC0wLjgxOS0wLjgxOEgxMy4xMTZ6Ii8+DQoJPHBhdGggZmlsbD0iIzlGQTBBMCIgZD0iTTMxLjk1NiwyNy42NTRoLTAuOTMxbDAuNzk1LTAuNzk1YzAuMzItMC4zMiwwLjMyLTAuODQsMC0xLjE2Yy0wLjMxOS0wLjMyLTAuODQtMC4zMi0xLjE1OSwwbC0xLjE0NiwxLjE0Ng0KCQlsLTEuMTQ2LTEuMTQ2Yy0wLjMyLTAuMzE4LTAuODQtMC4zMTgtMS4xNTksMGMtMC4zMTksMC4zMi0wLjMxOSwwLjg0LTAuMDAxLDEuMTZsMC43OTUsMC43OTVoLTAuOTNjLTAuNDUyLDAtMC44MiwwLjM2Ny0wLjgyLDAuODINCgkJYzAsMC40NTIsMC4zNjgsMC44MTksMC44MiwwLjgxOWgxLjYyMXYwLjY1OEgyNy43NWMtMC40NTMsMC0wLjgyLDAuMzY2LTAuODIsMC44MTlzMC4zNjcsMC44MiwwLjgyLDAuODJoMC45NDV2MS4xNTgNCgkJYzAsMC40NTMsMC4zNjcsMC44MiwwLjgyLDAuODJjMC40NTEsMCwwLjgxOC0wLjM2NywwLjgxOC0wLjgydi0xLjE1OGgwLjk0NWMwLjQ1MywwLDAuODItMC4zNjcsMC44Mi0wLjgycy0wLjM2Ny0wLjgxOS0wLjgyLTAuODE5DQoJCWgtMC45NDV2LTAuNjU4aDEuNjIxYzAuNDUzLDAsMC44Mi0wLjM2NywwLjgyLTAuODE5QzMyLjc3NSwyOC4wMjEsMzIuNDA5LDI3LjY1NCwzMS45NTYsMjcuNjU0eiIvPg0KCTxwYXRoIGZpbGw9IiM5RkEwQTAiIGQ9Ik0yOS41MTYsMjIuNTQ3Yy0zLjg0NCwwLTYuOTcsMy4xMjctNi45Nyw2Ljk2OWMwLDMuODQ0LDMuMTI2LDYuOTY5LDYuOTcsNi45NjlzNi45NjktMy4xMjUsNi45NjktNi45NjkNCgkJQzM2LjQ4NCwyNS42NzQsMzMuMzU3LDIyLjU0NywyOS41MTYsMjIuNTQ3eiBNMjkuNTE2LDM0Ljg0NmMtMi45MzgsMC01LjMzLTIuMzkxLTUuMzMtNS4zM2MwLTIuOTM4LDIuMzkyLTUuMzMsNS4zMy01LjMzDQoJCXM1LjMzLDIuMzkyLDUuMzMsNS4zM0MzNC44NDYsMzIuNDU1LDMyLjQ1NCwzNC44NDYsMjkuNTE2LDM0Ljg0NnoiLz4NCjwvZz4NCjwvc3ZnPg0K) no-repeat center center;
-          background-size: 100% 100%;
+            background: url('../../assets/images/collect.svg') no-repeat center center;
+            background-size: 100% 100%;
         }
         .icon-repair{
             background: url('../../assets/images/repair.svg') no-repeat center center;
@@ -1179,6 +1179,22 @@ export default {
         }
         .icon-standingBookCq{
             background: url('../../assets/images/standingBook.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-reportGwzx{
+            background: url('../../assets/images/control.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-reportCs{
+            background: url('../../assets/images/control.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-reportFt{
+            background: url('../../assets/images/collect.svg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .icon-enterpriseFt{
+            background: url('../../assets/images/enterprise.svg') no-repeat center center;
             background-size: 100% 100%;
         }
         .level-two-menu{

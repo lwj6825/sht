@@ -329,6 +329,17 @@
                     <el-pagination v-if="num" background @current-change="handleCurrentChange3" :current-page.sync="page" :page-size="cols"
                     layout="total, prev, pager, next, jumper" :total="num"></el-pagination>
                 </el-tab-pane>
+                <el-tab-pane label="所属资产" name="fourth" v-if="is_parent && tableData4.length > 0">
+                    <el-table :data="tableData4" :header-cell-style="rowClass">
+                        <el-table-column prop="assets_name" label="资产名称"></el-table-column>
+                        <el-table-column prop="bar_code" label="条码号"> </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-button type="text" size="small" @click="viewChildFun(scope.row)">查看</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-tab-pane>
             </el-tabs>
             <div class="passwrd" v-if="isEdits">
                 <div class="text">
@@ -355,7 +366,7 @@ String.prototype.trim=function(){
 }
 import {QueryAssetsUser,QueryAssetsConf,QueryAssetsType,QueryNodeBase2,QueryBusiness,AssetsUpdate,QueryChangeListByAssetsId,
     QueryInspectinfoListByAssetsId,QueryMaintaininfoListByAssetsId,QueryAssetsSpecifications,QueryAssetsNames,QueryAssetsManufacturers,
-    } from '../../js/traceEquipment/traceEquipment.js'
+    QueryChildAssetsBaseByParentId, QueryInspectId,} from '../../js/traceEquipment/traceEquipment.js'
 import {uploadPhotos} from '../../js/address/url.js'
 import axios from 'axios';
 export default {
@@ -372,6 +383,7 @@ export default {
             tableData: [],
             tableData2: [],
             tableData3: [],
+            tableData4: [],
             zcmg: '',
             ruleForm: {
                 name: '',
@@ -419,11 +431,11 @@ export default {
             sccjArr: [],
             management2: '',
             ssNode_name2: '',
+            is_parent: 1,
         }
     },
     mounted() {
         this.userId = localStorage.getItem('userId')
-        console.log(this.$route.params.param)
         this.getQueryAssetsSpecifications()
         this.getQueryAssetsNames()
         this.getQueryAssetsManufacturers()
@@ -459,7 +471,7 @@ export default {
         this.creater = param.name
         this.create_time = param.create_time.substring(0,16)
         let img_url = param.image_url
-        let  imgArr = img_url.split(','),obj ={};
+        let imgArr = img_url.split(','),obj ={};
         imgArr.forEach(val => {
             if(val){
                 obj = {
@@ -472,8 +484,67 @@ export default {
         this.getUpdataFun()
         this.getXjFun()
         this.getWxFun()
+        if(this.is_parent == 1){
+            this.getAssectsFun()
+        }
     },
     methods: { 
+        viewChildFun(ele){
+            this.is_parent = 0
+            this.assets_id = ele.assets_id
+            this.ruleForm.node = ele.node_code
+            this.btn = '修改'
+            this.activeName = 'first'
+            let param = ele
+            // this.ruleForm.node = param.node_code // 关联节点信息
+            this.ssNode_name2 = param.node_name // 节点名称
+            this.zcType_name = param.assets_type // 资产类型
+            // this.ruleForm.type = param.assets_type_id
+            this.ssq_name = param.sub_period // 所属期
+            this.ruleForm.ssq = param.sub_period_id
+            this.zcState_name = param.a_conf_item // 资产状态
+            this.ruleForm.state = param.a_conf_id
+            this.ruleForm.management = param.merchant_id // 关联商户信息
+            this.management2 = param.merchant_name// 商户名称
+            this.ruleForm.name = param.assets_name // 资产名称
+            this.ruleForm.tmh = param.bar_code // 条码号（SW）
+            this.ruleForm.xlh = param.serial_num // 序列号 
+            this.ruleForm.ggxh = param.specifications // 规格型号
+            this.ruleForm.sccj = param.manufacturer // 生产厂家
+            this.ruleForm.ip = param.ip // IP
+            this.ruleForm.jd = param.longitude // 经度
+            this.ruleForm.bz = param.remark // 备注
+            this.ruleForm.wd = param.latitude
+            this.create_way = param.create_way
+            this.creater = param.name
+            this.create_time = param.create_time.substring(0,16)
+            let img_url = param.image_url
+            let imgArr = img_url.split(','),obj ={};
+            imgArr.forEach(val => {
+                if(val){
+                    obj = {
+                        img_url: val
+                    }
+                    this.imgArr1.push(obj)
+                }
+            })
+            this.getQueryBusiness()
+            this.getUpdataFun()
+            this.getXjFun()
+            this.getWxFun()
+        },
+        getAssectsFun(){
+            let obj = {
+                parent_assets_id: this.assets_id, //
+            }
+            QueryChildAssetsBaseByParentId(obj)
+                .then(res => {
+                    this.tableData4 = res.data.child_list
+                })
+                .catch(res => {
+                    console.log(res);
+                })
+        },
         // 查询所有资产规格
         getQueryAssetsSpecifications(){
             QueryAssetsSpecifications('')
@@ -947,6 +1018,8 @@ export default {
                 this.getXjFun()
             }else if(tab.name == 'third'){
                 this.getWxFun()
+            }else if(tab.name == 'fourth'){
+                this.getAssectsFun()
             }
         },
         

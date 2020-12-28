@@ -1,5 +1,5 @@
-import monitor from '../components/monitor/monitor.vue'
-import monitorMsg from '../components/monitor/monitorMsg.vue'
+// import monitor from '../components/monitor/monitor.vue'
+// import monitorMsg from '../components/monitor/monitorMsg.vue'
 
 export default [
     {

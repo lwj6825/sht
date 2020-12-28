@@ -1,5 +1,5 @@
-import differentSz from '../components/differentSz/differentSz.vue' 
-import szManagement from '../components/differentSz/szManagement.vue' 
+// import differentSz from '../components/differentSz/differentSz.vue' 
+// import szManagement from '../components/differentSz/szManagement.vue' 
 export default [
     {
       path: 'differentSz/differentSz',

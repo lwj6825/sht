@@ -1,10 +1,10 @@
-import Repair from '@/components/repair/repair'
-import repairMsg from '../components/repair/repairMsg.vue'
-import viewRepair from '../components/repair/viewRepair.vue'
-import lsTask from '../components/repair/lsTask.vue'
-import recovery from '../components/repair/recovery.vue'
-import viewLsTask from '../components/repair/viewLsTask.vue'
-import viewRecovery from '../components/repair/viewRecovery.vue'
+// import Repair from '@/components/repair/repair'
+// import repairMsg from '../components/repair/repairMsg.vue'
+// import viewRepair from '../components/repair/viewRepair.vue'
+// import lsTask from '../components/repair/lsTask.vue'
+// import recovery from '../components/repair/recovery.vue'
+// import viewLsTask from '../components/repair/viewLsTask.vue'
+// import viewRecovery from '../components/repair/viewRecovery.vue'
 
 export default [
     { 

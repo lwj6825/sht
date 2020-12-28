@@ -28,7 +28,12 @@
             <el-option v-for="item in local_check_good_options" :key="item.ID" :label="item.GOODS_NAME"
               :value="item"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item><!--
+        <el-form-item label="检测商品" prop="name" v-if="roleId == 76">
+        <el-select v-model="goods_name" placeholder="请选择" size="small" value-key="ID" filterable style="width: 300px">
+            <el-option v-for="(item, index) in goodsArr" :key="index" :label="item.check_good" :value="item.check_good" ></el-option>
+          </el-select>
+        </el-form-item>-->
         <el-form-item label="检测结果" prop="name">
           <el-select v-model="local_check_result" filterable placeholder="请选择" style="width: 300px">
             <el-option v-for="item in check_result_options" :key="item.value" :label="item.label" :value="item.value">
@@ -120,7 +125,7 @@
 <script>
   import {addCheckItem, updateCheck, uploadImgJc} from '../../js/address/url.js';
   import {purchase, getDefaultProductTypes,} from "../../js/goods/goods.js";
-  import {GetSaleTz, GetAllBiz, Parse, jcpurchase,UpdateCheck, AddCheckItem} from '../../js/standingBook/standingBook.js'
+  import {GetSaleTz, GetAllBiz, Parse, jcpurchase,UpdateCheck, AddCheckItem, QueryCheckGoods2} from '../../js/standingBook/standingBook.js'
   import axios from 'axios';
   export default {
     name: "saleTz",
@@ -177,12 +182,16 @@
         booth_name: '',
         check_good: '',
         imgArr1: [],
+        goodsArr: [],
+        roleId: '',
+        goods_name: '',
       }
     },
     mounted() {
       this.isRegion = localStorage.getItem('isRegion');
       this.local_node_name = localStorage.getItem('loginName');
       this.local_node_id_id = localStorage.getItem('nodeidlocal');
+      this.roleId = localStorage.getItem('roleId');
       if (this.isRegion == 'false') {
         this.isShowMerchant = false;
         this.submit_shop_booth_id = localStorage.getItem('scShopId');
@@ -435,74 +444,80 @@
           })
         }
       },
-      /*
-      *   page: 1,
-          cols: 15000,
-          goodsName: "",
-          suppliersName: '',
-          region: this.local_region,
-          userId: this.userId_local,
-          total: '',
-      * */
       //  获取商品列表
       getGoodsFun(goodsType) {
-        let msg = {}
-        if(this.$route.query.msg){
-          msg = JSON.parse(this.$route.query.msg)
-        }
-        let boothData = {
-          region: this.local_region,
-          userId: this.userId_local,
-          node_id: this.local_node_id_id,
-          goodsType: goodsType,// 1 进货 2销售
-        }
-        jcpurchase(boothData)
-          .then(res => {
-            if(goodsType == 1){
-              this.$message({
-                message: '请增加进货商品',
-                type: 'warning'
-              });
-            }else if(goodsType == 2){
-              this.$message({
-                message: '请增加销售商品',
-                type: 'warning'
-              });
-            }
-            this.local_check_good_options = res.data;
-            
-            if(this.count == 1 && msg.check_good){
-              let name = '',arr = [];
-              name = msg.check_good
-              arr = name.split(',')
-              this.local_check_good_options.forEach(val => {
-                arr.forEach(val2 => {
-                  if(val.GOODS_NAME == val2){
-                    this.local_check_good.push(val)
-                  }
+        // if(this.roleId == 76){
+        //   let obj = {
+        //     check_good: '',
+        //     node_id:this.local_node_id_id,
+        //   }
+        //   QueryCheckGoods2(obj)
+        //     .then(res => {
+        //       this.goodsArr = res.data.list;
+        //     })
+        //     .catch(res => {
+        //     })
+        // }else{
+          let msg = {}
+          if(this.$route.query.msg){
+            msg = JSON.parse(this.$route.query.msg)
+          }
+          let boothData = {
+            region: this.local_region,
+            userId: this.userId_local,
+            node_id: this.local_node_id_id,
+            goodsType: goodsType,// 1 进货 2销售
+          }
+          jcpurchase(boothData)
+            .then(res => {
+              if(res.data.legnth == 0){
+                if(goodsType == 1){
+                  this.$message({
+                    message: '请增加进货商品',
+                    type: 'warning'
+                  });
+                }else if(goodsType == 2){
+                  this.$message({
+                    message: '请增加销售商品',
+                    type: 'warning'
+                  });
+                }
+              }
+              this.local_check_good_options = res.data;
+              
+              if(this.count == 1 && msg.check_good){
+                let name = '',arr = [];
+                name = msg.check_good
+                arr = name.split(',')
+                this.local_check_good_options.forEach(val => {
+                  arr.forEach(val2 => {
+                    if(val.GOODS_NAME == val2){
+                      this.local_check_good.push(val)
+                    }
+                  })
                 })
-              })
-              let codeArr = []
-              this.submit_goods_name = '';
-              for (let i = 0; i < this.local_check_good.length; i++) {
-                codeArr.push(this.local_check_good[i].GOODS_CODE)
-                this.submit_goods_name += this.local_check_good[i].GOODS_NAME.toString() + ',';
+                let codeArr = []
+                this.submit_goods_name = '';
+                for (let i = 0; i < this.local_check_good.length; i++) {
+                  codeArr.push(this.local_check_good[i].GOODS_CODE)
+                  this.submit_goods_name += this.local_check_good[i].GOODS_NAME.toString() + ',';
+                }
+                if(codeArr.length > 0){
+                  this.check_goods_code = codeArr.join(',')
+                }else{
+                  this.check_goods_code = ''
+                }
+                if(msg.check_good && this.local_check_good.length == 0){
+                  this.goodsType = '销售'
+                  this.getGoodsFun(2)
+                }else{
+                  this.count = 2
+                }
               }
-              if(codeArr.length > 0){
-                this.check_goods_code = codeArr.join(',')
-              }else{
-                this.check_goods_code = ''
-              }
-              if(msg.check_good && this.local_check_good.length == 0){
-                this.goodsType = '销售'
-                this.getGoodsFun(2)
-              }else{
-                this.count = 2
-              }
-            }
-          })
-          .catch(res => {
-          })
+            })
+            .catch(res => {
+            })
+        // }
       },
       //  商户通过  id  去查询  对应的名称   local_booth_name
       getMerchantName() {

@@ -1,6 +1,6 @@
 
-import assets from '../components/assets/assets.vue'
-import assetsMsg from '../components/assets/assetsMsg.vue'
+// import assets from '../components/assets/assets.vue'
+// import assetsMsg from '../components/assets/assetsMsg.vue'
 export default [
     {
       path: 'assets/assets',

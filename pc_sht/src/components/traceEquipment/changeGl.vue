@@ -112,15 +112,15 @@
                     <el-table-column prop="c_before" label="变更前">
                         <template slot-scope="scope">
                             <p v-if="scope.row.c_item != '附件'">{{scope.row.c_before}}</p>
-                            <img v-else style="width:50px;height: 50px;"
+                            <img v-if="item && scope.row.c_item == '附件'" style="width:50px;height: 50px;"
                                 v-for="(item,index) in scope.row.c_before" :key="index" :src="item" alt="">
                         </template>
                     </el-table-column>
                     <el-table-column prop="c_after" label="变更后">
                         <template slot-scope="scope">
                             <p v-if="scope.row.c_item != '附件'">{{scope.row.c_after}}</p>
-                            <img v-else style="width:50px;height: 50px;"
-                                v-for="(item,index) in scope.row.c_after" :key="index" :src="item" alt="">
+                            <img v-if="item && scope.row.c_item == '附件'" style="width:50px;height: 50px;"
+                                v-for="(item,index) in scope.row.c_after" :key="index" :src="item" alt="" >
                         </template>
                     </el-table-column>
                     <el-table-column prop="name" label="操作人"> </el-table-column>

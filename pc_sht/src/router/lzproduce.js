@@ -1,4 +1,4 @@
-import Producetable from '@/components/lzproduce/producetable'
+// import Producetable from '@/components/lzproduce/producetable'
 
 export default [
   //农事

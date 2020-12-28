@@ -16,6 +16,16 @@
                             <el-option label="零售市场" value="零售市场"></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="学校类别" v-if="account == 'cpjw'">
+                        <el-select v-model="form.category" filterable clearable placeholder="请选择" @change="selectCategoryFun">
+                            <el-option v-for="(item, index) in categoryArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="学校属性" v-if="account == 'cpjw'">
+                        <el-select v-model="form.attribute" filterable clearable placeholder="请选择" @change="selectAttributeFun">
+                            <el-option v-for="(item, index) in attributeArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="企业名称" class="qymcselect">
                         <div v-show="form.types == '超市'">
                             <el-select size="mini" v-model="form.cs_name" filterable multiple clearable placeholder="请选择">
@@ -66,16 +76,6 @@
                     <el-form-item label="所属街道" v-if="form.types == '零售市场' && account != 'cpjw' && userType != 6">
                         <el-select v-model="form.supervise" filterable clearable placeholder="请选择" :disabled="roleId == 40">
                             <el-option v-for="(item, index) in superviseArr" :key="index" :label="item.jgjg" :value="item.jgjg"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="学校类别" v-if="account == 'cpjw'">
-                        <el-select v-model="form.category" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item, index) in categoryArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="学校属性" v-if="account == 'cpjw'">
-                        <el-select v-model="form.attribute" filterable clearable placeholder="请选择">
-                            <el-option v-for="(item, index) in attributeArr" :key="index" :label="item.tag_name" :value="item.tag_id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
@@ -330,6 +330,12 @@ export default {
         this.getQueryNodeTagTreeFun()
     },
     methods: {
+        selectCategoryFun(){
+            this.getGetNodeJgInfoGroupForJg('餐饮')
+        },
+        selectAttributeFun(){
+            this.getGetNodeJgInfoGroupForJg('餐饮')
+        },
         getQueryNodeTagTreeFun(){
             let str = 'tag_parent_id=27'
             QueryNodeTagTree(str)
@@ -512,22 +518,22 @@ export default {
         },
         // 节点总数
         getNodeTotalFun(){
-            let params = {
-                node_id: this.node_id,
-                usertype: this.userType,
-                sjjgjg: '',
-                page: 1,
-                cols: 10000,
-                node_type: '',
-                node_name: '',
-            }
-            GetNodeJgInfoGroupForJg(params)
-                .then(res => {
-                    this.list_num1 = res.data.total
-                })
-                .catch((res) => {
-                    console.log(res)
-                })
+            // let params = {
+            //     node_id: this.node_id,
+            //     usertype: this.userType,
+            //     sjjgjg: '',
+            //     page: 1,
+            //     cols: 10000,
+            //     node_type: '',
+            //     node_name: '',
+            // }
+            // GetNodeJgInfoGroupForJg(params)
+            //     .then(res => {
+            //         this.list_num1 = res.data.total
+            //     })
+            //     .catch((res) => {
+            //         console.log(res)
+            //     })
         },
         // 选择企业类型
         typesChangeFun(ele){
@@ -560,6 +566,14 @@ export default {
         },
         // 节点名称
         getGetNodeJgInfoGroupForJg(node_type){
+            let str = ''
+            if(this.form.category && this.form.attribute){
+                str += this.form.category + ',' + this.form.attribute
+            }else if(this.form.category && !this.form.attribute){
+                str += this.form.category
+            }else if(!this.form.category && this.form.attribute){
+                str += this.form.attribute
+            }
             let params = {
                 node_id: this.node_id,
                 usertype: this.userType,
@@ -568,6 +582,7 @@ export default {
                 cols: 10000,
                 node_type: node_type,
                 node_name: '',
+                tag_id: str
             }
             GetNodeJgInfoGroupForJg(params)
                 .then(res => {

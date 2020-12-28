@@ -1,4 +1,4 @@
-import DataReportUpload from '../components/DataReport/DataReportUpload.vue'
+// import DataReportUpload from '../components/DataReport/DataReportUpload.vue'
 export default [
     {
         path: 'DataReport/DataReportUpload',

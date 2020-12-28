@@ -1,6 +1,6 @@
-import Fun from '@/components/fun/fun'
-import FunManagement from '@/components/fun/funManagement'
-import EditFun from '@/components/fun/editFun'
+// import Fun from '@/components/fun/fun'
+// import FunManagement from '@/components/fun/funManagement'
+// import EditFun from '@/components/fun/editFun'
 
 export default [
   {

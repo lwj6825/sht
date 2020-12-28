@@ -1,11 +1,11 @@
-import retail from '../components/retail/retail.vue'
-import retailList from '../components/retail/retailList.vue'
-import viewRetail from '../components/retail/viewRetail.vue'
-import addPurchase from '../components/retail/addPurchase.vue'
-import dataFilling from '../components/retail/dataFilling.vue'
-import filePurchase from '../components/retail/filePurchase.vue'
-import purchaseList from '../components/retail/purchaseList.vue'
-import viewPurchase from '../components/retail/viewPurchase.vue'
+// import retail from '../components/retail/retail.vue'
+// import retailList from '../components/retail/retailList.vue'
+// import viewRetail from '../components/retail/viewRetail.vue'
+// import addPurchase from '../components/retail/addPurchase.vue'
+// import dataFilling from '../components/retail/dataFilling.vue'
+// import filePurchase from '../components/retail/filePurchase.vue'
+// import purchaseList from '../components/retail/purchaseList.vue'
+// import viewPurchase from '../components/retail/viewPurchase.vue'
 
 export default [
     {

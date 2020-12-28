@@ -30,7 +30,7 @@
                 </el-form-item>    
             </el-form>
         </div>
-        <div class="tables" v-loading.body="fullscreenLoading">
+        <div class="tables" v-loading="fullscreenLoading">
             <div class="title">
                 <p class="tz-title">数据列表</p>
                 <div>

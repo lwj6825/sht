@@ -25,7 +25,7 @@
                         <div class="msg">
                             <el-input v-model="form.ghdw" readonly></el-input>
                         </div>
-                    </div>
+                    </div><!--
                     <div class="data">
                         <div class="title">单据上传</div>
                         <div class="msg">
@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     
                 </div>
             </div>
@@ -529,9 +529,11 @@ export default {
                     .then(res =>{
                         console.log(res)
                         if (res.result == true) {
-                            this.$message.success(res.message ? res.message : '保存成功');
+                            this.$message.success('保存成功');
+                            // this.$message.success(res.message ? res.message : '保存成功');
                             this.$router.push({name: 'EntryTzCq'})
                         }else{
+                            // this.$message.error('保存失败');
                             this.$message.error(res.message ? res.message : '保存失败');
                         }
                     })

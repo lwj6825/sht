@@ -6,7 +6,7 @@ import {
     queryInfoType, querygroupName, downloadNodeInfo, queryNodeDetailType2, downloadNotReportedMonitoring, queryBusinessStateSelect, 
     queryBusinessTypeSelect, queryBusiness2, queryNodeSelect, querypropertySelect, getBizIdByCondition, insertBusiness, updateBusiness,
     updateBusinessState, updateBusinessIsPay, downloadBusiness, getNodeTagInfo, queryJgJg, queryBasic, examineBasicInfo, getNodeId,
-    addRejected,
+    addRejected, queryTcJgJg, queryXhJd, queryParentNode, addTcJgJg, updateTcJgJg, updateTcJgJgXh, 
 } from '../address/url.js';
 
 export const QuerygroupName  = function(params) {
@@ -177,3 +177,28 @@ export const GetNodeId  = function(params) {
 export const AddRejected  = function(params) {
     return ajaxPost(addRejected, params)
 }
+// 监管机构
+// 查询序号
+export const QueryXhJd  = function(params) {
+    return ajaxGet(queryXhJd+'?' + params)
+}
+// 监管机构列表
+export const QueryTcJgJg  = function(params) {
+    return ajaxPost(queryTcJgJg, params)
+}
+// 查询父节点
+export const QueryParentNode  = function(params) {
+    return ajaxGet(queryParentNode+'?' + params)
+}
+// 添加监管机构
+export const AddTcJgJg  = function(params) {
+    return ajaxPost(addTcJgJg, params)
+}
+// 修改监管机构
+export const UpdateTcJgJg  = function(params) {
+    return ajaxPost(updateTcJgJg, params)
+} 
+// 修改监管机构序号
+export const UpdateTcJgJgXh  = function(params) {
+    return ajaxPost(updateTcJgJgXh, params)
+} 
